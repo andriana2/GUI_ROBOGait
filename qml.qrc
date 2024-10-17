@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>images/down.png</file>
+        <file>images/down2.png</file>
+        <file>images/left.png</file>
+        <file>images/right.png</file>
+        <file>images/up.png</file>
+        <file>images/up2.png</file>
+        <file>images/circle.png</file>
+        <file>images/rectangle.png</file>
+        <file>images/triangle.png</file>
+        <file>images/x.png</file>
+        <file>images/recycle.png</file>
+        <file>images/giro_der.png</file>
+        <file>images/giro_izq.png</file>
+        <file>images/recycle2.png</file>
+    </qresource>
+</RCC>
