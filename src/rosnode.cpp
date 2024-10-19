@@ -1,4 +1,4 @@
-#include "rosnode.h"
+#include "../lib/rosnode.h"
 
 RosNode::RosNode(QObject *parent) : QObject{parent}, Node{"joy_qt"}
 {

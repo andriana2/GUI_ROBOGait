@@ -19,9 +19,9 @@ find_package(geometry_msgs REQUIRED)
 
 add_executable(example2
   main.cpp
-  rosnode.h
-  rosnode.cpp
-  main.qml
+  lib/rosnode.h
+  src/rosnode.cpp
+  qml/main.qml
   qml.qrc
 )
 

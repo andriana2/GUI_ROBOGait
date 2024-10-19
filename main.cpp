@@ -6,7 +6,7 @@
 #include <QQmlApplicationEngine>  // Motor de Qt que carga y ejecuta archivos QML.
 #include <QIcon>
 
-#include "rosnode.h"              // Incluye el archivo de encabezado de la clase RosNode, que contiene la lógica de ROS 2.
+#include "lib/rosnode.h"              // Incluye el archivo de encabezado de la clase RosNode, que contiene la lógica de ROS 2.
 
 int main(int argc, char *argv[])
 {
@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     //RosNode node;
 
     // Define la URL del archivo QML que se cargará. Usa la sintaxis 'qrc:/' para indicar que el archivo está en los recursos del proyecto.
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
 
     // Obtiene el contexto raíz del motor QML. Este contexto es el que permitirá compartir propiedades entre C++ y QML.
     //context = engine.rootContext();
