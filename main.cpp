@@ -12,7 +12,6 @@ int main(int argc, char *argv[])
 {
     // Inicializa la aplicación gráfica Qt.
     QGuiApplication app(argc, argv);
-    app.setWindowIcon(QIcon("qrc:/images/icon.png"));
 
     // Inicializa ROS 2, permitiendo la interacción de ROS 2 en esta aplicación.
     rclcpp::init(argc, argv);
@@ -38,6 +37,8 @@ int main(int argc, char *argv[])
 
     // Carga el archivo QML que contiene la interfaz gráfica de la aplicación, en este caso 'main.qml'.
     engine.load(url);
+    if (engine.rootObjects().isEmpty())
+        return -1;
 
     // Ejecuta el bucle de eventos de Qt. Esto mantiene la aplicación en ejecución y la hace capaz de responder a eventos (como clics, teclas, etc.).
     return app.exec();
