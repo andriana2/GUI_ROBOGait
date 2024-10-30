@@ -3,5 +3,5 @@
 
 TEST(obtein_ip, EXPECT_EQ)
 {
-    EXPECT_EQ("10.0.2.15", obtenerIP());
+    EXPECT_EQ("192.168.0.2", obtenerIP());
 }

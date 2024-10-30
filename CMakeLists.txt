@@ -22,6 +22,9 @@ add_executable(example2
   lib/rosnode.h
   src/rosnode.cpp
   qml/main.qml
+  qml/ApplicationFlow.qml
+  qml/ApplicationFlowForm.ui.qml
+  qml/Colors.qml
   qml.qrc
 )
 

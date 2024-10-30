@@ -1,0 +1,12 @@
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+
+Rectangle {
+    id: root
+    color: Colors.currentTheme.background
+    
+  StackView {
+      id: stackView
+      anchors.fill: parent
+  }
+}
