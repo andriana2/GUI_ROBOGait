@@ -12,7 +12,7 @@
 #include <cstdlib>  // Para std::system()
 #include <thread> 
   // Para std::this_thread::sleep_for
-#include <chrono> 
+#include <chrono>
 
 using stringMsg = example_interfaces::msg::String;
 using twistMsg  = geometry_msgs::msg::Twist;
@@ -29,11 +29,11 @@ public:
     explicit RosNode(QObject *parent = nullptr);
     ~RosNode();
     Q_INVOKABLE void buttonCallback(int number);
-    Q_INVOKABLE void ballStateCallback(int x, int y);
     Q_INVOKABLE void moveUp(); 
     Q_INVOKABLE void moveDown();
     Q_INVOKABLE void moveLeft();
     Q_INVOKABLE void moveRight();
+    Q_INVOKABLE int stringIP(const QString &msg);
 
 private:
     Pub_t pub;

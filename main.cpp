@@ -17,23 +17,23 @@ int main(int argc, char *argv[])
     rclcpp::init(argc, argv);
 
     // Declaración de un puntero al contexto QML, que se utilizará más adelante.
-    //QQmlContext* context;
+    QQmlContext* context;
 
     // Crea el motor de QML, que se encargará de cargar y mostrar los archivos QML (la interfaz gráfica).
     QQmlApplicationEngine engine;
 
     // Crea una instancia de la clase RosNode, que es el nodo de ROS 2 que se utilizará para la lógica de ROS.
-    //RosNode node;
+    RosNode node;
 
     // Define la URL del archivo QML que se cargará. Usa la sintaxis 'qrc:/' para indicar que el archivo está en los recursos del proyecto.
     const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
 
     // Obtiene el contexto raíz del motor QML. Este contexto es el que permitirá compartir propiedades entre C++ y QML.
-    //context = engine.rootContext();
+    context = engine.rootContext();
 
     // Establece una propiedad de contexto llamada "_rosNode", que será accesible desde QML.
     // Esta propiedad contiene una referencia al objeto 'node', es decir, la instancia de RosNode.
-    //context->setContextProperty("_rosNode", &node);
+    context->setContextProperty("_rosNode", &node);
 
     // Carga el archivo QML que contiene la interfaz gráfica de la aplicación, en este caso 'main.qml'.
     engine.load(url);

@@ -9,19 +9,13 @@ set(CMAKE_AUTORCC ON) # Para enlazar imágenes y recursos
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Quick)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Quick)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Quick Core Gui Qml)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Quick Core Gui Qml)
 find_package(rclcpp REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(example_interfaces REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Gui)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Gui)
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Qml)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Qml)
 
 # Define el archivo de recursos de Qt (qml.qrc) con todos los archivos QML
 qt_add_resources(QML_RESOURCES qml.qrc)
@@ -31,7 +25,9 @@ add_executable(example2
   main.cpp
   lib/rosnode.h
   src/rosnode.cpp
-  ${QML_RESOURCES}
+  src/utils.cpp
+  lib/utils.h
+ ${QML_RESOURCES}
 )
 
 # Vincula las bibliotecas necesarias

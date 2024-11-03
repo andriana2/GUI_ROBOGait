@@ -1,6 +1,12 @@
 <RCC>
     <qresource prefix="/">
+        <file>qml/Constants.qml</file>
         <file>qml/main.qml</file>
+        <file>qml/ApplicationFlow.qml</file>
+        <file>qml/ApplicationFlowForm.ui.qml</file>
+        <file>qml/Colors.qml</file>
+        <file>qml/Home.qml</file>
+        <file>qml/HomeForm.ui.qml</file>
         <file>images/down.png</file>
         <file>images/down2.png</file>
         <file>images/left.png</file>
@@ -15,11 +21,8 @@
         <file>images/giro_der.png</file>
         <file>images/giro_izq.png</file>
         <file>images/recycle2.png</file>
-        <file>qml/main.qml</file>
-        <file>qml/ApplicationFlow.qml</file>
-        <file>qml/ApplicationFlowForm.ui.qml</file>
-        <file>qml/Colors.qml</file>
-        <file>qml/Home.qml</file>
-        <file>qml/HomeForm.ui.qml</file>
+        <file>images/logo.png</file>
+        <file>qml/IP.qml</file>
+        <file>qml/IPForm.ui.qml</file>
     </qresource>
 </RCC>

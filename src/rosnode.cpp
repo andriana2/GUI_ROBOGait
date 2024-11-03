@@ -1,10 +1,10 @@
 #include "../lib/rosnode.h"
+#include "../lib/utils.h"
 
 RosNode::RosNode(QObject *parent) : QObject{parent}, Node{"joy_qt"}
 {
     spin_thread = std::thread{std::bind(&RosNode::rosSpin, this)};
     pub.button = this->create_publisher<stringMsg>("button_state", 10);
-    pub.ball = this->create_publisher<twistMsg>("ball_state", 10);
     turtlesim_started_ = false;
     publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("/turtle1/cmd_vel", 10);
 }
@@ -68,12 +68,18 @@ void RosNode::buttonCallback(int number)
     pub.button->publish(msg);
 }
 
-void RosNode::ballStateCallback(int x, int y)
+int RosNode::stringIP(const QString &msg)
 {
-    geometry_msgs::msg::Twist msg;
-    msg.linear.x = x;
-    msg.linear.y = y;
-    pub.ball->publish(msg);
+    if (msg.isEmpty() || msg == "")
+    {
+        return 0;
+    }
+    std::string msg_ = msg.toStdString();
+    if (msg_ == obtenerIP())
+    {
+        return 1;
+    }
+    return 0;
 }
 
 void RosNode::moveUp() { sendVelocity(2.0, 0.0); }
