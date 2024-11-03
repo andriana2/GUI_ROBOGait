@@ -15,5 +15,11 @@
         <file>images/giro_der.png</file>
         <file>images/giro_izq.png</file>
         <file>images/recycle2.png</file>
+        <file>qml/main.qml</file>
+        <file>qml/ApplicationFlow.qml</file>
+        <file>qml/ApplicationFlowForm.ui.qml</file>
+        <file>qml/Colors.qml</file>
+        <file>qml/Home.qml</file>
+        <file>qml/HomeForm.ui.qml</file>
     </qresource>
 </RCC>
