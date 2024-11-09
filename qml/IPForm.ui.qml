@@ -2,8 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 
 Item {
-    width: 700
-    height: 1300
+    id: root
     property alias textArea: textArea
     property alias buttonEnviar: buttonEnviar
 
