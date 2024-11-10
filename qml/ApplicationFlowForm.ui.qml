@@ -5,9 +5,12 @@ import QtQuick.Controls 2.15
 Rectangle {
     id: root
     property alias home: home
-    property alias mystackview: mystackview
     property alias ip: ip
     property alias menu: menu
+
+    property string previousState: ""
+    property alias mystackview: mystackview
+
     StackView{
         anchors.fill: parent
         id: mystackview
@@ -18,14 +21,22 @@ Rectangle {
     Component {
         id: ip
         IP {
+            visible: true
         }
     }
     Component {
         id: menu
         MenuForm {
+            visible: true
 
         }
     }
+    // Component {
+    //   id: insert
+    //   Insert {
+    //     state: applicationFlow.mode
+    //   }
+    // }
     // Component {
     //     id: Home_
     // }

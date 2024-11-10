@@ -30,6 +30,10 @@ add_executable(example2
  ${QML_RESOURCES}
 )
 
+set_source_files_properties(Colors.qml PROPERTIES
+    QT_QML_SINGLETON_TYPE TRUE
+)
+
 # Vincula las bibliotecas necesarias
 target_link_libraries(example2
     Qt${QT_VERSION_MAJOR}::Quick

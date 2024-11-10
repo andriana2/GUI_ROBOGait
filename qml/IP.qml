@@ -17,7 +17,7 @@ IPForm {
             }
             else {
                 errorPopup.visible = false
-
+                applicationFlow.menu_push()
                 console.log("Texto enviado: " + textArea.text)
             }
 

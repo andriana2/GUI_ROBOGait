@@ -13,12 +13,12 @@ Rectangle {
         columnSpacing: 60 // Espacio entre columnas
 
         Rectangle {
-            id: rectangle1
+            id: teledirigido
             width: 150
             height: 150
+            //color: Colors.rectangle_color
             color: "#235c87"
-
-            Text {
+                Text {
                 id: text1
                 color: "#ffffff"
                 text: qsTr("TELEDIRIGIDO")
@@ -30,11 +30,12 @@ Rectangle {
         }
 
         Rectangle {
+            id: mapa
             width: 150
             height: 150
-            color: "#235c87"
-
-            Text {
+            //color: Colors.rectangle_color
+            color:"#235c87"
+                Text {
                 id: text2
                 x: -174
                 y: 68
@@ -48,11 +49,12 @@ Rectangle {
         }
 
         Rectangle {
+            id: hacer_mapa
             width: 150
             height: 150
-            color: "#235c87"
-
-            Text {
+            //color: Colors.rectangle_color
+            color:"#235c87"
+                Text {
                 id: text3
                 x: -174
                 y: 68
