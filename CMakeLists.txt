@@ -50,6 +50,11 @@ ament_target_dependencies(example2
     geometry_msgs
 )
 
+if(ANDROID)
+    set_target_properties(example2 PROPERTIES
+    QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
+endif()
+
 # Configuración de instalación
 include(GNUInstallDirs)
 install(TARGETS example2
