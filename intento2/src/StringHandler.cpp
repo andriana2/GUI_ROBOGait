@@ -1,4 +1,5 @@
 #include "../include/StringHandler.h"
+#include "include/utils.h"
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -6,41 +7,9 @@
 StringHandler::StringHandler(QObject *parent)
     : QObject(parent)
 {
+    m_currentMove = Stop;
 }
 
-QString StringHandler::inputString() const
-{
-    return m_inputString;
-}
-
-void StringHandler::setInputString(const QString &newString)
-{
-    if (m_inputString != newString) {
-        m_inputString = newString;
-        emit inputStringChanged();
-    }
-}
-
-QString StringHandler::resultString() const
-{
-    return m_resultString;
-}
-
-void StringHandler::compareWith(const QString &compareString)
-{
-    if (m_inputString == compareString) {
-        m_resultString = "Strings are equal!";
-    } else {
-        m_resultString = "Strings are different.";
-    }
-    emit resultStringChanged();
-}
-
-void StringHandler::sendFromTerminal(const QString &text)
-{
-    m_resultString = "From terminal: " + text;
-    emit resultStringChanged();
-}
 
 bool StringHandler::isInSameNetwork(const QString &ip1, const std::string& subnetMask) {
     if (ip1.isEmpty() || ip1 == "")
@@ -77,3 +46,38 @@ bool StringHandler::isInSameNetwork(const QString &ip1, const std::string& subne
     }
     return true;
 }
+
+void StringHandler::setCurrentMove(StringHandler::Move newCurrentMove)
+{
+    if (m_currentMove == newCurrentMove)
+        return;
+    m_currentMove = newCurrentMove;
+    emit currentMoveChanged();
+    qDebug() << "Movimiento seleccionado:" << moveToString(newCurrentMove);
+}
+
+
+QString StringHandler::moveToString(StringHandler::Move move) const {
+    switch (move) {
+    case Recto: return "Recto";
+    case Atras: return "Atrás";
+    case Giro_Izquierda: return "Giro a la Izquierda";
+    case Giro_Derecha: return "Giro a la Derecha";
+    case Mas_Rapido: return "Más Rápido";
+    case Mas_Lento: return "Más Lento";
+    case Stop: return "Stop";
+    default: return "Desconocido";
+    }
+}
+
+StringHandler::Move StringHandler::stringToMove(const QString &move) const {
+    if (move == "Recto") return Recto;
+    if (move == "Atras") return Atras;
+    if (move == "Giro_Izquierda") return Giro_Izquierda;
+    if (move == "Giro_Derecha") return Giro_Derecha;
+    if (move == "Mas_Rapido") return Mas_Rapido;
+    if (move == "Mas_Lento") return Mas_Lento;
+    if (move == "Stop") return Stop;
+    return Stop; // Valor predeterminado
+}
+

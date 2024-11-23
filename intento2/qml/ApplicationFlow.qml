@@ -5,7 +5,8 @@ ApplicationFlowForm {
     state: "Home"
 
     home.buttonStart.onClicked: {
-        mystackview.push(ip)
+        // mystackview.push(ip)
+        mystackview.push(menu_app)
     }
     function backButton()
     {
@@ -13,12 +14,16 @@ ApplicationFlowForm {
         applictionFlow.state = applicationFlow.previousState
     }
     function confirmButton() {
-        stack.push(insert)
+
         applicationFlow.state = "Insert"
     }
     function menu_push(){
-        mystackview.push(menu)
+        mystackview.push(menu_app)
 
+    }
+    function teledirigido_push()
+    {
+        mystackview.push(teledirigido)
     }
 
     //! [State]

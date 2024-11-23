@@ -1,6 +1,6 @@
 #include "../include/utils.h"
 
-#include <stdexcept>
+// #include <stdexcept>
 
 // #include <iostream>
 #include <unistd.h>
@@ -10,28 +10,28 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
-std::string moveToString(Move move) {
-    switch(move) {
-    case Recto: return "Recto";
-    case Atras: return "Atras";
-    case Giro_Izquierda: return "Giro_Izquierda";
-    case Giro_Derecha: return "Giro_Derecha";
-    case Mas_Rapido: return "Mas_Rapido";
-    case Mas_Lento: return "Mas_Lento";
-    default: return "Desconocido";
-    }
-}
+// std::string moveToString(Move move) {
+//     switch(move) {
+//     case Recto: return "Recto";
+//     case Atras: return "Atras";
+//     case Giro_Izquierda: return "Giro_Izquierda";
+//     case Giro_Derecha: return "Giro_Derecha";
+//     case Mas_Rapido: return "Mas_Rapido";
+//     case Mas_Lento: return "Mas_Lento";
+//     default: return "Desconocido";
+//     }
+// }
 
-// Función que convierte un string a un valor enum Move
-Move stringToMove(const std::string& str) {
-    if (str == "Recto") return Recto;
-    else if (str == "Atras") return Atras;
-    else if (str == "Giro_Izquierda") return Giro_Izquierda;
-    else if (str == "Giro_Derecha") return Giro_Derecha;
-    else if (str == "Mas_Rapido") return Mas_Rapido;
-    else if (str == "Mas_Lento") return Mas_Lento;
-    throw std::invalid_argument("Valor desconocido para Move: ");
-}
+// // Función que convierte un string a un valor enum Move
+// Move stringToMove(const std::string& str) {
+//     if (str == "Recto") return Recto;
+//     else if (str == "Atras") return Atras;
+//     else if (str == "Giro_Izquierda") return Giro_Izquierda;
+//     else if (str == "Giro_Derecha") return Giro_Derecha;
+//     else if (str == "Mas_Rapido") return Mas_Rapido;
+//     else if (str == "Mas_Lento") return Mas_Lento;
+//     throw std::invalid_argument("Valor desconocido para Move: ");
+// }
 
 std::string obtenerIP() {
     struct ifaddrs *interfaces = nullptr;

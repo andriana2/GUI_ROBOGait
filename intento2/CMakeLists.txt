@@ -27,7 +27,8 @@ qt_add_executable(appgui
 qt_add_qml_module(appgui
     URI gui
     VERSION 1.0
-    QML_FILES
+
+QML_FILES
     qml/Constants.qml
     qml/main.qml
     qml/ApplicationFlow.qml
@@ -36,11 +37,21 @@ qt_add_qml_module(appgui
     qml/HomeForm.ui.qml
     qml/Ip.qml
     qml/IpForm.ui.qml
-    qml/Menu.qml
-    qml/MenuForm.ui.qml
 
-    RESOURCES
+    qml/MenuForm.ui.qml
+    qml/Teledirigido.qml
+    qml/TeledirigidoForm.ui.qml
+
+
+
+RESOURCES
     images/logo.png
+    images/x.png
+    images/down.png
+    images/giro_der.png
+    images/giro_izq.png
+    images/up.png
+    QML_FILES qml/MenuPrincipal.qml
 
 )
 

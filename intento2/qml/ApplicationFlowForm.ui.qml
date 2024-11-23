@@ -4,8 +4,9 @@ import QtQuick.Controls 2.15
 Rectangle {
     id: root
     property alias home: home
-    // property alias ip: ip
-    // property alias menu: menu
+    property alias ip: ip
+    property alias menu_app: menu_app
+    property alias teledirigido: teledirigido
 
     property string previousState: ""
     property alias mystackview: mystackview
@@ -17,16 +18,22 @@ Rectangle {
             id: home
         }
     }
-    // Component {
-    //     id: ip
-    //     IP {
-    //         visible: true
-    //     }
-    // }
-    // Component {
-    //     id: menu
-    //     MenuForm {
-    //         visible: true
-    //     }
-    // }
+    Component {
+        id: ip
+        Ip {
+            visible: true
+        }
+    }
+    Component {
+        id: menu_app
+        MenuPrincipal {
+            visible:true
+        }
+    }
+    Component {
+        id: teledirigido
+        Teledirigido {
+            visible: true
+        }
+    }
 }
