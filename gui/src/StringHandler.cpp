@@ -22,7 +22,8 @@ bool StringHandler::isInSameNetwork(const QString &ip1, const std::string& subne
         }
     }
 
-    std::string ip2 = obtenerIP();
+    QString ip2_qstring = obtenerIP();
+    std::string ip2 = ip2_qstring.toStdString();
     std::cout << ip2 << std::endl;
     auto ipToInt = [](const std::string& ip) -> std::vector<int> {
         std::vector<int> parts;

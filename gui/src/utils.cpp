@@ -4,11 +4,12 @@
 
 // #include <iostream>
 #include <unistd.h>
-#include <cstring>
+// #include <cstring>
 #include <sys/types.h>
-#include <ifaddrs.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
+#include <QNetworkInterface>
+// #include <ifaddrs.h>
+// #include <arpa/inet.h>
+// #include <netinet/in.h>
 
 // std::string moveToString(Move move) {
 //     switch(move) {
@@ -33,26 +34,45 @@
 //     throw std::invalid_argument("Valor desconocido para Move: ");
 // }
 
-std::string obtenerIP() {
-    struct ifaddrs *interfaces = nullptr;
-    struct ifaddrs *tempAddr = nullptr;
-    std::string ipAddress = "No se pudo obtener la IP";
+// std::string obtenerIP() {
+//     struct ifaddrs *interfaces = nullptr;
+//     struct ifaddrs *tempAddr = nullptr;
+//     std::string ipAddress = "No se pudo obtener la IP";
 
-    // Obtener lista de interfaces
-    if (getifaddrs(&interfaces) == 0) {
-        tempAddr = interfaces;
-        // Recorrer las interfaces
-        while (tempAddr != nullptr) {
-            if (tempAddr->ifa_addr->sa_family == AF_INET) { // Solo IPv4
-                // Verificar que la interfaz no sea "localhost"
-                if (strcmp(tempAddr->ifa_name, "lo") != 0) {
-                    ipAddress = inet_ntoa(((struct sockaddr_in*)tempAddr->ifa_addr)->sin_addr);
-                    break;
+//     // Obtener lista de interfaces
+//     if (getifaddrs(&interfaces) == 0) {
+//         tempAddr = interfaces;
+//         // Recorrer las interfaces
+//         while (tempAddr != nullptr) {
+//             if (tempAddr->ifa_addr->sa_family == AF_INET) { // Solo IPv4
+//                 // Verificar que la interfaz no sea "localhost"
+//                 if (strcmp(tempAddr->ifa_name, "lo") != 0) {
+//                     ipAddress = inet_ntoa(((struct sockaddr_in*)tempAddr->ifa_addr)->sin_addr);
+//                     break;
+//                 }
+//             }
+//             tempAddr = tempAddr->ifa_next;
+//         }
+//     }
+//     freeifaddrs(interfaces); // Liberar la memoria asignada
+//     return ipAddress;
+// }
+
+
+QString obtenerIP() {
+    QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
+    for (const QNetworkInterface &interface : interfaces) {
+        if (interface.flags().testFlag(QNetworkInterface::IsUp) &&
+            interface.flags().testFlag(QNetworkInterface::IsRunning) &&
+            !interface.flags().testFlag(QNetworkInterface::IsLoopBack)) {
+
+            // Filtrar las direcciones IPv4
+            for (const QNetworkAddressEntry &entry : interface.addressEntries()) {
+                if (entry.ip().protocol() == QAbstractSocket::IPv4Protocol) {
+                    return entry.ip().toString();
                 }
             }
-            tempAddr = tempAddr->ifa_next;
         }
     }
-    freeifaddrs(interfaces); // Liberar la memoria asignada
-    return ipAddress;
+    return "No se pudo obtener la IP";
 }
