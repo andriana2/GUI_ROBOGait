@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>turtlesim_controller</name>
+  <version>0.1.0</version>
+  <description>Controlador de Turtlesim con servidor TCP usando ROS2</description>
+
+  <maintainer email="tu_email@example.com">Tu Nombre</maintainer>
+  <license>Apache-2.0</license>
+
+  <!-- Dependencias principales -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
+  
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+
+  <!-- Dependencias opcionales para pruebas -->
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_cmake_test</test_depend>
+
+  <!-- Exportar información del paquete -->
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
