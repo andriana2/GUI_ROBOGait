@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>turtlesim_controller</name>
+  <name>turtlesim_controller_udp</name>
   <version>0.1.0</version>
   <description>Controlador de Turtlesim con servidor TCP usando ROS2</description>
 

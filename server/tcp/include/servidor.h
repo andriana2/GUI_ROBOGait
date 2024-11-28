@@ -2,7 +2,7 @@
 #define SERVIDOR_H
 
 #include <functional>
-#include <asio.hpp>
+#include <boost/asio.hpp>
 
 class Servidor {
 public:
@@ -13,11 +13,12 @@ public:
 
 private:
     void startAccept();
-    void handleRead(asio::ip::tcp::socket &socket);
+    void handleRead(boost::asio::ip::tcp::socket &socket);
 
-    asio::io_context io_context_;
-    asio::ip::tcp::acceptor acceptor_;
+    boost::asio::io_context io_context_;
+    boost::asio::ip::tcp::acceptor acceptor_;
     CommandCallback callback_;
 };
 
 #endif // SERVIDOR_H
+

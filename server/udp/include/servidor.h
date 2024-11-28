@@ -1,23 +1,29 @@
 #ifndef SERVIDOR_H
 #define SERVIDOR_H
 
+#include <boost/asio.hpp>
+#include <iostream>
+#include <array>
 #include <functional>
-#include <asio.hpp>
 
-class Servidor {
+class Servidor
+{
 public:
     using CommandCallback = std::function<void(const std::string &)>;
 
-    Servidor(int port, CommandCallback callback);
+    Servidor(unsigned short port, CommandCallback callback);
+
     void run();
 
 private:
-    void startAccept();
-    void handleRead(asio::ip::tcp::socket &socket);
+    void startReceive();
 
-    asio::io_context io_context_;
-    asio::ip::tcp::acceptor acceptor_;
+    boost::asio::io_service io_service_;
+    boost::asio::ip::udp::socket socket_;
+    boost::asio::ip::udp::endpoint remote_endpoint_;
+    std::array<char, 1024> recv_buffer_;
     CommandCallback callback_;
+    unsigned int port;
 };
 
 #endif // SERVIDOR_H
