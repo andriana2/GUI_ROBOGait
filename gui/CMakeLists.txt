@@ -53,8 +53,13 @@ RESOURCES
     images/giro_der.png
     images/giro_izq.png
     images/up.png
-    QML_FILES qml/MenuPrincipal.qml
+    images/android_icons/mipmap-mdpi/logo48.png
+    images/android_icons/mipmap-hdpi/logo72.png
+    images/android_icons/mipmap-xhdpi/logo96.png
+    images/android_icons/mipmap-xxhdpi/logo144.png
+    images/android_icons/mipmap-xxxhdpi/logo192.png
 
+    QML_FILES qml/MenuPrincipal.qml
 
 )
 
@@ -75,6 +80,19 @@ target_link_libraries(appgui
     Qt6::Qml
     Qt6::Quick
 )
+
+if (ANDROID)
+    # Define las rutas de los íconos
+    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android_icons")
+
+    # Especifica el ícono de la aplicación
+    set(ANDROID_APK_ICON "@mipmap/ic_launcher")
+
+    # Incluye recursos adicionales
+    qt_add_android_apk(android_apk_target
+        PACKAGE_SOURCE_DIR ${ANDROID_PACKAGE_SOURCE_DIR}
+    )
+endif()
 
 include(GNUInstallDirs)
 install(TARGETS appgui

@@ -3,8 +3,7 @@
 
 // #include <iostream>
 // #include <stdexcept>
-#include <QString>
-// #include <string>
+#include <string>
 
 // enum Move {
 //     Recto,
@@ -21,7 +20,6 @@
 // // Función que convierte un string a un valor enum Move
 // Move stringToMove(const std::string& str);
 
-// std::string obtenerIP();
-QString obtenerIP();
+std::string obtenerIP();
 
 #endif // UTILS_H

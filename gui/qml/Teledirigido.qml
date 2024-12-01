@@ -5,43 +5,43 @@ TeledirigidoForm {
     up_mouse_area
     {
         onClicked: {
-            onClicked: stringHandler.currentMove = stringHandler.stringToMove("Recto")
+            stringHandler.currentMove = stringHandler.stringToMove("Recto")
         }
     }
     down_mouse_area
     {
         onClicked: {
-            onClicked: stringHandler.currentMove = stringHandler.stringToMove("Atras")
+            stringHandler.currentMove = stringHandler.stringToMove("Atras")
         }
     }
     stop_mouse_area
     {
         onClicked: {
-            onClicked: stringHandler.currentMove = stringHandler.stringToMove("Stop")
+            stringHandler.currentMove = stringHandler.stringToMove("Stop")
         }
     }
     more_speed_mouse_area
     {
         onClicked: {
-            onClicked: stringHandler.currentMove = stringHandler.stringToMove("Mas_Rapido")
+            stringHandler.currentMove = stringHandler.stringToMove("Mas_Rapido")
         }
     }
     less_speed_mouse_area
     {
         onClicked: {
-            onClicked: stringHandler.currentMove = stringHandler.stringToMove("Mas_Lento")
+            stringHandler.currentMove = stringHandler.stringToMove("Mas_Lento")
         }
     }
     giro_derecha_mouse_area
     {
         onClicked: {
-            onClicked: stringHandler.currentMove = stringHandler.stringToMove("Giro_Derecha")
+            stringHandler.currentMove = stringHandler.stringToMove("Giro_Derecha")
         }
     }
     giro_izquierda_mouse_area
     {
         onClicked: {
-            onClicked: stringHandler.currentMove = stringHandler.stringToMove("Giro_Izquierda")
+            stringHandler.currentMove = stringHandler.stringToMove("Giro_Izquierda")
         }
     }
 

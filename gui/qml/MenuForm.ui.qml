@@ -10,11 +10,9 @@ Rectangle {
     property alias mapa_mouse_area: mapa_mouse_area
     property alias teledirigido_mouse_area: teledirigido_mouse_area
 
-    GridLayout {
+    Flow {
         anchors.centerIn: parent // Centra el GridLayout en el contenedor
-        columns: 3 // Número de columnas en la cuadrícula
-        rowSpacing: 60 // Espacio entre filas
-        columnSpacing: 60 // Espacio entre columnas
+        spacing: 60 // Espacio entre filas
 
         Rectangle {
             id: teledirigido_button
@@ -79,5 +77,12 @@ Rectangle {
                 anchors.fill: parent
             }
         }
-     }
+    }
 }
+
+/*##^##
+Designer {
+    D{i:0;autoSize:true;height:480;width:640}D{i:2}D{i:5}D{i:8}D{i:1}
+}
+##^##*/
+

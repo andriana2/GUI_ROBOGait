@@ -8,7 +8,7 @@ ApplicationWindow {
     height: 700
     width: 1300
     visible: true
-    title:   qsTr("Ip")
+    title:   qsTr("Robogait")
 
 
     ApplicationFlow {
