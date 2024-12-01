@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>turtlesim_controller</name>
+  <name>node_manager</name>
   <version>0.1.0</version>
-  <description>Controlador de Turtlesim con servidor TCP usando ROS2</description>
+  <description>manega todas los nodos necesarios en el servidor para el gui de robogait</description>
 
   <maintainer email="tu_email@example.com">Tu Nombre</maintainer>
   <license>Apache-2.0</license>
