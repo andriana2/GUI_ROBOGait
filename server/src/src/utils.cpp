@@ -62,3 +62,8 @@ void getValuePositionJoystick(const std::string &input, float &linear, float &an
     }
     std::cout << "Linear: " << linear << ", Angular: " << angular << std::endl;
 }
+
+void pri1(std::string const &msg)
+{
+    std::cout << msg << std::endl;
+}

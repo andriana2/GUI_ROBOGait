@@ -7,8 +7,9 @@
 StringHandler::StringHandler(QObject *parent) : QObject(parent)
 {
     m_currentMove = Stop;
-}
+    cliente = new Cliente(8080);
 
+}
 
 bool StringHandler::isInSameNetwork(const QString &ip1, const std::string& subnetMask) {
     if (ip1.isEmpty() || ip1 == "")
@@ -46,7 +47,7 @@ bool StringHandler::isInSameNetwork(const QString &ip1, const std::string& subne
     // ip a la que nos conectamos
     // cliente.connectToServer(ip1, 8080);
     // cliente.connectToServer("127.0.0.1", 8080);
-    cliente.setIp(ip1);
+    cliente->connect2host(ip1);
     //--------------
     return true;
 }
@@ -59,19 +60,35 @@ void StringHandler::setCurrentMove(StringHandler::Move newCurrentMove)
     emit currentMoveChanged();
     qDebug() << "Movimiento seleccionado:" << moveToString(newCurrentMove);
     //--------enviar mensaje-------------//
-    cliente.sendMessage(moveToString(newCurrentMove));
+    if (newCurrentMove == Stop)
+    {
+        cliente->sendImageMap(QString imagen_link);
+
+    }
+    cliente->sendMessagePosition(moveToString(newCurrentMove));
 }
 
 
 QString StringHandler::moveToString(StringHandler::Move move) const {
+    // switch (move) {
+    // case Recto: return "Recto";
+    // case Atras: return "Atras";
+    // case Giro_Izquierda: return "Giro_Izquierda";
+    // case Giro_Derecha: return "Giro_Derecha";
+    // case Mas_Rapido: return "Mas_Rapido";
+    // case Mas_Lento: return "Mas_Lento";
+    // case Stop: return "Stop";
+    // default: return "Desconocido";
+    // }
     switch (move) {
-    case Recto: return "Recto";
-    case Atras: return "Atras";
-    case Giro_Izquierda: return "Giro_Izquierda";
-    case Giro_Derecha: return "Giro_Derecha";
-    case Mas_Rapido: return "Mas_Rapido";
-    case Mas_Lento: return "Mas_Lento";
-    case Stop: return "Stop";
+    case Recto: return "Linear:1.0,Angular:0.0";
+    case Atras: return "Linear:-1.0,Angular:0.0";
+    case Giro_Izquierda: return "Linear:0.0,Angular:1.0";
+    case Giro_Derecha: return "Linear:0.0,Angular:-1.0";
+    case Mas_Rapido: return "Linear:2.0,Angular:0.0";
+    case Mas_Lento: return "Linear:0.5,Angular:0.0";
+        // case Stop: return "Linear:0.0,Angular:0.0";
+    case Stop: return "imagen";
     default: return "Desconocido";
     }
 }
@@ -86,4 +103,6 @@ StringHandler::Move StringHandler::stringToMove(const QString &move) const {
     if (move == "Stop") return Stop;
     return Stop; // Valor predeterminado
 }
+
+
 

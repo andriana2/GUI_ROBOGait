@@ -12,5 +12,6 @@ Info_Message get_info_message_enum(std::string const &info);
 
 void getValuePositionJoystick(const std::string& input, float &linear, float &angular);
 
+void pri1(std::string const &msg);
 
 #endif // UTILS_H

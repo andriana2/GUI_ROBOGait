@@ -28,13 +28,17 @@ void Servidor::startAccept()
 
 void Servidor::readHeader()
 {
-    boost::asio::async_read_until(socket_, buffer_, ':',
+    std::cout << "estoy en readHeader" << std::endl;
+    boost::asio::async_read_until(socket_, buffer_, '\n',
                                   [this](boost::system::error_code ec, std::size_t bytes_transferred)
                                   {
                                       if (!ec)
                                       {
-                                          //   std::cout << "el buffer es:" << std::endl;
-                                          //   std::cout << buf_ << std::endl;
+
+                                          //   std::istream stream_(&buffer_);
+                                          //   std::string data;
+                                          //   std::getline(stream_, data);
+                                          //   pri1(data);
 
                                           std::istream stream(&buffer_);
                                           std::string tipo;
@@ -48,7 +52,14 @@ void Servidor::readHeader()
 
                                           std::string contenido;
                                           std::getline(stream, contenido, '\n'); // Remove processed data
-                                          handleType(tipo, longitud, contenido);
+                                        //   handleType(tipo, longitud, contenido);
+                                          std::cout << "Contenido " << contenido << std::endl;
+                                          
+                                          std::string resto;
+                                          std::getline(stream, resto, '\0'); // Remove processed data
+                                          handleType(tipo, longitud,contenido, resto);
+                                          std::cout << "resto " << resto << std::endl;
+
                                       }
                                       else
                                       {
@@ -57,38 +68,60 @@ void Servidor::readHeader()
                                   });
 }
 
-void Servidor::handleType(std::string const &type, int const &size, std::string const &target)
+void Servidor::handleType(std::string const &type, int const &size, std::string const &target, std::string else_info)
 {
     if (type == "MSG")
     {
+        pri1("estoy en handleType con mi target " + target);
         nodeManager.create_publisher(target);
-        readBodyMsg(size, target);
+        // readBodyMsg(size, target);
+        processMsg(else_info, target);
     }
     else if (type == "IMG")
     {
         readBodyImage(size);
     }
+    else if (type == "REQUEST_MSG")
+    {
+        manageTarget(target);
+    }
+    readHeader();
 }
 
-void Servidor::readBodyMsg(size_t const &size, std::string const &target)
+void Servidor::manageTarget(std::string const &target)
 {
-    std::string data;
-    boost::asio::async_read(socket_, boost::asio::dynamic_buffer(data), boost::asio::transfer_exactly(size),
-                            [this, &data, &target](boost::system::error_code ec, std::size_t bytes_transferred)
-                            {
-                                if (!ec)
-                                {
-                                    processMsg(data, target);
-                                    readHeader();
-                                }
-                                else
-                                {
-                                    handleDisconnect(ec);
-                                }
-                            });
 }
+
+// void Servidor::readBodyMsg(size_t const &size, std::string const &target)
+// {
+//     pri1("estoy en readBodyMsg");
+//     boost::asio::streambuf buf;
+//     std::string data;
+//     boost::asio::async_read(socket_, buf, boost::asio::transfer_exactly(size),
+//                             [this, &buf, &target](boost::system::error_code ec, std::size_t bytes_transferred)
+//                             {
+//                                 pri1("estoy en la funcion de dentro de read body");
+//                                 if (!ec)
+//                                 {
+//                                     std::istream stream_(&buf);
+//                                     std::string data;
+//                                     std::getline(stream_, data);
+//                                     pri1("quiero saber data");
+//                                     pri1(data);
+//                                     processMsg(data, target);
+//                                     readHeader();
+//                                 }
+//                                 else
+//                                 {
+//                                     handleDisconnect(ec);
+//                                 }
+//                             });
+// }
+
 void Servidor::processMsg(std::string const &data, std::string const &target)
 {
+    pri1("procesar mensaje");
+    pri1(data);
     if (target == get_info_message(Position_joystick))
     {
         float linear, angular;

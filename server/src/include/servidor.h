@@ -28,11 +28,14 @@ public:
 private:
     void startAccept();
     void readHeader();
-    void handleType(std::string const &type, int const &size, std::string const &target);
+    // void handleType(std::string const &type, int const &size, std::string const &target);
+    void handleType(std::string const &type, int const &size, std::string const &target, std::string else_info);
+
     void readBodyMsg(size_t const &size, std::string const &target);
     void processMsg(std::string const &data, std::string const &target);
     void readBodyImage(size_t const &size);
     void handleDisconnect(const boost::system::error_code &ec);
+    void manageTarget(std::string const &target);
     void saveImage(const std::vector<uint8_t> &buffer);
     void resetConnection();
 

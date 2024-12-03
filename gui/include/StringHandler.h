@@ -16,9 +16,8 @@ class StringHandler : public QObject
 
 public:
     Q_INVOKABLE bool isInSameNetwork(const QString &ip1, const std::string& subnetMask = "255.255.255.0");
+    explicit StringHandler(QObject *parent = nullptr);
 
-
-public:
     enum Move {
         Recto,
         Atras,
@@ -29,11 +28,11 @@ public:
         Stop
     };
     Q_ENUM(Move)
-    explicit StringHandler(QObject *parent = nullptr);
     Q_INVOKABLE Move stringToMove(const QString &move) const;
 
     Move currentMove() const { return m_currentMove; }
     void setCurrentMove(Move newCurrentMove);
+    void connection2server();
 
 public slots:
 
@@ -48,7 +47,7 @@ private:
     QString m_resultString;
     Move m_currentMove;
 
-    Cliente cliente;
+    Cliente *cliente;
 
 };
 
