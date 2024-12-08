@@ -43,6 +43,7 @@ QML_FILES
     qml/MenuForm.ui.qml
     qml/Teledirigido.qml
     qml/TeledirigidoForm.ui.qml
+    qml/MenuPrincipal.qml
 
 
 
@@ -59,7 +60,6 @@ RESOURCES
     # images/android_icons/mipmap-xxhdpi/logo144.png
     # images/android_icons/mipmap-xxxhdpi/logo192.png
 
-    QML_FILES qml/MenuPrincipal.qml
 
 )
 

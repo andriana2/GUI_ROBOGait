@@ -26,6 +26,27 @@ void Servidor::startAccept()
             } });
 }
 
+void Servidor::handleDisconnect(const boost::system::error_code &ec)
+{
+    if (ec == boost::asio::error::eof)
+    {
+        std::cout << "Client disconnected.\n";
+    }
+    else
+    {
+        std::cerr << "Error: " << ec.message() << "\n";
+    }
+    resetConnection();
+}
+
+void Servidor::resetConnection()
+{
+    //rviz_active = false;
+    socket_.close(); // Ensure the socket is closed
+    buf_.clear();    // Clear the buffer
+    startAccept();   // Wait for the next client
+}
+
 void Servidor::readHeader()
 {
     std::cout << "estoy en readHeader" << std::endl;
@@ -34,12 +55,6 @@ void Servidor::readHeader()
                                   {
                                       if (!ec)
                                       {
-
-                                          //   std::istream stream_(&buffer_);
-                                          //   std::string data;
-                                          //   std::getline(stream_, data);
-                                          //   pri1(data);
-
                                           std::istream stream(&buffer_);
                                           std::string tipo;
                                           std::getline(stream, tipo, ':'); // Lee hasta ':'
@@ -52,14 +67,13 @@ void Servidor::readHeader()
 
                                           std::string contenido;
                                           std::getline(stream, contenido, '\n'); // Remove processed data
-                                        //   handleType(tipo, longitud, contenido);
+                                                                                 //   handleType(tipo, longitud, contenido);
                                           std::cout << "Contenido " << contenido << std::endl;
-                                          
+
                                           std::string resto;
                                           std::getline(stream, resto, '\0'); // Remove processed data
-                                          handleType(tipo, longitud,contenido, resto);
+                                          handleType(tipo, longitud, contenido, resto);
                                           std::cout << "resto " << resto << std::endl;
-
                                       }
                                       else
                                       {
@@ -79,17 +93,55 @@ void Servidor::handleType(std::string const &type, int const &size, std::string 
     }
     else if (type == "IMG")
     {
-        readBodyImage(size);
+        // saveImage(else_info);
     }
     else if (type == "REQUEST_MSG")
     {
         manageTarget(target);
+    }
+    else if (type == "REQUEST_IMG")
+    {
+        if (target == "map_scan")
+        {
+            nodeManager.create_publisher(target);
+            nodeManager.refresh_map();
+            std::string path = PATH2MAP;
+            path += "/temporal_map.pgm";
+            sendImageMap(path);
+        }
     }
     readHeader();
 }
 
 void Servidor::manageTarget(std::string const &target)
 {
+    if (target == "send_map_names")
+    {
+        std::string msg;
+        std::string path = PATH2MAP;
+        std::string command = "find " + path + " -type f -name '*.pgm' 2>&1";
+
+        std::vector<std::string> maps = executeCommand(command);
+        if (maps.empty())
+        {
+            std::cout << "No se encontraron archivos .png en el directorio actual." << std::endl;
+        }
+        else
+        {
+            std::cout << "Archivos encontrados:" << std::endl;
+            for (size_t i = 0; i < maps.size(); ++i)
+            {
+                std::filesystem::path filePath(maps[i]);
+                msg += filePath.filename().string();
+                if (i != maps.size() - 1)
+                {
+                    msg += "\n";
+                }
+            }
+        }
+        pri1(msg);
+        sendMsg(msg, "maps");
+    }
 }
 
 // void Servidor::readBodyMsg(size_t const &size, std::string const &target)
@@ -126,40 +178,55 @@ void Servidor::processMsg(std::string const &data, std::string const &target)
     {
         float linear, angular;
         getValuePositionJoystick(data, linear, angular);
+        std::string str = std::to_string(linear) + "<-linear angular ->"  + std::to_string(angular);
+        pri1(str);
         nodeManager.execute_position(linear, angular);
     }
 }
 
-void Servidor::readBodyImage(size_t const &size)
+void Servidor::sendImageMap(const std::string &name_map)
 {
-    std::vector<uint8_t> data(size);
-    boost::asio::async_read(socket_, boost::asio::dynamic_buffer(data), boost::asio::transfer_exactly(size),
-                            [this, &data](boost::system::error_code ec, std::size_t bytes_transferred)
-                            {
-                                if (!ec)
-                                {
-                                    saveImage(data);
-                                    readHeader();
-                                }
-                                else
-                                {
-                                    handleDisconnect(ec);
-                                }
-                            });
+    // Abrir el archivo .pgm en modo binario
+    std::string path = name_map;
+    std::ifstream file(path, std::ios::binary);
+    if (!file)
+    {
+        throw std::runtime_error("No se pudo abrir el archivo " + path);
+    }
+
+    // Leer el contenido del archivo
+    file.seekg(0, std::ios::end);
+    std::size_t file_size = file.tellg();
+    file.seekg(0, std::ios::beg);
+    std::vector<char> buffer(file_size);
+    file.read(buffer.data(), file_size);
+
+    // Enviar el tamaño del archivo primero
+    // boost::asio::write(socket, boost::asio::buffer(&file_size, sizeof(file_size)));
+
+    // Enviar el contenido del archivo
+    boost::asio::write(socket_, boost::asio::buffer(buffer));
+
+    std::cout << "Archivo enviado: " << path << " (" << file_size << " bytes)" << std::endl;
 }
 
-void Servidor::handleDisconnect(const boost::system::error_code &ec)
-{
-    if (ec == boost::asio::error::eof)
-    {
-        std::cout << "Client disconnected.\n";
-    }
-    else
-    {
-        std::cerr << "Error: " << ec.message() << "\n";
-    }
-    resetConnection();
-}
+// void Servidor::readBodyImage(size_t const &size)
+// {
+//     std::vector<uint8_t> data(size);
+//     boost::asio::async_read(socket_, boost::asio::dynamic_buffer(data), boost::asio::transfer_exactly(size),
+//                             [this, &data](boost::system::error_code ec, std::size_t bytes_transferred)
+//                             {
+//                                 if (!ec)
+//                                 {
+//                                     saveImage(data);
+//                                     readHeader();
+//                                 }
+//                                 else
+//                                 {
+//                                     handleDisconnect(ec);
+//                                 }
+//                             });
+// }
 
 void Servidor::saveImage(const std::vector<uint8_t> &buffer)
 {
@@ -183,18 +250,11 @@ void Servidor::saveImage(const std::vector<uint8_t> &buffer)
     }
 }
 
-void Servidor::resetConnection()
+void Servidor::sendMsg(const std::string &mensaje, const std::string &target)
 {
-    socket_.close(); // Ensure the socket is closed
-    buf_.clear();    // Clear the buffer
-    startAccept();   // Wait for the next client
+    std::string header = "MSG:" + std::to_string(mensaje.size()) + ":" + target + "\n";
+    boost::asio::write(socket_, boost::asio::buffer(header + mensaje));
 }
-
-// void Servidor::enviarMensaje(const std::string &mensaje)
-// {
-//     std::string header = "SRV_MSG:" + std::to_string(mensaje.size()) + ":";
-//     boost::asio::write(socket_, boost::asio::buffer(header + mensaje));
-// }
 
 // void Servidor::enviarImagen(const std::vector<uint8_t> &imagen)
 // {

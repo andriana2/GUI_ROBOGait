@@ -1,8 +1,11 @@
 #include "include/servidor.h"
 #include <rclcpp/rclcpp.hpp>
 #include <thread>
+#include "include/header.h"
+#include <filesystem>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     rclcpp::init(argc, argv);
     auto node = rclcpp::Node::make_shared("node_manager");
 

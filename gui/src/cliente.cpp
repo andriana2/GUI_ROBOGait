@@ -2,9 +2,10 @@
 #include <QDebug>
 #include <QAbstractSocket>
 
-Cliente::Cliente(int portNumber) : QObject()
+Cliente::Cliente(int portNumber) : QObject()//, stringHandler(nullptr)
 {
     socket = new QTcpSocket();
+    maping = true;
 
     port = portNumber;
 
@@ -18,9 +19,26 @@ Cliente::Cliente(int portNumber) : QObject()
     connect(socket, &QTcpSocket::errorOccurred, this, &Cliente::onErrorOccurred);
 }
 
+void Cliente::setStringHandler(StringHandler *sh){ stringHandler = sh;}
+
 void Cliente::onReadyRead() {
     QByteArray data = socket->readAll();
-    qDebug() << "Data received:" << QString(data);
+    QString info = QString(data);
+    if (info.size() > 600)
+    {
+        qDebug() << "es una imagen";
+        if (maping)
+        {
+            qDebug() << "estoy maping";
+            stringHandler->setImage(data);
+            //                reciveImageMap(data);
+        }
+    }
+    else
+    {
+        qDebug() << "Data received:" << QString(data);
+
+    }
 }
 
 void Cliente::connect2host(const QString hostAddress)
@@ -64,7 +82,8 @@ void Cliente::sendMessagePosition(const QString &message)
     if (socket->state() == QTcpSocket::ConnectedState)
     {
         QString start = "MSG:" + QString::number(message.size()) + ":Position_joystick\n";
-        QByteArray fullMessage = start.toUtf8() + message.toUtf8();
+        QString char_ = "\0";
+        QByteArray fullMessage = start.toUtf8() + message.toUtf8() + char_.toUtf8();
         socket->write(fullMessage);
         socket->flush(); // Enviar todo junto
         qDebug() << "Full message sent: " << fullMessage;
@@ -73,8 +92,24 @@ void Cliente::sendMessagePosition(const QString &message)
     }
 }
 
-void Cliente::sendImageMap(const QString &link)
+void Cliente::sendRequestImg(const QString &target)
 {
+    if (target == "map_scan")
+    {
+        QString start = "REQUEST_IMG:0:" + target + "\n\0";
+        QByteArray full = start.toUtf8();
+        socket->write(full);
+        socket->flush();
+        qDebug() << "Full send request img " << full;
+    }
+}
+
+void Cliente::receiveImageMap(const QByteArray &data)
+{
+    QImage image;
+    if (image.loadFromData(data)) {
+        //stringHandler->setImage(data);  // Emitir la señal con la imagen
+    }
 
 
 }

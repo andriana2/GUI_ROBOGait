@@ -1,9 +1,13 @@
 #ifndef CLIENTE_H
 #define CLIENTE_H
 
+#include "StringHandler.h"
 #include <QObject>
 #include <QTcpSocket>
 #include <QTimer>
+#include <QImage>
+
+class StringHandler;
 
 class Cliente : public QObject
 {
@@ -12,13 +16,15 @@ public:
     Cliente(int portNumber); //
 
     QTcpSocket *socket; //
+    void setStringHandler(StringHandler *sh);
 
     void connectToServer(const QString &host, quint16 port);
     void sendMessagePosition(const QString &message);
-    void sendImageMap(const QString &link);
+    void receiveImageMap(const QByteArray &link);
     void processServerResponse();
 
     bool getStatus(); //
+    void sendRequestImg(const QString &target);
 
 public slots:
     void closeConnection(); //
@@ -35,10 +41,13 @@ private slots:
     void onErrorOccurred(QAbstractSocket::SocketError error);
 
 private:
+    bool maping;
     QString host;
     int port;
     bool status;
     QTimer *timeoutTimer;
+
+    StringHandler *stringHandler;
 };
 
 #endif // CLIENTE_H

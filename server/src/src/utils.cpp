@@ -67,3 +67,31 @@ void pri1(std::string const &msg)
 {
     std::cout << msg << std::endl;
 }
+
+std::vector<std::string> executeCommand(const std::string& command) {
+    std::vector<std::string> results;
+    std::array<char, 128> buffer;
+    std::string result;
+
+    // Abrir un pipe para ejecutar el comando
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command.c_str(), "r"), pclose);
+    if (!pipe) {
+        throw std::runtime_error("Error al abrir el pipe para ejecutar el comando.");
+    }
+
+    // Leer la salida del comando
+    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+        result += buffer.data();
+    }
+
+    // Dividir la salida en líneas y añadirlas al vector
+    std::istringstream stream(result);
+    std::string line;
+    while (std::getline(stream, line)) {
+        if (!line.empty()) { // Ignorar líneas vacías
+            results.push_back(line);
+        }
+    }
+
+    return results;
+}

@@ -5,6 +5,8 @@ import QtQuick.Layouts 1.15
 Rectangle {
     id: rectangle
     color: "#518bb7"
+    property alias imageDisplay: imageDisplay
+    property alias image_button: image_button
     property alias giro_izquierda_mouse_area: giro_izquierda_mouse_area
     property alias giro_derecha_mouse_area: giro_derecha_mouse_area
     property alias less_speed_mouse_area: less_speed_mouse_area
@@ -26,14 +28,12 @@ Rectangle {
             height: 250
             //color: Colors.rectangle_color
             color: "#235c87"
-            Text {
-                id: text1
-                color: "#ffffff"
-                text: qsTr("TELEDIRIGIDO")
-                anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: 12
-                anchors.horizontalCenter: parent.horizontalCenter
-                scale: 2
+            Image {
+                id: imageDisplay
+                width: parent.width
+                height: parent.height
+                visible: false
+                //source: imageReceiver.imagePath
             }
         }
         Rectangle {
@@ -170,13 +170,23 @@ Rectangle {
             }
         }
     }
+
+    Button {
+        id: image_button
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: qsTr("image")
+//        onClicked: {
+//            imageReceiver.setImage(imageData)
+//            imageDisplay.visible = true
+//        }
+    }
 }
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}D{i:3}D{i:2}D{i:6}D{i:5}D{i:8}D{i:7}D{i:10}
-D{i:9}D{i:12}D{i:13}D{i:11}D{i:15}D{i:16}D{i:14}D{i:18}D{i:17}D{i:20}D{i:19}D{i:4}
-D{i:1}
+    D{i:0;autoSize:true;height:480;width:640}D{i:3}D{i:2}D{i:5}D{i:7}D{i:9}D{i:11}D{i:14}
+D{i:17}D{i:19}D{i:4}D{i:1}D{i:21}
 }
 ##^##*/
 

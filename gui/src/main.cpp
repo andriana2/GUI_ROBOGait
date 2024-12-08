@@ -5,6 +5,8 @@
 #include <QLocale>
 #include <QTranslator>
 #include "../include/StringHandler.h"
+#include "../include/cliente.h"
+// #include "../include/Manage.h"
 
 
 int main(int argc, char *argv[])
@@ -21,7 +23,12 @@ int main(int argc, char *argv[])
         }
     }
 
+    Cliente cliente(8080);
     StringHandler stringHandler;
+    cliente.setStringHandler(&stringHandler);
+    stringHandler.setClient(&cliente);
+
+
     QQmlApplicationEngine engine;
 
     engine.rootContext()->setContextProperty("stringHandler", &stringHandler);

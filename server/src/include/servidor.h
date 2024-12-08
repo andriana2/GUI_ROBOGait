@@ -12,6 +12,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <string>
+#include <filesystem> 
 
 #include "utils.h"
 #include "header.h"
@@ -38,7 +39,8 @@ private:
     void manageTarget(std::string const &target);
     void saveImage(const std::vector<uint8_t> &buffer);
     void resetConnection();
-
+    void sendMsg(const std::string &mensaje, const std::string &target);
+    void sendImageMap(const std::string &name_map);
     boost::asio::io_context io_context_;
     boost::asio::ip::tcp::acceptor acceptor_;
     boost::asio::ip::tcp::socket socket_;

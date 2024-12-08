@@ -44,6 +44,15 @@ TeledirigidoForm {
             stringHandler.currentMove = stringHandler.stringToMove("Giro_Izquierda")
         }
     }
+    image_button
+    {
+        onClicked: {
+
+            imageDisplay.source = stringHandler.getImageSource()
+            imageDisplay.visible = true
+            console.log(imageDisplay.source)
+        }
+    }
 
 
 }

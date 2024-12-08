@@ -3,13 +3,14 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <QBuffer>
+#include <QDebug>
 
-StringHandler::StringHandler(QObject *parent) : QObject(parent)
+StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr)
 {
     m_currentMove = Stop;
-    cliente = new Cliente(8080);
-
 }
+void StringHandler::setClient(Cliente *cli){ cliente = cli;}
 
 bool StringHandler::isInSameNetwork(const QString &ip1, const std::string& subnetMask) {
     if (ip1.isEmpty() || ip1 == "")
@@ -23,8 +24,9 @@ bool StringHandler::isInSameNetwork(const QString &ip1, const std::string& subne
         }
     }
 
-    std::string ip2 = obtenerIP();
-    std::cout << ip2 << std::endl;
+    QString ip2 = obtenerIP();
+    std::string ip2_ = ip2.toStdString();
+    std::cout << ip2_ << std::endl;
     auto ipToInt = [](const std::string& ip) -> std::vector<int> {
         std::vector<int> parts;
         std::stringstream ss(ip);
@@ -36,7 +38,7 @@ bool StringHandler::isInSameNetwork(const QString &ip1, const std::string& subne
     };
 
     std::vector<int> ip1Parts = ipToInt(ip1_);
-    std::vector<int> ip2Parts = ipToInt(ip2);
+    std::vector<int> ip2Parts = ipToInt(ip2_);
     std::vector<int> maskParts = ipToInt(subnetMask);
 
     for (int i = 0; i < 4; ++i) {
@@ -52,6 +54,12 @@ bool StringHandler::isInSameNetwork(const QString &ip1, const std::string& subne
     return true;
 }
 
+QString StringHandler::getImageSource()
+{
+    qDebug() << m_imageSource;
+    return m_imageSource;
+}
+
 void StringHandler::setCurrentMove(StringHandler::Move newCurrentMove)
 {
     if (m_currentMove == newCurrentMove)
@@ -60,35 +68,46 @@ void StringHandler::setCurrentMove(StringHandler::Move newCurrentMove)
     emit currentMoveChanged();
     qDebug() << "Movimiento seleccionado:" << moveToString(newCurrentMove);
     //--------enviar mensaje-------------//
-    if (newCurrentMove == Stop)
-    {
-        cliente->sendImageMap(QString imagen_link);
+    // if (newCurrentMove == Stop)
+    // {
+    //     //cliente->sendImageMap(imagen_link);
 
-    }
+    // }
     cliente->sendMessagePosition(moveToString(newCurrentMove));
+    cliente->sendRequestImg("map_scan");
+}
+void StringHandler::setImage(const QByteArray &data)
+{
+    if (!data.isEmpty()) {
+        QImage image;
+        if (image.loadFromData(data)) { // Intenta cargar los datos como una imagen
+            // Convertir la imagen a un URL de datos en memoria
+            qDebug() << "CONVIRTIENDO";
+            QByteArray imageData;
+            QBuffer buffer(&imageData);
+            buffer.open(QIODevice::WriteOnly);
+            image.save(&buffer, "PGM"); // Guarda la imagen en formato PNG en memoria
+
+            qDebug() << "HOLA";
+            m_imageSource = "data:image/pgm;base64," + imageData.toBase64();
+            qDebug() <<"poraquí"<< m_imageSource;
+            emit imageSourceChanged();
+        } else {
+            qWarning() << "Invalid image data!";
+        }
+    }
 }
 
-
 QString StringHandler::moveToString(StringHandler::Move move) const {
-    // switch (move) {
-    // case Recto: return "Recto";
-    // case Atras: return "Atras";
-    // case Giro_Izquierda: return "Giro_Izquierda";
-    // case Giro_Derecha: return "Giro_Derecha";
-    // case Mas_Rapido: return "Mas_Rapido";
-    // case Mas_Lento: return "Mas_Lento";
-    // case Stop: return "Stop";
-    // default: return "Desconocido";
-    // }
     switch (move) {
-    case Recto: return "Linear:1.0,Angular:0.0";
-    case Atras: return "Linear:-1.0,Angular:0.0";
-    case Giro_Izquierda: return "Linear:0.0,Angular:1.0";
-    case Giro_Derecha: return "Linear:0.0,Angular:-1.0";
-    case Mas_Rapido: return "Linear:2.0,Angular:0.0";
-    case Mas_Lento: return "Linear:0.5,Angular:0.0";
-        // case Stop: return "Linear:0.0,Angular:0.0";
-    case Stop: return "imagen";
+    case Recto: return "Linear:0.2,Angular:0.0";
+    case Atras: return "Linear:-0.2,Angular:0.0";
+    case Giro_Izquierda: return "Linear:0.0,Angular:0.2";
+    case Giro_Derecha: return "Linear:0.0,Angular:-0.2";
+    case Mas_Rapido: return "Linear:0.4,Angular:0.0";
+    case Mas_Lento: return "Linear:0.1,Angular:0.0";
+    case Stop: return "Linear:0.0,Angular:0.0";
+    // case Stop: return "imagen";
     default: return "Desconocido";
     }
 }
@@ -106,3 +125,8 @@ StringHandler::Move StringHandler::stringToMove(const QString &move) const {
 
 
 
+
+QString StringHandler::imageSource() const
+{
+    return m_imageSource;
+}
