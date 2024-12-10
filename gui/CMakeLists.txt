@@ -39,11 +39,13 @@ QML_FILES
     qml/HomeForm.ui.qml
     qml/Ip.qml
     qml/IpForm.ui.qml
-
+    
     qml/MenuForm.ui.qml
     qml/Teledirigido.qml
     qml/TeledirigidoForm.ui.qml
     qml/MenuPrincipal.qml
+    qml/CustomToolBarForm.ui.qml
+    qml/CustomToolBar.qml
 
 
 
