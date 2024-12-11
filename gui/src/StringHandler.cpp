@@ -80,6 +80,7 @@ void StringHandler::setImage(const QByteArray &data)
 {
     if (!data.isEmpty()) {
         QImage image;
+        qDebug() << data;
         if (image.loadFromData(data)) { // Intenta cargar los datos como una imagen
             // Convertir la imagen a un URL de datos en memoria
             qDebug() << "CONVIRTIENDO";

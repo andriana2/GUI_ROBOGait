@@ -18,28 +18,29 @@ void NodeManager::create_publisher(std::string const &where_publish)
     {
         if (!rviz_active)
         {
-            pid = fork();
-            if (pid == 0)
-            {
-                // Proceso hijo
-                const char *command = "ros2";
-                const char *args[] = {"ros2", "launch", "turtlebot3_cartographer", "cartographer.launch.py", nullptr};
-                freopen("/dev/null", "w", stdout); // Redirigir stdout a /dev/null
-                freopen("/dev/null", "w", stderr); // Redirigir stderr a /dev/null
-                execvp(command, const_cast<char *const *>(args));
-                std::exit(EXIT_FAILURE); // Solo si exec falla
-            }
-            else if (pid > 0)
-            {
-                // Proceso padre
-                rviz_active = true;
-                std::cout << "Cartographer lanzado en segundo plano." << std::endl;
-            }
-            else
-            {
-                // Error al crear proceso
-                std::cerr << "Error al lanzar Cartographer." << std::endl;
-            }
+            //DESCOMENTAR CUANDO FUNCIONE LA TRASMISION DE IMAGENES
+            // pid = fork();
+            // if (pid == 0)
+            // {
+            //     // Proceso hijo
+            //     const char *command = "ros2";
+            //     const char *args[] = {"ros2", "launch", "turtlebot3_cartographer", "cartographer.launch.py", nullptr};
+            //     freopen("/dev/null", "w", stdout); // Redirigir stdout a /dev/null
+            //     freopen("/dev/null", "w", stderr); // Redirigir stderr a /dev/null
+            //     execvp(command, const_cast<char *const *>(args));
+            //     std::exit(EXIT_FAILURE); // Solo si exec falla
+            // }
+            // else if (pid > 0)
+            // {
+            //     // Proceso padre
+            //     rviz_active = true;
+            //     std::cout << "Cartographer lanzado en segundo plano." << std::endl;
+            // }
+            // else
+            // {
+            //     // Error al crear proceso
+            //     std::cerr << "Error al lanzar Cartographer." << std::endl;
+            // }
         }
     }
     else

@@ -22,22 +22,81 @@ Cliente::Cliente(int portNumber) : QObject()//, stringHandler(nullptr)
 void Cliente::setStringHandler(StringHandler *sh){ stringHandler = sh;}
 
 void Cliente::onReadyRead() {
-    QByteArray data = socket->readAll();
-    QString info = QString(data);
-    if (info.size() > 600)
-    {
-        qDebug() << "es una imagen";
-        if (maping)
-        {
-            qDebug() << "estoy maping";
-            stringHandler->setImage(data);
-            //                reciveImageMap(data);
-        }
-    }
-    else
-    {
-        qDebug() << "Data received:" << QString(data);
+    static QByteArray buffer;
+    static qint64 expectedSize = -1;
+    static QString dataType;
 
+    // Mientras haya datos disponibles
+    while (socket->bytesAvailable()) {
+        // Leer encabezado si aún no lo tenemos
+        if (expectedSize == -1 && dataType.isEmpty()) {
+            // Leer encabezado completo (terminado en '\n')
+            if (!buffer.contains('\n')) {
+                buffer.append(socket->readAll());
+                if (!buffer.contains('\n')) {
+                    return; // Aún no hemos recibido el encabezado completo
+                }
+            }
+
+            // Procesar el encabezado
+            QByteArray headerData = buffer.left(buffer.indexOf('\n'));
+            buffer.remove(0, buffer.indexOf('\n') + 1);
+
+            // Ejemplo de encabezado: "IMG:12345:map_drawing\n"
+            QStringList headerParts = QString(headerData).split(':');
+            if (headerParts.size() != 3) {
+                qWarning() << "Encabezado inválido:" << headerData;
+                return;
+            }
+
+            dataType = headerParts[0];
+            expectedSize = headerParts[1].toLongLong();
+            qDebug() << "Recibiendo" << dataType << "de tamaño" << expectedSize;
+        }
+
+        // Leer contenido del mensaje
+        if (expectedSize > 0) {
+            buffer.append(socket->readAll());
+            if (buffer.size() >= expectedSize) {
+                // Procesar contenido según el tipo
+                if (dataType == "IMG") {
+                    qDebug() << buffer;
+                    stringHandler->setImage(buffer);
+                } else if (dataType == "MSG") {
+                    //processMessage(buffer);
+                } else {
+                    qWarning() << "Tipo de datos no reconocido:" << dataType;
+                }
+
+                // Limpiar para el próximo mensaje
+                buffer.clear();
+                expectedSize = -1;
+                dataType.clear();
+
+                // Enviar confirmación al servidor
+                socket->write("ACK");
+                socket->flush();
+                // QByteArray data = socket->readAll();
+                // QString info = QString(data);
+                // if (info.size() > 600)
+                // {
+                //     qDebug() << "es una imagen";
+                //     if (maping)
+                //     {
+                //         qDebug() << "estoy maping";
+                //         qDebug() << data;
+                //         stringHandler->setImage(data);
+                //         //                reciveImageMap(data);
+                //     }
+                // }
+                // else
+                // {
+                //     qDebug() << "Data received:" << QString(data);
+
+                // }  }
+
+            }
+        }
     }
 }
 
@@ -45,6 +104,9 @@ void Cliente::connect2host(const QString hostAddress)
 {
     host = hostAddress;
     timeoutTimer->start(3000);
+
+    // socket->setSocketOption(QAbstractSocket::SendBufferSizeSocketOption, 8192);
+    // socket->setSocketOption(QAbstractSocket::ReceiveBufferSizeSocketOption, 8192);
 
     socket->connectToHost(host, port);
     connect(socket, &QTcpSocket::connected, this, &Cliente::connected);
@@ -96,7 +158,7 @@ void Cliente::sendRequestImg(const QString &target)
 {
     if (target == "map_scan")
     {
-        QString start = "REQUEST_IMG:0:" + target + "\n\0";
+        QString start = "REQUEST_IMG:0:" + target + "\n";
         QByteArray full = start.toUtf8();
         socket->write(full);
         socket->flush();

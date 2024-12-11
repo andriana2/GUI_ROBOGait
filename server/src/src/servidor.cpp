@@ -41,7 +41,7 @@ void Servidor::handleDisconnect(const boost::system::error_code &ec)
 
 void Servidor::resetConnection()
 {
-    //rviz_active = false;
+    // rviz_active = false;
     socket_.close(); // Ensure the socket is closed
     buf_.clear();    // Clear the buffer
     startAccept();   // Wait for the next client
@@ -178,7 +178,7 @@ void Servidor::processMsg(std::string const &data, std::string const &target)
     {
         float linear, angular;
         getValuePositionJoystick(data, linear, angular);
-        std::string str = std::to_string(linear) + "<-linear angular ->"  + std::to_string(angular);
+        std::string str = std::to_string(linear) + "<-linear angular ->" + std::to_string(angular);
         pri1(str);
         nodeManager.execute_position(linear, angular);
     }
@@ -186,6 +186,11 @@ void Servidor::processMsg(std::string const &data, std::string const &target)
 
 void Servidor::sendImageMap(const std::string &name_map)
 {
+    // boost::asio::socket_base::send_buffer_size sendOption(8192); // Tamaño en bytes
+    // socket_.set_option(sendOption);
+
+    // boost::asio::socket_base::receive_buffer_size recvOption(8192); // Tamaño en bytes
+    // socket_.set_option(recvOption);
     // Abrir el archivo .pgm en modo binario
     std::string path = name_map;
     std::ifstream file(path, std::ios::binary);
@@ -199,15 +204,38 @@ void Servidor::sendImageMap(const std::string &name_map)
     std::size_t file_size = file.tellg();
     file.seekg(0, std::ios::beg);
     std::vector<char> buffer(file_size);
-    file.read(buffer.data(), file_size);
+    const size_t packetSize = 1024;
+    size_t bytesSent = 0;
 
-    // Enviar el tamaño del archivo primero
-    // boost::asio::write(socket, boost::asio::buffer(&file_size, sizeof(file_size)));
+    std::string header = "IMG:" + std::to_string(file_size) + ":map_drawing\n";
+    boost::asio::write(socket_, boost::asio::buffer(header));
 
-    // Enviar el contenido del archivo
-    boost::asio::write(socket_, boost::asio::buffer(buffer));
+    while (bytesSent < file_size)
+    {
+        file.read(buffer.data(), packetSize);
+        size_t bytesRead = file.gcount();
+        boost::asio::write(socket_, boost::asio::buffer(buffer.data(), bytesRead));
+        bytesSent += bytesRead;
 
-    std::cout << "Archivo enviado: " << path << " (" << file_size << " bytes)" << std::endl;
+        // Esperar confirmación del cliente
+        // char ack[3];
+        // boost::asio::read(socket_, boost::asio::buffer(ack, 3));
+        // if (std::string(ack) != "ACK")
+        // {
+        //     pri1("OK");
+        //     throw std::runtime_error("ACK no recibido");
+        // }
+    }
+    // file.read(buffer.data(), file_size);
+
+    // pri1(buffer.data());
+    // // Enviar el tamaño del archivo primero
+    // // boost::asio::write(socket, boost::asio::buffer(&file_size, sizeof(file_size)));
+
+    // // Enviar el contenido del archivo
+    // boost::asio::write(socket_, boost::asio::buffer(buffer));
+
+    // std::cout << "Archivo enviado: " << path << " (" << file_size << " bytes)" << std::endl;
 }
 
 // void Servidor::readBodyImage(size_t const &size)
