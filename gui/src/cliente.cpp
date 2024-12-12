@@ -73,28 +73,9 @@ void Cliente::onReadyRead() {
                 expectedSize = -1;
                 dataType.clear();
 
-                // Enviar confirmación al servidor
-                socket->write("ACK");
-                socket->flush();
-                // QByteArray data = socket->readAll();
-                // QString info = QString(data);
-                // if (info.size() > 600)
-                // {
-                //     qDebug() << "es una imagen";
-                //     if (maping)
-                //     {
-                //         qDebug() << "estoy maping";
-                //         qDebug() << data;
-                //         stringHandler->setImage(data);
-                //         //                reciveImageMap(data);
-                //     }
-                // }
-                // else
-                // {
-                //     qDebug() << "Data received:" << QString(data);
-
-                // }  }
-
+                // // Enviar confirmación al servidor
+                // socket->write("ACK");
+                // socket->flush();
             }
         }
     }
