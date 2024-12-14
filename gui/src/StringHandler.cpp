@@ -101,13 +101,13 @@ void StringHandler::setImage(const QByteArray &data)
 
 QString StringHandler::moveToString(StringHandler::Move move) const {
     switch (move) {
-    case Recto: return "Linear:0.2,Angular:0.0";
-    case Atras: return "Linear:-0.2,Angular:0.0";
-    case Giro_Izquierda: return "Linear:0.0,Angular:0.2";
-    case Giro_Derecha: return "Linear:0.0,Angular:-0.2";
-    case Mas_Rapido: return "Linear:0.4,Angular:0.0";
-    case Mas_Lento: return "Linear:0.1,Angular:0.0";
-    case Stop: return "Linear:0.0,Angular:0.0";
+    case Recto: return "Linear:0.2,Angular:0.0\n";
+    case Atras: return "Linear:-0.2,Angular:0.0\n";
+    case Giro_Izquierda: return "Linear:0.0,Angular:0.2\n";
+    case Giro_Derecha: return "Linear:0.0,Angular:-0.2\n";
+    case Mas_Rapido: return "Linear:0.4,Angular:0.0\n";
+    case Mas_Lento: return "Linear:0.1,Angular:0.0\n";
+    case Stop: return "Linear:0.0,Angular:0.0\n";
     // case Stop: return "imagen";
     default: return "Desconocido";
     }

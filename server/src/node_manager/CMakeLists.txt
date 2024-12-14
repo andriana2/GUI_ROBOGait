@@ -4,6 +4,7 @@ project(node_manager)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(interface_srv REQUIRED)
 
 add_executable(node_manager
     main.cpp
@@ -12,7 +13,7 @@ add_executable(node_manager
     src/utils.cpp
 )
 
-ament_target_dependencies(node_manager rclcpp geometry_msgs)
+ament_target_dependencies(node_manager rclcpp geometry_msgs interface_srv)
 
 target_compile_features(node_manager PUBLIC cxx_std_17)
 

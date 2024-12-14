@@ -5,6 +5,7 @@
 #include <geometry_msgs/msg/twist.hpp>
 #include <string>
 #include "utils.h"
+#include "interface_srv/srv/get_robot_position.hpp"
 
 class NodeManager
 {
@@ -16,7 +17,8 @@ public:
 
 private:
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_publisher_;
-    
+    rclcpp::Client<interface_srv::srv::GetRobotPosition>::SharedPtr tf_service_client_;
+
     rclcpp::Node::SharedPtr node_manager;
     void kill_launch_file(std::string const &command);
 

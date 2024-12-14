@@ -281,7 +281,7 @@ void Servidor::saveImage(const std::vector<uint8_t> &buffer)
 void Servidor::sendMsg(const std::string &mensaje, const std::string &target)
 {
     std::string header = "MSG:" + std::to_string(mensaje.size()) + ":" + target + "\n";
-    boost::asio::write(socket_, boost::asio::buffer(header + mensaje));
+    boost::asio::write(socket_, boost::asio::buffer(header + mensaje + '\n'));
 }
 
 // void Servidor::enviarImagen(const std::vector<uint8_t> &imagen)
