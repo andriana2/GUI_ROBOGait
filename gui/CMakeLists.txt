@@ -11,9 +11,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Network)
 
-set_source_files_properties(qml/Constants.qml PROPERTIES
-    QT_QML_SINGLETON_TYPE TRUE
-)
+set_source_files_properties(qml/Constants.qml
+    PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_executable(appgui
     src/main.cpp
@@ -30,7 +29,7 @@ qt_add_qml_module(appgui
     URI gui
     VERSION 1.0
 
-QML_FILES
+    QML_FILES
     qml/Constants.qml
     qml/main.qml
     qml/ApplicationFlow.qml
@@ -49,13 +48,14 @@ QML_FILES
 
 
 
-RESOURCES
+    RESOURCES
     images/logo.png
     images/x.png
     images/down.png
     images/giro_der.png
     images/giro_izq.png
     images/up.png
+    QML_FILES qml/Joystick.qml
     # images/android_icons/mipmap-mdpi/logo48.png
     # images/android_icons/mipmap-hdpi/logo72.png
     # images/android_icons/mipmap-xhdpi/logo96.png
@@ -69,7 +69,7 @@ RESOURCES
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
 set_target_properties(appgui PROPERTIES
-#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.appgui
+    #    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.appgui
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE

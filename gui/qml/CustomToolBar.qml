@@ -1,5 +1,15 @@
 import QtQuick 2.15
 
-Item {
+CustomToolBarForm {
+    backButton.onClicked: applicationFlow.backButton()
+    backButton.states: State {
+        name: "pressed"
+        when: backButton.pressed
+        PropertyChanges {
+            target: backButton
+            scale: 1.1
+        }
+    }
 
 }
+

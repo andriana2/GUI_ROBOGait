@@ -26,17 +26,50 @@ ApplicationFlowForm {
         mystackview.push(teledirigido)
     }
 
-    //! [State]
-    // states: [
-    //     State{
-    //         name: "Home"
-    //         PropertyChanges {
-    //             target: applicationFlow
-
-    //         }
-    //     }
-
-    // ]
+    // ! [State]
+    states: [
+        State{
+            name: "Home"
+            PropertyChanges {
+                target: toolbar
+                backButton.opacity: 1
+                backButton.enabled: false
+                logo.sourceSize.width: 70
+                logo.sourceSize.height: 50
+            }
+        },
+        State {
+            name: "ip"
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "Home"
+            }
+            PropertyChanges {
+                target: toolbar
+                backButton.opacity: 0
+                backButton.enabled: false
+            }
+        },
+        State {
+            name: "menu_app"
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "ip"
+            }
+            PropertyChanges {
+                target: toolbar
+                backButton.opacity: 0
+                backButton.enabled: false
+            }
+        },
+        State {
+            name: "teledirigido"
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "menu_app"
+            }
+        }
+    ]
 
 
 }

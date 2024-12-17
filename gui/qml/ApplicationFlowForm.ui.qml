@@ -10,12 +10,54 @@ Rectangle {
 
     property string previousState: ""
     property alias mystackview: mystackview
+    property alias toolbar: toolbar
+
+    CustomToolBar {
+        id: toolbar
+        anchors.topMargin: parent.height / 80
+        width: parent.width
+        height: 35
+        anchors.top: parent.top
+    }
 
     StackView {
         anchors.fill: parent
         id: mystackview
         initialItem: Home {
             id: home
+        }
+        pushEnter: Transition {
+            PropertyAnimation {
+                property: "x"
+                from: mystackview.width
+                to: 0
+                duration: 400
+            }
+        }
+        //! [mystackview view]
+        pushExit: Transition {
+            PropertyAnimation {
+                property: "x"
+                from: 0
+                to: -mystackview.width
+                duration: 400
+            }
+        }
+        popEnter: Transition {
+            PropertyAnimation {
+                property: "x"
+                from: -mystackview.width
+                to: 0
+                duration: 400
+            }
+        }
+        popExit: Transition {
+            PropertyAnimation {
+                property: "x"
+                from: 0
+                to: stack.width
+                duration: 400
+            }
         }
     }
     Component {

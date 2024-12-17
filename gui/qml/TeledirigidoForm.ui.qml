@@ -15,6 +15,8 @@ Rectangle {
     property alias down_mouse_area: down_mouse_area
     property alias up_mouse_area: up_mouse_area
 
+    // property alias joystickId: joystickId
+
     GridLayout {
         id: grid
         anchors.verticalCenter: parent.verticalCenter
@@ -36,6 +38,7 @@ Rectangle {
                 //source: imageReceiver.imagePath
             }
         }
+
         Rectangle {
             id: mapa
             width: 250
@@ -169,6 +172,7 @@ Rectangle {
                 }
             }
         }
+
     }
 
     Button {
@@ -176,10 +180,10 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
         text: qsTr("image")
-//        onClicked: {
-//            imageReceiver.setImage(imageData)
-//            imageDisplay.visible = true
-//        }
+        //        onClicked: {
+        //            imageReceiver.setImage(imageData)
+        //            imageDisplay.visible = true
+        //        }
     }
 }
 
