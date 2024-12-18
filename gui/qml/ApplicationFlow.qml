@@ -7,23 +7,25 @@ ApplicationFlowForm {
     home.buttonStart.onClicked: {
         mystackview.push(ip)
         // mystackview.push(menu_app)
+        applicationFlow.state = "ip"
     }
     function backButton()
     {
         mystackview.pop()
-        applictionFlow.state = applicationFlow.previousState
+        applicationFlow.state = applicationFlow.previousState
     }
     function confirmButton() {
-
         applicationFlow.state = "Insert"
     }
     function menu_push(){
         mystackview.push(menu_app)
+        applicationFlow.state = "menu_app"
 
     }
     function teledirigido_push()
     {
         mystackview.push(teledirigido)
+        applicationFlow.state = "teledirigido"
     }
 
     // ! [State]
@@ -37,6 +39,10 @@ ApplicationFlowForm {
                 logo.sourceSize.width: 70
                 logo.sourceSize.height: 50
             }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+            }
         },
         State {
             name: "ip"
@@ -48,6 +54,10 @@ ApplicationFlowForm {
                 target: toolbar
                 backButton.opacity: 0
                 backButton.enabled: false
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
             }
         },
         State {
@@ -61,12 +71,20 @@ ApplicationFlowForm {
                 backButton.opacity: 0
                 backButton.enabled: false
             }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+            }
         },
         State {
             name: "teledirigido"
             PropertyChanges {
                 target:applicationFlow
                 previousState: "menu_app"
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
             }
         }
     ]

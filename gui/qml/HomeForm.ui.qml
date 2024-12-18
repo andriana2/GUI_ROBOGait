@@ -8,7 +8,11 @@ Item {
     Rectangle {
         id: rectangle
         color: "#518bb7"
-        anchors.fill: parent
+        anchors.top: home.top
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        // anchors.horizontalCenter: parent.horizontalCenter
 
         Image {
             id: image

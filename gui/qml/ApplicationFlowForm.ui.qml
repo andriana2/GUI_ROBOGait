@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 
 Rectangle {
     id: root
+    color: "#518bb7"
     property alias home: home
     property alias ip: ip
     property alias menu_app: menu_app
@@ -21,8 +22,12 @@ Rectangle {
     }
 
     StackView {
-        anchors.fill: parent
         id: mystackview
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.topMargin: parent.height / 20
         initialItem: Home {
             id: home
         }
@@ -55,7 +60,7 @@ Rectangle {
             PropertyAnimation {
                 property: "x"
                 from: 0
-                to: stack.width
+                to: mystackview.width
                 duration: 400
             }
         }
