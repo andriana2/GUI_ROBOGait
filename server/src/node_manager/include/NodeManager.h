@@ -7,6 +7,8 @@
 #include "utils.h"
 #include "interface_srv/srv/get_robot_position.hpp"
 
+#include <yaml-cpp/yaml.h> // leer el archivo yaml
+
 class NodeManager
 {
 public:

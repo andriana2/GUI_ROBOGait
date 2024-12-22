@@ -45,6 +45,10 @@ void NodeManager::create_publisher(std::string const &where_publish)
             {
                 // Esperar la respuesta con un timeout
                 auto response = future.get();
+                if (response->success == true)
+                {
+                    RCLCPP_INFO(node_manager->get_logger(), "La informacion ha llegado correctamente");
+                }
                 RCLCPP_INFO(node_manager->get_logger(),
                             "Received Robot Pose - x: %.2f, y: %.2f, yaw: %.2f",
                             response->x, response->y, response->yaw);
@@ -58,7 +62,20 @@ void NodeManager::create_publisher(std::string const &where_publish)
             //  pid = fork();
             //  if (pid == 0)
             //  {
-            //      // Proceso hijo
+            // en este momento tendrias que combinar la posicion inicial del robot con lo recibido del servidor
+            // 
+        //      YAML::Node config = YAML::LoadFile("mapa.yaml");
+
+        // // Obtener la resolución
+        // double resolution = config["resolution"].as<double>();
+        // std::cout << "Resolución: " << resolution << std::endl;
+
+        // // Obtener los valores de origen
+        // auto origin = config["origin"];
+        // double origin_x = origin[0].as<double>();
+        // double origin_y = origin[1].as<double>();
+        // std::cout << "Origen X: " << origin_x << ", Origen Y: " << origin_y << std::endl;
+                 // Proceso hijo
             //      const char *command = "ros2";
             //      const char *args[] = {"ros2", "launch", "turtlebot3_cartographer", "cartographer.launch.py", nullptr};
             //      freopen("/dev/null", "w", stdout); // Redirigir stdout a /dev/null
