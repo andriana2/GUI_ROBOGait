@@ -34,10 +34,12 @@ ApplicationFlowForm {
             name: "Home"
             PropertyChanges {
                 target: toolbar
-                backButton.opacity: 1
+                backButton.opacity: 0
                 backButton.enabled: false
-                logo.sourceSize.width: 70
-                logo.sourceSize.height: 50
+                logo.opacity: 0
+                logo.enabled: false
+                title.opacity: 0
+                title.enabled: false
             }
             PropertyChanges {
                 target: mystackview

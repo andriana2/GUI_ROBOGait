@@ -60,7 +60,7 @@ void Cliente::onReadyRead() {
             if (buffer.size() >= expectedSize) {
                 // Procesar contenido según el tipo
                 if (dataType == "IMG") {
-                    qDebug() << buffer;
+                    // qDebug() << buffer;
                     stringHandler->setImage(buffer);
                 } else if (dataType == "MSG") {
                     //processMessage(buffer);

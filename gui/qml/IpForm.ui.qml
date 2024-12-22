@@ -17,7 +17,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             font.pixelSize: 12
             horizontalAlignment: Text.AlignHCenter
-            anchors.verticalCenterOffset: -50
+            anchors.verticalCenterOffset: -70
             anchors.horizontalCenter: parent.horizontalCenter
             scale: 3.347
         }
@@ -26,7 +26,7 @@ Item {
             id: buttonEnviar
             text: qsTr("Enviar")
             anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: 50
+            anchors.verticalCenterOffset: 30
             anchors.horizontalCenter: parent.horizontalCenter
         }
 
@@ -34,8 +34,15 @@ Item {
             id: textArea
             anchors.verticalCenter: parent.verticalCenter
             horizontalAlignment: Text.AlignHCenter
+            anchors.verticalCenterOffset: -20
             anchors.horizontalCenter: parent.horizontalCenter
             placeholderText: qsTr("Escribe la IP aquí")
         }
     }
 }
+
+/*##^##
+Designer {
+    D{i:0;autoSize:true;height:480;width:640}D{i:2}D{i:3}D{i:4}D{i:1}
+}
+##^##*/

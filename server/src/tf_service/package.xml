@@ -11,6 +11,7 @@
 
   <depend>rclcpp</depend>
   <depend>tf2_ros</depend>
+  <depend>interface_srv</depend>
   <depend>geometry_msgs</depend>
 
   <export>

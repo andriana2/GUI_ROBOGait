@@ -80,14 +80,14 @@ void StringHandler::setImage(const QByteArray &data)
 {
     if (!data.isEmpty()) {
         QImage image;
-        qDebug() << data;
+        // qDebug() << data;
         if (image.loadFromData(data)) { // Intenta cargar los datos como una imagen
             // Convertir la imagen a un URL de datos en memoria
             qDebug() << "CONVIRTIENDO";
             QByteArray imageData;
             QBuffer buffer(&imageData);
             buffer.open(QIODevice::WriteOnly);
-            image.save(&buffer, "PGM"); // Guarda la imagen en formato PNG en memoria
+            image.save(&buffer, "PGM"); // Guarda la imagen en formato PGM en memoria
 
             qDebug() << "HOLA";
             m_imageSource = "data:image/pgm;base64," + imageData.toBase64();

@@ -13,6 +13,7 @@
   
   <depend>rclcpp</depend>
   <depend>geometry_msgs</depend>
+  <depend>interface_srv</depend>
 
   <!-- Dependencias opcionales para pruebas -->
   <test_depend>ament_lint_auto</test_depend>

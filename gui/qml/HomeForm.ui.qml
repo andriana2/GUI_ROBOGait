@@ -12,15 +12,15 @@ Item {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        // anchors.horizontalCenter: parent.horizontalCenter
 
+        // anchors.horizontalCenter: parent.horizontalCenter
         Image {
             id: image
             width: 197
             height: 191
             anchors.verticalCenter: parent.verticalCenter
             source: "../images/logo.png"
-            anchors.verticalCenterOffset: -50
+            anchors.verticalCenterOffset: -90
             anchors.horizontalCenter: parent.horizontalCenter
             fillMode: Image.PreserveAspectFit
         }
@@ -29,7 +29,7 @@ Item {
             id: buttonStart
             text: qsTr("START")
             anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: 150
+            anchors.verticalCenterOffset: 110
             anchors.horizontalCenter: parent.horizontalCenter
             focusPolicy: Qt.StrongFocus
             z: 0
@@ -37,3 +37,9 @@ Item {
         }
     }
 }
+
+/*##^##
+Designer {
+    D{i:0;autoSize:true;height:480;width:640}D{i:2}D{i:3}D{i:1}
+}
+##^##*/
