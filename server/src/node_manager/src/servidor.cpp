@@ -106,7 +106,11 @@ void Servidor::handleType(std::string const &type, int const &size, std::string 
             nodeManager.create_publisher(target);
             nodeManager.refresh_map();
             std::string path = PATH2MAP;
+            std::string path_yaml = path + "/temporal_map.yaml";
             path += "/temporal_map.pgm";
+            struct FinalPosition final_position= nodeManager.getPositionRobotPixel(path_yaml);
+            std::string msg = "X_pixel:" + std::to_string(final_position.x_pixel) + ",Y_pixel:" + std::to_string(final_position.y_pixel) + ",yawl:" + std::to_string(final_position.yaw);
+            sendMsg(msg, "final_position");
             sendImageMap(path);
         }
     }
@@ -282,6 +286,7 @@ void Servidor::sendMsg(const std::string &mensaje, const std::string &target)
 {
     std::string header = "MSG:" + std::to_string(mensaje.size()) + ":" + target + "\n";
     boost::asio::write(socket_, boost::asio::buffer(header + mensaje + '\n'));
+    pri1("Enviado: " + header + mensaje + '\n');
 }
 
 // void Servidor::enviarImagen(const std::vector<uint8_t> &imagen)

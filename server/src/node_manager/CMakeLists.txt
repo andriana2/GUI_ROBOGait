@@ -14,7 +14,9 @@ add_executable(node_manager
     src/utils.cpp
 )
 
-ament_target_dependencies(node_manager rclcpp geometry_msgs interface_srv yaml-cpp)
+ament_target_dependencies(node_manager rclcpp geometry_msgs interface_srv)
+
+target_link_libraries(node_manager yaml-cpp)
 
 target_compile_features(node_manager PUBLIC cxx_std_17)
 

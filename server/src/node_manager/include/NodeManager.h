@@ -16,6 +16,7 @@ public:
     void create_publisher(std::string const &where_publish);
     void execute_position(float const &linear, float const &angular);
     void refresh_map();
+    struct FinalPosition getPositionRobotPixel(std::string const &path_yaml);
 
 private:
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_publisher_;
@@ -25,6 +26,8 @@ private:
     void kill_launch_file(std::string const &command);
 
     bool rviz_active;
+    struct GetPosition position_robot;
+    struct FinalPosition final_position_pixel;
 };
 
 #endif // NODEMANAGER_H

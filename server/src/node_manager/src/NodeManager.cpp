@@ -5,6 +5,12 @@ NodeManager::NodeManager(rclcpp::Node::SharedPtr node_ptr)
 {
     node_manager = node_ptr;
     rviz_active = false;
+    position_robot.x_robot = -10;
+    position_robot.y_robot = -10;
+    position_robot.yaw = -10;
+    final_position_pixel.x_pixel = 0;
+    final_position_pixel.x_pixel = 0;
+    final_position_pixel.yaw = -10;
 }
 
 void NodeManager::create_publisher(std::string const &where_publish)
@@ -24,17 +30,19 @@ void NodeManager::create_publisher(std::string const &where_publish)
         if (!tf_service_client_)
         {
             // Crear el publisher si no existe
-            tf_service_client_ = node_manager->create_client<interface_srv::srv::GetRobotPosition>("get_robot_pose");
+            tf_service_client_ = node_manager->create_client<interface_srv::srv::GetRobotPosition>("get_transform");
             RCLCPP_INFO(node_manager->get_logger(), "Robot Pose Client initialized.");
         }
         if (!rviz_active)
         {
+            // pri1("EEEEEEEEEOOOOO");
             if (!tf_service_client_->wait_for_service(std::chrono::seconds(1)))
             {
+                // pri1("no hay servicio:::::::::::::::::::::::::::::");
                 RCLCPP_WARN(node_manager->get_logger(), "Service not available, waiting...");
                 return;
             }
-
+            // std::cout << "________--------------------______-" << std::endl;
             // Crear solicitud
             auto request = std::make_shared<interface_srv::srv::GetRobotPosition::Request>();
 
@@ -45,12 +53,18 @@ void NodeManager::create_publisher(std::string const &where_publish)
             {
                 // Esperar la respuesta con un timeout
                 auto response = future.get();
+                // pri1("es succes?");
                 if (response->success == true)
                 {
+                    // pri1("si");
                     RCLCPP_INFO(node_manager->get_logger(), "La informacion ha llegado correctamente");
+                    position_robot.x_robot = response->x;
+                    position_robot.y_robot = response->y;
+                    position_robot.yaw = response->yaw;
                 }
+
                 RCLCPP_INFO(node_manager->get_logger(),
-                            "Received Robot Pose - x: %.2f, y: %.2f, yaw: %.2f",
+                            "Received Robot Pose x: %.2f, y: %.2f, yaw: %.2f",
                             response->x, response->y, response->yaw);
             }
             catch (const std::exception &e)
@@ -62,20 +76,7 @@ void NodeManager::create_publisher(std::string const &where_publish)
             //  pid = fork();
             //  if (pid == 0)
             //  {
-            // en este momento tendrias que combinar la posicion inicial del robot con lo recibido del servidor
-            // 
-        //      YAML::Node config = YAML::LoadFile("mapa.yaml");
-
-        // // Obtener la resolución
-        // double resolution = config["resolution"].as<double>();
-        // std::cout << "Resolución: " << resolution << std::endl;
-
-        // // Obtener los valores de origen
-        // auto origin = config["origin"];
-        // double origin_x = origin[0].as<double>();
-        // double origin_y = origin[1].as<double>();
-        // std::cout << "Origen X: " << origin_x << ", Origen Y: " << origin_y << std::endl;
-                 // Proceso hijo
+            //      // Proceso hijo
             //      const char *command = "ros2";
             //      const char *args[] = {"ros2", "launch", "turtlebot3_cartographer", "cartographer.launch.py", nullptr};
             //      freopen("/dev/null", "w", stdout); // Redirigir stdout a /dev/null
@@ -120,6 +121,36 @@ void NodeManager::create_publisher(std::string const &where_publish)
         }
         // kill_launch_file(RVIZ_LAUNCH_MAPING_KILL);
     }
+}
+
+struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_yaml)
+{
+    try
+    {
+        // Cargar el archivo .yaml
+        YAML::Node config = YAML::LoadFile(path_yaml);
+
+        // Obtener la resolución
+        float resolution = config["resolution"].as<float>();
+        std::cout << "Resolución: " << resolution << std::endl;
+
+        // Obtener los valores de origen
+        auto origin = config["origin"];
+        float origin_x = origin[0].as<float>();
+        float origin_y = origin[1].as<float>();
+        std::cout << "Origen X: " << origin_x << ", Origen Y: " << origin_y << std::endl;
+        std::cout << "Robot X: " << origin_x << ", Robot Y: " << origin_y << std::endl;
+
+        final_position_pixel.x_pixel = static_cast<int>((position_robot.x_robot - origin_x) / resolution);
+        final_position_pixel.y_pixel = static_cast<int>((position_robot.y_robot - origin_y) / resolution);
+        final_position_pixel.yaw = position_robot.yaw;
+        std::cout << "Pixel X: " << final_position_pixel.x_pixel << ", Pixel Y: " << final_position_pixel.y_pixel << ", YAW: " << final_position_pixel.yaw << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error al leer el archivo YAML: " << e.what() << std::endl;
+    }
+    return final_position_pixel;
 }
 
 void NodeManager::refresh_map()

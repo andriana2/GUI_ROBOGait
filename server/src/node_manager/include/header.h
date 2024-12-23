@@ -9,9 +9,23 @@ enum Info_Message
 
 };
 
+struct GetPosition
+{
+    float x_robot;
+    float y_robot;
+    float yaw;
+};
+
+struct FinalPosition
+{
+    int x_pixel;
+    int y_pixel;
+    float yaw;
+};
+
 #define PATH2MAP "/home/robogait/Desktop/gui_andri/gui/server/maps"
 
-//#define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f " + PATH2MAP + " "
+// #define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f " + PATH2MAP + " "
 #define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f /home/robogait/Desktop/gui_andri/gui/server/maps"
 
 // launch

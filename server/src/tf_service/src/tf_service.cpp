@@ -33,6 +33,8 @@ private:
     // Callback para procesar datos del topic /tf
     void tfCallback(const tf2_msgs::msg::TFMessage::SharedPtr msg)
     {
+        // std::cout << "tfCallback" << std::endl;
+
         for (const auto &transform : msg->transforms)
         {
             std::string key = transform.header.frame_id + "->" + transform.child_frame_id;
@@ -43,6 +45,8 @@ private:
     // Encontrar la transformación acumulada entre dos frames
     bool findTransform(const std::string &parent_frame, const std::string &child_frame, geometry_msgs::msg::Transform &result)
     {
+        std::cout << "encontrando transformacion" << std::endl;
+
         std::string key = parent_frame + "->" + child_frame;
 
         // Caso base: transformación directa
@@ -76,6 +80,8 @@ private:
     // Combinar dos transformaciones
     void combineTransforms(const geometry_msgs::msg::Transform& t1, const geometry_msgs::msg::Transform& t2, geometry_msgs::msg::Transform& result) {
         // Combinar traslaciones
+        std::cout << "transformando" << std::endl;
+        
         result.translation.x = t1.translation.x + t2.translation.x;
         result.translation.y = t1.translation.y + t2.translation.y;
         result.translation.z = t1.translation.z + t2.translation.z;
@@ -89,6 +95,8 @@ private:
 
     void transform2GetPosition(const geometry_msgs::msg::Transform &result, struct GetPosition &result_struct)
     {
+        std::cout << "En las transformaciones" << std::endl;
+        
         result_struct.x = result.translation.x;
         result_struct.y = result.translation.y;
 
@@ -102,6 +110,7 @@ private:
         [[maybe_unused]] const std::shared_ptr<interface_srv::srv::GetRobotPosition::Request> request,
         std::shared_ptr<interface_srv::srv::GetRobotPosition::Response> response)
     {
+        std::cout << "Manejando solicitudes" << std::endl;
         geometry_msgs::msg::Transform result;
 
         if (findTransform("map", "base_footprint", result))
