@@ -56,6 +56,7 @@ qt_add_qml_module(appgui
     images/giro_izq.png
     images/up.png
     images/keyboard_left.svg
+
     QML_FILES qml/Joystick.qml
     # images/android_icons/mipmap-mdpi/logo48.png
     # images/android_icons/mipmap-hdpi/logo72.png

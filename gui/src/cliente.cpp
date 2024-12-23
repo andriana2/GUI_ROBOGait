@@ -63,6 +63,8 @@ void Cliente::onReadyRead() {
                     // qDebug() << buffer;
                     stringHandler->setImage(buffer);
                 } else if (dataType == "MSG") {
+                    QString convertedString = QString::fromUtf8(buffer);
+                    qDebug() << convertedString;
                     //processMessage(buffer);
                 } else {
                     qWarning() << "Tipo de datos no reconocido:" << dataType;
