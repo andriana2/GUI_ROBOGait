@@ -7,10 +7,17 @@
 #include <QBuffer>
 #include <QDebug>
 #include <QFile>
+#include <QTimer>
 
 StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr)
 {
-    m_currentMove = Stop;
+    periodicTimer = new QTimer(this);
+    connect(periodicTimer, &QTimer::timeout, this, [this]() {
+        cliente->sendMessage(sendJoystickPosition(currentAngular, currentLineal));
+        if (SLAM_ON) {
+            cliente->sendMessage(sendRequestMapSlam());
+        }
+    });
 }
 void StringHandler::setClient(Cliente *cli){ cliente = cli;}
 
@@ -62,42 +69,41 @@ QString StringHandler::getImageSource()
     return m_imageSource;
 }
 
-// void StringHandler::setCurrentMove(StringHandler::Move newCurrentMove)
-// {
-//     if (m_currentMove == newCurrentMove)
-//         return;
-//     m_currentMove = newCurrentMove;
-//     emit currentMoveChanged();
-//     qDebug() << "Movimiento seleccionado:" << moveToString(newCurrentMove);
-//     //--------enviar mensaje-------------//
-//     // if (newCurrentMove == Stop)
-//     // {
-//     //     //cliente->sendImageMap(imagen_link);
+void StringHandler::setCurrentMove(const QString &lineal, const QString &angular) {
+    bool ok;
+    bool moveStopLocal;
 
-//     // }
-//     cliente->sendMessagePosition(moveToString(newCurrentMove));
-//     cliente->sendRequestImg("map_scan");
-// }
+    // Convertir lineal a float y redondear
+    float lineal_f = std::round(lineal.toFloat(&ok) * 10000.0f) / 10000.0f;
+    if (!ok) return; // Salir si la conversión falla
 
-void StringHandler::setCurrentMove(StringHandler::Move newCurrentMove)
-{
-    if (m_currentMove == newCurrentMove)
+    // Convertir angular a float y redondear
+    float angular_f = std::round(angular.toFloat(&ok) * 10000.0f) / 10000.0f;
+    if (!ok) return; // Salir si la conversión falla
+
+    // Determinar si el robot está detenido
+    float margin = 0.0001;
+    moveStopLocal = (std::abs(lineal_f) <= margin && std::abs(angular_f) <= margin);
+    if (moveStopLocal && moveStop) {
+        // Si ya está detenido y no hay cambios, no hacemos nada
         return;
-    m_currentMove = newCurrentMove;
-    emit currentMoveChanged();
-    //qDebug() << "Movimiento seleccionado:" << moveToString(newCurrentMove);
-    //--------enviar mensaje-------------//
-    // if (newCurrentMove == Stop)
-    // {
-    //     //cliente->sendImageMap(imagen_link);
+    } else if (moveStopLocal && !moveStop) {
+        // El robot se detuvo: enviar posición cero y detener mensajes periódicos
+        cliente->sendMessage(sendJoystickPosition(0.0f, 0.0f));
+        periodicTimer->stop();
+        moveStop = true;
+    } else {
+        // El robot está en movimiento: actualizar valores y activar el temporizador
+        currentAngular = angular_f;
+        currentLineal = lineal_f;
 
-    // }
-    float angular;
-    float lineal;
-    moveToString(newCurrentMove, lineal, angular);
-    cliente->sendMessage(sendJoystickPosition(angular, lineal));
-    cliente->sendMessage(sendRequestMapSlam());
+        if (!periodicTimer->isActive()) {
+            periodicTimer->start(500);
+        }
+        moveStop = false;
+    }
 }
+
 
 void StringHandler::getImageMapSlam(const QJsonObject &json)
 {
@@ -132,7 +138,6 @@ void StringHandler::getImageMapSlam(const QJsonObject &json)
         receivedFrames = 0;
         totalFrames = 0;
     }
-
 }
 
 void StringHandler::getRobotPositionPixel(const QJsonObject &json)
@@ -154,7 +159,6 @@ void StringHandler::setImage(const QByteArray &data)
             buffer.open(QIODevice::WriteOnly);
             image.save(&buffer, "PGM"); // Guarda la imagen en formato PGM en memoria
 
-            qDebug() << "HOLA";
             m_imageSource = "data:image/pgm;base64," + imageData.toBase64();
             qDebug() <<"poraquí"<< m_imageSource;
             emit imageSourceChanged();
@@ -163,57 +167,6 @@ void StringHandler::setImage(const QByteArray &data)
         }
     }
 }
-
-void StringHandler::moveToString(StringHandler::Move move, float& linear, float& angular) const {
-    switch (move) {
-    case Recto:
-        linear = 0.2f;
-        angular = 0.0f;
-        break;
-    case Atras:
-        linear = -0.2f;
-        angular = 0.0f;
-        break;
-    case Giro_Izquierda:
-        linear = 0.0f;
-        angular = 0.2f;
-        break;
-    case Giro_Derecha:
-        linear = 0.0f;
-        angular = -0.2f;
-        break;
-    case Mas_Rapido:
-        linear = 0.4f;
-        angular = 0.0f;
-        break;
-    case Mas_Lento:
-        linear = 0.1f;
-        angular = 0.0f;
-        break;
-    case Stop:
-        linear = 0.0f;
-        angular = 0.0f;
-        break;
-    default:
-        linear = 0.0f;
-        angular = 0.0f;
-        break;
-    }
-}
-
-StringHandler::Move StringHandler::stringToMove(const QString &move) const {
-    if (move == "Recto") return Recto;
-    if (move == "Atras") return Atras;
-    if (move == "Giro_Izquierda") return Giro_Izquierda;
-    if (move == "Giro_Derecha") return Giro_Derecha;
-    if (move == "Mas_Rapido") return Mas_Rapido;
-    if (move == "Mas_Lento") return Mas_Lento;
-    if (move == "Stop") return Stop;
-    return Stop; // Valor predeterminado
-}
-
-
-
 
 QString StringHandler::imageSource() const
 {

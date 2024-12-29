@@ -5,10 +5,10 @@ ApplicationFlowForm {
     state: "Home"
 
     home.buttonStart.onClicked: {
-        // mystackview.push(ip)
-        // applicationFlow.state = "ip"
-        mystackview.push(teledirigido)
-        applicationFlow.state = "teledirigido"
+        mystackview.push(ip)
+        applicationFlow.state = "ip"
+        // mystackview.push(teledirigido)
+        // applicationFlow.state = "teledirigido"
     }
     function backButton()
     {

@@ -10,6 +10,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
+#include <QTimer>
+
 #include "cliente.h"
 
 class Cliente;
@@ -17,7 +19,6 @@ class Cliente;
 class StringHandler : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(Move currentMove READ currentMove WRITE setCurrentMove NOTIFY currentMoveChanged)
     Q_PROPERTY(QString imageSource READ imageSource NOTIFY imageSourceChanged)
 
 public:
@@ -27,47 +28,32 @@ public:
     Q_INVOKABLE QString getImageSource();
 
     void setClient(Cliente *cli);
-    enum Move {
-        Recto,
-        Atras,
-        Giro_Izquierda,
-        Giro_Derecha,
-        Mas_Rapido,
-        Mas_Lento,
-        Stop
-    };
-    Q_ENUM(Move)
-    Q_INVOKABLE Move stringToMove(const QString &move) const;
-    Move currentMove() const { return m_currentMove; }
 
     // msg send
-    void setCurrentMove(Move newCurrentMove);
+    Q_INVOKABLE void setCurrentMove(const QString &lineal,const QString & angular);
     void setImageMap(const QByteArray &data);
 
     // msg recived
     void getImageMapSlam(const QJsonObject &json);
     void getRobotPositionPixel(const QJsonObject &json);
 
-
-    // public slots:
-
-
     QString imageSource() const;
 
 signals:
 
-    void currentMoveChanged();
     void imageReceived(const QString &image);
 
     void imageSourceChanged();
 
 private:
-    void moveToString(StringHandler::Move move, float& linear, float& angular) const;
-    Move m_currentMove;
-
+    bool moveStop = 0;
+    bool SLAM_ON = 1;
     Cliente *cliente;
+    float currentAngular;
+    float currentLineal;
 
     QString m_imageSource;
+    QTimer *periodicTimer;
 
     QByteArray imageBuffer;
     size_t totalSize = 0;

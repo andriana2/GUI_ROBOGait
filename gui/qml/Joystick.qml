@@ -5,7 +5,7 @@ JoystickForm {
     id:joyStick
     property int offset:30;
 
-    signal dirChanged(string direction, string angulo)
+    signal dirChanged(string linear, string angular)
     signal pressed()
     signal released()
 
