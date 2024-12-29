@@ -1,10 +1,14 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.16)
 project(runTests)
 
 # GoogleTest requires at least C++14
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Configurar módulos de Qt
+find_package(Qt6 REQUIRED COMPONENTS Core Test)
+
+# Incluir GoogleTest
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -13,29 +17,34 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(googletest)
 
-# include _deps directory for gtest
+# Include _deps directory for gtest
 include_directories(_deps/googletest-src/googletest/include)
-include_directories(../)
+
+# Incluir directorios de encabezados de Qt
+include_directories(${CMAKE_SOURCE_DIR})
 
 enable_testing()
 
-# el main, el test, el archivo que quiero probar
+# Agregar ejecutable para las pruebas
 add_executable(
   runTests
   runTest.cpp
   utils_test.cpp
-
-  #../src/rosnode.cpp
   ../src/utils.cpp
-
 )
+
+# Vincular bibliotecas de Google Test y Qt
 target_link_libraries(
   runTests
+  Qt6::Core
+  Qt6::Test
   GTest::gtest_main
 )
 
-# For Windows: Prevent overriding the parent project's compiler/linker settings
+# Establecer el CRT compartido para Windows
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
+# Descubrir y registrar pruebas de GoogleTest
 include(GoogleTest)
 gtest_discover_tests(runTests)
+

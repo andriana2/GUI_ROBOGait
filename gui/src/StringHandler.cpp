@@ -1,10 +1,12 @@
 #include "../include/StringHandler.h"
-#include "include/utils.h"
+#include "../include/utils.h"
+#include "../include/ToJson.h"
 #include <iostream>
 #include <vector>
 #include <sstream>
 #include <QBuffer>
 #include <QDebug>
+#include <QFile>
 
 StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr)
 {
@@ -60,22 +62,85 @@ QString StringHandler::getImageSource()
     return m_imageSource;
 }
 
+// void StringHandler::setCurrentMove(StringHandler::Move newCurrentMove)
+// {
+//     if (m_currentMove == newCurrentMove)
+//         return;
+//     m_currentMove = newCurrentMove;
+//     emit currentMoveChanged();
+//     qDebug() << "Movimiento seleccionado:" << moveToString(newCurrentMove);
+//     //--------enviar mensaje-------------//
+//     // if (newCurrentMove == Stop)
+//     // {
+//     //     //cliente->sendImageMap(imagen_link);
+
+//     // }
+//     cliente->sendMessagePosition(moveToString(newCurrentMove));
+//     cliente->sendRequestImg("map_scan");
+// }
+
 void StringHandler::setCurrentMove(StringHandler::Move newCurrentMove)
 {
     if (m_currentMove == newCurrentMove)
         return;
     m_currentMove = newCurrentMove;
     emit currentMoveChanged();
-    qDebug() << "Movimiento seleccionado:" << moveToString(newCurrentMove);
+    //qDebug() << "Movimiento seleccionado:" << moveToString(newCurrentMove);
     //--------enviar mensaje-------------//
     // if (newCurrentMove == Stop)
     // {
     //     //cliente->sendImageMap(imagen_link);
 
     // }
-    cliente->sendMessagePosition(moveToString(newCurrentMove));
-    cliente->sendRequestImg("map_scan");
+    float angular;
+    float lineal;
+    moveToString(newCurrentMove, lineal, angular);
+    cliente->sendMessage(sendJoystickPosition(angular, lineal));
+    cliente->sendMessage(sendRequestMapSlam());
 }
+
+void StringHandler::getImageMapSlam(const QJsonObject &json)
+{
+    QString name = json["name"].toString();
+    QByteArray data = fromHex(json["data"].toString());
+    size_t size = json["size"].toInt();
+    totalSize = json["total_size"].toInt();
+    totalFrames = json["total_frame"].toInt();
+    receivedFrames++;
+
+    // Append the received fragment to the image buffer
+    imageBuffer.append(data);
+
+    qDebug() << "Received frame:" << json["num_frame"].toInt() << "of" << totalFrames;
+
+    // If all frames are received, save the image
+    if (receivedFrames == totalFrames)
+    {
+        QFile imageFile(name + ".pgm");
+        if (!imageFile.open(QIODevice::WriteOnly))
+        {
+            qWarning() << "Failed to save the image file";
+            return;
+        }
+        imageFile.write(imageBuffer);
+        imageFile.close();
+        qDebug() << "Image saved as:" << imageFile.fileName();
+
+        // Reset for the next image
+        imageBuffer.clear();
+        totalSize = 0;
+        receivedFrames = 0;
+        totalFrames = 0;
+    }
+
+}
+
+void StringHandler::getRobotPositionPixel(const QJsonObject &json)
+{
+
+}
+
+
 void StringHandler::setImage(const QByteArray &data)
 {
     if (!data.isEmpty()) {
@@ -99,17 +164,40 @@ void StringHandler::setImage(const QByteArray &data)
     }
 }
 
-QString StringHandler::moveToString(StringHandler::Move move) const {
+void StringHandler::moveToString(StringHandler::Move move, float& linear, float& angular) const {
     switch (move) {
-    case Recto: return "Linear:0.2,Angular:0.0\n";
-    case Atras: return "Linear:-0.2,Angular:0.0\n";
-    case Giro_Izquierda: return "Linear:0.0,Angular:0.2\n";
-    case Giro_Derecha: return "Linear:0.0,Angular:-0.2\n";
-    case Mas_Rapido: return "Linear:0.4,Angular:0.0\n";
-    case Mas_Lento: return "Linear:0.1,Angular:0.0\n";
-    case Stop: return "Linear:0.0,Angular:0.0\n";
-    // case Stop: return "imagen";
-    default: return "Desconocido";
+    case Recto:
+        linear = 0.2f;
+        angular = 0.0f;
+        break;
+    case Atras:
+        linear = -0.2f;
+        angular = 0.0f;
+        break;
+    case Giro_Izquierda:
+        linear = 0.0f;
+        angular = 0.2f;
+        break;
+    case Giro_Derecha:
+        linear = 0.0f;
+        angular = -0.2f;
+        break;
+    case Mas_Rapido:
+        linear = 0.4f;
+        angular = 0.0f;
+        break;
+    case Mas_Lento:
+        linear = 0.1f;
+        angular = 0.0f;
+        break;
+    case Stop:
+        linear = 0.0f;
+        angular = 0.0f;
+        break;
+    default:
+        linear = 0.0f;
+        angular = 0.0f;
+        break;
     }
 }
 

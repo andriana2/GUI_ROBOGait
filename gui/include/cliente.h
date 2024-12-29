@@ -2,10 +2,16 @@
 #define CLIENTE_H
 
 #include "StringHandler.h"
+
 #include <QObject>
 #include <QTcpSocket>
 #include <QTimer>
+
+#include <QJsonDocument>
+#include <QJsonObject>
+
 #include <QImage>
+
 
 class StringHandler;
 
@@ -15,16 +21,15 @@ class Cliente : public QObject
 public:
     Cliente(int portNumber); //
 
-    QTcpSocket *socket; //
-    void setStringHandler(StringHandler *sh);
+    QTcpSocket *socket;
+    void setStringHandler(StringHandler *sh);//
 
-    void connectToServer(const QString &host, quint16 port);
-    void sendMessagePosition(const QString &message);
-    void receiveImageMap(const QByteArray &link);
-    void processServerResponse();
+    void sendMessage(const QJsonDocument &jsone);  //
+    // void receiveImageMap(const QByteArray &link);
+    // void processServerResponse();
 
     bool getStatus(); //
-    void sendRequestImg(const QString &target);
+    // void sendRequestImg(const QString &target);
 
 public slots:
     void closeConnection(); //
@@ -34,14 +39,20 @@ signals:
     void statusChanged(bool);
 
 private slots:
-    void onReadyRead();
-    // void readyRead();
+    void onReadyRead();//
+    void processJson(const QJsonDocument &json);//
     void connected(); //
     void connectionTimeout(); //
-    void onErrorOccurred(QAbstractSocket::SocketError error);
+    void onErrorOccurred(QAbstractSocket::SocketError error); //
 
 private:
+
+    //json
+    QJsonDocument jsonDoc;
+    //map
     bool maping;
+
+    //connection
     QString host;
     int port;
     bool status;

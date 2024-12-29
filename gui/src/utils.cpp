@@ -7,57 +7,30 @@
 // #include <cstring>
 #include <sys/types.h>
 #include <QNetworkInterface>
-// #include <ifaddrs.h>
-// #include <arpa/inet.h>
-// #include <netinet/in.h>
+#include <QRegularExpression>
 
-// std::string moveToString(Move move) {
-//     switch(move) {
-//     case Recto: return "Recto";
-//     case Atras: return "Atras";
-//     case Giro_Izquierda: return "Giro_Izquierda";
-//     case Giro_Derecha: return "Giro_Derecha";
-//     case Mas_Rapido: return "Mas_Rapido";
-//     case Mas_Lento: return "Mas_Lento";
-//     default: return "Desconocido";
-//     }
-// }
+QVector<QString> extractJSONObjects(const QString& input) {
+    QVector<QString> jsonObjects;
+    QRegularExpression jsonRegex(R"(\{(?:[^{}]|(?R))*\})");
+    QRegularExpressionMatchIterator matchIterator = jsonRegex.globalMatch(input);
 
-// // Función que convierte un string a un valor enum Move
-// Move stringToMove(const std::string& str) {
-//     if (str == "Recto") return Recto;
-//     else if (str == "Atras") return Atras;
-//     else if (str == "Giro_Izquierda") return Giro_Izquierda;
-//     else if (str == "Giro_Derecha") return Giro_Derecha;
-//     else if (str == "Mas_Rapido") return Mas_Rapido;
-//     else if (str == "Mas_Lento") return Mas_Lento;
-//     throw std::invalid_argument("Valor desconocido para Move: ");
-// }
+    while (matchIterator.hasNext()) {
+        QRegularExpressionMatch match = matchIterator.next();
+        jsonObjects.append(match.captured(0)); // Agregar el JSON encontrado al vector
+    }
 
-// std::string obtenerIP() {
-//     struct ifaddrs *interfaces = nullptr;
-//     struct ifaddrs *tempAddr = nullptr;
-//     std::string ipAddress = "No se pudo obtener la IP";
+    return jsonObjects;
+}
 
-//     // Obtener lista de interfaces
-//     if (getifaddrs(&interfaces) == 0) {
-//         tempAddr = interfaces;
-//         // Recorrer las interfaces
-//         while (tempAddr != nullptr) {
-//             if (tempAddr->ifa_addr->sa_family == AF_INET) { // Solo IPv4
-//                 // Verificar que la interfaz no sea "localhost"
-//                 if (strcmp(tempAddr->ifa_name, "lo") != 0) {
-//                     ipAddress = inet_ntoa(((struct sockaddr_in*)tempAddr->ifa_addr)->sin_addr);
-//                     break;
-//                 }
-//             }
-//             tempAddr = tempAddr->ifa_next;
-//         }
-//     }
-//     freeifaddrs(interfaces); // Liberar la memoria asignada
-//     return ipAddress;
-// }
-
+QByteArray fromHex(const QString &hex)
+{
+    QByteArray data;
+    for (int i = 0; i < hex.size(); i += 2)
+    {
+        data.append(static_cast<char>(hex.mid(i, 2).toInt(nullptr, 16)));
+    }
+    return data;
+}
 
 QString obtenerIP() {
     QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
@@ -76,3 +49,71 @@ QString obtenerIP() {
     }
     return "No se pudo obtener la IP";
 }
+
+Header stringToHeader(const QString& str) {
+    if (str == "MSG") {
+        return MSG;
+    } else if (str == "REQUEST_MSG") {
+        return REQUEST_MSG;
+    } else if (str == "IMG") {
+        return IMG;
+    } else if (str == "REQUEST_IMG") {
+        return REQUEST_IMG;
+    } else {
+        Q_ASSERT(false);
+        return MSG;
+    }
+}
+
+// Función para convertir un Header enum a QString
+QString headerToString(Header header) {
+    switch (header) {
+    case MSG:
+        return "MSG";
+    case REQUEST_MSG:
+        return "REQUEST_MSG";
+    case IMG:
+        return "IMG";
+    case REQUEST_IMG:
+        return "REQUEST_IMG";
+    default:
+        Q_ASSERT(false);
+        return "MSG";
+    }
+}
+
+Target stringToTarget(const QString& str) {
+    if (str == "Joystick_Position") {
+        return Joystick_Position;
+    } else if (str == "Map_SLAM") {
+        return Map_SLAM;
+    } else if (str == "Robot_Position_Pixel") {
+        return Robot_Position_Pixel;
+    } else if (str == "Img_Map_SLAM") {
+        return Img_Map_SLAM;
+    } else if (str == "Save_Map") {
+        return Save_Map;
+    } else {
+        Q_ASSERT(false);
+        return Joystick_Position;
+    }
+}
+
+QString targetToString(Target target) {
+    switch (target) {
+    case Joystick_Position:
+        return "Joystick_Position";
+    case Map_SLAM:
+        return "Map_SLAM";
+    case Robot_Position_Pixel:
+        return "Robot_Position_Pixel";
+    case Img_Map_SLAM:
+        return "Img_Map_SLAM";
+    case Save_Map:
+        return "Save_Map";
+    default:
+        Q_ASSERT(false);
+        return "Joystick_Position";
+    }
+}
+

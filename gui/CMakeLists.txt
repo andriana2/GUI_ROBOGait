@@ -19,10 +19,12 @@ qt_add_executable(appgui
     src/StringHandler.cpp
     src/utils.cpp
     src/cliente.cpp
+    src/ToJson.cpp
 
     include/StringHandler.h
     include/utils.h
     include/cliente.h
+    include/ToJson.h
 )
 
 qt_add_qml_module(appgui
@@ -45,6 +47,7 @@ qt_add_qml_module(appgui
     qml/MenuPrincipal.qml
     qml/CustomToolBarForm.ui.qml
     qml/CustomToolBar.qml
+    qml/Joystick.qml
 
 
 
@@ -57,7 +60,6 @@ qt_add_qml_module(appgui
     images/up.png
     images/keyboard_left.svg
 
-    QML_FILES qml/Joystick.qml
     # images/android_icons/mipmap-mdpi/logo48.png
     # images/android_icons/mipmap-hdpi/logo72.png
     # images/android_icons/mipmap-xhdpi/logo96.png

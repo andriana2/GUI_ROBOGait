@@ -7,6 +7,9 @@
 // #include <QImage>
 // #include <string>
 // #include "utils.h"
+#include <QJsonDocument>
+#include <QJsonObject>
+
 #include "cliente.h"
 
 class Cliente;
@@ -36,8 +39,15 @@ public:
     Q_ENUM(Move)
     Q_INVOKABLE Move stringToMove(const QString &move) const;
     Move currentMove() const { return m_currentMove; }
+
+    // msg send
     void setCurrentMove(Move newCurrentMove);
     void setImageMap(const QByteArray &data);
+
+    // msg recived
+    void getImageMapSlam(const QJsonObject &json);
+    void getRobotPositionPixel(const QJsonObject &json);
+
 
     // public slots:
 
@@ -52,12 +62,17 @@ signals:
     void imageSourceChanged();
 
 private:
-    QString moveToString(StringHandler::Move move) const;
+    void moveToString(StringHandler::Move move, float& linear, float& angular) const;
     Move m_currentMove;
 
     Cliente *cliente;
 
     QString m_imageSource;
+
+    QByteArray imageBuffer;
+    size_t totalSize = 0;
+    size_t receivedFrames = 0;
+    size_t totalFrames = 0;
 };
 
 #endif // STRINGHANDLER_H
