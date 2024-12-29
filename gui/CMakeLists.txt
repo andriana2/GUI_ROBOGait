@@ -11,8 +11,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Network)
 
-set_source_files_properties(qml/Constants.qml
-    PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+set(qml_singletons
+    qml/ConstantVariables.qml
+)
+
+# set_source_files_properties(${qml_singletons}
+#     PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_executable(appgui
     src/main.cpp
@@ -32,7 +36,6 @@ qt_add_qml_module(appgui
     VERSION 1.0
 
     QML_FILES
-    qml/Constants.qml
     qml/main.qml
     qml/ApplicationFlow.qml
     qml/ApplicationFlowForm.ui.qml
@@ -48,7 +51,8 @@ qt_add_qml_module(appgui
     qml/CustomToolBarForm.ui.qml
     qml/CustomToolBar.qml
     qml/Joystick.qml
-
+    qml/JoystickForm.ui.qml
+    ${qml_singletons}
 
 
     RESOURCES
