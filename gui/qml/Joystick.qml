@@ -33,8 +33,8 @@ JoystickForm {
             stick.x = totalArea.width / 2 + dx * ratio - stick.width / 2
             stick.y = totalArea.height / 2 + dy * ratio - stick.height / 2
         }
-        var linearVelocity = dy / totalArea.height * 2.0  // Velocidad lineal (hacia adelante/atrás)
-        var angularVelocity = dx / totalArea.width * 2.0  // Velocidad angular (giro)
+        var linearVelocity = dy / totalArea.height * -1.0  // Velocidad lineal (hacia adelante/atrás)
+        var angularVelocity = dx / totalArea.width * -1.0  // Velocidad angular (giro)
 
         joyStick.dirChanged(linearVelocity, angularVelocity)
         // var rad = totalArea.radius

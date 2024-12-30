@@ -16,6 +16,8 @@
 
 #include <nlohmann/json.hpp>
 
+#include <threads.h>
+
 #include "utils.h"
 #include "header.h"
 #include "toJson.h"

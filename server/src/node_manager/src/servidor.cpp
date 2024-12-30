@@ -57,13 +57,17 @@ void Servidor::startRead()
             {
                 // Crear un std::string a partir del buffer leído
                 std::string buffer_string(buffer_array.data(), bytes_transferred);
-                pri1(buffer_string);
+                // pri1(buffer_string);
                 std::vector<std::string> buffer_vector = splitJson(buffer_string);
                 handleType(buffer_vector);
             }
             else if (ec != boost::asio::error::eof)
             {
                 std::cerr << "Error en la lectura: " << ec.message() << std::endl;
+            }
+            else
+            {
+                handleDisconnect(ec);
             }
         });
 }
@@ -107,40 +111,41 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
 {
     for (auto json_ : jsons)
     {
-        json parsed_json = nlohmann::json::parse(json_);
+        json parsed_json = json::parse(json_);
+
+        pri1(parsed_json.dump(4));
 
         if (parsed_json.contains("opt") && parsed_json["opt"] == headerToString(MSG))
         {
             if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Joystick_Position))
             {
                 float linear, angular;
-                getPositionJoystick(json_, linear, angular);
-                pri1("hola2");
-                pri1(std::to_string(linear) + "<-linear angular ->" + std::to_string(angular));
+                nodeManager.create_publisher(stringToTarget(parsed_json["target"]));
+                getPositionJoystick(parsed_json, linear, angular);
+                // pri1(std::to_string(linear) + "<-linear angular ->" + std::to_string(angular));
                 nodeManager.execute_position(linear, angular);
-                pri1("hola");
             }
         }
         else if (parsed_json.contains("opt") && parsed_json["opt"] == headerToString(REQUEST_IMG))
         {
-            if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Img_Map_SLAM))
+            if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Map_SLAM))
             {
                 nodeManager.create_publisher(stringToTarget(parsed_json["target"]));
-                // nodeManager.refresh_map();
+                nodeManager.refresh_map();
                 std::string path = PATH2MAP;
-                std::string path_yaml = path + "/temporal_map.yaml";
                 path += "/temporal_map.pgm";
-                // struct FinalPosition final_position = nodeManager.getPositionRobotPixel(path_yaml);
-                // std::string msg = "X_pixel:" + std::to_string(final_position.x_pixel) + ",Y_pixel:" + std::to_string(final_position.y_pixel) + ",yawl:" + std::to_string(final_position.yaw);
-                // sendMsg(msg, "final_position");
-                sendImageMap(path);
+
+                // Ejecutar sendImageMap en un hilo separado
+                std::thread sendMapThread(&Servidor::sendImageMap, this, path);
+
+                // Detach para que el hilo se maneje de forma independiente
+                sendMapThread.detach();
             }
         }
         else
         {
             std::cout << "El campo 'opt' no contiene 'MSG' o 'IMG_REQUEST' o no existe.\n";
         }
-        pri1("hola3");
     }
     startRead();
     // if (type == "MSG")
@@ -308,49 +313,58 @@ void Servidor::sendMsg(const json &json_msg)
 
 void Servidor::sendImageMap(const std::string &name_map)
 {
-    const std::size_t maxJsonSize = 1024; // Tamaño máximo por paquete
-
-    std::ifstream file(name_map, std::ios::binary);
-    if (!file)
+    try
     {
-        throw std::runtime_error("No se pudo abrir el archivo " + name_map);
-    }
+        const std::size_t maxJsonSize = 2048; // Tamaño máximo por paquete
 
-    // Leer el contenido del archivo
-    file.seekg(0, std::ios::end);
-    std::size_t totalSize = file.tellg();
-    file.seekg(0, std::ios::beg);
-
-    const std::size_t maxDataSize = 512; // Espacio reservado para los datos de la imagen
-    std::vector<char> buffer(maxDataSize);
-    std::size_t bytesSent = 0;
-    std::size_t numFrame = 0;
-    std::size_t totalFrames = (totalSize + maxDataSize - 1) / maxDataSize; // Calcular total de frames
-
-    while (bytesSent < totalSize)
-    {
-        file.read(buffer.data(), maxDataSize);
-        std::size_t bytesRead = file.gcount();
-
-        // Convertir datos a hexadecimal
-        std::string hexData = toHex(buffer.data(), bytesRead);
-
-        // Crear el JSON
-        json jsonMessage = sendImgMapSlam(hexData, bytesRead, totalSize, numFrame, totalFrames);
-
-        // Serializar el JSON
-        std::string jsonStr = jsonMessage.dump();
-
-        // Verificar que el tamaño total no exceda el límite
-        if (jsonStr.size() > maxJsonSize)
+        std::ifstream file(name_map, std::ios::binary);
+        if (!file)
         {
-            throw std::runtime_error("El JSON generado excede el tamaño máximo permitido");
+            throw std::runtime_error("No se pudo abrir el archivo " + name_map);
         }
 
-        // Enviar el JSON por el socket
-        boost::asio::write(socket_, boost::asio::buffer(jsonStr));
+        // Leer el contenido del archivo
+        file.seekg(0, std::ios::end);
+        std::size_t totalSize = file.tellg();
+        file.seekg(0, std::ios::beg);
 
-        bytesSent += bytesRead;
-        numFrame++;
+        const std::size_t maxDataSize = 900; // Espacio reservado para los datos de la imagen
+        std::vector<char> buffer(maxDataSize);
+        std::size_t bytesSent = 0;
+        std::size_t numFrame = 0;
+        std::size_t totalFrames = (totalSize + maxDataSize - 1) / maxDataSize; // Calcular total de frames
+
+        while (bytesSent < totalSize)
+        {
+            file.read(buffer.data(), maxDataSize);
+            std::size_t bytesRead = file.gcount();
+
+            // Convertir datos a hexadecimal
+            std::string hexData = toHex(buffer.data(), bytesRead);
+
+            // Crear el JSON
+            json jsonMessage = sendImgMapSlam(hexData, bytesRead, totalSize, numFrame, totalFrames);
+
+            // Serializar el JSON
+            std::string jsonStr = jsonMessage.dump();
+
+            // Verificar que el tamaño total no exceda el límite
+            pri1(jsonStr);
+            if (jsonStr.size() > maxJsonSize)
+            {
+                std::string str = "El JSON generado excede el tamaño máximo permitido " + std::to_string(jsonStr.size());
+                throw std::runtime_error(str);
+            }
+
+            // Enviar el JSON por el socket
+            boost::asio::write(socket_, boost::asio::buffer(jsonStr));
+
+            bytesSent += bytesRead;
+            numFrame++;
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error en sendImageMap: " << e.what() << std::endl;
     }
 }

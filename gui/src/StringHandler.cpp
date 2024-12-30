@@ -107,9 +107,8 @@ void StringHandler::setCurrentMove(const QString &lineal, const QString &angular
 
 void StringHandler::getImageMapSlam(const QJsonObject &json)
 {
-    QString name = json["name"].toString();
+    QString name = "temporal_img";
     QByteArray data = fromHex(json["data"].toString());
-    size_t size = json["size"].toInt();
     totalSize = json["total_size"].toInt();
     totalFrames = json["total_frame"].toInt();
     receivedFrames++;
@@ -131,7 +130,8 @@ void StringHandler::getImageMapSlam(const QJsonObject &json)
         imageFile.write(imageBuffer);
         imageFile.close();
         qDebug() << "Image saved as:" << imageFile.fileName();
-
+        m_imageSource = imageFile.fileName();
+        qDebug() <<"poraquí "<< m_imageSource;
         // Reset for the next image
         imageBuffer.clear();
         totalSize = 0;
@@ -160,7 +160,7 @@ void StringHandler::setImage(const QByteArray &data)
             image.save(&buffer, "PGM"); // Guarda la imagen en formato PGM en memoria
 
             m_imageSource = "data:image/pgm;base64," + imageData.toBase64();
-            qDebug() <<"poraquí"<< m_imageSource;
+            qDebug() <<"poraquí "<< m_imageSource;
             emit imageSourceChanged();
         } else {
             qWarning() << "Invalid image data!";

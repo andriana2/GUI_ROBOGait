@@ -21,7 +21,7 @@ void NodeManager::create_publisher(Target const &target)
         if (!cmd_vel_publisher_)
         {
             // Crear el publisher si no existe
-            cmd_vel_publisher_ = node_manager->create_publisher<geometry_msgs::msg::Twist>(CMD_TOPIC, 10);
+            cmd_vel_publisher_ = node_manager->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
             RCLCPP_INFO(node_manager->get_logger(), "Publisher /cmd_vel creado.");
         }
     }
@@ -35,15 +35,11 @@ void NodeManager::create_publisher(Target const &target)
         }
         if (!rviz_active)
         {
-            // pri1("EEEEEEEEEOOOOO");
             if (!tf_service_client_->wait_for_service(std::chrono::seconds(1)))
             {
-                // pri1("no hay servicio:::::::::::::::::::::::::::::");
                 RCLCPP_WARN(node_manager->get_logger(), "Service not available, waiting...");
                 return;
             }
-            // std::cout << "________--------------------______-" << std::endl;
-            // Crear solicitud
             auto request = std::make_shared<interface_srv::srv::GetRobotPosition::Request>();
 
             // Enviar solicitud y procesar la respuesta
@@ -53,10 +49,8 @@ void NodeManager::create_publisher(Target const &target)
             {
                 // Esperar la respuesta con un timeout
                 auto response = future.get();
-                // pri1("es succes?");
                 if (response->success == true)
                 {
-                    // pri1("si");
                     RCLCPP_INFO(node_manager->get_logger(), "La informacion ha llegado correctamente");
                     position_robot.x_robot = response->x;
                     position_robot.y_robot = response->y;

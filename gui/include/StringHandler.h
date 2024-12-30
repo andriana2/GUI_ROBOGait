@@ -47,7 +47,7 @@ signals:
 
 private:
     bool moveStop = 0;
-    bool SLAM_ON = 0;
+    bool SLAM_ON = 1;
     Cliente *cliente;
     float currentAngular;
     float currentLineal;

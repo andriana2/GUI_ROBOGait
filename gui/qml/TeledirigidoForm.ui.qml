@@ -8,7 +8,7 @@ Rectangle {
     property alias imageDisplay: imageDisplay
     property alias joystick: joystick
 
-    // property alias image_button: image_button
+    property alias image_button: image_button
     // property alias giro_izquierda_mouse_area: giro_izquierda_mouse_area
     // property alias giro_derecha_mouse_area: giro_derecha_mouse_area
     // property alias less_speed_mouse_area: less_speed_mouse_area
@@ -33,7 +33,7 @@ Rectangle {
             width: parent.width
             height: parent.height
             visible: false
-            //source: imageReceiver.imagePath
+            source: imageReceiver.imagePath
         }
     }
     Item {
@@ -189,16 +189,16 @@ Rectangle {
     //            }
     //        }
 
-    //    Button {
-    //        id: image_button
-    //        anchors.verticalCenter: parent.verticalCenter
-    //        anchors.horizontalCenter: parent.horizontalCenter
-    //        text: qsTr("image")
-    //        //        onClicked: {
-    //        //            imageReceiver.setImage(imageData)
-    //        //            imageDisplay.visible = true
-    //        //        }
-    //    }
+       Button {
+           id: image_button
+           anchors.verticalCenter: parent.verticalCenter
+           anchors.horizontalCenter: parent.horizontalCenter
+           text: qsTr("image")
+           //        onClicked: {
+           //            imageReceiver.setImage(imageData)
+           //            imageDisplay.visible = true
+           //        }
+       }
 }
 
 /*##^##
