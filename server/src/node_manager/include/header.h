@@ -1,11 +1,19 @@
 #ifndef HEADER_H
 #define HEADER_H
 
-enum Info_Message
-{
-    Lista_mapa = 1,
-    Position_joystick,
-    Guardar_mapa,
+enum Header {
+    MSG,
+    REQUEST_MSG,
+    IMG,
+    REQUEST_IMG
+};
+
+enum Target {
+    Joystick_Position,
+    Map_SLAM,
+    Robot_Position_Pixel,
+    Img_Map_SLAM,
+    Save_Map
 
 };
 
@@ -23,7 +31,8 @@ struct FinalPosition
     float yaw;
 };
 
-#define PATH2MAP "/home/robogait/Desktop/gui_andri/gui/server/maps"
+// #define PATH2MAP "/home/robogait/Desktop/gui_andri/gui/server/maps"
+#define PATH2MAP "/home/robogait/Desktop/gui_nuevo/gui/server/maps"
 
 // #define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f " + PATH2MAP + " "
 #define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f /home/robogait/Desktop/gui_andri/gui/server/maps"

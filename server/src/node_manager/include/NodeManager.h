@@ -13,7 +13,8 @@ class NodeManager
 {
 public:
     NodeManager(rclcpp::Node::SharedPtr node_ptr);
-    void create_publisher(std::string const &where_publish);
+    void create_publisher(Target const &target);
+
     void execute_position(float const &linear, float const &angular);
     void refresh_map();
     struct FinalPosition getPositionRobotPixel(std::string const &path_yaml);

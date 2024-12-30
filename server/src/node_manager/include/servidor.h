@@ -14,9 +14,15 @@
 #include <string>
 #include <filesystem> 
 
+#include <nlohmann/json.hpp>
+
 #include "utils.h"
 #include "header.h"
+#include "toJson.h"
+
 #include "NodeManager.h"
+
+using json = nlohmann::json;
 
 class Servidor
 {
@@ -28,23 +34,27 @@ public:
 
 private:
     void startAccept();
-    void readHeader();
-    // void handleType(std::string const &type, int const &size, std::string const &target);
-    void handleType(std::string const &type, int const &size, std::string const &target, std::string else_info);
-
-    void readBodyMsg(size_t const &size, std::string const &target);
-    void processMsg(std::string const &data, std::string const &target);
-    void readBodyImage(size_t const &size);
-    void handleDisconnect(const boost::system::error_code &ec);
-    void manageTarget(std::string const &target);
-    void saveImage(const std::vector<uint8_t> &buffer);
+    void startRead();
     void resetConnection();
-    void sendMsg(const std::string &mensaje, const std::string &target);
+    // void handleType(std::string const &type, int const &size, std::string const &target, std::string else_info);
+    void handleType(std::vector<std::string> const &jsons);
+    // void readBodyMsg(size_t const &size, std::string const &target);
+    // void readBodyImage(size_t const &size);
+    // void processMsg(std::string const &data, std::string const &target);
+    void handleDisconnect(const boost::system::error_code &ec);
+    // void manageTarget(std::string const &target);
+    // void saveImage(const std::vector<uint8_t> &buffer);
+    void sendMsg(const json &json_msg);
+
+
     void sendImageMap(const std::string &name_map);
+
+
     boost::asio::io_context io_context_;
     boost::asio::ip::tcp::acceptor acceptor_;
     boost::asio::ip::tcp::socket socket_;
     boost::asio::streambuf buffer_;
+    std::array<char, 1024> buffer_array;
     std::string buf_;
     CommandCallback callback_;
     NodeManager nodeManager;

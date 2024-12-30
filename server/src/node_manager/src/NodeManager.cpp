@@ -13,19 +13,19 @@ NodeManager::NodeManager(rclcpp::Node::SharedPtr node_ptr)
     final_position_pixel.yaw = -10;
 }
 
-void NodeManager::create_publisher(std::string const &where_publish)
+void NodeManager::create_publisher(Target const &target)
 {
     static pid_t pid;
-    if (where_publish == get_info_message(Position_joystick))
+    if (target == Joystick_Position)
     {
         if (!cmd_vel_publisher_)
         {
             // Crear el publisher si no existe
-            cmd_vel_publisher_ = node_manager->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
+            cmd_vel_publisher_ = node_manager->create_publisher<geometry_msgs::msg::Twist>(CMD_TOPIC, 10);
             RCLCPP_INFO(node_manager->get_logger(), "Publisher /cmd_vel creado.");
         }
     }
-    else if (where_publish == "map_scan")
+    else if (target == Map_SLAM)
     {
         if (!tf_service_client_)
         {

@@ -10,4 +10,6 @@ QJsonDocument sendRequestMapSlam();
 
 QJsonDocument sendSaveMap(const QString& map_name);
 
+void getRobotPositionPixel(const QJsonDocument &JsonDoc, int x_output, int y_output, float yaw_output);
+
 #endif // TOJSON_H
