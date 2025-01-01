@@ -164,19 +164,20 @@ std::vector<std::string> splitJson(const std::string& input) {
 }
 
 // Función para convertir datos binarios a texto hexadecimal
-std::string toHex(const char* data, std::size_t length)
-{
-    static const char* hexDigits = "0123456789ABCDEF";
-    std::string hex;
-    hex.reserve(length * 2);
+// std::string toHex(const char* data, std::size_t length)
+// {
+//     static const char* hexDigits = "0123456789ABCDEF";
+//     std::string hex;
+//     hex.reserve(length * 2);
 
-    for (std::size_t i = 0; i < length; ++i)
-    {
-        unsigned char byte = static_cast<unsigned char>(data[i]);
-        hex.push_back(hexDigits[byte >> 4]);
-        hex.push_back(hexDigits[byte & 0x0F]);
-    }
+//     for (std::size_t i = 0; i < length; ++i)
+//     {
+//         unsigned char byte = static_cast<unsigned char>(data[i]);
+//         hex.push_back(hexDigits[byte >> 4]);
+//         hex.push_back(hexDigits[byte & 0x0F]);
+//     }
 
-    return hex;
-}
+//     return hex;
+// }
+
 

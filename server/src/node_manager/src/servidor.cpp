@@ -1,5 +1,6 @@
 #include "../include/servidor.h"
 #include <iostream>
+#include <boost/beast/core/detail/base64.hpp>
 
 Servidor::Servidor(int port, rclcpp::Node::SharedPtr node)
     : acceptor_(io_context_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)), socket_(io_context_), nodeManager(node) {}
@@ -130,8 +131,8 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
         {
             if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Map_SLAM))
             {
-                nodeManager.create_publisher(stringToTarget(parsed_json["target"]));
-                nodeManager.refresh_map();
+                // nodeManager.create_publisher(stringToTarget(parsed_json["target"]));
+                // nodeManager.refresh_map();
                 std::string path = PATH2MAP;
                 path += "/temporal_map.pgm";
 
@@ -311,11 +312,21 @@ void Servidor::sendMsg(const json &json_msg)
     boost::asio::write(socket_, boost::asio::buffer(jsonStr));
 }
 
+
+std::string toBase64(const char* data, size_t length)
+{
+    std::string base64Str;
+    base64Str.resize(boost::beast::detail::base64::encoded_size(length));
+
+    boost::beast::detail::base64::encode(base64Str.data(), data, length);
+    return base64Str;
+}
+
 void Servidor::sendImageMap(const std::string &name_map)
 {
     try
     {
-        const std::size_t maxJsonSize = 2048; // Tamaño máximo por paquete
+        const std::size_t maxJsonSize = 1024; // Tamaño máximo por paquete
 
         std::ifstream file(name_map, std::ios::binary);
         if (!file)
@@ -328,7 +339,7 @@ void Servidor::sendImageMap(const std::string &name_map)
         std::size_t totalSize = file.tellg();
         file.seekg(0, std::ios::beg);
 
-        const std::size_t maxDataSize = 900; // Espacio reservado para los datos de la imagen
+        const std::size_t maxDataSize = 600; // Espacio reservado para los datos de la imagen
         std::vector<char> buffer(maxDataSize);
         std::size_t bytesSent = 0;
         std::size_t numFrame = 0;
@@ -340,7 +351,7 @@ void Servidor::sendImageMap(const std::string &name_map)
             std::size_t bytesRead = file.gcount();
 
             // Convertir datos a hexadecimal
-            std::string hexData = toHex(buffer.data(), bytesRead);
+            std::string hexData = toBase64(buffer.data(), bytesRead);
 
             // Crear el JSON
             json jsonMessage = sendImgMapSlam(hexData, bytesRead, totalSize, numFrame, totalFrames);

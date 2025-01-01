@@ -9,6 +9,7 @@
 // #include "utils.h"
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QFileInfo>
 
 #include <QTimer>
 
@@ -52,9 +53,9 @@ private:
     float currentAngular;
     float currentLineal;
 
-    QString m_imageSource;
     QTimer *periodicTimer;
 
+    QString m_imageSource;
     QByteArray imageBuffer;
     size_t totalSize = 0;
     size_t receivedFrames = 0;

@@ -7,8 +7,8 @@ Rectangle {
     color: "#518bb7"
     property alias imageDisplay: imageDisplay
     property alias joystick: joystick
+    // property alias image_button: image_button
 
-    property alias image_button: image_button
     // property alias giro_izquierda_mouse_area: giro_izquierda_mouse_area
     // property alias giro_derecha_mouse_area: giro_derecha_mouse_area
     // property alias less_speed_mouse_area: less_speed_mouse_area
@@ -30,12 +30,26 @@ Rectangle {
         color: "#518bb7"
         Image {
             id: imageDisplay
-            width: parent.width
-            height: parent.height
+            width: Math.min(parent.width, parent.height * imageDisplay.sourceSize.width / imageDisplay.sourceSize.height)
+            height: Math.min(parent.height, parent.width * imageDisplay.sourceSize.height / imageDisplay.sourceSize.width)
+            anchors.centerIn: parent
+            // width: parent.width
+            // height: parent.height
             visible: false
-            source: imageReceiver.imagePath
+            fillMode: Image.PreserveAspectCrop
+            // source: ""
+            source: ""
         }
     }
+    Connections {
+        target: stringHandler
+        function onImageSourceChanged() {
+            // Actualizar el source cuando la señal es emitida
+            imageDisplay.visible = true
+            imageDisplay.source = stringHandler.imageSource
+        }
+    }
+
     Item {
         id: mapa
         width: 250
@@ -55,150 +69,16 @@ Rectangle {
         }
     }
 
-    //        Rectangle {
-    //            id: mapa
-    //            width: 250
-    //            height: 250
-    //            //color: Colors.rectangle_color
-    //            color: "#a8efff"
-
-    //            Image {
-    //                id: up
-    //                width: 40
-    //                height: 40
-    //                anchors.verticalCenter: parent.verticalCenter
-    //                source: "../images/up.png"
-    //                anchors.verticalCenterOffset: -50
-    //                anchors.horizontalCenter: parent.horizontalCenter
-    //                fillMode: Image.PreserveAspectFit
-    //                MouseArea {
-    //                    id: up_mouse_area
-    //                    anchors.fill: parent
-    //                }
-    //            }
-
-    //            Image {
-    //                id: down
-    //                width: 40
-    //                height: 40
-    //                anchors.verticalCenter: parent.verticalCenter
-    //                source: "../images/down.png"
-    //                anchors.verticalCenterOffset: 50
-    //                anchors.horizontalCenter: parent.horizontalCenter
-    //                fillMode: Image.PreserveAspectFit
-    //                MouseArea {
-    //                    id: down_mouse_area
-    //                    anchors.fill: parent
-    //                }
-    //            }
-
-    //            Image {
-    //                id: stop
-    //                width: 40
-    //                height: 40
-    //                anchors.verticalCenter: parent.verticalCenter
-    //                source: "../images/x.png"
-    //                anchors.horizontalCenter: parent.horizontalCenter
-    //                fillMode: Image.PreserveAspectFit
-    //                MouseArea {
-    //                    id: stop_mouse_area
-    //                    anchors.fill: parent
-    //                }
-    //            }
-
-    //            Image {
-    //                id: more_speed
-    //                width: 40
-    //                height: 40
-    //                anchors.verticalCenter: parent.verticalCenter
-    //                source: "../images/up.png"
-    //                anchors.verticalCenterOffset: -90
-    //                anchors.horizontalCenter: parent.horizontalCenter
-    //                fillMode: Image.PreserveAspectFit
-
-    //                Text {
-    //                    id: text_speed_more
-    //                    text: qsTr("+Speed")
-    //                    anchors.verticalCenter: parent.verticalCenter
-    //                    font.pixelSize: 12
-    //                    scale: 1.5
-    //                    anchors.horizontalCenterOffset: -70
-    //                    anchors.horizontalCenter: parent.horizontalCenter
-    //                }
-    //                MouseArea {
-    //                    id: more_speed_mouse_area
-    //                    anchors.fill: parent
-    //                }
-    //            }
-
-    //            Image {
-    //                id: less_speed
-    //                width: 40
-    //                height: 40
-    //                anchors.verticalCenter: parent.verticalCenter
-    //                source: "../images/down.png"
-    //                anchors.verticalCenterOffset: 90
-    //                anchors.horizontalCenter: parent.horizontalCenter
-    //                fillMode: Image.PreserveAspectFit
-
-    //                Text {
-    //                    id: text_speed_less
-    //                    x: -60
-    //                    y: -167
-    //                    text: qsTr("-Speed")
-    //                    anchors.verticalCenter: parent.verticalCenter
-    //                    font.pixelSize: 12
-    //                    anchors.horizontalCenterOffset: -60
-    //                    scale: 1.5
-    //                    anchors.horizontalCenter: parent.horizontalCenter
-    //                }
-    //                MouseArea {
-    //                    id: less_speed_mouse_area
-    //                    anchors.fill: parent
-    //                }
-    //            }
-
-    //            Image {
-    //                id: giro_derecha
-    //                width: 40
-    //                height: 40
-    //                anchors.verticalCenter: parent.verticalCenter
-    //                source: "../images/giro_der.png"
-    //                anchors.horizontalCenterOffset: -50
-    //                anchors.horizontalCenter: parent.horizontalCenter
-    //                fillMode: Image.PreserveAspectFit
-    //                MouseArea {
-    //                    id: giro_derecha_mouse_area
-    //                    anchors.fill: parent
-    //                }
-    //            }
-
-    //            Image {
-    //                id: giro_izquierda
-    //                width: 40
-    //                height: 40
-    //                anchors.verticalCenter: parent.verticalCenter
-    //                source: "../images/giro_izq.png"
-    //                anchors.horizontalCenterOffset: 50
-    //                anchors.horizontalCenter: parent.horizontalCenter
-    //                fillMode: Image.PreserveAspectFit
-    //                MouseArea {
-    //                    id: giro_izquierda_mouse_area
-    //                    anchors.fill: parent
-    //                }
-    //            }
-    //        }
-
-       Button {
-           id: image_button
-           anchors.verticalCenter: parent.verticalCenter
-           anchors.horizontalCenter: parent.horizontalCenter
-           text: qsTr("image")
-           //        onClicked: {
-           //            imageReceiver.setImage(imageData)
-           //            imageDisplay.visible = true
-           //        }
-       }
+    // Button {
+    //     id: image_button
+    //     anchors.verticalCenter: parent.verticalCenter
+    //     anchors.horizontalCenter: parent.horizontalCenter
+    //     text: qsTr("image")
+    //     //        onClicked: {
+    //     //            imageReceiver.setImage(imageData)
+    //     //            imageDisplay.visible = true
+    //     //        }
+    // }
 }
 
 /*##^##

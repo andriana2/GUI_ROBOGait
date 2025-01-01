@@ -13,10 +13,14 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
 {
     periodicTimer = new QTimer(this);
     connect(periodicTimer, &QTimer::timeout, this, [this]() {
-        cliente->sendMessage(sendJoystickPosition(currentAngular, currentLineal));
-        if (SLAM_ON) {
+        static int i = 0;
+        if (SLAM_ON && i == 6) {
             cliente->sendMessage(sendRequestMapSlam());
+            i = 0;
         }
+        else
+            cliente->sendMessage(sendJoystickPosition(currentAngular, currentLineal));
+        i++;
     });
 }
 void StringHandler::setClient(Cliente *cli){ cliente = cli;}
@@ -65,7 +69,7 @@ bool StringHandler::isInSameNetwork(const QString &ip1, const std::string& subne
 
 QString StringHandler::getImageSource()
 {
-    qDebug() << m_imageSource;
+    // qDebug() << m_imageSource;
     return m_imageSource;
 }
 
@@ -107,8 +111,7 @@ void StringHandler::setCurrentMove(const QString &lineal, const QString &angular
 
 void StringHandler::getImageMapSlam(const QJsonObject &json)
 {
-    QString name = "temporal_img";
-    QByteArray data = fromHex(json["data"].toString());
+    QByteArray data = QByteArray::fromBase64(json["data"].toString().toUtf8());
     totalSize = json["total_size"].toInt();
     totalFrames = json["total_frame"].toInt();
     receivedFrames++;
@@ -121,17 +124,24 @@ void StringHandler::getImageMapSlam(const QJsonObject &json)
     // If all frames are received, save the image
     if (receivedFrames == totalFrames)
     {
-        QFile imageFile(name + ".pgm");
-        if (!imageFile.open(QIODevice::WriteOnly))
-        {
-            qWarning() << "Failed to save the image file";
-            return;
-        }
-        imageFile.write(imageBuffer);
-        imageFile.close();
-        qDebug() << "Image saved as:" << imageFile.fileName();
-        m_imageSource = imageFile.fileName();
-        qDebug() <<"poraquí "<< m_imageSource;
+        QImage image;
+        qDebug() << "HAN LLEGADO TODOS LOS FRAMES";
+        QBuffer buffer(&imageBuffer);
+        buffer.open(QIODevice::WriteOnly);
+        image.save(&buffer, "PNG");
+        m_imageSource = "data:image/pgm;base64," + imageBuffer.toBase64(); // Guarda el path absoluto
+        //qDebug() << "Path guardado en m_imageSource:" << m_imageSource;
+        emit imageSourceChanged();
+
+        // QFile imageFile("../image/temporal_map.pgm");
+        // if (!imageFile.open(QIODevice::WriteOnly))
+        // {
+        //     qWarning() << "Failed to save the image file";
+        //     return;
+        // }
+        // imageFile.write(imageBuffer);
+        // imageFile.close();
+
         // Reset for the next image
         imageBuffer.clear();
         totalSize = 0;
