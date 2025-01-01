@@ -35,6 +35,7 @@ void NodeManager::create_publisher(Target const &target)
         }
         if (!rviz_active)
         {
+            // TODO LO RELACIONADO CON EL SERVICIO
             if (!tf_service_client_->wait_for_service(std::chrono::seconds(1)))
             {
                 RCLCPP_WARN(node_manager->get_logger(), "Service not available, waiting...");

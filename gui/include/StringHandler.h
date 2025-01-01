@@ -1,6 +1,11 @@
 #ifndef STRINGHANDLER_H
 #define STRINGHANDLER_H
 
+#include <QCoreApplication>
+#include <QPainter>
+#include <QBrush>
+#include <QPen>
+
 #include <QObject>
 #include <QDebug>
 #include <QString>
@@ -37,6 +42,9 @@ public:
     // msg recived
     void getImageMapSlam(const QJsonObject &json);
     void getRobotPositionPixel(const QJsonObject &json);
+
+    //edit image
+    QString updateMapPaintPoint(QImage &mapa, int columna, int fila, float yaw);
 
     QString imageSource() const;
 

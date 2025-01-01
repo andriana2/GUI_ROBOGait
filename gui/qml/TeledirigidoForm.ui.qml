@@ -7,17 +7,7 @@ Rectangle {
     color: "#518bb7"
     property alias imageDisplay: imageDisplay
     property alias joystick: joystick
-    // property alias image_button: image_button
 
-    // property alias giro_izquierda_mouse_area: giro_izquierda_mouse_area
-    // property alias giro_derecha_mouse_area: giro_derecha_mouse_area
-    // property alias less_speed_mouse_area: less_speed_mouse_area
-    // property alias more_speed_mouse_area: more_speed_mouse_area
-    // property alias stop_mouse_area: stop_mouse_area
-    // property alias down_mouse_area: down_mouse_area
-    // property alias up_mouse_area: up_mouse_area
-
-    // property alias joystickId: joystickId
     Rectangle {
         id: teledirigido
         width: 2 * parent.width / 3
@@ -41,10 +31,11 @@ Rectangle {
             source: ""
         }
     }
+
+    // funcion para actualizar el source de imageDisplay
     Connections {
         target: stringHandler
         function onImageSourceChanged() {
-            // Actualizar el source cuando la señal es emitida
             imageDisplay.visible = true
             imageDisplay.source = stringHandler.imageSource
         }
@@ -58,8 +49,6 @@ Rectangle {
         anchors.horizontalCenterOffset: teledirigido.width / 2
         anchors.horizontalCenter: parent.horizontalCenter
 
-        //color: Colors.rectangle_color
-        //                    color: "#a8efff"
         Joystick {
             id: joystick
             width: parent.width
@@ -68,17 +57,6 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
         }
     }
-
-    // Button {
-    //     id: image_button
-    //     anchors.verticalCenter: parent.verticalCenter
-    //     anchors.horizontalCenter: parent.horizontalCenter
-    //     text: qsTr("image")
-    //     //        onClicked: {
-    //     //            imageReceiver.setImage(imageData)
-    //     //            imageDisplay.visible = true
-    //     //        }
-    // }
 }
 
 /*##^##

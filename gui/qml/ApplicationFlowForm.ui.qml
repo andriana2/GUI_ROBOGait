@@ -15,9 +15,9 @@ Rectangle {
 
     CustomToolBar {
         id: toolbar
-        anchors.topMargin: parent.height / 80
+        anchors.topMargin: parent.height / 120
         width: parent.width
-        height: 35
+        height: 20
         anchors.top: parent.top
     }
 
