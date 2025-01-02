@@ -10,17 +10,29 @@
 #include <QRegularExpression>
 
 QVector<QString> extractJSONObjects(const QString& input) {
+    static QString incompleteFragment; // Guarda fragmentos incompletos entre llamadas
     QVector<QString> jsonObjects;
+
+    // Combina el fragmento incompleto con la nueva entrada
+    QString combinedInput = incompleteFragment + input;
+
     QRegularExpression jsonRegex(R"(\{(?:[^{}]|(?R))*\})");
-    QRegularExpressionMatchIterator matchIterator = jsonRegex.globalMatch(input);
+    QRegularExpressionMatchIterator matchIterator = jsonRegex.globalMatch(combinedInput);
+
+    int lastValidEnd = 0; // Para rastrear hasta dónde se procesó exitosamente
 
     while (matchIterator.hasNext()) {
         QRegularExpressionMatch match = matchIterator.next();
-        jsonObjects.append(match.captured(0)); // Agregar el JSON encontrado al vector
+        jsonObjects.append(match.captured(0));
+        lastValidEnd = match.capturedEnd(0); // Registra el final del último JSON válido
     }
+
+    // Guarda cualquier fragmento después del último JSON válido
+    incompleteFragment = combinedInput.mid(lastValidEnd);
 
     return jsonObjects;
 }
+
 
 QByteArray fromHex(const QString &hex)
 {

@@ -114,7 +114,7 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
     {
         json parsed_json = json::parse(json_);
 
-        pri1(parsed_json.dump(4));
+        // pri1(parsed_json.dump(4));
 
         if (parsed_json.contains("opt") && parsed_json["opt"] == headerToString(MSG))
         {
@@ -131,10 +131,10 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
         {
             if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Map_SLAM))
             {
-                // nodeManager.create_publisher(stringToTarget(parsed_json["target"]));
-                // nodeManager.refresh_map();
                 std::string path = PATH2MAP;
                 path += "/temporal_map.pgm";
+                nodeManager.create_publisher(stringToTarget(parsed_json["target"]), path);
+                nodeManager.refresh_map();
 
                 // Ejecutar sendImageMap en un hilo separado
                 std::thread sendMapThread(&Servidor::sendImageMap, this, path);
@@ -312,8 +312,7 @@ void Servidor::sendMsg(const json &json_msg)
     boost::asio::write(socket_, boost::asio::buffer(jsonStr));
 }
 
-
-std::string toBase64(const char* data, size_t length)
+std::string toBase64(const char *data, size_t length)
 {
     std::string base64Str;
     base64Str.resize(boost::beast::detail::base64::encoded_size(length));
@@ -360,11 +359,15 @@ void Servidor::sendImageMap(const std::string &name_map)
             std::string jsonStr = jsonMessage.dump();
 
             // Verificar que el tamaño total no exceda el límite
-            pri1(jsonStr);
+            // pri1(jsonStr);
             if (jsonStr.size() > maxJsonSize)
             {
                 std::string str = "El JSON generado excede el tamaño máximo permitido " + std::to_string(jsonStr.size());
                 throw std::runtime_error(str);
+            }
+            else if (jsonStr.size() < maxJsonSize)
+            {
+                jsonStr.append(maxJsonSize - jsonStr.size(), ' ');
             }
 
             // Enviar el JSON por el socket

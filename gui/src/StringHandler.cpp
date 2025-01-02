@@ -14,14 +14,14 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
     periodicTimer = new QTimer(this);
     connect(periodicTimer, &QTimer::timeout, this, [this]()
             {
-        static int i = 0;
-        if (SLAM_ON && i == 6) {
-            cliente->sendMessage(sendRequestMapSlam());
-            i = 0;
-        }
-        else
-            cliente->sendMessage(sendJoystickPosition(currentAngular, currentLineal));
-        i++; });
+                static int i = 0;
+                if (SLAM_ON && i == 18) {
+                    cliente->sendMessage(sendRequestMapSlam());
+                    i = 0;
+                }
+                else
+                    cliente->sendMessage(sendJoystickPosition(currentAngular, currentLineal));
+                i++; });
 }
 void StringHandler::setClient(Cliente *cli) { cliente = cli; }
 
@@ -174,19 +174,25 @@ QString StringHandler::updateMapPaintPoint(QImage &mapa, int columna, int fila, 
 
 void StringHandler::getImageMapSlam(const QJsonObject &json)
 {
+    periodicTimer->stop();
     QByteArray data = QByteArray::fromBase64(json["data"].toString().toUtf8());
     totalSize = json["total_size"].toInt();
     totalFrames = json["total_frame"].toInt();
-    receivedFrames++;
+    if(json["num_frame"].toInt() == 0 && receivedFrames != 0)
+    {
+        receivedFrames = 0;
+    }
 
     // Append the received fragment to the image buffer
     imageBuffer.append(data);
 
-    qDebug() << "Received frame:" << json["num_frame"].toInt() << "of" << totalFrames;
+    qDebug() << "Received frame:" << json["num_frame"].toInt() << "of" << totalFrames << "num recivedFrames: " << receivedFrames;
+    receivedFrames++;
 
     // If all frames are received, save the image
     if (receivedFrames == totalFrames)
     {
+        qDebug() << "TODOS LOS FRAMS RECIBIDOS";
         if (imageBuffer.isEmpty())
         {
             qWarning() << "Error: imageBuffer is empty";
@@ -208,11 +214,11 @@ void StringHandler::getImageMapSlam(const QJsonObject &json)
             qWarning() << "Error updating the map";
             return;
         }
-
-        // Convertir a base64 y guardar
-        m_imageSource = "data:image/png;base64," + image_str; // Usa "png" en lugar de "pgm"
-        //qDebug() << "Path guardado en m_imageSource:" << m_imageSource;
-        emit imageSourceChanged();
+        setImageSource(image_str);
+        // // Convertir a base64 y guardar
+        // m_imageSource = "data:image/png;base64," + image_str; // Usa "png" en lugar de "pgm"
+        // //qDebug() << "Path guardado en m_imageSource:" << m_imageSource;
+        // emit imageSourceChanged();
 
         // QImage image;
         // qDebug() << "HAN LLEGADO TODOS LOS FRAMES";
@@ -242,6 +248,12 @@ void StringHandler::getImageMapSlam(const QJsonObject &json)
         receivedFrames = 0;
         totalFrames = 0;
     }
+}
+
+void StringHandler::setImageSource(const QString &source)
+{
+    m_imageSource = "data:image/png;base64," + source;
+    emit imageSourceChanged();
 }
 
 void StringHandler::getRobotPositionPixel(const QJsonObject &json)

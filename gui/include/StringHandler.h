@@ -25,7 +25,7 @@ class Cliente;
 class StringHandler : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString imageSource READ imageSource NOTIFY imageSourceChanged)
+    Q_PROPERTY(QString imageSource READ imageSource WRITE setImageSource NOTIFY imageSourceChanged)
 
 public:
     explicit StringHandler(QObject *parent = nullptr);
@@ -42,6 +42,7 @@ public:
     // msg recived
     void getImageMapSlam(const QJsonObject &json);
     void getRobotPositionPixel(const QJsonObject &json);
+    void setImageSource(const QString &source);
 
     //edit image
     QString updateMapPaintPoint(QImage &mapa, int columna, int fila, float yaw);
@@ -66,7 +67,7 @@ private:
     QString m_imageSource;
     QByteArray imageBuffer;
     size_t totalSize = 0;
-    size_t receivedFrames = 0;
+    size_t receivedFrames = 1;
     size_t totalFrames = 0;
 };
 

@@ -13,7 +13,7 @@ NodeManager::NodeManager(rclcpp::Node::SharedPtr node_ptr)
     final_position_pixel.yaw = -10;
 }
 
-void NodeManager::create_publisher(Target const &target)
+void NodeManager::create_publisher(Target const &target, std::string const &path)
 {
     static pid_t pid;
     if (target == Joystick_Position)
@@ -33,7 +33,7 @@ void NodeManager::create_publisher(Target const &target)
             tf_service_client_ = node_manager->create_client<interface_srv::srv::GetRobotPosition>("get_transform");
             RCLCPP_INFO(node_manager->get_logger(), "Robot Pose Client initialized.");
         }
-        if (!rviz_active)
+        if (tf_service_client_)
         {
             // TODO LO RELACIONADO CON EL SERVICIO
             if (!tf_service_client_->wait_for_service(std::chrono::seconds(1)))
@@ -56,6 +56,7 @@ void NodeManager::create_publisher(Target const &target)
                     position_robot.x_robot = response->x;
                     position_robot.y_robot = response->y;
                     position_robot.yaw = response->yaw;
+                    FinalPosition fp = getPositionRobotPixel(path);
                 }
 
                 RCLCPP_INFO(node_manager->get_logger(),

@@ -18,28 +18,39 @@ Rectangle {
         //color: Colors.rectangle_color
         //        color: "#235c87"
         color: "#518bb7"
+        // Image {
+        //     id: imageDisplay
+        //     width: Math.min(parent.width, parent.height * imageDisplay.sourceSize.width / imageDisplay.sourceSize.height)
+        //     height: Math.min(parent.height, parent.width * imageDisplay.sourceSize.height / imageDisplay.sourceSize.width)
+        //     anchors.centerIn: parent
+        //     // width: parent.width
+        //     // height: parent.height
+        //     visible: false
+        //     fillMode: Image.PreserveAspectCrop
+        //     // source: ""
+        //     source: ""
+        // }
         Image {
             id: imageDisplay
             width: Math.min(parent.width, parent.height * imageDisplay.sourceSize.width / imageDisplay.sourceSize.height)
             height: Math.min(parent.height, parent.width * imageDisplay.sourceSize.height / imageDisplay.sourceSize.width)
             anchors.centerIn: parent
-            // width: parent.width
-            // height: parent.height
-            visible: false
+            visible: stringHandler.imageSource !== "" // Solo visible si hay una fuente válida
             fillMode: Image.PreserveAspectCrop
-            // source: ""
-            source: ""
+            source: stringHandler.imageSource // Vinculación directa al valor de stringHandler.imageSource
         }
+
     }
 
     // funcion para actualizar el source de imageDisplay
-    Connections {
-        target: stringHandler
-        function onImageSourceChanged() {
-            imageDisplay.visible = true
-            imageDisplay.source = stringHandler.imageSource
-        }
-    }
+    // Connections {
+    //     target: stringHandler
+    //     function onImageSourceChanged() {
+    //         imageDisplay.visible = true
+    //         imageDisplay.source = stringHandler.imageSource
+    //         console.log("imagen actualizada")
+    //     }
+    // }
 
     Item {
         id: mapa

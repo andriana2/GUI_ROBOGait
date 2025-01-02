@@ -26,6 +26,8 @@ void Cliente::onReadyRead() {
     while (socket->bytesAvailable()) {
         QByteArray rawData = socket->readAll();
         QString dataString = QString::fromUtf8(rawData);
+        // qDebug() << dataString;
+        qDebug() << "su tamaño es de --------------->" << dataString.size();
         QVector<QString> jsonObjects = extractJSONObjects(dataString);
         for (const QString& jsonStr : jsonObjects) {
             this->jsonDoc = QJsonDocument::fromJson(jsonStr.toUtf8());
