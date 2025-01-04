@@ -32,6 +32,38 @@ QJsonDocument sendSaveMap(const QString& map_name) {
     return QJsonDocument(jsonObj);
 }
 
+QJsonDocument sendStateRemoteControlled(bool stop, bool mapping, bool in) {
+    QJsonObject jsonObj;
+    jsonObj["opt"] = headerToString(MSG);
+    jsonObj["target"] = targetToString(State_Remote_Controlled);
+    jsonObj["stop"] = stop;
+    jsonObj["mapping"] = mapping;
+    jsonObj["in"] = in;
+    return QJsonDocument(jsonObj);
+}
+
+void getRobotPositionPixel(const QJsonDocument &JsonDoc, int &x_output, int &y_output, float &yaw_output)
+{
+    if (!JsonDoc.isObject()) {
+        qWarning() << "El documento JSON no es un objeto.";
+        return;
+    }
+
+    QJsonObject jsonObj = JsonDoc.object();
+
+    // Extraer los valores del JSON
+    if (jsonObj.contains("x") && jsonObj["x"].isString()) {
+        x_output = jsonObj["x"].toString().toInt();
+    }
+
+    if (jsonObj.contains("y") && jsonObj["y"].isString()) {
+        y_output = jsonObj["y"].toString().toInt();
+    }
+
+    if (jsonObj.contains("yaw") && jsonObj["yaw"].isString()) {
+        yaw_output = jsonObj["yaw"].toString().toFloat();
+    }
+}
 
 
 // void actualizarJson(QJsonDocument& jsonDoc, const QString& opt, const QString& target) {

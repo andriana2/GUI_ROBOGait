@@ -13,7 +13,10 @@ class NodeManager
 {
 public:
     NodeManager(rclcpp::Node::SharedPtr node_ptr);
-    void create_publisher(Target const &target, std::string const &path = "");
+    void create_publisher(Target const &target);
+    void close_publisher(Target const &target);
+
+    // void create_publisher(Target const &target, std::string const &path = "");
 
     void execute_position(float const &linear, float const &angular);
     void refresh_map();
@@ -27,8 +30,6 @@ private:
     void kill_launch_file(std::string const &command);
 
     bool rviz_active;
-    struct GetPosition position_robot;
-    struct FinalPosition final_position_pixel;
 };
 
 #endif // NODEMANAGER_H

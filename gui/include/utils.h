@@ -20,7 +20,8 @@ enum Target {
     Map_SLAM,
     Robot_Position_Pixel,
     Img_Map_SLAM,
-    Save_Map
+    Save_Map,
+    State_Remote_Controlled
 
 };
 

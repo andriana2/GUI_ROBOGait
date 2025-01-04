@@ -1,4 +1,7 @@
 #include "../include/utils.h"
+#include <boost/asio.hpp>
+#include <boost/beast/core/detail/base64.hpp>
+
 
 std::string headerToString(Header header)
 {
@@ -45,6 +48,8 @@ std::string targetToString(Target target)
         return "Img_Map_SLAM";
     case Save_Map:
         return "Save_Map";
+    case State_Remote_Controlled:
+        return "";
     default:
         return "UNKNOWN";
     }
@@ -62,6 +67,8 @@ Target stringToTarget(const std::string &str)
         return Img_Map_SLAM;
     if (str == "Save_Map")
         return Save_Map;
+    if (str == "State_Remote_Controlled")
+        return State_Remote_Controlled;
     throw std::invalid_argument("Invalid Target string: " + str);
 }
 
@@ -135,49 +142,40 @@ std::vector<std::string> executeCommand(const std::string &command)
     return results;
 }
 
-std::vector<std::string> splitJson(const std::string& input) {
+std::vector<std::string> splitJson(const std::string &input)
+{
+    static std::string leftoverBuffer; // Almacena datos incompletos entre llamadas
     std::vector<std::string> jsons;
-    std::string buffer;
+    std::string buffer = leftoverBuffer + input; // Combina el buffer previo con la nueva entrada
+    leftoverBuffer.clear();                      // Limpia el buffer estático para llenarlo después si sobra algo
+
     int braceCounter = 0;
 
-    for (char c : input) {
-        buffer += c;
-
-        if (c == '{') {
+    for (char c : buffer)
+    {
+        leftoverBuffer += c;
+        if (c == '{')
             braceCounter++;
-        } else if (c == '}') {
+        else if (c == '}')
             braceCounter--;
-        }
-
-        // When a complete JSON object is found
-        if (braceCounter == 0 && !buffer.empty()) {
-            jsons.push_back(buffer);
-            buffer.clear(); // Clear the buffer for the next JSON
+        // Cuando se encuentra un objeto JSON completo
+        if (braceCounter == 0 && !leftoverBuffer.empty())
+        {
+            jsons.push_back(leftoverBuffer);
+            leftoverBuffer.clear(); // Limpia el buffer para el siguiente JSON
         }
     }
-
-    if (braceCounter != 0) {
-        throw std::runtime_error("The input contains an incomplete JSON.");
-    }
-
+    // Si sobra información incompleta, se guarda en el buffer estático
+    if (braceCounter != 0)
+        leftoverBuffer = buffer;
     return jsons;
 }
 
-// Función para convertir datos binarios a texto hexadecimal
-// std::string toHex(const char* data, std::size_t length)
-// {
-//     static const char* hexDigits = "0123456789ABCDEF";
-//     std::string hex;
-//     hex.reserve(length * 2);
+std::string toBase64(const char *data, size_t length)
+{
+    std::string base64Str;
+    base64Str.resize(boost::beast::detail::base64::encoded_size(length));
 
-//     for (std::size_t i = 0; i < length; ++i)
-//     {
-//         unsigned char byte = static_cast<unsigned char>(data[i]);
-//         hex.push_back(hexDigits[byte >> 4]);
-//         hex.push_back(hexDigits[byte & 0x0F]);
-//     }
-
-//     return hex;
-// }
-
-
+    boost::beast::detail::base64::encode(base64Str.data(), data, length);
+    return base64Str;
+}

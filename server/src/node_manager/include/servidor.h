@@ -26,6 +26,8 @@
 
 using json = nlohmann::json;
 
+class NodeManager;
+
 class Servidor
 {
 public:

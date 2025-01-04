@@ -105,6 +105,8 @@ Target stringToTarget(const QString& str) {
         return Img_Map_SLAM;
     } else if (str == "Save_Map") {
         return Save_Map;
+    } else if (str == "State_Remote_Controlled") {
+        return State_Remote_Controlled;
     } else {
         Q_ASSERT(false);
         return Joystick_Position;
@@ -123,6 +125,8 @@ QString targetToString(Target target) {
         return "Img_Map_SLAM";
     case Save_Map:
         return "Save_Map";
+    case State_Remote_Controlled:
+        return "State_Remote_Controlled";
     default:
         Q_ASSERT(false);
         return "Joystick_Position";

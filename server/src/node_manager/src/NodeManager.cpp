@@ -5,23 +5,15 @@ NodeManager::NodeManager(rclcpp::Node::SharedPtr node_ptr)
 {
     node_manager = node_ptr;
     rviz_active = false;
-    position_robot.x_robot = -10;
-    position_robot.y_robot = -10;
-    position_robot.yaw = -10;
-    final_position_pixel.x_pixel = 0;
-    final_position_pixel.x_pixel = 0;
-    final_position_pixel.yaw = -10;
 }
 
-void NodeManager::create_publisher(Target const &target, std::string const &path)
+void NodeManager::create_publisher(Target const &target)
 {
-    static pid_t pid;
     if (target == Joystick_Position)
     {
         if (!cmd_vel_publisher_)
         {
-            // Crear el publisher si no existe
-            cmd_vel_publisher_ = node_manager->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
+            cmd_vel_publisher_ = node_manager->create_publisher<geometry_msgs::msg::Twist>(CMD_TOPIC, 10);
             RCLCPP_INFO(node_manager->get_logger(), "Publisher /cmd_vel creado.");
         }
     }
@@ -33,96 +25,164 @@ void NodeManager::create_publisher(Target const &target, std::string const &path
             tf_service_client_ = node_manager->create_client<interface_srv::srv::GetRobotPosition>("get_transform");
             RCLCPP_INFO(node_manager->get_logger(), "Robot Pose Client initialized.");
         }
-        if (tf_service_client_)
-        {
-            // TODO LO RELACIONADO CON EL SERVICIO
-            if (!tf_service_client_->wait_for_service(std::chrono::seconds(1)))
-            {
-                RCLCPP_WARN(node_manager->get_logger(), "Service not available, waiting...");
-                return;
-            }
-            auto request = std::make_shared<interface_srv::srv::GetRobotPosition::Request>();
-
-            // Enviar solicitud y procesar la respuesta
-            auto future = tf_service_client_->async_send_request(request);
-
-            try
-            {
-                // Esperar la respuesta con un timeout
-                auto response = future.get();
-                if (response->success == true)
-                {
-                    RCLCPP_INFO(node_manager->get_logger(), "La informacion ha llegado correctamente");
-                    position_robot.x_robot = response->x;
-                    position_robot.y_robot = response->y;
-                    position_robot.yaw = response->yaw;
-                    FinalPosition fp = getPositionRobotPixel(path);
-                }
-
-                RCLCPP_INFO(node_manager->get_logger(),
-                            "Received Robot Pose x: %.2f, y: %.2f, yaw: %.2f",
-                            response->x, response->y, response->yaw);
-            }
-            catch (const std::exception &e)
-            {
-                RCLCPP_ERROR(node_manager->get_logger(), "Failed to call service: %s", e.what());
-            }
-
-            // DESCOMENTAR CUANDO FUNCIONE LA TRASMISION DE IMAGENES
-            //  pid = fork();
-            //  if (pid == 0)
-            //  {
-            //      // Proceso hijo
-            //      const char *command = "ros2";
-            //      const char *args[] = {"ros2", "launch", "turtlebot3_cartographer", "cartographer.launch.py", nullptr};
-            //      freopen("/dev/null", "w", stdout); // Redirigir stdout a /dev/null
-            //      freopen("/dev/null", "w", stderr); // Redirigir stderr a /dev/null
-            //      execvp(command, const_cast<char *const *>(args));
-            //      std::exit(EXIT_FAILURE); // Solo si exec falla
-            //  }
-            //  else if (pid > 0)
-            //  {
-            //      // Proceso padre
-            //      rviz_active = true;
-            //      std::cout << "Cartographer lanzado en segundo plano." << std::endl;
-            //  }
-            //  else
-            //  {
-            //      // Error al crear proceso
-            //      std::cerr << "Error al lanzar Cartographer." << std::endl;
-            //  }
-        }
-    }
-    else
-    {
-        if (rviz_active)
-        {
-            if (pid > 0)
-            {
-                if (kill(pid, SIGTERM) == 0)
-                {
-                    rviz_active = false;
-                    std::cout << "Proceso Cartographer (PID " << pid << ") terminado." << std::endl;
-                }
-                else
-                {
-
-                    perror("Error al terminar el proceso");
-                }
-            }
-            else
-            {
-                std::cerr << "Cartographer no está en ejecución." << std::endl;
-            }
-        }
-        // kill_launch_file(RVIZ_LAUNCH_MAPING_KILL);
     }
 }
 
+void NodeManager::close_publisher(Target const &target)
+{
+    if (target == Joystick_Position)
+    {
+        if (!cmd_vel_publisher_)
+        {
+            cmd_vel_publisher_.reset();
+            RCLCPP_INFO(node_manager->get_logger(), "Publisher /cmd_vel destroy.");
+        }
+    }
+    else if (target == Map_SLAM)
+    {
+        if (!tf_service_client_)
+        {
+            tf_service_client_.reset();
+            RCLCPP_INFO(node_manager->get_logger(), "Robot Pose Client destroy.");
+        }
+    }
+}
+
+// void NodeManager::create_publisher(Target const &target, std::string const &path)
+// {
+//     static pid_t pid;
+//     if (target == Joystick_Position)
+//     {
+//         if (!cmd_vel_publisher_)
+//         {
+//             // Crear el publisher si no existe
+//             cmd_vel_publisher_ = node_manager->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
+//             RCLCPP_INFO(node_manager->get_logger(), "Publisher /cmd_vel creado.");
+//         }
+//     }
+//     else if (target == Map_SLAM)
+//     {
+//         if (!tf_service_client_)
+//         {
+//             // Crear el publisher si no existe
+//             tf_service_client_ = node_manager->create_client<interface_srv::srv::GetRobotPosition>("get_transform");
+//             RCLCPP_INFO(node_manager->get_logger(), "Robot Pose Client initialized.");
+//         }
+//         if (tf_service_client_)
+//         {
+//             // // TODO LO RELACIONADO CON EL SERVICIO
+//             // if (!tf_service_client_->wait_for_service(std::chrono::seconds(1)))
+//             // {
+//             //     RCLCPP_WARN(node_manager->get_logger(), "Service not available, waiting...");
+//             //     return;
+//             // }
+//             // auto request = std::make_shared<interface_srv::srv::GetRobotPosition::Request>();
+
+//             // // Enviar solicitud y procesar la respuesta
+//             // auto future = tf_service_client_->async_send_request(request);
+
+//             // try
+//             // {
+//             //     // Esperar la respuesta con un timeout
+//             //     auto response = future.get();
+//             //     if (response->success == true)
+//             //     {
+//             //         RCLCPP_INFO(node_manager->get_logger(), "La informacion ha llegado correctamente");
+//             //         position_robot.x_robot = response->x;
+//             //         position_robot.y_robot = response->y;
+//             //         position_robot.yaw = response->yaw;
+//             //         FinalPosition fp = getPositionRobotPixel(path);
+//             //     }
+
+//             //     RCLCPP_INFO(node_manager->get_logger(),
+//             //                 "Received Robot Pose x: %.2f, y: %.2f, yaw: %.2f",
+//             //                 response->x, response->y, response->yaw);
+//             // }
+//             // catch (const std::exception &e)
+//             // {
+//             //     RCLCPP_ERROR(node_manager->get_logger(), "Failed to call service: %s", e.what());
+//             // }
+
+//             // DESCOMENTAR CUANDO FUNCIONE LA TRASMISION DE IMAGENES
+//             //  pid = fork();
+//             //  if (pid == 0)
+//             //  {
+//             //      // Proceso hijo
+//             //      const char *command = "ros2";
+//             //      const char *args[] = {"ros2", "launch", "turtlebot3_cartographer", "cartographer.launch.py", nullptr};
+//             //      freopen("/dev/null", "w", stdout); // Redirigir stdout a /dev/null
+//             //      freopen("/dev/null", "w", stderr); // Redirigir stderr a /dev/null
+//             //      execvp(command, const_cast<char *const *>(args));
+//             //      std::exit(EXIT_FAILURE); // Solo si exec falla
+//             //  }
+//             //  else if (pid > 0)
+//             //  {
+//             //      // Proceso padre
+//             //      rviz_active = true;
+//             //      std::cout << "Cartographer lanzado en segundo plano." << std::endl;
+//             //  }
+//             //  else
+//             //  {
+//             //      // Error al crear proceso
+//             //      std::cerr << "Error al lanzar Cartographer." << std::endl;
+//             //  }
+//         }
+//     }
+//     else
+//     {
+//         if (rviz_active)
+//         {
+//             if (pid > 0)
+//             {
+//                 if (kill(pid, SIGTERM) == 0)
+//                 {
+//                     rviz_active = false;
+//                     std::cout << "Proceso Cartographer (PID " << pid << ") terminado." << std::endl;
+//                 }
+//                 else
+//                 {
+
+//                     perror("Error al terminar el proceso");
+//                 }
+//             }
+//             else
+//             {
+//                 std::cerr << "Cartographer no está en ejecución." << std::endl;
+//             }
+//         }
+//         // kill_launch_file(RVIZ_LAUNCH_MAPING_KILL);
+//     }
+// }
+
 struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_yaml)
 {
+    float x_robot, y_robot, yaw_robot;
+    struct FinalPosition final_position;
+
+    if (!tf_service_client_->wait_for_service(std::chrono::seconds(1)))
+    {
+        RCLCPP_WARN(node_manager->get_logger(), "Service not available, waiting...");
+        // return;
+    }
+    auto request = std::make_shared<interface_srv::srv::GetRobotPosition::Request>();
+
+    // Enviar solicitud y procesar la respuesta
+    auto future = tf_service_client_->async_send_request(request);
+
     try
     {
+        // Esperar la respuesta con un timeout
+        auto response = future.get();
+        if (response->success == true)
+        {
+            RCLCPP_INFO(node_manager->get_logger(), "La informacion ha llegado correctamente");
+            x_robot = response->x;
+            y_robot = response->y;
+            yaw_robot = response->yaw;
+        }
+
+        // Lo relacionado con el path
+
         // Cargar el archivo .yaml
         YAML::Node config = YAML::LoadFile(path_yaml);
 
@@ -135,18 +195,19 @@ struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_
         float origin_x = origin[0].as<float>();
         float origin_y = origin[1].as<float>();
         std::cout << "Origen X: " << origin_x << ", Origen Y: " << origin_y << std::endl;
-        std::cout << "Robot X: " << origin_x << ", Robot Y: " << origin_y << std::endl;
+        std::cout << "Robot X: " << x_robot << ", Robot Y: " << y_robot << std::endl;
 
-        final_position_pixel.x_pixel = static_cast<int>((position_robot.x_robot - origin_x) / resolution);
-        final_position_pixel.y_pixel = static_cast<int>((position_robot.y_robot - origin_y) / resolution);
-        final_position_pixel.yaw = position_robot.yaw;
-        std::cout << "Pixel X: " << final_position_pixel.x_pixel << ", Pixel Y: " << final_position_pixel.y_pixel << ", YAW: " << final_position_pixel.yaw << std::endl;
+
+        final_position.x_pixel = static_cast<int>((x_robot - origin_x) / resolution);
+        final_position.y_pixel = static_cast<int>((y_robot - origin_y) / resolution);
+        final_position.yaw = yaw_robot;
+        std::cout << "Pixel X: " << final_position.x_pixel << ", Pixel Y: " << final_position.y_pixel << ", YAW: " << final_position.yaw << std::endl;
     }
     catch (const std::exception &e)
     {
         std::cerr << "Error al leer el archivo YAML: " << e.what() << std::endl;
     }
-    return final_position_pixel;
+    return final_position;
 }
 
 void NodeManager::refresh_map()
@@ -167,11 +228,14 @@ void NodeManager::refresh_map()
 
 void NodeManager::execute_position(float const &linear, float const &angular)
 {
-    geometry_msgs::msg::Twist twist_msg;
-    twist_msg.linear.x = linear;
-    twist_msg.angular.z = angular;
-    cmd_vel_publisher_->publish(twist_msg);
-    std::cout << "valores publicados linear: " << linear << " angular: " << angular << std::endl;
+    if (cmd_vel_publisher_)
+    {
+        geometry_msgs::msg::Twist twist_msg;
+        twist_msg.linear.x = linear;
+        twist_msg.angular.z = angular;
+        cmd_vel_publisher_->publish(twist_msg);
+        std::cout << "valores publicados linear: " << linear << " angular: " << angular << std::endl;
+    }
 }
 
 void NodeManager::kill_launch_file(std::string const &command)

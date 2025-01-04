@@ -15,7 +15,7 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
     connect(periodicTimer, &QTimer::timeout, this, [this]()
             {
                 static int i = 0;
-                if (SLAM_ON && i == 18) {
+                if (SLAM_ON && i == 8) {
                     cliente->sendMessage(sendRequestMapSlam());
                     i = 0;
                 }
@@ -258,6 +258,7 @@ void StringHandler::setImageSource(const QString &source)
 
 void StringHandler::getRobotPositionPixel(const QJsonObject &json)
 {
+
 }
 
 void StringHandler::setImage(const QByteArray &data)

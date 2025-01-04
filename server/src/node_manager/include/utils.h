@@ -32,11 +32,6 @@ std::vector<std::string> executeCommand(const std::string &command);
 
 std::vector<std::string> splitJson(const std::string &input);
 
-json qtJsonToNlohmannJson(const QJsonObject& qt_json_obj);
-
-std::string toHex(const char *data, std::size_t length);
-
-// std::string toBase64(const char* data, size_t length);
-
+std::string toBase64(const char *data, size_t length);
 
 #endif // UTILS_H
