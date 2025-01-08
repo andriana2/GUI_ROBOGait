@@ -80,6 +80,11 @@ QString StringHandler::getImageSource()
     return m_imageSource;
 }
 
+void StringHandler::sendStateRemoteControlledHandler(bool mapping, bool in)
+{
+    cliente->sendMessage(sendStateRemoteControlled(mapping, in));
+}
+
 void StringHandler::setCurrentMove(const QString &lineal, const QString &angular)
 {
     bool ok;
@@ -126,6 +131,7 @@ void StringHandler::setCurrentMove(const QString &lineal, const QString &angular
 
 QString StringHandler::updateMapPaintPoint(QImage &mapa, int columna, int fila, float yaw)
 {
+    fila = mapa.height() - 1 - fila;
     if (mapa.isNull())
     {
         qWarning("Error al cargar el mapa");
@@ -140,6 +146,7 @@ QString StringHandler::updateMapPaintPoint(QImage &mapa, int columna, int fila, 
         qWarning("La posición del robot está fuera de los límites del mapa");
         return "";
     }
+
     double longitud_flecha = 5.0; // Longitud de la flecha en píxeles
     int columna_flecha = columna + static_cast<int>(longitud_flecha * std::cos(yaw));
     int fila_flecha = fila - static_cast<int>(longitud_flecha * std::sin(yaw)); // Invertir Y para coordenadas
@@ -178,7 +185,7 @@ void StringHandler::getImageMapSlam(const QJsonObject &json)
     QByteArray data = QByteArray::fromBase64(json["data"].toString().toUtf8());
     totalSize = json["total_size"].toInt();
     totalFrames = json["total_frame"].toInt();
-    if(json["num_frame"].toInt() == 0 && receivedFrames != 0)
+    if (json["num_frame"].toInt() == 0 && receivedFrames != 0)
     {
         receivedFrames = 0;
     }
@@ -208,7 +215,12 @@ void StringHandler::getImageMapSlam(const QJsonObject &json)
         qDebug() << "Image successfully loaded. Size:" << image.size();
 
         // Modificar el mapa
-        QString image_str = updateMapPaintPoint(image, 91, 65, 1.5123);
+        QString image_str;
+        if(finalPosition.active)
+        {
+            image_str = updateMapPaintPoint(image, finalPosition.x_pixel, finalPosition.y_pixel, finalPosition.yaw);
+            finalPosition.active = false;
+        }
         if (image_str.isEmpty())
         {
             qWarning() << "Error updating the map";
@@ -258,7 +270,10 @@ void StringHandler::setImageSource(const QString &source)
 
 void StringHandler::getRobotPositionPixel(const QJsonObject &json)
 {
-
+    finalPosition.x_pixel = json["x"].toInt();
+    finalPosition.y_pixel = json["y"].toInt();
+    finalPosition.yaw = json["yaw"].toDouble();
+    finalPosition.active = true;
 }
 
 void StringHandler::setImage(const QByteArray &data)

@@ -25,6 +25,7 @@ ApplicationFlowForm {
     }
     function teledirigido_push()
     {
+        stringHandler.sendStateRemoteControlledHandler(1,1)
         mystackview.push(teledirigido)
         applicationFlow.state = "teledirigido"
     }

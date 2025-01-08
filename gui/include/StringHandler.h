@@ -19,6 +19,7 @@
 #include <QTimer>
 
 #include "cliente.h"
+#include "include/utils.h"
 
 class Cliente;
 
@@ -32,6 +33,7 @@ public:
     Q_INVOKABLE bool isInSameNetwork(const QString &ip1, const std::string& subnetMask = "255.255.255.0");
     Q_INVOKABLE void setImage(const QByteArray &data);
     Q_INVOKABLE QString getImageSource(); // QUITAR MIRAR SI FUNCIONA
+    Q_INVOKABLE void sendStateRemoteControlledHandler(bool mapping, bool in);
 
     void setClient(Cliente *cli);
 
@@ -69,6 +71,8 @@ private:
     size_t totalSize = 0;
     size_t receivedFrames = 1;
     size_t totalFrames = 0;
+
+    struct FinalPosition finalPosition;
 };
 
 #endif // STRINGHANDLER_H

@@ -184,6 +184,7 @@ struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_
         // Lo relacionado con el path
 
         // Cargar el archivo .yaml
+        pri1(path_yaml);
         YAML::Node config = YAML::LoadFile(path_yaml);
 
         // Obtener la resolución
@@ -200,7 +201,7 @@ struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_
 
         final_position.x_pixel = static_cast<int>((x_robot - origin_x) / resolution);
         final_position.y_pixel = static_cast<int>((y_robot - origin_y) / resolution);
-        final_position.yaw = yaw_robot;
+        final_position.yaw = -1 * yaw_robot;
         std::cout << "Pixel X: " << final_position.x_pixel << ", Pixel Y: " << final_position.y_pixel << ", YAW: " << final_position.yaw << std::endl;
     }
     catch (const std::exception &e)

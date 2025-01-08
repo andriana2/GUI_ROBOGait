@@ -25,6 +25,14 @@ enum Target {
 
 };
 
+struct FinalPosition
+{
+    int x_pixel;
+    int y_pixel;
+    float yaw;
+    bool active;
+};
+
 QVector<QString> extractJSONObjects(const QString& input);
 QByteArray fromHex(const QString &hex);
 

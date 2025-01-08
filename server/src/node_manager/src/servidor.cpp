@@ -86,17 +86,16 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             }
             else if (parsed_json.contains("target") && parsed_json["target"] == targetToString(State_Remote_Controlled))
             {
-                if (parsed_json["stop"] || !parsed_json["in"])
+                if (!parsed_json["in"])
                 {
-                    // kill the process (all)
-                    if (parsed_json["maping"])
-                        nodeManager.close_publisher(Map_SLAM);
+                    // bkill the process (all)
+                    nodeManager.close_publisher(Map_SLAM);
                     nodeManager.close_publisher(Joystick_Position); 
                     // SI HE INICIALIZADO ALGO CON UN ROS2 RUN O LAUNCH HAY QUE HACER UN KILL
                     // RVIZ
                     return;
                 }
-                else if (parsed_json["maping"])
+                else if (parsed_json["mapping"])
                     nodeManager.create_publisher(Map_SLAM);
                 nodeManager.create_publisher(Joystick_Position);
             }
@@ -106,10 +105,10 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Map_SLAM))
             {
                 std::string path = PATH2MAP;
+                FinalPosition fp = nodeManager.getPositionRobotPixel(path + "/temporal_map.yaml");
                 path += "/temporal_map.pgm";
 
                 // send robot position pixels
-                FinalPosition fp = nodeManager.getPositionRobotPixel(path);
                 sendMsg(sendRobotPositionPixel(fp.x_pixel, fp.y_pixel, fp.yaw));
                 
                 nodeManager.refresh_map();
@@ -130,6 +129,11 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
 
 void Servidor::sendMsg(const json &json_msg)
 {
+    if (json_msg.contains("target") && json_msg["target"] == targetToString(Robot_Position_Pixel));
+    {
+        pri1("Hey");
+    }
+    
     std::string jsonStr = json_msg.dump();
     boost::asio::write(socket_, boost::asio::buffer(jsonStr));
 }

@@ -32,11 +32,11 @@ QJsonDocument sendSaveMap(const QString& map_name) {
     return QJsonDocument(jsonObj);
 }
 
-QJsonDocument sendStateRemoteControlled(bool stop, bool mapping, bool in) {
+QJsonDocument sendStateRemoteControlled(bool mapping, bool in) {
     QJsonObject jsonObj;
     jsonObj["opt"] = headerToString(MSG);
     jsonObj["target"] = targetToString(State_Remote_Controlled);
-    jsonObj["stop"] = stop;
+    // jsonObj["stop"] = stop;
     jsonObj["mapping"] = mapping;
     jsonObj["in"] = in;
     return QJsonDocument(jsonObj);

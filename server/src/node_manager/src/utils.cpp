@@ -49,7 +49,7 @@ std::string targetToString(Target target)
     case Save_Map:
         return "Save_Map";
     case State_Remote_Controlled:
-        return "";
+        return "State_Remote_Controlled";
     default:
         return "UNKNOWN";
     }
@@ -162,6 +162,7 @@ std::vector<std::string> splitJson(const std::string &input)
         if (braceCounter == 0 && !leftoverBuffer.empty())
         {
             jsons.push_back(leftoverBuffer);
+            pri1(leftoverBuffer);
             leftoverBuffer.clear(); // Limpia el buffer para el siguiente JSON
         }
     }
