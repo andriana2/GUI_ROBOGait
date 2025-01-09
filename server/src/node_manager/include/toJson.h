@@ -4,7 +4,6 @@
 #include <iostream>
 #include <nlohmann/json.hpp> // Asegúrate de incluir la biblioteca
 #include "utils.h"
-#include <QJsonObject>
 
 using json = nlohmann::json;
 

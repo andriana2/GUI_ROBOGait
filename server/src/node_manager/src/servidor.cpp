@@ -2,8 +2,18 @@
 #include <iostream>
 #include <boost/beast/core/detail/base64.hpp>
 
+// void Servidor::signalHandler(int signal)
+// {
+//     std::cout << "\nSeñal SIGINT capturada. Cerrando el servidor de forma segura...\n";
+//     closeServer();
+//     exit(0);
+// }
+
 Servidor::Servidor(int port, rclcpp::Node::SharedPtr node)
-    : acceptor_(io_context_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)), socket_(io_context_), nodeManager(node) {}
+    : acceptor_(io_context_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)), socket_(io_context_), nodeManager(node)
+{
+    // std::signal(SIGINT, signalHandler);
+}
 
 void Servidor::run()
 {
@@ -27,25 +37,44 @@ void Servidor::startAccept()
             } });
 }
 
-void Servidor::handleDisconnect(const boost::system::error_code &ec)
-{
-    if (ec == boost::asio::error::eof)
-    {
-        std::cout << "Client disconnected.\n";
-    }
-    else
-    {
-        std::cerr << "Error: " << ec.message() << "\n";
-    }
-    resetConnection();
-}
-
 void Servidor::resetConnection()
 {
-    // rviz_active = false;
-    socket_.close(); // Ensure the socket is closed
-    buf_.clear();    // Clear the buffer
-    startAccept();   // Wait for the next client
+    try
+    {
+        std::cout << "Cerrando la conexión con el cliente...\n";
+        socket_.close();
+        buf_.clear();  // Limpia el buffer
+        startAccept(); // Espera por un nuevo cliente
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error cerrando el socket: " << e.what() << "\n";
+    }
+}
+
+void Servidor::closeServer()
+{
+    std::cout << "Apagando el servidor...\n";
+
+    try
+    {
+        // Detener el contexto de IO
+        io_context_.stop();
+
+        // Cerrar el socket
+        if (socket_.is_open())
+        {
+            pri1("Estoy intentando cerrarme mucho");
+            socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+            socket_.close();
+        }
+
+        std::cout << "Servidor cerrado correctamente.\n";
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error cerrando el servidor: " << e.what() << "\n";
+    }
 }
 
 void Servidor::startRead()
@@ -56,16 +85,20 @@ void Servidor::startRead()
         {
             if (!ec)
             {
-                // Crear un std::string a partir del buffer leído
                 std::string buffer_string(buffer_array.data(), bytes_transferred);
-                // pri1(buffer_string);
                 std::vector<std::string> buffer_vector = splitJson(buffer_string);
                 handleType(buffer_vector);
             }
-            else if (ec != boost::asio::error::eof)
-                std::cerr << "Error en la lectura: " << ec.message() << std::endl;
+            else if (ec == boost::asio::error::eof || ec == boost::asio::error::connection_reset)
+            {
+                std::cout << "Cliente desconectado.\n";
+                resetConnection();
+            }
             else
-                handleDisconnect(ec);
+            {
+                std::cerr << "Error en la lectura: " << ec.message() << "\n";
+                resetConnection();
+            }
         });
 }
 
@@ -90,10 +123,10 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
                 {
                     // bkill the process (all)
                     nodeManager.close_publisher(Map_SLAM);
-                    nodeManager.close_publisher(Joystick_Position); 
+                    nodeManager.close_publisher(Joystick_Position);
                     // SI HE INICIALIZADO ALGO CON UN ROS2 RUN O LAUNCH HAY QUE HACER UN KILL
                     // RVIZ
-                    return;
+                    startRead();
                 }
                 else if (parsed_json["mapping"])
                     nodeManager.create_publisher(Map_SLAM);
@@ -110,8 +143,8 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
 
                 // send robot position pixels
                 sendMsg(sendRobotPositionPixel(fp.x_pixel, fp.y_pixel, fp.yaw));
-                
-                nodeManager.refresh_map();
+
+                // nodeManager.refresh_map();
 
                 // Ejecutar sendImageMap en un hilo separado
                 std::thread sendMapThread(&Servidor::sendImageMap, this, path);
@@ -129,11 +162,12 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
 
 void Servidor::sendMsg(const json &json_msg)
 {
-    if (json_msg.contains("target") && json_msg["target"] == targetToString(Robot_Position_Pixel));
+    if (json_msg.contains("target") && json_msg["target"] == targetToString(Robot_Position_Pixel))
+        ;
     {
         pri1("Hey");
     }
-    
+
     std::string jsonStr = json_msg.dump();
     boost::asio::write(socket_, boost::asio::buffer(jsonStr));
 }
@@ -142,52 +176,52 @@ void Servidor::sendImageMap(const std::string &name_map)
 {
     try
     {
-        const std::size_t maxJsonSize = 1024; // Tamaño máximo por paquete
+        const std::size_t maxJsonSize = 2048; // Tamaño máximo por paquete
 
-        std::ifstream file(name_map, std::ios::binary);
-        if (!file)
-            throw std::runtime_error("No se pudo abrir el archivo " + name_map);
+        // Leer imagen PGM usando OpenCV
+        cv::Mat image = cv::imread(name_map, cv::IMREAD_GRAYSCALE);
+        if (image.empty())
+        {
+            throw std::runtime_error("Error al leer la imagen.");
+        }
 
-        // Leer el contenido del archivo
-        file.seekg(0, std::ios::end);
-        std::size_t totalSize = file.tellg();
-        file.seekg(0, std::ios::beg);
+        // Comprimir imagen y convertirla a formato PNG
+        std::vector<int> compression_params = {cv::IMWRITE_PNG_COMPRESSION, 9}; // Nivel de compresión (0-9)
+        std::vector<uchar> compressed_image;
+        cv::imencode(".png", image, compressed_image, compression_params);
 
-        const std::size_t maxDataSize = 600; // Espacio reservado para los datos de la imagen
-        std::vector<char> buffer(maxDataSize);
+        // Leer los datos comprimidos directamente desde la memoria
+        std::size_t totalSize = compressed_image.size();
+        const std::size_t maxDataSize = 1300; // Espacio reservado para los datos de la imagen
         std::size_t bytesSent = 0;
         std::size_t numFrame = 0;
         std::size_t totalFrames = (totalSize + maxDataSize - 1) / maxDataSize; // Calcular total de frames
 
         while (bytesSent < totalSize)
         {
-            file.read(buffer.data(), maxDataSize);
-            std::size_t bytesRead = file.gcount();
+            std::size_t bytesRead = std::min(maxDataSize, totalSize - bytesSent);
+            std::vector<char> buffer(compressed_image.begin() + bytesSent, compressed_image.begin() + bytesSent + bytesRead);
 
-            // Convertir datos a hexadecimal
+            // Convertir datos a base64
             std::string hexData = toBase64(buffer.data(), bytesRead);
 
             // Crear el JSON
-            json jsonMessage = sendImgMapSlam(hexData, bytesRead, totalSize, numFrame, totalFrames);
+            nlohmann::json jsonMessage = sendImgMapSlam(hexData, bytesRead, totalSize, numFrame, totalFrames);
 
             // Serializar el JSON
             std::string jsonStr = jsonMessage.dump();
 
             // Verificar que el tamaño total no exceda el límite
-            // pri1(jsonStr);
             if (jsonStr.size() > maxJsonSize)
             {
                 std::string str = "El JSON generado excede el tamaño máximo permitido " + std::to_string(jsonStr.size());
                 throw std::runtime_error(str);
             }
-            else if (jsonStr.size() < maxJsonSize)
-            {
-                jsonStr.append(maxJsonSize - jsonStr.size(), ' ');
-            }
 
             // Enviar el JSON por el socket
+            pri1("IMAGEN ENVIADA: " + jsonStr);
+            pri1(std::to_string(jsonStr.size()));
             boost::asio::write(socket_, boost::asio::buffer(jsonStr));
-
             bytesSent += bytesRead;
             numFrame++;
         }
@@ -197,3 +231,63 @@ void Servidor::sendImageMap(const std::string &name_map)
         std::cerr << "Error en sendImageMap: " << e.what() << std::endl;
     }
 }
+
+// void Servidor::sendImageMap(const std::string &name_map)
+// {
+//     try
+//     {
+//         const std::size_t maxJsonSize = 1024; // Tamaño máximo por paquete
+
+//         std::ifstream file(name_map, std::ios::binary);
+//         if (!file)
+//             throw std::runtime_error("No se pudo abrir el archivo " + name_map);
+
+//         // Leer el contenido del archivo
+//         file.seekg(0, std::ios::end);
+//         std::size_t totalSize = file.tellg();
+//         file.seekg(0, std::ios::beg);
+
+//         const std::size_t maxDataSize = 600; // Espacio reservado para los datos de la imagen
+//         std::vector<char> buffer(maxDataSize);
+//         std::size_t bytesSent = 0;
+//         std::size_t numFrame = 0;
+//         std::size_t totalFrames = (totalSize + maxDataSize - 1) / maxDataSize; // Calcular total de frames
+
+//         while (bytesSent < totalSize)
+//         {
+//             file.read(buffer.data(), maxDataSize);
+//             std::size_t bytesRead = file.gcount();
+
+//             // Convertir datos a hexadecimal
+//             std::string hexData = toBase64(buffer.data(), bytesRead);
+
+//             // Crear el JSON
+//             json jsonMessage = sendImgMapSlam(hexData, bytesRead, totalSize, numFrame, totalFrames);
+
+//             // Serializar el JSON
+//             std::string jsonStr = jsonMessage.dump();
+
+//             // Verificar que el tamaño total no exceda el límite
+//             // pri1(jsonStr);
+//             if (jsonStr.size() > maxJsonSize)
+//             {
+//                 std::string str = "El JSON generado excede el tamaño máximo permitido " + std::to_string(jsonStr.size());
+//                 throw std::runtime_error(str);
+//             }
+//             else if (jsonStr.size() < maxJsonSize)
+//             {
+//                 jsonStr.append(maxJsonSize - jsonStr.size(), ' ');
+//             }
+
+//             // Enviar el JSON por el socket
+//             boost::asio::write(socket_, boost::asio::buffer(jsonStr));
+
+//             bytesSent += bytesRead;
+//             numFrame++;
+//         }
+//     }
+//     catch (const std::exception &e)
+//     {
+//         std::cerr << "Error en sendImageMap: " << e.what() << std::endl;
+//     }
+// }

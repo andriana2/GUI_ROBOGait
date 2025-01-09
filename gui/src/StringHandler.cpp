@@ -181,6 +181,7 @@ QString StringHandler::updateMapPaintPoint(QImage &mapa, int columna, int fila, 
 
 void StringHandler::getImageMapSlam(const QJsonObject &json)
 {
+    qDebug() << "HHOOLLAAAA";
     periodicTimer->stop();
     QByteArray data = QByteArray::fromBase64(json["data"].toString().toUtf8());
     totalSize = json["total_size"].toInt();
@@ -207,7 +208,7 @@ void StringHandler::getImageMapSlam(const QJsonObject &json)
         }
 
         QImage image;
-        if (!image.loadFromData(imageBuffer, "PGM")) // Verificar si la imagen se carga correctamente
+        if (!image.loadFromData(imageBuffer, "PNG")) // Verificar si la imagen se carga correctamente
         {
             qWarning() << "Error: Unable to load image from imageBuffer";
             return;

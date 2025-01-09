@@ -11,9 +11,6 @@
 
 #include "header.h"
 
-#include <QJsonObject>
-#include <QJsonDocument>
-#include <QByteArray>
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;

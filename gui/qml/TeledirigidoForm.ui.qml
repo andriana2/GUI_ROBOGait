@@ -42,21 +42,8 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.top: parent.top
         anchors.left: parent.left
-        //color: Colors.rectangle_color
-        //        color: "#235c87"
         color: "#518bb7"
-        // Image {
-        //     id: imageDisplay
-        //     width: Math.min(parent.width, parent.height * imageDisplay.sourceSize.width / imageDisplay.sourceSize.height)
-        //     height: Math.min(parent.height, parent.width * imageDisplay.sourceSize.height / imageDisplay.sourceSize.width)
-        //     anchors.centerIn: parent
-        //     // width: parent.width
-        //     // height: parent.height
-        //     visible: false
-        //     fillMode: Image.PreserveAspectCrop
-        //     // source: ""
-        //     source: ""
-        // }
+
         Image {
             id: imageDisplay
             width: Math.min(parent.width,
@@ -72,15 +59,6 @@ Rectangle {
         }
     }
 
-    // funcion para actualizar el source de imageDisplay
-    // Connections {
-    //     target: stringHandler
-    //     function onImageSourceChanged() {
-    //         imageDisplay.visible = true
-    //         imageDisplay.source = stringHandler.imageSource
-    //         console.log("imagen actualizada")
-    //     }
-    // }
     Item {
         id: mapa
         width: 250

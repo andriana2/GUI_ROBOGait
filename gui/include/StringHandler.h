@@ -32,7 +32,7 @@ public:
     explicit StringHandler(QObject *parent = nullptr);
     Q_INVOKABLE bool isInSameNetwork(const QString &ip1, const std::string& subnetMask = "255.255.255.0");
     Q_INVOKABLE void setImage(const QByteArray &data);
-    Q_INVOKABLE QString getImageSource(); // QUITAR MIRAR SI FUNCIONA
+    // Q_INVOKABLE QString getImageSource(); // QUITAR MIRAR SI FUNCIONA
     Q_INVOKABLE void sendStateRemoteControlledHandler(bool mapping, bool in);
 
     void setClient(Cliente *cli);
@@ -44,7 +44,7 @@ public:
     // msg recived
     void getImageMapSlam(const QJsonObject &json);
     void getRobotPositionPixel(const QJsonObject &json);
-    void setImageSource(const QString &source);
+    Q_INVOKABLE void setImageSource(const QString &source);
 
     //edit image
     QString updateMapPaintPoint(QImage &mapa, int columna, int fila, float yaw);

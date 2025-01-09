@@ -80,6 +80,7 @@ Rectangle {
     Component {
         id: teledirigido
         Teledirigido {
+            visible_value: applicationFlow.visible_image
             visible: true
         }
     }

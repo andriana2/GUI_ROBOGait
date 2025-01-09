@@ -49,6 +49,7 @@ void Cliente::processJson(const QJsonDocument &json)
     if(stringToHeader(jsonObj["opt"].toString()) == IMG)
     {
         if(stringToTarget(jsonObj["target"].toString()) == Img_Map_SLAM)
+            qDebug () << "HEEEEy";
             stringHandler->getImageMapSlam(jsonObj);
     }
     else if(stringToHeader(jsonObj["opt"].toString()) == REQUEST_IMG)

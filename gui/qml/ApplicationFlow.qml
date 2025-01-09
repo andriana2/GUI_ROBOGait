@@ -3,6 +3,7 @@ import QtQuick 2.15
 ApplicationFlowForm {
     id: applicationFlow
     state: "Home"
+    property bool visible_image
 
     home.buttonStart.onClicked: {
         mystackview.push(ip)
@@ -13,6 +14,11 @@ ApplicationFlowForm {
     function backButton()
     {
         mystackview.pop()
+        if (applicationFlow.state === "teledirigido")
+        {
+            stringHandler.sendStateRemoteControlledHandler(1,0)
+                    visible_image = 0
+        }
         applicationFlow.state = applicationFlow.previousState
     }
     function confirmButton() {
@@ -26,6 +32,8 @@ ApplicationFlowForm {
     function teledirigido_push()
     {
         stringHandler.sendStateRemoteControlledHandler(1,1)
+        visible_image = 1
+        console.log("Imagen a visible 0")
         mystackview.push(teledirigido)
         applicationFlow.state = "teledirigido"
     }

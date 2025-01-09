@@ -12,11 +12,13 @@
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <string>
-#include <filesystem> 
+#include <filesystem>
 
 #include <nlohmann/json.hpp>
 
 #include <threads.h>
+
+#include <opencv2/opencv.hpp>
 
 #include "utils.h"
 #include "header.h"
@@ -35,24 +37,18 @@ public:
 
     Servidor(int port, rclcpp::Node::SharedPtr node);
     void run();
+    void closeServer();
 
 private:
     void startAccept();
     void startRead();
     void resetConnection();
-    // void handleType(std::string const &type, int const &size, std::string const &target, std::string else_info);
+    // void signalHandler(int signal);
+
     void handleType(std::vector<std::string> const &jsons);
-    // void readBodyMsg(size_t const &size, std::string const &target);
-    // void readBodyImage(size_t const &size);
-    // void processMsg(std::string const &data, std::string const &target);
-    void handleDisconnect(const boost::system::error_code &ec);
-    // void manageTarget(std::string const &target);
-    // void saveImage(const std::vector<uint8_t> &buffer);
     void sendMsg(const json &json_msg);
 
-
     void sendImageMap(const std::string &name_map);
-
 
     boost::asio::io_context io_context_;
     boost::asio::ip::tcp::acceptor acceptor_;
