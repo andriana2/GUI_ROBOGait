@@ -32,7 +32,7 @@ public:
     explicit StringHandler(QObject *parent = nullptr);
     Q_INVOKABLE bool isInSameNetwork(const QString &ip1, const std::string& subnetMask = "255.255.255.0");
     Q_INVOKABLE void setImage(const QByteArray &data);
-    // Q_INVOKABLE QString getImageSource(); // QUITAR MIRAR SI FUNCIONA
+    Q_INVOKABLE QString getImageSource(); // QUITAR MIRAR SI FUNCIONA
     Q_INVOKABLE void sendStateRemoteControlledHandler(bool mapping, bool in);
 
     void setClient(Cliente *cli);
