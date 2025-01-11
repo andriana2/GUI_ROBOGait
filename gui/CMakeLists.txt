@@ -52,6 +52,10 @@ qt_add_qml_module(appgui
     qml/CustomToolBar.qml
     qml/Joystick.qml
     qml/JoystickForm.ui.qml
+    qml/Map.qml
+    qml/MapForm.ui.qml
+    qml/SavePage.qml
+    qml/SavePageForm.ui.qml
     ${qml_singletons}
 
 
@@ -63,6 +67,7 @@ qt_add_qml_module(appgui
     images/giro_izq.png
     images/up.png
     images/keyboard_left.svg
+    images/saveButton.png
 
     # images/android_icons/mipmap-mdpi/logo48.png
     # images/android_icons/mipmap-hdpi/logo72.png

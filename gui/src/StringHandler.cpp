@@ -265,7 +265,11 @@ void StringHandler::getImageMapSlam(const QJsonObject &json)
 
 void StringHandler::setImageSource(const QString &source)
 {
-    m_imageSource = "data:image/png;base64," + source;
+    if (source.isEmpty()) {
+        m_imageSource = "";
+    } else {
+        m_imageSource = "data:image/png;base64," + source;
+    }
     emit imageSourceChanged();
 }
 
@@ -306,4 +310,17 @@ void StringHandler::setImage(const QByteArray &data)
 QString StringHandler::imageSource() const
 {
     return m_imageSource;
+}
+
+bool StringHandler::mapping() const
+{
+    return m_mapping;
+}
+
+void StringHandler::setmapping(bool newMapping)
+{
+    if (m_mapping == newMapping)
+        return;
+    m_mapping = newMapping;
+    emit mappingChanged();
 }

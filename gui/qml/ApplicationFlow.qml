@@ -6,10 +6,10 @@ ApplicationFlowForm {
     property bool visible_image
 
     home.buttonStart.onClicked: {
-        mystackview.push(ip)
-        applicationFlow.state = "ip"
-        // mystackview.push(teledirigido)
-        // applicationFlow.state = "teledirigido"
+        // mystackview.push(ip)
+        // applicationFlow.state = "ip"
+        mystackview.push(teledirigido)
+        applicationFlow.state = "teledirigido"
     }
     function backButton()
     {
@@ -46,6 +46,8 @@ ApplicationFlowForm {
                 target: toolbar
                 backButton.opacity: 0
                 backButton.enabled: false
+                saveButton.opacity: 0
+                saveButton.enabled: false
                 logo.opacity: 0
                 logo.enabled: false
                 title.opacity: 0
@@ -66,6 +68,8 @@ ApplicationFlowForm {
                 target: toolbar
                 backButton.opacity: 0
                 backButton.enabled: false
+                saveButton.opacity: 0
+                saveButton.enabled: false
             }
             PropertyChanges {
                 target: mystackview
@@ -82,6 +86,8 @@ ApplicationFlowForm {
                 target: toolbar
                 backButton.opacity: 0
                 backButton.enabled: false
+                saveButton.opacity: 0
+                saveButton.enabled: false
             }
             PropertyChanges {
                 target: mystackview

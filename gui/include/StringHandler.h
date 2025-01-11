@@ -27,6 +27,7 @@ class StringHandler : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString imageSource READ imageSource WRITE setImageSource NOTIFY imageSourceChanged)
+    Q_PROPERTY(bool mapping READ mapping WRITE setMapping NOTIFY mappingChanged FINAL)
 
 public:
     explicit StringHandler(QObject *parent = nullptr);
@@ -51,11 +52,16 @@ public:
 
     QString imageSource() const;
 
+    bool mapping() const;
+    void setmapping(bool newMapping);
+
 signals:
 
     void imageReceived(const QString &image);
 
     void imageSourceChanged();
+
+    void mappingChanged();
 
 private:
     bool moveStop = 0;
@@ -73,6 +79,7 @@ private:
     size_t totalFrames = 0;
 
     struct FinalPosition finalPosition;
+    bool m_mapping;
 };
 
 #endif // STRINGHANDLER_H
