@@ -20,9 +20,9 @@ IpForm {
                 applicationFlow.menu_push()
                 console.log("Texto enviado: " + textArea.text)
             }
-
         }
     }
+
     Rectangle {
         id: errorPopup
         width: parent.width * 0.8

@@ -317,10 +317,49 @@ bool StringHandler::mapping() const
     return m_mapping;
 }
 
-void StringHandler::setmapping(bool newMapping)
+void StringHandler::setMapping(bool newMapping)
 {
     if (m_mapping == newMapping)
         return;
     m_mapping = newMapping;
     emit mappingChanged();
+}
+
+bool StringHandler::saveMap() const
+{
+    return m_saveMap;
+}
+
+void StringHandler::setSaveMap(bool newSaveMap)
+{
+    if (m_saveMap == newSaveMap)
+        return;
+    m_saveMap = newSaveMap;
+    emit saveMapChanged();
+}
+
+int StringHandler::typeSaveMap() const
+{
+    return m_typeSaveMap;
+}
+
+void StringHandler::setTypeSaveMap(int newTypeSaveMap)
+{
+    if (m_typeSaveMap == newTypeSaveMap)
+        return;
+    m_typeSaveMap = newTypeSaveMap;
+    emit typeSaveMapChanged();
+}
+
+QString StringHandler::nameMap() const
+{
+    return m_nameMap;
+}
+
+void StringHandler::setNameMap(const QString &newNameMap)
+{
+    if (m_nameMap == newNameMap)
+        return;
+    m_nameMap = newNameMap;
+    emit nameMapChanged();
 }

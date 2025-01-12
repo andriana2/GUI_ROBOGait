@@ -7,6 +7,10 @@ Rectangle {
     color: "#518bb7"
     property alias imageDisplay: imageDisplay
     property alias joystick: joystick
+    property alias switchRow: switchRow
+
+    property alias save_page: save_page
+    property bool save_page_visible: save_page_visible
 
     Rectangle {
         id: mapa
@@ -91,12 +95,12 @@ Rectangle {
                 x: customSwitch.checked ? parent.width - width - 3 : 3
 
                 // Animación suave
-                Behavior on x {
-                    NumberAnimation {
-                        duration: 200
-                        easing.type: Easing.InOutQuad
-                    }
-                }
+                //                Behavior on x {
+                //                    NumberAnimation {
+                //                        duration: 200
+                //                        easing.type: Easing.InOutQuad
+                //                    }
+                //                }
             }
 
             // Área de interacción
@@ -106,44 +110,19 @@ Rectangle {
             }
         }
     }
-
-    // Switch {
-    //     id: switchDelegate
-    //     width: 50
-    //     height: 30
-    //     Rectangle {
-    //         width: parent.width
-    //         height: parent.height
-    //         radius: height / 2
-    //         color: switchDelegate.checked ? "#4CAF50" : "#B0BEC5"
-    //         border.color: "gray"
-    //     }
-    //     Rectangle {
-    //         width: 24
-    //         height: 24
-    //         radius: width / 2
-    //         color: "white"
-    //         border.color: "gray"
-    //         x: switchDelegate.checked ? parent.width - width - 3 : 3
-    //         y: (parent.height - height) / 2
-    //     }
-    // }
-
-    // Switch {
-    //     id: switch1
-    //     width: 111
-    //     height: 29
-    //     text: qsTr("Mapear")
-    //     anchors.verticalCenter: mapa.verticalCenter
-    //     anchors.verticalCenterOffset: -1 * mapa.width
-    //     anchors.horizontalCenterOffset: 0
-    //     anchors.horizontalCenter: mapa.horizontalCenter
-    // }
+    SavePage {
+        id: save_page
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: -20
+        anchors.horizontalCenter: parent.horizontalCenter
+        // state_save_page: state_save_page
+    }
 }
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}D{i:2}D{i:1}D{i:4}D{i:3}D{i:6}D{i:7}D{i:5}
+    D{i:0;autoSize:true;height:480;width:640}D{i:2}D{i:1}D{i:4}D{i:3}D{i:6}D{i:8}D{i:9}
+D{i:7}D{i:5}D{i:10}
 }
 ##^##*/
 

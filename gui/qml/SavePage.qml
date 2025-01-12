@@ -7,7 +7,7 @@ SavePageForm {
     states: [
         State {
             name: "out_save"
-            when: visible_value === 1
+            when: state_save_page === 1
             StateChangeScript {
                 script: {
                     console.log("estoy en saliendo por eso me pregunta que hacer si guardar sin cambios")
@@ -15,12 +15,18 @@ SavePageForm {
             }
             PropertyChanges {
                 target: text_header
+                text: "¿Guardar los cambios?"
+            }
+            PropertyChanges {
+                target: no_save
                 visible: true
+                opacity: 1
+
             }
         },
         State {
             name: "save"
-            when: visible_value === 2
+            when: state_save_page === 2
             StateChangeScript {
                 script: {
                     console.log("estoy en guardar")
@@ -28,12 +34,25 @@ SavePageForm {
             }
             PropertyChanges {
                 target: text_header
-                visible: true
+                text: "Guardar este mapa"
+            }
+            PropertyChanges {
+                target: no_save
+                visible: false
+                opacity: 0
+
+            }
+            PropertyChanges {
+                target: save
+                anchors.right: cancel.left
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 28
+                anchors.rightMargin: 10
             }
         },
         State {
             name: "save_again"
-            when: visible_value === 3
+            when: state_save_page === 3
             StateChangeScript {
                 script: {
                     console.log("estoy en guardar de nuevo")
@@ -42,7 +61,13 @@ SavePageForm {
             }
             PropertyChanges {
                 target: text_header
-                visible: false
+                text: "¿Guardar los cambios en este archivo?"
+            }
+            PropertyChanges {
+                target: no_save
+                visible: true
+                opacity: 1
+
             }
         }
     ]

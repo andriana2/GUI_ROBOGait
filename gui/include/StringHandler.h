@@ -26,8 +26,12 @@ class Cliente;
 class StringHandler : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString imageSource READ imageSource WRITE setImageSource NOTIFY imageSourceChanged)
-    Q_PROPERTY(bool mapping READ mapping WRITE setMapping NOTIFY mappingChanged FINAL)
+    Q_PROPERTY(QString imageSource READ imageSource WRITE setImageSource NOTIFY imageSourceChanged) //La imagen que se muestra (Teledirigido)
+    Q_PROPERTY(bool mapping READ mapping WRITE setMapping NOTIFY mappingChanged FINAL)//Si estoy mapeando o solo moviendo con el joystick (Teledirigido)
+    Q_PROPERTY(bool saveMap READ saveMap WRITE setSaveMap NOTIFY saveMapChanged FINAL)//Saber si se ha guaradado la imagen (Teledirigido)
+    Q_PROPERTY(int typeSaveMap READ typeSaveMap WRITE setTypeSaveMap NOTIFY typeSaveMapChanged FINAL)//Tipo de mapa si se a guardado o no (Teledirigido)
+    Q_PROPERTY(QString nameMap READ nameMap WRITE setNameMap NOTIFY nameMapChanged FINAL)//Nombre del mapa por si se ha guardado el mapa (Teledirigido)
+
 
 public:
     explicit StringHandler(QObject *parent = nullptr);
@@ -45,23 +49,34 @@ public:
     // msg recived
     void getImageMapSlam(const QJsonObject &json);
     void getRobotPositionPixel(const QJsonObject &json);
-    Q_INVOKABLE void setImageSource(const QString &source);
 
     //edit image
     QString updateMapPaintPoint(QImage &mapa, int columna, int fila, float yaw);
 
     QString imageSource() const;
+    Q_INVOKABLE void setImageSource(const QString &source);
 
     bool mapping() const;
-    void setmapping(bool newMapping);
+    Q_INVOKABLE void setMapping(bool newMapping);
+
+    bool saveMap() const;
+    Q_INVOKABLE void setSaveMap(bool newSaveMap);
+
+    int typeSaveMap() const;
+    Q_INVOKABLE void setTypeSaveMap(int newTypeSaveMap);
+
+    QString nameMap() const;
+    Q_INVOKABLE void setNameMap(const QString &newNameMap);
 
 signals:
 
     void imageReceived(const QString &image);
 
     void imageSourceChanged();
-
     void mappingChanged();
+    void saveMapChanged();
+    void typeSaveMapChanged();
+    void nameMapChanged();
 
 private:
     bool moveStop = 0;
@@ -72,14 +87,17 @@ private:
 
     QTimer *periodicTimer;
 
-    QString m_imageSource;
     QByteArray imageBuffer;
     size_t totalSize = 0;
     size_t receivedFrames = 1;
     size_t totalFrames = 0;
-
     struct FinalPosition finalPosition;
+
+    QString m_imageSource;
     bool m_mapping;
+    bool m_saveMap = 0;
+    int m_typeSaveMap = -1;
+    QString m_nameMap;
 };
 
 #endif // STRINGHANDLER_H
