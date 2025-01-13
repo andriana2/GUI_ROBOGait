@@ -84,8 +84,6 @@ Rectangle {
             visible: true
             visible_save: applicationFlow.visible_save
             type_save: applicationFlow.type_save
-
-
         }
     }
 }

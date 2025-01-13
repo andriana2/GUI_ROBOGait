@@ -8,6 +8,7 @@ Rectangle {
     property alias imageDisplay: imageDisplay
     property alias joystick: joystick
     property alias switchRow: switchRow
+    property alias customSwitch: customSwitch
 
     property alias save_page: save_page
     property bool save_page_visible: save_page_visible
@@ -95,12 +96,12 @@ Rectangle {
                 x: customSwitch.checked ? parent.width - width - 3 : 3
 
                 // Animación suave
-                //                Behavior on x {
-                //                    NumberAnimation {
-                //                        duration: 200
-                //                        easing.type: Easing.InOutQuad
-                //                    }
-                //                }
+                Behavior on x {
+                    NumberAnimation {
+                        duration: 200
+                        easing.type: Easing.InOutQuad
+                    }
+                }
             }
 
             // Área de interacción

@@ -5,43 +5,58 @@ TeledirigidoForm {
     // property bool savePageVisible: savePageVisible
     property bool visible_save: visible_save
     property int type_save: type_save
+    // property bool mapping: mapping
 
     states: [
         State {
-            name: "visible"
-            when: visible_value === true
+            name: "mapping"
+            when: customSwitch.checked === false
             StateChangeScript {
                 script: {
-                    console.log("estoy en visible")
+                    console.log("estoy en mapping")
+                    clearImageSource();
+                }
+            }
+            PropertyChanges {
+                target: imageDisplay
+                visible: false
+            }
+            PropertyChanges {
+                target: save_page
+                visible: false
+                opacity: 0
+            }
+        },
+        State {
+            name: "hidden"
+            when: visible_value === false
+            StateChangeScript {
+                script: {
+                    console.log("estoy en hidden")
+                    clearImageSource();
+                }
+            }
+            PropertyChanges {
+                target: imageDisplay
+                visible: false
+            }
+            PropertyChanges {
+                target: save_page
+                visible: false
+                opacity: 0
+            }
+        },
+        State {
+            name: "nothing"
+            when: (type_save === 0 || type_save === -1) && visible_value === true
+            StateChangeScript {
+                script: {
+                    console.log("estoy en nothing")
                 }
             }
             PropertyChanges {
                 target: imageDisplay
                 visible: true
-            }
-        },
-        // State {
-        //     name: "hidden"
-        //     when: visible_value === false
-        //     StateChangeScript {
-        //         script: {
-        //             console.log("estoy en hidden")
-        //             clearImageSource();
-        //         }
-        //     }
-
-        //     PropertyChanges {
-        //         target: imageDisplay
-        //         visible: false
-        //     }
-        // },
-        State {
-            name: "nothing"
-            when: type_save === 0 || type_save === -1
-            StateChangeScript {
-                script: {
-                    console.log("estoy en nothing")
-                }
             }
             PropertyChanges {
                 target: save_page
@@ -59,16 +74,21 @@ TeledirigidoForm {
         },
         State {
             name: "no_save"
-            when: type_save === 1
+            when: type_save === 1 && visible_value === true
             StateChangeScript {
                 script: {
                     console.log("estoy en no_save")
                 }
             }
             PropertyChanges {
+                target: imageDisplay
+                visible: true
+            }
+            PropertyChanges {
                 target: save_page
                 visible: true
                 state_save_page: 1
+                opacity: 1
             }
             PropertyChanges {
                 target: joystick
@@ -81,16 +101,21 @@ TeledirigidoForm {
         },
         State {
             name: "save"
-            when: type_save === 2
+            when: type_save === 2 && visible_value === true
             StateChangeScript {
                 script: {
                     console.log("estoy en save")
                 }
             }
             PropertyChanges {
+                target: imageDisplay
+                visible: true
+            }
+            PropertyChanges {
                 target: save_page
                 visible: true
                 state_save_page: 2
+                opacity: 1
             }
             PropertyChanges {
                 target: joystick
@@ -103,16 +128,21 @@ TeledirigidoForm {
         },
         State {
             name: "save_again"
-            when: type_save === 3
+            when: type_save === 3 && visible_value === true
             StateChangeScript {
                 script: {
                     console.log("estoy en save_again")
                 }
             }
             PropertyChanges {
+                target: imageDisplay
+                visible: true
+            }
+            PropertyChanges {
                 target: save_page
                 visible: true
                 state_save_page: 3
+                opacity: 1
             }
             PropertyChanges {
                 target: joystick
@@ -148,6 +178,29 @@ TeledirigidoForm {
         stringHandler.setCurrentMove("0.0", "0.0")
         stringHandler.setSaveMap(0)
         console.log("Joystick liberado");
+    }
+
+    save_page.cancel.onClicked: {
+        console.log("Presionado Cancelar")
+
+        applicationFlow.type_save = -1
+        stringHandler.setSaveMap(0)
+        stringHandler.setTypeSaveMap(-1)
+        console.log(type_save)
+    }
+
+    save_page.no_save.onClicked: {
+        console.log("Presionado no guardar")
+        stringHandler.setSaveMap(1)
+        applicationFlow.backButton()
+    }
+
+    save_page.save.onClicked: {
+        console.log("Presionado Guardar")
+        applicationFlow.type_save = 0
+        stringHandler.setSaveMap(1)
+        stringHandler.setTypeSaveMap(1)
+        stringHandler.setNameMap(save_page.text_name.text)
     }
 
 }

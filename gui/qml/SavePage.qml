@@ -8,11 +8,11 @@ SavePageForm {
         State {
             name: "out_save"
             when: state_save_page === 1
-            StateChangeScript {
-                script: {
-                    console.log("estoy en saliendo por eso me pregunta que hacer si guardar sin cambios")
-                }
-            }
+            // StateChangeScript {
+            //     script: {
+            //         console.log("estoy en saliendo por eso me pregunta que hacer si guardar sin cambios")
+            //     }
+            // }
             PropertyChanges {
                 target: text_header
                 text: "¿Guardar los cambios?"
@@ -27,11 +27,11 @@ SavePageForm {
         State {
             name: "save"
             when: state_save_page === 2
-            StateChangeScript {
-                script: {
-                    console.log("estoy en guardar")
-                }
-            }
+            // StateChangeScript {
+            //     script: {
+            //         console.log("estoy en guardar")
+            //     }
+            // }
             PropertyChanges {
                 target: text_header
                 text: "Guardar este mapa"
@@ -53,12 +53,11 @@ SavePageForm {
         State {
             name: "save_again"
             when: state_save_page === 3
-            StateChangeScript {
-                script: {
-                    console.log("estoy en guardar de nuevo")
-                    clearImageSource();
-                }
-            }
+            // StateChangeScript {
+            //     script: {
+            //         console.log("estoy en guardar de nuevo")
+            //     }
+            // }
             PropertyChanges {
                 target: text_header
                 text: "¿Guardar los cambios en este archivo?"

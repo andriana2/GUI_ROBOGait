@@ -358,6 +358,10 @@ QString StringHandler::nameMap() const
 
 void StringHandler::setNameMap(const QString &newNameMap)
 {
+    // void Cliente::sendMessage(const QJsonDocument &json)
+    if (newNameMap != "")
+    cliente->sendMessage(sendSaveMap(newNameMap));
+
     if (m_nameMap == newNameMap)
         return;
     m_nameMap = newNameMap;

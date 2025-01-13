@@ -8,10 +8,10 @@ ApplicationFlowForm {
     property int type_save: type_save = -1
 
     home.buttonStart.onClicked: {
-        // mystackview.push(ip)
-        // applicationFlow.state = "ip"
-        mystackview.push(teledirigido)
-        applicationFlow.state = "teledirigido"
+        mystackview.push(ip)
+        applicationFlow.state = "ip"
+        // mystackview.push(menu_app)
+        // applicationFlow.state = "menu_app"
     }
     function backButton()
     {
@@ -25,6 +25,7 @@ ApplicationFlowForm {
                 mystackview.pop()
                 applicationFlow.state = applicationFlow.previousState
                 stringHandler.sendStateRemoteControlledHandler(1,0)
+                stringHandler.setNameMap("")
                 visible_image = 0
                 stringHandler.setTypeSaveMap(-1)
                 type_save = -1
@@ -32,18 +33,15 @@ ApplicationFlowForm {
             }
             else
             {
-                if(type_save === -1)
+                if(stringHandler.typeSaveMap === -1)
                 {
                     stringHandler.setTypeSaveMap(1)
                     type_save = 1
-                    console.log("Estoy en backButton !saveMap y typeSaveMap -1")
                 }
                 else
                 {
                     stringHandler.setTypeSaveMap(3)
-                    console.log(type_save)
                     type_save = 3
-                    console.log("Estoy en backButton !saveMap y typeSaveMap else")
                 }
             }
         }
@@ -56,18 +54,39 @@ ApplicationFlowForm {
     }
     function saveButton()
     {
-        console.log("saveButton")
-        console.log(type_save)
-        console.log(visible_save)
         if(!stringHandler.saveMap)
         {
-            stringHandler.setTypeSaveMap(2)
-            type_save = 2
-            visible_save = 1
-            stringHandler.setSaveMap(1)
+            console.log("saveButton FALSE")
+            console.log(type_save)
+            console.log(visible_save)
+
+            if (stringHandler.typeSaveMap === 1)
+            {
+                stringHandler.setTypeSaveMap(0)
+                type_save = 0
+                visible_save = 1
+                stringHandler.setSaveMap(1)
+                stringHandler.setNameMap(stringHandler.nameMap) // BUENOO |- |- JIJI
+            }
+            else
+            {
+                stringHandler.setTypeSaveMap(2)
+                type_save = 2
+                visible_save = 1
+                stringHandler.setSaveMap(1)
+            }
+
         }
         else
         {
+            // if (stringHandler.typeSaveMap === 2)
+            // {
+
+            // }
+
+            console.log("saveButton TRUE")
+            console.log(type_save)
+            console.log(visible_save)
             stringHandler.setTypeSaveMap(0)
             type_save = 0
             visible_save = 1
@@ -85,7 +104,7 @@ ApplicationFlowForm {
     }
     function teledirigido_push()
     {
-        stringHandler.setSaveMap = 0
+        stringHandler.setSaveMap(0)
         stringHandler.sendStateRemoteControlledHandler(1,1)
         visible_image = 1
         console.log("Imagen a visible 0")

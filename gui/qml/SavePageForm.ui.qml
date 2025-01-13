@@ -50,23 +50,7 @@ Rectangle {
         anchors.top: text1.bottom
         anchors.leftMargin: 26
         anchors.topMargin: 20
-        radius: 4 // Opcional: Esquinas redondeadas
-
-        // padding: 4 // Opcional: Espacio alrededor del texto
-        // Text {
-        //     id: text_name
-        //     text: qsTr("                       .pgm")
-        //     anchors.left: parent.left
-        //     anchors.top: parent.top
-        //     font.pixelSize: 20
-        //     horizontalAlignment: Text.AlignHCenter
-        //     verticalAlignment: Text.AlignVCenter
-        //     anchors.leftMargin: -232
-        //     anchors.topMargin: -46
-        //     anchors.verticalCenterOffset: -23
-        //     anchors.horizontalCenterOffset: -29
-        //     anchors.centerIn: parent
-        // }
+        radius: 4
         TextArea {
             id: text_name
             color: "#454545"
@@ -87,28 +71,63 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.rightMargin: 28
         anchors.bottomMargin: 28
+
+        background: Rectangle {
+            color: "#ffffff"  // Color inicial
+            radius: 6
+            border.color: "#454545"  // Borde del mismo color que el texto
+            border.width: 2
+        }
+
+        contentItem: Label {
+            text: parent.text
+            color: "#454545"
+            font.pixelSize: 18
+        }
     }
 
     Button {
         id: no_save
-        x: 344
-        y: 207
         text: qsTr("No Guardar")
         anchors.right: cancel.left
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 28
         anchors.rightMargin: 10
+
+        background: Rectangle {
+            color: "#ffffff"  // Color inicial
+            radius: 6
+            border.color: "#454545"  // Borde del mismo color que el texto
+            border.width: 2
+
+        }
+
+        contentItem: Label {
+            text: parent.text
+            color: "#454545"
+            font.pixelSize: 18
+        }
     }
+
 
     Button {
         id: save
-        x: 251
-        y: 207
         text: qsTr("Guardar")
         anchors.right: no_save.left
         anchors.bottom: parent.bottom
+        // t: save.enabled ? "white" : "#454545";
         anchors.bottomMargin: 28
         anchors.rightMargin: 10
+        enabled: text_name.text.length > 0
+        background: Rectangle {
+            color: save.enabled ? "#3A64A5" : "#B0B0B0"
+            radius: 6
+        }
+        contentItem: Label {
+            text: parent.text
+            color: save.enabled ? "white" : "#454545"  // Cambia el color del texto
+            font.pixelSize: 18
+        }
     }
 }
 

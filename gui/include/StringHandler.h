@@ -97,7 +97,7 @@ private:
     bool m_mapping;
     bool m_saveMap = 0;
     int m_typeSaveMap = -1;
-    QString m_nameMap;
+    QString m_nameMap = "";
 };
 
 #endif // STRINGHANDLER_H
