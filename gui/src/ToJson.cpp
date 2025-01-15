@@ -66,16 +66,38 @@ void getRobotPositionPixel(const QJsonDocument &JsonDoc, int &x_output, int &y_o
     }
 }
 
+QJsonDocument sendRequestMapName()
+{
+    QJsonObject jsonObj;
+    jsonObj["opt"] = headerToString(REQUEST_MSG);
+    jsonObj["target"] = targetToString(Map_Name);
+    return QJsonDocument(jsonObj);
+}
 
-// void actualizarJson(QJsonDocument& jsonDoc, const QString& opt, const QString& target) {
-//     QJsonObject jsonObj;
-//     jsonObj["opt"] = opt;
-//     jsonObj["target"] = name;
+QJsonDocument sendChangeMapName(const QString &new_map_name, const QString &last_map_name)
+{
+    QJsonObject jsonObj;
+    jsonObj["opt"] = headerToString(MSG); // no tengo en cuenta si se repite mirar
+    jsonObj["target"] = targetToString(Change_Map_Name);
+    jsonObj["new_map_name"] = new_map_name;
+    jsonObj["last_map_name"] = last_map_name;
+    return QJsonDocument(jsonObj);
+}
 
+QJsonDocument sendDeleteMap(const QString &map_name)
+{
+    QJsonObject jsonObj;
+    jsonObj["opt"] = headerToString(MSG);
+    jsonObj["target"] = targetToString(Delete_Map);
+    jsonObj["map_name"] = map_name;
+    return QJsonDocument(jsonObj);
+}
 
-//     // Asignar el objeto JSON al documento
-//     jsonDoc.setObject(jsonObj);
-// }
-
-
-
+QJsonDocument sendRequestMapSelected(const QString &map_name)
+{
+    QJsonObject jsonObj;
+    jsonObj["opt"] = headerToString(REQUEST_IMG);
+    jsonObj["target"] = targetToString(Img_Map_Select);
+    jsonObj["map_name"] = map_name;
+    return QJsonDocument(jsonObj);
+}

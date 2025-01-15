@@ -9,6 +9,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QString>
+#include <QStringListModel>
 // #include <QImage>
 // #include <string>
 // #include "utils.h"
@@ -31,6 +32,7 @@ class StringHandler : public QObject
     Q_PROPERTY(bool saveMap READ saveMap WRITE setSaveMap NOTIFY saveMapChanged FINAL)//Saber si se ha guaradado la imagen (Teledirigido)
     Q_PROPERTY(int typeSaveMap READ typeSaveMap WRITE setTypeSaveMap NOTIFY typeSaveMapChanged FINAL)//Tipo de mapa si se a guardado o no (Teledirigido)
     Q_PROPERTY(QString nameMap READ nameMap WRITE setNameMap NOTIFY nameMapChanged FINAL)//Nombre del mapa por si se ha guardado el mapa (Teledirigido)
+    Q_PROPERTY(QStringListModel* model READ model NOTIFY modelChanged FINAL) // lista que aparece (SelectMap)
 
 
 public:
@@ -68,6 +70,10 @@ public:
     QString nameMap() const;
     Q_INVOKABLE void setNameMap(const QString &newNameMap);
 
+    Q_INVOKABLE QStringListModel *model() const;
+    Q_INVOKABLE void loadData(const std::vector<std::string> &data);
+    Q_INVOKABLE void requestMapName();
+
 signals:
 
     void imageReceived(const QString &image);
@@ -77,6 +83,8 @@ signals:
     void saveMapChanged();
     void typeSaveMapChanged();
     void nameMapChanged();
+
+    void modelChanged();
 
 private:
     bool moveStop = 0;
@@ -98,6 +106,7 @@ private:
     bool m_saveMap = 0;
     int m_typeSaveMap = -1;
     QString m_nameMap = "";
+    QStringListModel *m_model = nullptr;
 };
 
 #endif // STRINGHANDLER_H

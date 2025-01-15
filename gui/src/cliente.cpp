@@ -2,6 +2,9 @@
 #include "../include/utils.h"
 #include <QDebug>
 #include <QAbstractSocket>
+#include <QJsonArray>
+#include <vector>
+#include <string>
 
 Cliente::Cliente(int portNumber) : QObject()//, stringHandler(nullptr)
 {
@@ -60,75 +63,26 @@ void Cliente::processJson(const QJsonDocument &json)
     {
         if(stringToTarget(jsonObj["target"].toString()) == Robot_Position_Pixel)
             stringHandler->getRobotPositionPixel(jsonObj);
+        if(stringToTarget(jsonObj["target"].toString()) == Map_Name)
+        {
+            if (jsonObj.contains("vec_map_name") && jsonObj["vec_map_name"].isArray()) {
+                QJsonArray jsonArray = jsonObj["vec_map_name"].toArray();
+                std::vector<std::string> vec_map_name;
+                for (const auto& item : jsonArray) {
+                    vec_map_name.push_back(item.toString().toStdString());
+                }
+                stringHandler->loadData(vec_map_name);
+            } else {
+                qWarning() << "Error: 'vec_map_name' no existe o no es un array.";
+            }
+        }
+
     }
     else if(stringToHeader(jsonObj["opt"].toString()) == REQUEST_MSG)
     {
 
     }
 }
-
-
-// void Cliente::onReadyRead() {
-//     static QByteArray buffer;
-//     static qint64 expectedSize = -1;
-//     static QString dataType;
-
-//     // Mientras haya datos disponibles
-//     while (socket->bytesAvailable()) {
-//         // Leer encabezado si aún no lo tenemos
-//         if (expectedSize == -1 && dataType.isEmpty()) {
-//             // Leer encabezado completo (terminado en '\n')
-//             if (!buffer.contains('\n')) {
-//                 buffer.append(socket->readAll());
-//                 if (!buffer.contains('\n')) {
-//                     return; // Aún no hemos recibido el encabezado completo
-//                 }
-//             }
-
-//             // Procesar el encabezado
-//             QByteArray headerData = buffer.left(buffer.indexOf('\n'));
-//             buffer.remove(0, buffer.indexOf('\n') + 1);
-
-//             // Ejemplo de encabezado: "IMG:12345:map_drawing\n"
-//             QStringList headerParts = QString(headerData).split(':');
-//             if (headerParts.size() != 3) {
-//                 qWarning() << "Encabezado inválido:" << headerData;
-//                 return;
-//             }
-
-//             dataType = headerParts[0];
-//             expectedSize = headerParts[1].toLongLong();
-//             qDebug() << "Recibiendo" << dataType << "de tamaño" << expectedSize;
-//         }
-
-//         // Leer contenido del mensaje
-//         if (expectedSize > 0) {
-//             buffer.append(socket->readAll());
-//             if (buffer.size() >= expectedSize) {
-//                 // Procesar contenido según el tipo
-//                 if (dataType == "IMG") {
-//                     // qDebug() << buffer;
-//                     stringHandler->setImage(buffer);
-//                 } else if (dataType == "MSG") {
-//                     QString convertedString = QString::fromUtf8(buffer);
-//                     qDebug() << convertedString;
-//                     //processMessage(buffer);
-//                 } else {
-//                     qWarning() << "Tipo de datos no reconocido:" << dataType;
-//                 }
-
-//                 // Limpiar para el próximo mensaje
-//                 buffer.clear();
-//                 expectedSize = -1;
-//                 dataType.clear();
-
-//                 // // Enviar confirmación al servidor
-//                 // socket->write("ACK");
-//                 // socket->flush();
-//             }
-//         }
-//     }
-// }
 
 void Cliente::connect2host(const QString hostAddress)
 {

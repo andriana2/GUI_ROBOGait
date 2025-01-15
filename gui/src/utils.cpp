@@ -9,7 +9,8 @@
 #include <QNetworkInterface>
 #include <QRegularExpression>
 
-QVector<QString> extractJSONObjects(const QString& input) {
+QVector<QString> extractJSONObjects(const QString &input)
+{
     static QString incompleteFragment; // Guarda fragmentos incompletos entre llamadas
     QVector<QString> jsonObjects;
 
@@ -21,7 +22,8 @@ QVector<QString> extractJSONObjects(const QString& input) {
 
     int lastValidEnd = 0; // Para rastrear hasta dónde se procesó exitosamente
 
-    while (matchIterator.hasNext()) {
+    while (matchIterator.hasNext())
+    {
         QRegularExpressionMatch match = matchIterator.next();
         jsonObjects.append(match.captured(0));
         lastValidEnd = match.capturedEnd(0); // Registra el final del último JSON válido
@@ -33,7 +35,6 @@ QVector<QString> extractJSONObjects(const QString& input) {
     return jsonObjects;
 }
 
-
 QByteArray fromHex(const QString &hex)
 {
     QByteArray data;
@@ -44,16 +45,21 @@ QByteArray fromHex(const QString &hex)
     return data;
 }
 
-QString obtenerIP() {
+QString obtenerIP()
+{
     QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
-    for (const QNetworkInterface &interface : interfaces) {
+    for (const QNetworkInterface &interface : interfaces)
+    {
         if (interface.flags().testFlag(QNetworkInterface::IsUp) &&
             interface.flags().testFlag(QNetworkInterface::IsRunning) &&
-            !interface.flags().testFlag(QNetworkInterface::IsLoopBack)) {
+            !interface.flags().testFlag(QNetworkInterface::IsLoopBack))
+        {
 
             // Filtrar las direcciones IPv4
-            for (const QNetworkAddressEntry &entry : interface.addressEntries()) {
-                if (entry.ip().protocol() == QAbstractSocket::IPv4Protocol) {
+            for (const QNetworkAddressEntry &entry : interface.addressEntries())
+            {
+                if (entry.ip().protocol() == QAbstractSocket::IPv4Protocol)
+                {
                     return entry.ip().toString();
                 }
             }
@@ -62,24 +68,36 @@ QString obtenerIP() {
     return "No se pudo obtener la IP";
 }
 
-Header stringToHeader(const QString& str) {
-    if (str == "MSG") {
+Header stringToHeader(const QString &str)
+{
+    if (str == "MSG")
+    {
         return MSG;
-    } else if (str == "REQUEST_MSG") {
+    }
+    else if (str == "REQUEST_MSG")
+    {
         return REQUEST_MSG;
-    } else if (str == "IMG") {
+    }
+    else if (str == "IMG")
+    {
         return IMG;
-    } else if (str == "REQUEST_IMG") {
+    }
+    else if (str == "REQUEST_IMG")
+    {
         return REQUEST_IMG;
-    } else {
+    }
+    else
+    {
         Q_ASSERT(false);
         return MSG;
     }
 }
 
 // Función para convertir un Header enum a QString
-QString headerToString(Header header) {
-    switch (header) {
+QString headerToString(Header header)
+{
+    switch (header)
+    {
     case MSG:
         return "MSG";
     case REQUEST_MSG:
@@ -94,27 +112,51 @@ QString headerToString(Header header) {
     }
 }
 
-Target stringToTarget(const QString& str) {
-    if (str == "Joystick_Position") {
+Target stringToTarget(const QString &str)
+{
+    if (str == "Joystick_Position")
+    {
         return Joystick_Position;
-    } else if (str == "Map_SLAM") {
+    }
+    else if (str == "Map_SLAM")
+    {
         return Map_SLAM;
-    } else if (str == "Robot_Position_Pixel") {
+    }
+    else if (str == "Robot_Position_Pixel")
+    {
         return Robot_Position_Pixel;
-    } else if (str == "Img_Map_SLAM") {
+    }
+    else if (str == "Img_Map_SLAM")
+    {
         return Img_Map_SLAM;
-    } else if (str == "Save_Map") {
+    }
+    else if (str == "Save_Map")
+    {
         return Save_Map;
-    } else if (str == "State_Remote_Controlled") {
+    }
+    else if (str == "State_Remote_Controlled")
+    {
         return State_Remote_Controlled;
-    } else {
+    }
+    else if (str == "Img_Map_Select")
+    {
+        return Img_Map_Select;
+    }
+    else if (str == "Map_Name")
+    {
+        return Map_Name;
+    }
+    else
+    {
         Q_ASSERT(false);
         return Joystick_Position;
     }
 }
 
-QString targetToString(Target target) {
-    switch (target) {
+QString targetToString(Target target)
+{
+    switch (target)
+    {
     case Joystick_Position:
         return "Joystick_Position";
     case Map_SLAM:
@@ -127,9 +169,16 @@ QString targetToString(Target target) {
         return "Save_Map";
     case State_Remote_Controlled:
         return "State_Remote_Controlled";
+    case Map_Name:
+        return "Map_Name";
+    case Change_Map_Name:
+        return "Change_Map_Name";
+    case Delete_Map:
+        return "Delete_Map";
+    case Img_Map_Select:
+        return "Img_Map_Select";
     default:
         Q_ASSERT(false);
         return "Joystick_Position";
     }
 }
-

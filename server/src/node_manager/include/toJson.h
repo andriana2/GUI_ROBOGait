@@ -13,6 +13,8 @@ json sendImgMapSlam(const std::string data, int size_data, int total_size_img, i
 
 void getPositionJoystick(json const &j, float &linear_output, float &angular_output);
 
+json sendMapName(std::vector<std::string> const &vec_map_name);
+
 
 
 #endif // TOJSON_H

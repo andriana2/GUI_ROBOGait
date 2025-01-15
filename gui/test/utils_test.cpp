@@ -1,6 +1,15 @@
 #include <gtest/gtest.h>
 #include "../include/utils.h"
 #include <iostream>
+
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QString>
+#include <vector>
+#include <string>
+#include <iostream>
+
 /*
 TEST(obtein_ip, EXPECT_EQ)
 {
@@ -61,3 +70,58 @@ TEST(ExtractJSONObjectsTest, NestedJSONObjects) {
         EXPECT_EQ(result[i], expected[i]) << "El objeto JSON en la posición " << i << " no coincide.";
     }
 }
+
+void processJson(const QJsonDocument& doc) {
+    // Acceder al objeto JSON
+    QJsonObject jsonObj = doc.object();
+
+    // Verificar si "vec_map_name" existe y es un arreglo
+    if (jsonObj.contains("vec_map_name") && jsonObj["vec_map_name"].isArray()) {
+        // Obtener el array "vec_map_name"
+        QJsonArray jsonArray = jsonObj["vec_map_name"].toArray();
+
+        // Verificar el tamaño del array
+        std::cout << "Size of vec_map_name array: " << jsonArray.size() << std::endl;
+
+        // Convertir el QJsonArray a un std::vector<std::string>
+        std::vector<std::string> vec_map_name;
+        for (const auto& item : jsonArray) {
+            // Convertir cada item a QString y luego a std::string
+            vec_map_name.push_back(item.toString().toStdString());
+        }
+
+        // Mostrar el vector resultante
+        std::cout << "Vec_map_name contents: " << std::endl;
+        for (const auto& map_name : vec_map_name) {
+            std::cout << map_name << std::endl;
+        }
+    } else {
+        std::cerr << "Error: 'vec_map_name' no existe o no es un array." << std::endl;
+    }
+}
+
+TEST(ExtractJSONObjectsTest, main) {
+    // Crear un JSON de ejemplo con el formato especificado
+    QString jsonString = R"({
+        "opt": "MSG",
+        "target": "Map_Name",
+        "vec_map_name": [
+            "my_map_with_nav2.pgm",
+            "my_map.pgm",
+            "temporal_map1.pgm",
+            "temporal_map.pgm"
+        ]
+    })";
+
+    // Convertir el QString a QJsonDocument
+    QJsonDocument doc = QJsonDocument::fromJson(jsonString.toUtf8());
+
+    // Verificar si la deserialización fue exitosa
+    if (doc.isNull()) {
+        std::cerr << "Error al parsear el JSON." << std::endl;
+    } else {
+        // Procesar el JSON
+        processJson(doc);
+    }
+}
+

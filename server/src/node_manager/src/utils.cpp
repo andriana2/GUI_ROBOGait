@@ -2,7 +2,6 @@
 #include <boost/asio.hpp>
 #include <boost/beast/core/detail/base64.hpp>
 
-
 std::string headerToString(Header header)
 {
     switch (header)
@@ -50,6 +49,14 @@ std::string targetToString(Target target)
         return "Save_Map";
     case State_Remote_Controlled:
         return "State_Remote_Controlled";
+    case Map_Name:
+        return "Map_Name";
+    case Change_Map_Name:
+        return "Change_Map_Name";
+    case Delete_Map:
+        return "Delete_Map";
+    case Img_Map_Select:
+        return "Img_Map_Select";
     default:
         return "UNKNOWN";
     }
@@ -69,6 +76,15 @@ Target stringToTarget(const std::string &str)
         return Save_Map;
     if (str == "State_Remote_Controlled")
         return State_Remote_Controlled;
+    if (str == "Map_Name")
+        return Map_Name;
+    if (str == "Change_Map_Name")
+        return Change_Map_Name;
+    if (str == "Delete_Map")
+        return Delete_Map;
+    if (str == "Img_Map_Select")
+        return Img_Map_Select;
+
     throw std::invalid_argument("Invalid Target string: " + str);
 }
 
@@ -179,4 +195,44 @@ std::string toBase64(const char *data, size_t length)
 
     boost::beast::detail::base64::encode(base64Str.data(), data, length);
     return base64Str;
+}
+
+std::string replaceSpaces(const std::string &name)
+{
+    std::string modifiedName = name;
+    for (auto &c : modifiedName)
+    {
+        if (c == ' ')
+        {
+            c = '#'; // Use a special character, such as '#'
+        }
+    }
+    return modifiedName;
+}
+
+// Function to restore spaces from the special delimiter
+std::string restoreSpaces(const std::string &name)
+{
+    std::string originalName = name;
+    for (auto &c : originalName)
+    {
+        if (c == '#')
+        {
+            c = ' '; // Restore spaces
+        }
+    }
+    return originalName;
+}
+std::vector<std::string> getMapName(std::string const &path)
+{
+    std::vector<std::string> map_name;
+    for (const auto &file : std::filesystem::directory_iterator(path))
+    {
+        if (file.is_regular_file() && file.path().extension() == ".pgm")
+        {
+            pri1(file.path().filename().string());
+            map_name.push_back(file.path().filename().string());
+        }
+    }
+    return map_name;
 }

@@ -93,7 +93,6 @@ struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_
         std::cout << "Origen X: " << origin_x << ", Origen Y: " << origin_y << std::endl;
         std::cout << "Robot X: " << x_robot << ", Robot Y: " << y_robot << std::endl;
 
-
         final_position.x_pixel = static_cast<int>((x_robot - origin_x) / resolution);
         final_position.y_pixel = static_cast<int>((y_robot - origin_y) / resolution);
         final_position.yaw = -1 * yaw_robot;
@@ -150,7 +149,6 @@ struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_
 //         std::cout << "Origen X: " << origin_x << ", Origen Y: " << origin_y << std::endl;
 //         std::cout << "Robot X: " << x_robot << ", Robot Y: " << y_robot << std::endl;
 
-
 //         final_position.x_pixel = static_cast<int>((x_robot - origin_x) / resolution);
 //         final_position.y_pixel = static_cast<int>((y_robot - origin_y) / resolution);
 //         final_position.yaw = -1 * yaw_robot;
@@ -163,10 +161,11 @@ struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_
 //     return final_position;
 // }
 
-void NodeManager::refresh_map()
+void NodeManager::refresh_map(std::string const &map_name)
 {
     std::string command = MAP_SAVER_CLI;
-    command += "/temporal_map";
+    command += "/" + replaceSpaces(map_name);
+    // command += "/temporal_map";
     int result = system(command.c_str());
 
     if (result == 0)

@@ -14,8 +14,11 @@ enum Target {
     Robot_Position_Pixel,
     Img_Map_SLAM,
     Save_Map,
-    State_Remote_Controlled
-
+    State_Remote_Controlled,
+    Map_Name,
+    Change_Map_Name,
+    Delete_Map,
+    Img_Map_Select
 };
 
 struct FinalPosition

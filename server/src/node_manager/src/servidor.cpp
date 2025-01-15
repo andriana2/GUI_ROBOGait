@@ -132,6 +132,39 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
                     nodeManager.create_publisher(Map_SLAM);
                 nodeManager.create_publisher(Joystick_Position);
             }
+            else if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Delete_Map))
+            {
+                std::string path = PATH2MAP;
+                path += "/" + replaceSpaces(parsed_json["map_name"]);
+                std::string path1 = path + ".pgm";
+                if (std::remove(path1.c_str()) == 0)
+                    std::cout << "Archivo eliminado exitosamente: " << path << std::endl;
+                else
+                    std::cerr << "Error al eliminar el archivo: " << path << std::endl;
+                std::string path2 = path + ".yaml";
+                if (std::remove(path2.c_str()) == 0)
+                    std::cout << "Archivo eliminado exitosamente: " << path << std::endl;
+                else
+                    std::cerr << "Error al eliminar el archivo: " << path << std::endl;
+            }
+            else if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Change_Map_Name))
+            {
+                // if (fs::exists(nuevoNombre))
+                // {
+                //     std::cerr << "Error: El archivo \"" << nuevoNombre << "\" ya existe." << std::endl;
+                //     return 1; // Salir con código de error
+                // }
+
+                // // Intentar renombrar el archivo
+                // if (std::rename(nombreOriginal.c_str(), nuevoNombre.c_str()) == 0)
+                // {
+                //     std::cout << "El archivo se renombró exitosamente a: " << nuevoNombre << std::endl;
+                // }
+                // else
+                // {
+                //     std::cerr << "Error al renombrar el archivo: " << nombreOriginal << std::endl;
+                // }
+            }
         }
         else if (parsed_json.contains("opt") && parsed_json["opt"] == headerToString(REQUEST_IMG))
         {
@@ -151,6 +184,23 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
                 // Detach para que el hilo se maneje de forma independiente
                 sendMapThread.detach();
             }
+            else if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Img_Map_Select))
+            {
+                std::string path = PATH2MAP;
+                path += "/" + replaceSpaces(parsed_json["map_name"]);
+                nodeManager.refresh_map(parsed_json["map_name"]);
+                std::thread sendMapThread(&Servidor::sendImageMap, this, path);
+                // Detach para que el hilo se maneje de forma independiente
+                sendMapThread.detach();
+            }
+        }
+        else if (parsed_json.contains("opt") && parsed_json["opt"] == headerToString(REQUEST_MSG))
+        {
+            if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Map_Name))
+            {
+                std::string path = PATH2MAP;
+                sendMsg(sendMapName(getMapName(path)));
+            }
         }
         else
         {
@@ -163,12 +213,12 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
 void Servidor::sendMsg(const json &json_msg)
 {
     if (json_msg.contains("target") && json_msg["target"] == targetToString(Robot_Position_Pixel))
-        ;
     {
         pri1("Hey");
     }
 
     std::string jsonStr = json_msg.dump();
+    pri1(jsonStr);
     boost::asio::write(socket_, boost::asio::buffer(jsonStr));
 }
 

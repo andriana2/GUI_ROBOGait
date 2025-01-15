@@ -10,15 +10,15 @@ ApplicationFlowForm {
     home.buttonStart.onClicked: {
         mystackview.push(ip)
         applicationFlow.state = "ip"
-        // mystackview.push(selectMap)
-        // applicationFlow.state = "selectMap"
+        // mystackview.push(menu_app)
+        // applicationFlow.state = "menu_app"
     }
     function backButton()
     {
         console.log("backButton")
-        console.log(type_save)
-        console.log(visible_save)
-        if (applicationFlow.state === "teledirigido" || applicationFlow.state === "teledirigido_mapping")
+        // console.log(type_save)
+        // console.log(visible_save)
+        if (applicationFlow.state === "teledirigido")
         {
             if (stringHandler.mapping)
             {
@@ -126,7 +126,10 @@ ApplicationFlowForm {
     }
     function select_map_push()
     {
+        stringHandler.requestMapName()
+        //stringHandler.loadData(["Mapa 1", "Mapa 2", "Mapa 3"])
         mystackview.push(selectMap)
+        applicationFlow.state = "selectMap"
     }
 
     // ! [State]
@@ -211,7 +214,6 @@ ApplicationFlowForm {
         },
         State {
             name: "selectMap"
-            // when: stringHandler.mapping === 1
             StateChangeScript {
                 script: {
                     console.log("selectMap")

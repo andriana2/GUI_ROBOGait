@@ -9,13 +9,13 @@
 #include <QFile>
 #include <QTimer>
 
-StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr)
+StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr), m_model(new QStringListModel(this))
 {
     periodicTimer = new QTimer(this);
     connect(periodicTimer, &QTimer::timeout, this, [this]()
             {
                 static int i = 0;
-                if (m_mapping && i == 8) {
+                if (m_mapping && i == 3) {
                     cliente->sendMessage(sendRequestMapSlam());
                     i = 0;
                 }
@@ -228,34 +228,6 @@ void StringHandler::getImageMapSlam(const QJsonObject &json)
             return;
         }
         setImageSource(image_str);
-        // // Convertir a base64 y guardar
-        // m_imageSource = "data:image/png;base64," + image_str; // Usa "png" en lugar de "pgm"
-        // //qDebug() << "Path guardado en m_imageSource:" << m_imageSource;
-        // emit imageSourceChanged();
-
-        // QImage image;
-        // qDebug() << "HAN LLEGADO TODOS LOS FRAMES";
-        // QBuffer buffer(&imageBuffer);
-        // buffer.open(QIODevice::WriteOnly);
-        // image.save(&buffer, "PNG");
-        // // MI APORTACION
-        // QString image_str = updateMap(image, 91, 65, 1.5123);
-
-        // // FIN MI APORTACION
-        // m_imageSource = "data:image/pgm;base64," + image_str; // Guarda el path absoluto
-        // qDebug() << "Path guardado en m_imageSource:" << m_imageSource;
-        // emit imageSourceChanged();
-
-        // QFile imageFile("../image/temporal_map.pgm");
-        // if (!imageFile.open(QIODevice::WriteOnly))
-        // {
-        //     qWarning() << "Failed to save the image file";
-        //     return;
-        // }
-        // imageFile.write(imageBuffer);
-        // imageFile.close();
-
-        // Reset for the next image
         imageBuffer.clear();
         totalSize = 0;
         receivedFrames = 0;
@@ -373,4 +345,27 @@ void StringHandler::setNameMap(const QString &newNameMap)
     }
     m_nameMap = newNameMap;
     emit nameMapChanged();
+}
+
+QStringListModel *StringHandler::model() const
+{
+    return m_model;
+}
+
+void StringHandler::loadData(const std::vector<std::string> &data) {
+    QStringList list;
+    for (const std::string &str : data) {
+        qDebug() << "Loading: " << QString::fromStdString(str);
+        list.append(QString::fromStdString(str));
+    }
+
+    m_model->setStringList(list);
+    emit modelChanged();  // Notifica a QML que los datos han cambiado
+}
+
+
+
+void StringHandler::requestMapName()
+{
+    cliente->sendMessage(sendRequestMapName());
 }

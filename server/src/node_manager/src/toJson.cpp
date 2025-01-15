@@ -45,3 +45,11 @@ void getPositionJoystick(const json &j, float &linear_output, float &angular_out
     }
 }
 
+json sendMapName(std::vector<std::string> const &vec_map_name)
+{
+        return {
+        {"opt", headerToString(MSG)},
+        {"target", targetToString(Map_Name)},
+        {"vec_map_name", vec_map_name}};
+}
+

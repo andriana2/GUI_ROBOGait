@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Configurar módulos de Qt
-find_package(Qt6 REQUIRED COMPONENTS Core Test)
+find_package(Qt6 REQUIRED COMPONENTS Core Test Network)
 
 # Incluir GoogleTest
 include(FetchContent)
@@ -37,6 +37,7 @@ add_executable(
 target_link_libraries(
   runTests
   Qt6::Core
+  Qt6::Network
   Qt6::Test
   GTest::gtest_main
 )

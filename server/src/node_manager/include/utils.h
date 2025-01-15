@@ -8,6 +8,7 @@
 #include <array>
 #include <memory>
 #include <stdexcept>
+#include <filesystem>
 
 #include "header.h"
 
@@ -30,5 +31,11 @@ std::vector<std::string> executeCommand(const std::string &command);
 std::vector<std::string> splitJson(const std::string &input);
 
 std::string toBase64(const char *data, size_t length);
+
+std::string replaceSpaces(const std::string &name);
+
+std::string restoreSpaces(const std::string &name);
+
+std::vector<std::string> getMapName(std::string const &path);
 
 #endif // UTILS_H
