@@ -94,7 +94,7 @@ private:
     struct FinalPosition finalPosition;
 
     QString m_imageSource;
-    bool m_mapping;
+    bool m_mapping = 0;
     bool m_saveMap = 0;
     int m_typeSaveMap = -1;
     QString m_nameMap = "";

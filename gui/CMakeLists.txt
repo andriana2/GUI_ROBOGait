@@ -56,6 +56,8 @@ qt_add_qml_module(appgui
     qml/MapForm.ui.qml
     qml/SavePage.qml
     qml/SavePageForm.ui.qml
+    qml/SelectMap.qml
+    qml/SelectMapForm.ui.qml
     ${qml_singletons}
 
 

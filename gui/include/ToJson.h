@@ -8,7 +8,7 @@ QJsonDocument sendJoystickPosition(const float &angular, const float &linear);
 
 QJsonDocument sendRequestMapSlam();
 
-QJsonDocument sendSaveMap(const QString& map_name);
+QJsonDocument sendSaveMap(const QString& map_name, bool repeated);
 
 QJsonDocument sendStateRemoteControlled(bool mapping, bool in);
 

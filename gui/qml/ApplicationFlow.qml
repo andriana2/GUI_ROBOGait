@@ -10,39 +10,53 @@ ApplicationFlowForm {
     home.buttonStart.onClicked: {
         mystackview.push(ip)
         applicationFlow.state = "ip"
-        // mystackview.push(menu_app)
-        // applicationFlow.state = "menu_app"
+        // mystackview.push(selectMap)
+        // applicationFlow.state = "selectMap"
     }
     function backButton()
     {
         console.log("backButton")
         console.log(type_save)
         console.log(visible_save)
-        if (applicationFlow.state === "teledirigido")
+        if (applicationFlow.state === "teledirigido" || applicationFlow.state === "teledirigido_mapping")
         {
-            if(stringHandler.saveMap)
+            if (stringHandler.mapping)
             {
-                mystackview.pop()
-                applicationFlow.state = applicationFlow.previousState
-                stringHandler.sendStateRemoteControlledHandler(1,0)
-                stringHandler.setNameMap("")
-                visible_image = 0
-                stringHandler.setTypeSaveMap(-1)
-                type_save = -1
-                stringHandler.setSaveMap(0)
-            }
-            else
-            {
-                if(stringHandler.typeSaveMap === -1)
+                console.log("estoy en backButton mapping")
+
+                if(stringHandler.saveMap)
                 {
-                    stringHandler.setTypeSaveMap(1)
-                    type_save = 1
+                    console.log("estoy en backButton stringHandler.saveMap")
+                    mystackview.pop()
+                    applicationFlow.state = applicationFlow.previousState
+                    stringHandler.sendStateRemoteControlledHandler(1,0)
+                    stringHandler.setNameMap("")
+                    visible_image = 0
+                    stringHandler.setTypeSaveMap(-1)
+                    type_save = -1
+                    stringHandler.setSaveMap(0)
+                    stringHandler.setMapping(0)
                 }
                 else
                 {
-                    stringHandler.setTypeSaveMap(3)
-                    type_save = 3
+                    console.log("estoy en backButton !stringHandler.saveMap")
+                    if(stringHandler.typeSaveMap === -1)
+                    {
+                        stringHandler.setTypeSaveMap(1)
+                        type_save = 1
+                    }
+                    else
+                    {
+                        stringHandler.setTypeSaveMap(3)
+                        type_save = 3
+                    }
                 }
+            }
+            else
+            {
+                console.log("estoy en backButton !mapping")
+                mystackview.pop()
+                applicationFlow.state = applicationFlow.previousState
             }
         }
         else{
@@ -105,11 +119,14 @@ ApplicationFlowForm {
     function teledirigido_push()
     {
         stringHandler.setSaveMap(0)
-        stringHandler.sendStateRemoteControlledHandler(1,1)
         visible_image = 1
         console.log("Imagen a visible 0")
         mystackview.push(teledirigido)
         applicationFlow.state = "teledirigido"
+    }
+    function select_map_push()
+    {
+        mystackview.push(selectMap)
     }
 
     // ! [State]
@@ -170,6 +187,12 @@ ApplicationFlowForm {
         },
         State {
             name: "teledirigido"
+            // when: stringHandler.mapping === 1
+            StateChangeScript {
+                script: {
+                    console.log("teledirigido_mapping")
+                }
+            }
             PropertyChanges {
                 target:applicationFlow
                 previousState: "menu_app"
@@ -177,6 +200,37 @@ ApplicationFlowForm {
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+            }
+            PropertyChanges {
+                target: toolbar
+                saveButton.opacity: 1
+                saveButton.enabled: true
+                backButton.opacity: 1
+                backButton.enabled: true
+            }
+        },
+        State {
+            name: "selectMap"
+            // when: stringHandler.mapping === 1
+            StateChangeScript {
+                script: {
+                    console.log("selectMap")
+                }
+            }
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "menu_app"
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+            }
+            PropertyChanges {
+                target: toolbar
+                saveButton.opacity: 0
+                saveButton.enabled: false
+                backButton.opacity: 1
+                backButton.enabled: true
             }
         }
     ]

@@ -23,11 +23,12 @@ QJsonDocument sendRequestMapSlam() {
     return QJsonDocument(jsonObj);
 }
 
-QJsonDocument sendSaveMap(const QString& map_name) {
+QJsonDocument sendSaveMap(const QString& map_name, bool repeated) {
     QJsonObject jsonObj;
     jsonObj["opt"] = headerToString(MSG);
     jsonObj["target"] = targetToString(Save_Map);
     jsonObj["map_name"] = map_name;
+    jsonObj["repeated"] = repeated;
     //jsonDoc.setObject(jsonObj);
     return QJsonDocument(jsonObj);
 }

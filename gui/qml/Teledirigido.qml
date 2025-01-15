@@ -14,7 +14,9 @@ TeledirigidoForm {
             StateChangeScript {
                 script: {
                     console.log("estoy en mapping")
-                    clearImageSource();
+                    clearImageSource()
+                    stringHandler.setMapping(0)
+                    stringHandler.sendStateRemoteControlledHandler(0,1)
                 }
             }
             PropertyChanges {
@@ -26,6 +28,11 @@ TeledirigidoForm {
                 visible: false
                 opacity: 0
             }
+            // PropertyChanges {
+            //     target: applicationFlow.toolbar
+            //     saveButton.opacity: 0
+            //     saveButton.enabled: false
+            // }
         },
         State {
             name: "hidden"
@@ -34,6 +41,7 @@ TeledirigidoForm {
                 script: {
                     console.log("estoy en hidden")
                     clearImageSource();
+                    stringHandler.setMapping(1)
                 }
             }
             PropertyChanges {
@@ -52,6 +60,9 @@ TeledirigidoForm {
             StateChangeScript {
                 script: {
                     console.log("estoy en nothing")
+
+                    stringHandler.setMapping(1)
+                    stringHandler.sendStateRemoteControlledHandler(1,1)
                 }
             }
             PropertyChanges {
@@ -71,6 +82,11 @@ TeledirigidoForm {
                 target: switchRow
                 enabled: true
             }
+            // PropertyChanges {
+            //     target: applicationFlow.toolbar
+            //     saveButton.opacity: 1
+            //     saveButton.enabled: true
+            // }
         },
         State {
             name: "no_save"
@@ -78,6 +94,8 @@ TeledirigidoForm {
             StateChangeScript {
                 script: {
                     console.log("estoy en no_save")
+
+                    stringHandler.setMapping(1)
                 }
             }
             PropertyChanges {
@@ -105,6 +123,8 @@ TeledirigidoForm {
             StateChangeScript {
                 script: {
                     console.log("estoy en save")
+
+                    stringHandler.setMapping(1)
                 }
             }
             PropertyChanges {
@@ -132,6 +152,8 @@ TeledirigidoForm {
             StateChangeScript {
                 script: {
                     console.log("estoy en save_again")
+
+                    stringHandler.setMapping(1)
                 }
             }
             PropertyChanges {

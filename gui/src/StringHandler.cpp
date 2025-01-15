@@ -15,7 +15,7 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
     connect(periodicTimer, &QTimer::timeout, this, [this]()
             {
                 static int i = 0;
-                if (SLAM_ON && i == 8) {
+                if (m_mapping && i == 8) {
                     cliente->sendMessage(sendRequestMapSlam());
                     i = 0;
                 }
@@ -217,7 +217,7 @@ void StringHandler::getImageMapSlam(const QJsonObject &json)
 
         // Modificar el mapa
         QString image_str;
-        if(finalPosition.active)
+        if (finalPosition.active)
         {
             image_str = updateMapPaintPoint(image, finalPosition.x_pixel, finalPosition.y_pixel, finalPosition.yaw);
             finalPosition.active = false;
@@ -265,9 +265,12 @@ void StringHandler::getImageMapSlam(const QJsonObject &json)
 
 void StringHandler::setImageSource(const QString &source)
 {
-    if (source.isEmpty()) {
+    if (source.isEmpty())
+    {
         m_imageSource = "";
-    } else {
+    }
+    else
+    {
         m_imageSource = "data:image/png;base64," + source;
     }
     emit imageSourceChanged();
@@ -360,10 +363,14 @@ void StringHandler::setNameMap(const QString &newNameMap)
 {
     // void Cliente::sendMessage(const QJsonDocument &json)
     if (newNameMap != "")
-    cliente->sendMessage(sendSaveMap(newNameMap));
-
-    if (m_nameMap == newNameMap)
-        return;
+    {
+        if (m_nameMap == newNameMap)
+        {
+            cliente->sendMessage(sendSaveMap(newNameMap, 1));
+            return;
+        }
+        cliente->sendMessage(sendSaveMap(newNameMap, 1)); // Si se repite en algun futuro dar un error cliente->sendMessage(sendSaveMap(newNameMap, 0));
+    }
     m_nameMap = newNameMap;
     emit nameMapChanged();
 }

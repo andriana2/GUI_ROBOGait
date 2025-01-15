@@ -8,10 +8,12 @@ Rectangle {
     property alias ip: ip
     property alias menu_app: menu_app
     property alias teledirigido: teledirigido
+    property alias selectMap: selectMap
 
     property string previousState: ""
     property alias mystackview: mystackview
     property alias toolbar: toolbar
+
 
     CustomToolBar {
         id: toolbar
@@ -84,6 +86,12 @@ Rectangle {
             visible: true
             visible_save: applicationFlow.visible_save
             type_save: applicationFlow.type_save
+        }
+    }
+    Component {
+        id: selectMap
+        SelectMap {
+            visible: true
         }
     }
 }
