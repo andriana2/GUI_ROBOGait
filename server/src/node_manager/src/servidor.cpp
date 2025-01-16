@@ -112,9 +112,9 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Joystick_Position))
             {
                 float linear, angular;
-                // nodeManager.create_publisher(stringToTarget(parsed_json["target"]));
+                nodeManager.create_publisher(stringToTarget(parsed_json["target"]));
                 getPositionJoystick(parsed_json, linear, angular); // json
-                // pri1(std::to_string(linear) + "<-linear angular ->" + std::to_string(angular));
+                pri1(std::to_string(linear) + "<-linear angular ->" + std::to_string(angular));
                 nodeManager.execute_position(linear, angular); // publicar la posicion // publish position
             }
             else if (parsed_json.contains("target") && parsed_json["target"] == targetToString(State_Remote_Controlled))
@@ -128,8 +128,12 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
                     // RVIZ
                     startRead();
                 }
-                else if (parsed_json["mapping"])
+                else if (parsed_json.contains("mapping") && parsed_json["mapping"] == true)
+                {
+                    pri1("Iniciado el publisher de map slam");
                     nodeManager.create_publisher(Map_SLAM);
+
+                }
                 nodeManager.create_publisher(Joystick_Position);
             }
             else if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Delete_Map))
@@ -165,6 +169,12 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
                 //     std::cerr << "Error al renombrar el archivo: " << nombreOriginal << std::endl;
                 // }
             }
+            else if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Save_Map))
+            {
+                std::string path = PATH2MAP;
+                path += "/" + replaceSpaces(parsed_json["map_name"]);
+                nodeManager.refresh_map(parsed_json["map_name"]);
+            }
         }
         else if (parsed_json.contains("opt") && parsed_json["opt"] == headerToString(REQUEST_IMG))
         {
@@ -177,7 +187,7 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
                 // send robot position pixels
                 sendMsg(sendRobotPositionPixel(fp.x_pixel, fp.y_pixel, fp.yaw));
 
-                // nodeManager.refresh_map();
+                nodeManager.refresh_map();
 
                 // Ejecutar sendImageMap en un hilo separado
                 std::thread sendMapThread(&Servidor::sendImageMap, this, path);
@@ -188,7 +198,8 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             {
                 std::string path = PATH2MAP;
                 path += "/" + replaceSpaces(parsed_json["map_name"]);
-                nodeManager.refresh_map(parsed_json["map_name"]);
+
+                // nodeManager.refresh_map(parsed_json["map_name"]);
                 std::thread sendMapThread(&Servidor::sendImageMap, this, path);
                 // Detach para que el hilo se maneje de forma independiente
                 sendMapThread.detach();
