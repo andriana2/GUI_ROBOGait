@@ -70,6 +70,7 @@ qt_add_qml_module(appgui
     images/up.png
     images/keyboard_left.svg
     images/saveButton.png
+    images/my_map.png
 
     # images/android_icons/mipmap-mdpi/logo48.png
     # images/android_icons/mipmap-hdpi/logo72.png

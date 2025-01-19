@@ -20,12 +20,7 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
                     i = 0;
                 }
                 else
-                {
-
                     cliente->sendMessage(sendJoystickPosition(currentAngular, currentLineal));
-                    if (i == 3)
-                        i = 0;
-                }
                 i++; });
 }
 void StringHandler::setClient(Cliente *cli) { cliente = cli; }

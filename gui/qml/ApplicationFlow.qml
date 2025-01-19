@@ -8,10 +8,10 @@ ApplicationFlowForm {
     property int type_save: type_save = -1
 
     home.buttonStart.onClicked: {
-        mystackview.push(ip)
-        applicationFlow.state = "ip"
-        // mystackview.push(menu_app)
-        // applicationFlow.state = "menu_app"
+        // mystackview.push(ip)
+        // applicationFlow.state = "ip"
+        mystackview.push(menu_app)
+        applicationFlow.state = "menu_app"
     }
     function backButton()
     {
@@ -131,6 +131,13 @@ ApplicationFlowForm {
         mystackview.push(selectMap)
         applicationFlow.state = "selectMap"
     }
+    function map_path_push()
+    {
+        stringHandler.requestMapName()
+        //stringHandler.loadData(["Mapa 1", "Mapa 2", "Mapa 3"])
+        mystackview.push(mapPath)
+        applicationFlow.state = "mapPath"
+    }
 
     // ! [State]
     states: [
@@ -217,6 +224,29 @@ ApplicationFlowForm {
             StateChangeScript {
                 script: {
                     console.log("selectMap")
+                }
+            }
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "menu_app"
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+            }
+            PropertyChanges {
+                target: toolbar
+                saveButton.opacity: 0
+                saveButton.enabled: false
+                backButton.opacity: 1
+                backButton.enabled: true
+            }
+        },
+        State {
+            name: "mapPath"
+            StateChangeScript {
+                script: {
+                    console.log("mapPath")
                 }
             }
             PropertyChanges {

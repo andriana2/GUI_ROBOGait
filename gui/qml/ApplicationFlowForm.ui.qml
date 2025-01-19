@@ -9,6 +9,7 @@ Rectangle {
     property alias menu_app: menu_app
     property alias teledirigido: teledirigido
     property alias selectMap: selectMap
+    property alias mapPath: mapPath
 
     property string previousState: ""
     property alias mystackview: mystackview
@@ -91,6 +92,12 @@ Rectangle {
     Component {
         id: selectMap
         SelectMap {
+            visible: true
+        }
+    }
+    Component {
+        id: mapPath
+        Map {
             visible: true
         }
     }

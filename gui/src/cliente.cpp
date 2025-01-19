@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-Cliente::Cliente(int portNumber) : QObject() //, stringHandler(nullptr)
+Cliente::Cliente(int portNumber) : QObject()//, stringHandler(nullptr)
 {
     socket = new QTcpSocket();
     maping = true;
@@ -23,23 +23,19 @@ Cliente::Cliente(int portNumber) : QObject() //, stringHandler(nullptr)
     connect(socket, &QTcpSocket::errorOccurred, this, &Cliente::onErrorOccurred);
 }
 
-void Cliente::setStringHandler(StringHandler *sh) { stringHandler = sh; }
+void Cliente::setStringHandler(StringHandler *sh){ stringHandler = sh;}
 
-void Cliente::onReadyRead()
-{
-    while (socket->bytesAvailable())
-    {
+void Cliente::onReadyRead() {
+    while (socket->bytesAvailable()) {
         QByteArray rawData = socket->readAll();
         QString dataString = QString::fromUtf8(rawData);
         // qDebug() << dataString;
         qDebug() << "su tamaño es de --------------->" << dataString.size();
         QVector<QString> jsonObjects = extractJSONObjects(dataString);
-        for (const QString &jsonStr : jsonObjects)
-        {
+        for (const QString& jsonStr : jsonObjects) {
             this->jsonDoc = QJsonDocument::fromJson(jsonStr.toUtf8());
 
-            if (!jsonDoc.isObject())
-            {
+            if (!jsonDoc.isObject()) {
                 qWarning() << "Invalid JSON received";
                 continue;
             }
@@ -53,41 +49,38 @@ void Cliente::onReadyRead()
 void Cliente::processJson(const QJsonDocument &json)
 {
     QJsonObject jsonObj = json.object();
-    if (stringToHeader(jsonObj["opt"].toString()) == IMG)
+    if(stringToHeader(jsonObj["opt"].toString()) == IMG)
     {
-        if (stringToTarget(jsonObj["target"].toString()) == Img_Map_SLAM)
-        {
-            qDebug() << "HEEEEy";
+        if(stringToTarget(jsonObj["target"].toString()) == Img_Map_SLAM)
+            qDebug () << "HEEEEy";
             stringHandler->getImageMapSlam(jsonObj);
-        }
     }
-    else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_IMG)
+    else if(stringToHeader(jsonObj["opt"].toString()) == REQUEST_IMG)
     {
+
     }
-    else if (stringToHeader(jsonObj["opt"].toString()) == MSG)
+    else if(stringToHeader(jsonObj["opt"].toString()) == MSG)
     {
-        if (stringToTarget(jsonObj["target"].toString()) == Robot_Position_Pixel)
+        if(stringToTarget(jsonObj["target"].toString()) == Robot_Position_Pixel)
             stringHandler->getRobotPositionPixel(jsonObj);
-        if (stringToTarget(jsonObj["target"].toString()) == Map_Name)
+        if(stringToTarget(jsonObj["target"].toString()) == Map_Name)
         {
-            if (jsonObj.contains("vec_map_name") && jsonObj["vec_map_name"].isArray())
-            {
+            if (jsonObj.contains("vec_map_name") && jsonObj["vec_map_name"].isArray()) {
                 QJsonArray jsonArray = jsonObj["vec_map_name"].toArray();
                 std::vector<std::string> vec_map_name;
-                for (const auto &item : jsonArray)
-                {
+                for (const auto& item : jsonArray) {
                     vec_map_name.push_back(item.toString().toStdString());
                 }
                 stringHandler->loadData(vec_map_name);
-            }
-            else
-            {
+            } else {
                 qWarning() << "Error: 'vec_map_name' no existe o no es un array.";
             }
         }
+
     }
-    else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_MSG)
+    else if(stringToHeader(jsonObj["opt"].toString()) == REQUEST_MSG)
     {
+
     }
 }
 
@@ -99,8 +92,7 @@ void Cliente::connect2host(const QString hostAddress)
     connect(socket, &QTcpSocket::connected, this, &Cliente::connected);
     qDebug() << "Conectado a ip: " << host << " y al puerto " << port;
 
-    if (!socket->waitForConnected())
-    {
+    if (!socket->waitForConnected()) {
         qDebug() << "No se pudo conectar al servidor.";
         return;
     }
@@ -108,8 +100,8 @@ void Cliente::connect2host(const QString hostAddress)
 
 void Cliente::connectionTimeout()
 {
-    // qDebug() << tcpSocket->state();
-    if (socket->state() == QAbstractSocket::ConnectingState)
+    //qDebug() << tcpSocket->state();
+    if(socket->state() == QAbstractSocket::ConnectingState)
     {
         socket->abort();
         // emit tcpSocket->error(QAbstractSocket::SocketTimeoutError);
@@ -122,7 +114,7 @@ void Cliente::connected()
     emit statusChanged(status);
 }
 
-bool Cliente::getStatus() { return status; }
+bool Cliente::getStatus() {return status;}
 
 void Cliente::sendMessage(const QJsonDocument &json)
 {
@@ -132,9 +124,7 @@ void Cliente::sendMessage(const QJsonDocument &json)
         socket->write(byteArray);
         // socket->flush(); // Enviar todo junto
         qDebug() << "Full message sent: " << QString::fromUtf8(byteArray);
-    }
-    else
-    {
+    }else {
         qDebug() << "Socket is not connected!";
     }
 }
@@ -193,7 +183,7 @@ void Cliente::closeConnection()
 {
     timeoutTimer->stop();
 
-    // qDebug() << tcpSocket->state();
+    //qDebug() << tcpSocket->state();
     disconnect(socket, &QTcpSocket::connected, 0, 0);
     disconnect(socket, &QTcpSocket::readyRead, 0, 0);
 
@@ -219,7 +209,8 @@ void Cliente::closeConnection()
     }
 }
 
-void Cliente::onErrorOccurred(QAbstractSocket::SocketError error)
-{
+void Cliente::onErrorOccurred(QAbstractSocket::SocketError error) {
     qDebug() << "Socket error:" << error;
 }
+
+

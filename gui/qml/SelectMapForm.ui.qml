@@ -75,7 +75,7 @@ Rectangle {
                         //             console.log("modelData value:", modelData)
                         //         }
                         Text {
-                            text: modelData
+                            text: display
                             font.pixelSize: 18
                             color: "#000000"
                             anchors.verticalCenter: parent.verticalCenter
