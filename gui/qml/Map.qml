@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.15
 Item {
     property alias canvas: canvas
     property alias area: area
-    property string imageSource: "../images/my_map.png" // Ruta de la imagen
+    property string imageSource: mapInfo.imgSource // Ruta de la imagen
 
 
     RowLayout {
@@ -15,6 +15,15 @@ Item {
         Button{
             text: 'Clear'
             onClicked: canvas.clear()
+        }
+        Button{
+            text: 'Paint'
+            onClicked:{
+                mapInfo.setScreenSize(imageDisplay.width, imageDisplay.height)
+                //stringHandler.setPixelScreen(imageDisplay.width, imageDisplay.height)
+                canvas.enablePainting = true
+            }
+
         }
         Button{
             text: 'Exit'
@@ -55,6 +64,7 @@ Item {
         property int lastX: -1 // Valor inicial fuera del lienzo
         property int lastY: -1 // Valor inicial fuera del lienzo
         property bool circleDrawn: false
+        property bool enablePainting: false
 
         // Función para limpiar el lienzo
         function clear() {
@@ -64,26 +74,30 @@ Item {
             lastX = -1
             lastY = -1
             circleDrawn = false; // Restablecer el estado de dibujo
+            // enablePainting = false;
         }
 
         onPaint: {
             var ctx = getContext('2d');
 
-            if (lastX === -1 || lastY === -1 || circleDrawn === true) {
-                return; // No dibujar si no se ha clickeado o ya se dibujó un círculo
+            if (!enablePainting || lastX === -1 || lastY === -1 || circleDrawn === true) {
+                return; // No dibujar si no está habilitado el modo de pintura o ya se dibujó un círculo
             }
 
-            ctx.lineWidth = 5;
+            ctx.lineWidth = 15;
             ctx.strokeStyle = "red";  // Color de la pluma
+            ctx.fillStyle = "red";
+
 
             var radius = 5; // Radio del círculo
 
             // Dibujar un círculo en la posición donde se hizo clic
             ctx.beginPath();
             ctx.arc(lastX, lastY, radius, 0, Math.PI * 2); // Dibuja el círculo
+            ctx.fill();
             ctx.stroke();
-            console.log("Mousex: " + area.mouseX + " MouseY: " + area.mouseY + " LastX: " + lastX + " LastY: " + lastY )
-
+            console.log("LastX: " + lastX + " LastY: " + lastY )
+            mapInfo.setPositionScreen(lastX,lastY)
             circleDrawn = true; // Marcar que el círculo fue dibujado
         }
 
@@ -91,10 +105,11 @@ Item {
             id: area
             anchors.fill: parent
             onPressed: {
-                canvas.lastX = mouseX; // Ajustar posición para la zona limitada
-                canvas.lastY = mouseY; // Ajustar posición para la zona limitada
-                // canvas.circleDrawn = false; // Restablecer estado para dibujar un nuevo círculo
-                canvas.requestPaint(); // Solicitar que se repinte el lienzo
+                if (canvas.enablePainting) {
+                    canvas.lastX = mouseX; // Ajustar posición para la zona limitada
+                    canvas.lastY = mouseY; // Ajustar posición para la zona limitada
+                    canvas.requestPaint(); // Solicitar que se repinte el lienzo
+                }
             }
         }
     }

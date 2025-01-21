@@ -22,11 +22,11 @@ ApplicationFlowForm {
         {
             if (stringHandler.mapping)
             {
-                console.log("estoy en backButton mapping")
+                // console.log("estoy en backButton mapping")
 
                 if(stringHandler.saveMap)
                 {
-                    console.log("estoy en backButton stringHandler.saveMap")
+                    // console.log("estoy en backButton stringHandler.saveMap")
                     mystackview.pop()
                     applicationFlow.state = applicationFlow.previousState
                     stringHandler.sendStateRemoteControlledHandler(1,0)
@@ -39,7 +39,7 @@ ApplicationFlowForm {
                 }
                 else
                 {
-                    console.log("estoy en backButton !stringHandler.saveMap")
+                    // console.log("estoy en backButton !stringHandler.saveMap")
                     if(stringHandler.typeSaveMap === -1)
                     {
                         stringHandler.setTypeSaveMap(1)
@@ -54,16 +54,22 @@ ApplicationFlowForm {
             }
             else
             {
-                console.log("estoy en backButton !mapping")
+                // console.log("estoy en backButton !mapping")
                 mystackview.pop()
                 applicationFlow.state = applicationFlow.previousState
             }
         }
+        if (applicationFlow.state === "mapPath")
+        {
+            mapInfo.clearInfoImage()
+            mystackview.pop()
+            applicationFlow.state = applicationFlow.previousState
+        }
+
         else{
             mystackview.pop()
             applicationFlow.state = applicationFlow.previousState
         }
-        console.log(type_save)
 
     }
     function saveButton()

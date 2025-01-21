@@ -46,9 +46,16 @@ Rectangle {
             clip: true
             model: stringHandler.model
 
+            //            model: ListModel {
+            //                ListElement {
+            //                    name: "MAP1"
+            //                }
+            //            }
             delegate: Item {
                 width: listView.width
                 height: 70
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
 
                 Button {
                     id: mapButton
@@ -66,8 +73,8 @@ Rectangle {
                     //                                            console.log("Seleccionado:", model.name)
                     //                                        }
                     Row {
+                        anchors.right: parent.right
                         spacing: 20
-                        anchors.fill: parent
                         anchors.margins: 10
 
                         // Texto del nombre del elemento
@@ -105,7 +112,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.5}D{i:1}D{i:3}D{i:2}
+    D{i:0;autoSize:true;height:480;width:640}D{i:1}D{i:3}D{i:2}
 }
 ##^##*/
 

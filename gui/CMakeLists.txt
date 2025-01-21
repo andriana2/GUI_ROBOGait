@@ -25,10 +25,12 @@ qt_add_executable(appgui
     src/cliente.cpp
     src/ToJson.cpp
 
+
     include/StringHandler.h
     include/utils.h
     include/cliente.h
     include/ToJson.h
+    include/MapInfo.h
 )
 
 qt_add_qml_module(appgui
