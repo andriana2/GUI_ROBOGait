@@ -29,16 +29,16 @@ class MapInfo : public QObject
     Q_OBJECT
     Q_PROPERTY(QString mapName READ mapName WRITE setMapName NOTIFY mapNameChanged FINAL)
     Q_PROPERTY(float orientation READ orientation WRITE setOrientation NOTIFY orientationChanged FINAL)
-    Q_PROPERTY(Pixel originalPosition READ originalPosition WRITE setOriginalPosition NOTIFY originalPositionChanged FINAL)
-    Q_PROPERTY(Pixel positionScreen READ positionScreen WRITE setPositionScreen NOTIFY positionScreenChanged FINAL)
+    Q_PROPERTY(Pixel originalPosition READ originalPosition NOTIFY originalPositionChanged FINAL)
+    Q_PROPERTY(Pixel positionScreen READ positionScreen NOTIFY positionScreenChanged FINAL)
 
-    Q_PROPERTY(Pixel imageSize READ imageSize WRITE setImageSize NOTIFY imageSizeChanged FINAL)
-    Q_PROPERTY(Pixel screenSize READ screenSize WRITE setScreenSize NOTIFY screenSizeChanged FINAL)
+    Q_PROPERTY(Pixel imageSize READ imageSize NOTIFY imageSizeChanged FINAL)
+    Q_PROPERTY(Pixel screenSize READ screenSize NOTIFY screenSizeChanged FINAL)
     Q_PROPERTY(QList<Pixel> pixels READ pixels NOTIFY pixelsChanged FINAL)
     Q_PROPERTY(QString imgSource READ imgSource WRITE setImgSource NOTIFY imgSourceChanged FINAL)
 
     Q_PROPERTY(float finalPathOrientation READ finalPathOrientation WRITE setFinalPathOrientation NOTIFY finalPathOrientationChanged FINAL)
-    Q_PROPERTY(Pixel finalPathPosition READ finalPathPosition WRITE setFinalPathPosition NOTIFY finalPathPositionChanged FINAL)
+    Q_PROPERTY(Pixel finalPathPosition READ finalPathPosition NOTIFY finalPathPositionChanged FINAL)
 
 
 
@@ -67,50 +67,41 @@ public:
     void setOrientation(float newOrientation);
 
     Pixel originalPosition() const;
-    void setOriginalPosition(const int &x, const int &y);
+    Q_INVOKABLE void setOriginalPosition(const int &x, const int &y);
 
     Pixel positionScreen() const;
-    void setPositionScreen(const int &x, const int &y);
+    Q_INVOKABLE void setPositionScreen(const int &x, const int &y);
 
     Pixel imageSize() const;
-    void setImageSize(const int &width, const int &height);
+    Q_INVOKABLE void setImageSize(const int &width, const int &height);
 
     Pixel screenSize() const;
-    void setScreenSize(const int &width, const int &height);
+    Q_INVOKABLE void setScreenSize(const int &width, const int &height);
 
     QList<Pixel> pixels() const;
-    void addInfoImageOriginal(const int &width, const int &height);
+    Q_INVOKABLE void addInfoImageOriginal(const int &x, const int &y);
 
     QString imgSource() const;
-    void setImgSource(const QString &newImgSource);
+    Q_INVOKABLE void setImgSource(const QString &newImgSource);
 
     float finalPathOrientation() const;
-    void setFinalPathOrientation(float newFinalPathOrientation);
+    Q_INVOKABLE void setFinalPathOrientation(float newFinalPathOrientation);
 
     Pixel finalPathPosition() const;
-    void setFinalPathPosition(const int &x, const int &y);
+    Q_INVOKABLE void setFinalPathPosition(const int &x, const int &y);
 
     Q_INVOKABLE void clearInfoImage();
 
 signals:
     void mapNameChanged();
-
     void orientationChanged();
-
     void originalPositionChanged();
-
     void positionScreenChanged();
-
     void imageSizeChanged();
-
     void screenSizeChanged();
-
     void pixelsChanged();
-
     void imgSourceChanged();
-
     void finalPathOrientationChanged();
-
     void finalPathPositionChanged();
 
 private:

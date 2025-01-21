@@ -25,13 +25,18 @@ int main(int argc, char *argv[])
 
     Cliente cliente(8080);
     StringHandler stringHandler;
+    MapInfo mapInfo;
     cliente.setStringHandler(&stringHandler);
+    cliente.setMapInfo(&mapInfo);
     stringHandler.setClient(&cliente);
+    mapInfo.setClient(&cliente);
+
 
 
     QQmlApplicationEngine engine;
 
     engine.rootContext()->setContextProperty("stringHandler", &stringHandler);
+    engine.rootContext()->setContextProperty("mapInfo", &mapInfo);
 
     const QUrl url(QStringLiteral("qrc:/gui/qml/main.qml"));
     QObject::connect(

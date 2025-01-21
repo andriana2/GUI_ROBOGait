@@ -213,4 +213,10 @@ void Cliente::onErrorOccurred(QAbstractSocket::SocketError error) {
     qDebug() << "Socket error:" << error;
 }
 
+void Cliente::setMapInfo(MapInfo *sh)
+{
+    if (mapInfo == sh)
+        return;
+    mapInfo = sh;
+}
 

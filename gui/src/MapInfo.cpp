@@ -2,6 +2,13 @@
 
 MapInfo::MapInfo(QObject *parent){}
 
+void MapInfo::setClient(Cliente *cli)
+{
+    if (cliente == cli)
+        return;
+    cliente = cli;
+}
+
 QString MapInfo::mapName() const
 {
     return m_mapName;
@@ -35,9 +42,12 @@ Pixel MapInfo::originalPosition() const
 
 void MapInfo::setOriginalPosition(const int &x, const int &y)
 {
-    if (m_originalPosition == Pixel{x,y})
+    int x_original = std::round((static_cast<double>(x) * m_imageSize.x) / m_screenSize.x);
+    int y_original = std::round((static_cast<double>(y) * m_imageSize.y) / m_screenSize.y);
+
+    if (m_originalPosition == Pixel{x_original,y_original})
         return;
-    m_originalPosition = Pixel{x,y};
+    m_originalPosition = Pixel{x_original,y_original};
     emit originalPositionChanged();
 }
 
@@ -51,6 +61,7 @@ void MapInfo::setPositionScreen(const int &x, const int &y)
     if (m_positionScreen == Pixel{x,y})
         return;
     m_positionScreen = Pixel{x,y};
+    setOriginalPosition(x,y);
     emit positionScreenChanged();
 }
 
@@ -85,9 +96,14 @@ QList<Pixel> MapInfo::pixels() const
     return m_pixels;
 }
 
-void addInfoImageOriginal(const int &width, const int &height)
+void MapInfo::addInfoImageOriginal(const int &x, const int &y)
 {
+    int x_original = std::round((static_cast<double>(x) * m_imageSize.x) / m_screenSize.x);
+    int y_original = std::round((static_cast<double>(y) * m_imageSize.y) / m_screenSize.y);
 
+    m_pixels.append(Pixel{x_original, y_original});
+
+    emit pixelsChanged();
 }
 
 
@@ -124,8 +140,25 @@ Pixel MapInfo::finalPathPosition() const
 
 void MapInfo::setFinalPathPosition(const int &x, const int &y)
 {
-    if (m_finalPathPosition == Pixel{x,y})
+    int x_original = std::round((static_cast<double>(x) * m_imageSize.x) / m_screenSize.x);
+    int y_original = std::round((static_cast<double>(y) * m_imageSize.y) / m_screenSize.y);
+
+    if (m_finalPathPosition == Pixel{x_original,y_original})
         return;
-    m_finalPathPosition = Pixel{x,y};
+    m_finalPathPosition = Pixel{x_original,y_original};
     emit finalPathPositionChanged();
+}
+
+void MapInfo::clearInfoImage()
+{
+    m_mapName = "";
+    m_orientation = 0.0f;
+    m_originalPosition = Pixel();
+    m_positionScreen = Pixel();
+    m_imageSize = Pixel();
+    m_screenSize = Pixel();
+    m_pixels.clear();
+    m_imgSource = "";
+    m_finalPathOrientation = 0.0f; // radianes de la posicion final del robot
+    m_finalPathPosition = Pixel();
 }
