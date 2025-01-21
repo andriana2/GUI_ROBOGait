@@ -7,6 +7,7 @@
 
 #include <QString>
 #include <QVector>
+#include <qobjectdefs.h>
 
 enum Header {
     MSG,
@@ -35,6 +36,28 @@ struct FinalPosition
     float yaw;
     bool active;
 };
+
+struct Pixel {
+    Q_GADGET
+    Q_PROPERTY(int x MEMBER x)
+    Q_PROPERTY(int y MEMBER y)
+
+public:
+    int x = 0; // Inicialización predeterminada
+    int y = 0; // Inicialización predeterminada
+
+    Pixel() = default; // Constructor predeterminado
+    Pixel(int x, int y) : x(x), y(y) {} // Constructor con parámetros
+
+    bool operator==(const Pixel& other) const {
+        return x == other.x && y == other.y;
+    }
+
+    bool operator!=(const Pixel& other) const {
+        return !(*this == other);
+    }
+};
+
 
 QVector<QString> extractJSONObjects(const QString& input);
 QByteArray fromHex(const QString &hex);
