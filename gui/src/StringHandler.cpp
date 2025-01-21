@@ -16,7 +16,7 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
             {
                 static int i = 0;
                 if (m_mapping && i == 3) {
-                    cliente->sendMessage(sendRequestMapSlam());
+                    cliente->sendMessage(sendRequestMap());
                     i = 0;
                 }
                 else

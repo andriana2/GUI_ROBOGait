@@ -1,4 +1,5 @@
 #include "../include/MapInfo.h"
+#include "include/ToJson.h"
 
 MapInfo::MapInfo(QObject *parent){}
 
@@ -16,6 +17,7 @@ QString MapInfo::mapName() const
 
 void MapInfo::setMapName(const QString &newMapName)
 {
+    cliente->sendMessage(sendRequestMap(newMapName));
     if (m_mapName == newMapName)
         return;
     m_mapName = newMapName;

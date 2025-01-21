@@ -8,10 +8,10 @@ ApplicationFlowForm {
     property int type_save: type_save = -1
 
     home.buttonStart.onClicked: {
-        // mystackview.push(ip)
-        // applicationFlow.state = "ip"
-        mystackview.push(menu_app)
-        applicationFlow.state = "menu_app"
+        mystackview.push(ip)
+        applicationFlow.state = "ip"
+        // mystackview.push(menu_app)
+        // applicationFlow.state = "menu_app"
     }
     function backButton()
     {
@@ -257,7 +257,7 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target:applicationFlow
-                previousState: "menu_app"
+                previousState: "selectMap"
             }
             PropertyChanges {
                 target: mystackview

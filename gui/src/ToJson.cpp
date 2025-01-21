@@ -14,10 +14,12 @@ QJsonDocument sendJoystickPosition(const float &angular, const float &linear)
     return QJsonDocument(jsonObj);
 }
 
-QJsonDocument sendRequestMapSlam() {
+QJsonDocument sendRequestMap(QString const &map_name) {
     QJsonObject jsonObj;
     jsonObj["opt"] = headerToString(REQUEST_IMG);
     jsonObj["target"] = targetToString(Map_SLAM);
+    jsonObj["map_name"] = map_name;
+
 
     //jsonDoc.setObject(jsonObj);
     return QJsonDocument(jsonObj);

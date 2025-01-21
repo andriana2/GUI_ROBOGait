@@ -6,7 +6,8 @@ MenuForm {
         applicationFlow.teledirigido_push()
     }
     mapa_mouse_area.onClicked: {
-        applicationFlow.map_path_push()
+        // applicationFlow.map_path_push()
+        applicationFlow.select_map_push()
     }
 
     // mapa{

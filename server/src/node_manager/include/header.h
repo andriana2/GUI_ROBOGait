@@ -29,10 +29,10 @@ struct FinalPosition
 };
 
 // #define PATH2MAP "/home/robogait/Desktop/gui_andri/gui/server/maps" // uni
-#define PATH2MAP "/home/andri/Desktop/gui_nuevo/gui/server/maps" //casa
+#define PATH2MAP "/home/andri/Desktop/gui_nuevo/gui_/server/maps" //casa
 
 // #define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f " + PATH2MAP + " "
-#define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f /home/robogait/Desktop/gui_andri/gui/server/maps"
+#define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f /home/robogait/Desktop/gui_andri/gui_/server/maps"
 
 // launch
 #define RVIZ_LAUNCH_MAPING "ros2 launch turtlebot3_cartographer cartographer.launch.py &" // &ejecutar en segundo plano

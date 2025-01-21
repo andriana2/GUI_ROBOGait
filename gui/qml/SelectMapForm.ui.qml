@@ -7,8 +7,9 @@ Rectangle {
     // height: 700
     color: "#518bb7"
     // property alias mapButton: mapButton
-    // property alias mapEdit: mapEdit
-    // property alias mapDelete: mapDelete
+    // // property alias mapEdit: mapEdit
+    // // property alias mapDelete: mapDelete
+    // property alias listView: listView
 
     // Título
     Text {
@@ -54,56 +55,63 @@ Rectangle {
             delegate: Item {
                 width: listView.width
                 height: 70
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
 
                 Button {
                     id: mapButton
                     width: parent.width
                     height: 60
-                    text: ""
                     background: Rectangle {
                         color: "#ffffff"
                         border.color: "#cccccc"
                         radius: 10
+                    }
+                    onClicked: {
+                        mapInfo.setMapName(model.display); // Mostrará el texto asociado al botón
+                        applicationFlow.map_path_push()
                     }
 
                     // Acción al hacer clic en el Button (Rectangle)
                     //                                        onClicked: {
                     //                                            console.log("Seleccionado:", model.name)
                     //                                        }
-                    Row {
-                        anchors.right: parent.right
-                        spacing: 20
-                        anchors.margins: 10
-
-                        // Texto del nombre del elemento
-                        // Component.onCompleted: {
-                        //             console.log("modelData value:", modelData)
-                        //         }
-                        Text {
-                            text: display
-                            font.pixelSize: 18
-                            color: "#000000"
-                            anchors.verticalCenter: parent.verticalCenter
-                        }
-
-                        // Botón de Editar
-                        Button {
-                            id: mapEdit
-                            text: "Editar"
-                            anchors.verticalCenter: parent.verticalCenter
-                            //                                                        onClicked: console.log("Editar:", model.name)
-                        }
-
-                        // Botón de Borrar
-                        Button {
-                            id: mapDelete
-                            text: "Borrar"
-                            anchors.verticalCenter: parent.verticalCenter
-                            //                                                        onClicked: listView.model.remove(index)
-                        }
+                    // Row {
+                    //     id: row
+                    //     // spacing: 20
+                    //     anchors.fill: parent
+                    //     // anchors.margins: 10
+                    //     // Texto del nombre del elemento
+                    //     // Component.onCompleted: {
+                    //     //             console.log("modelData value:", modelData)
+                    //     //         }
+                    Text {
+                        id: textMapName
+                        text: display
+                        font.pixelSize: 18
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        color: "#000000"
+                        anchors.verticalCenter: parent.verticalCenter
                     }
+
+                    // Botón de Editar
+                    Button {
+                        id: mapEdit
+                        text: "Editar"
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: mapDelete.left
+                        anchors.rightMargin: 20
+                        //                                                        onClicked: console.log("Editar:", model.name)
+                    }
+
+                    // Botón de Borrar
+                    Button {
+                        id: mapDelete
+                        text: "Borrar"
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 10
+                        //                                                        onClicked: listView.model.remove(index)
+                    }
+                    // }
                 }
             }
         }

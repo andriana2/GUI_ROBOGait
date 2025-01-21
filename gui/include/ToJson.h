@@ -6,7 +6,7 @@
 
 QJsonDocument sendJoystickPosition(const float &angular, const float &linear);
 
-QJsonDocument sendRequestMapSlam();
+QJsonDocument sendRequestMap(QString const &map_name = "");
 
 QJsonDocument sendSaveMap(const QString& map_name, bool repeated);
 

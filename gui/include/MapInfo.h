@@ -45,26 +45,13 @@ class MapInfo : public QObject
 public:
     explicit MapInfo(QObject *parent = nullptr);
 
-    // Q_INVOKABLE QString getInfoImageSource();
-    // Q_INVOKABLE QString getInfoImageMapName();
-    // Q_INVOKABLE float getInfoImageOrientation();
-    // void setInfoImageSource(const QString &source);
-    // void setInfoImagePixel(const Pixel &pixel);
-    // void setInfoImageMapName(const QString &mapName);
-    // void setInfoImageOrientation(float orientation);
-    // Q_INVOKABLE void addPixelToInfoImage(int x, int y, bool paint_path);
-    // Q_INVOKABLE void setPixelScreen(int x, int y);
-    // Q_INVOKABLE void clearInfoImage();
-    // Q_INVOKABLE void addInfoImageOriginal(int x, int y);
-
-
     void setClient(Cliente *cli);
 
     QString mapName() const;
-    void setMapName(const QString &newMapName);
+    Q_INVOKABLE void setMapName(const QString &newMapName);
 
     float orientation() const;
-    void setOrientation(float newOrientation);
+    Q_INVOKABLE void setOrientation(float newOrientation);
 
     Pixel originalPosition() const;
     Q_INVOKABLE void setOriginalPosition(const int &x, const int &y);

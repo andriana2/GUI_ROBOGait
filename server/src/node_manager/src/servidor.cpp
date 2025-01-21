@@ -132,7 +132,6 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
                 {
                     pri1("Iniciado el publisher de map slam");
                     nodeManager.create_publisher(Map_SLAM);
-
                 }
                 nodeManager.create_publisher(Joystick_Position);
             }
@@ -181,13 +180,21 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Map_SLAM))
             {
                 std::string path = PATH2MAP;
-                FinalPosition fp = nodeManager.getPositionRobotPixel(path + "/temporal_map.yaml");
-                path += "/temporal_map.pgm";
+                if (parsed_json.contains("map_name") && parsed_json["map_name"] == "")
+                {
+                    FinalPosition fp = nodeManager.getPositionRobotPixel(path + "/temporal_map.yaml");
+                    path += "/temporal_map.pgm";
 
-                // send robot position pixels
-                sendMsg(sendRobotPositionPixel(fp.x_pixel, fp.y_pixel, fp.yaw));
+                    // send robot position pixels
+                    sendMsg(sendRobotPositionPixel(fp.x_pixel, fp.y_pixel, fp.yaw));
 
-                nodeManager.refresh_map();
+                    nodeManager.refresh_map();
+                }
+                else
+                {
+                    path += parsed_json["map_name"];
+
+                }
 
                 // Ejecutar sendImageMap en un hilo separado
                 std::thread sendMapThread(&Servidor::sendImageMap, this, path);
