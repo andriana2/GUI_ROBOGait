@@ -20,9 +20,11 @@
 #include <QTimer>
 
 #include "cliente.h"
+#include "MapInfo.h"
 #include "include/utils.h"
 
 class Cliente;
+class MapInfo;
 
 class StringHandler : public QObject
 {
@@ -43,6 +45,7 @@ public:
     Q_INVOKABLE void sendStateRemoteControlledHandler(bool mapping, bool in);
 
     void setClient(Cliente *cli);
+    void setMapInfo(MapInfo *mapIn);
 
     // msg send
     Q_INVOKABLE void setCurrentMove(const QString &lineal,const QString & angular);
@@ -50,6 +53,7 @@ public:
 
     // msg recived
     void getImageMapSlam(const QJsonObject &json);
+    void getImageMapPath(const QJsonObject &json);
     void getRobotPositionPixel(const QJsonObject &json);
 
     //edit image
@@ -90,6 +94,7 @@ private:
     bool moveStop = 0;
     bool SLAM_ON = 1;
     Cliente *cliente;
+    MapInfo *mapInfo;
     float currentAngular;
     float currentLineal;
 

@@ -4,6 +4,8 @@
 #include <QJsonObject>
 // #include "utils.h"
 
+namespace ToJson{
+
 QJsonDocument sendJoystickPosition(const float &angular, const float &linear);
 
 QJsonDocument sendRequestMap(QString const &map_name = "");
@@ -20,5 +22,6 @@ QJsonDocument sendChangeMapName(const QString& new_map_name,const QString& last_
 
 QJsonDocument sendDeleteMap(const QString& map_name);
 
+}
 
 #endif // TOJSON_H

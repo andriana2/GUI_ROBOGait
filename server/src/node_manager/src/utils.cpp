@@ -45,12 +45,16 @@ std::string targetToString(Target target)
         return "Robot_Position_Pixel";
     case Img_Map_SLAM:
         return "Img_Map_SLAM";
+    case Img_Map_Path:
+        return "Img_Map_Path";
     case Save_Map:
         return "Save_Map";
     case State_Remote_Controlled:
         return "State_Remote_Controlled";
     case Map_Name:
         return "Map_Name";
+    case Map_Info_Image_Size:
+        return "Map_Info_Image_Size";
     case Change_Map_Name:
         return "Change_Map_Name";
     case Delete_Map:
@@ -72,12 +76,16 @@ Target stringToTarget(const std::string &str)
         return Robot_Position_Pixel;
     if (str == "Img_Map_SLAM")
         return Img_Map_SLAM;
+    if (str == "Img_Map_Path")
+        return Img_Map_Path;
     if (str == "Save_Map")
         return Save_Map;
     if (str == "State_Remote_Controlled")
         return State_Remote_Controlled;
     if (str == "Map_Name")
         return Map_Name;
+    if (str == "Map_Info_Image_Size")
+        return Map_Info_Image_Size;
     if (str == "Change_Map_Name")
         return Change_Map_Name;
     if (str == "Delete_Map")
@@ -223,6 +231,7 @@ std::string restoreSpaces(const std::string &name)
     }
     return originalName;
 }
+
 std::vector<std::string> getMapName(std::string const &path)
 {
     std::vector<std::string> map_name;
@@ -230,9 +239,40 @@ std::vector<std::string> getMapName(std::string const &path)
     {
         if (file.is_regular_file() && file.path().extension() == ".pgm")
         {
-            pri1(file.path().filename().string());
-            map_name.push_back(file.path().filename().string());
+            // Utilizamos .stem() para obtener el nombre del archivo sin extensión
+            std::string name_without_extension = file.path().stem().string();
+            pri1(name_without_extension);
+            map_name.push_back(name_without_extension);
         }
     }
     return map_name;
+}
+
+void getImageSize(std::string const &path, int &width_output, int &height_output)
+{
+    std::ifstream file(path); // Cambia "imagen.pgm" por la ruta de tu archivo
+    if (!file.is_open())
+    {
+        std::cerr << "Error al abrir el archivo: "<< path << std::endl;
+        exit(1);
+    }
+
+    std::string line;
+    int width = 0, height = 0;
+
+    // Leer primera línea (formato P5)
+    std::getline(file, line);
+
+    // Leer segunda línea (dimensiones)
+    if (std::getline(file, line))
+    {
+        std::istringstream iss(line);
+        iss >> width >> height;
+    }
+
+    std::cout << "Ancho: " << width << ", Alto: " << height << std::endl;
+
+    width_output = width;
+    height_output = height;
+    file.close();
 }

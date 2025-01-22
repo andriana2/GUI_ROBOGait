@@ -16,14 +16,19 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
             {
                 static int i = 0;
                 if (m_mapping && i == 3) {
-                    cliente->sendMessage(sendRequestMap());
+                    cliente->sendMessage(ToJson::sendRequestMap());
                     i = 0;
                 }
                 else
-                    cliente->sendMessage(sendJoystickPosition(currentAngular, currentLineal));
+                    cliente->sendMessage(ToJson::sendJoystickPosition(currentAngular, currentLineal));
                 i++; });
 }
 void StringHandler::setClient(Cliente *cli) { cliente = cli; }
+
+void StringHandler::setMapInfo(MapInfo *mapIn)
+{
+    mapInfo = mapIn;
+}
 
 bool StringHandler::isInSameNetwork(const QString &ip1, const std::string &subnetMask)
 {
@@ -82,7 +87,7 @@ QString StringHandler::getImageSource()
 
 void StringHandler::sendStateRemoteControlledHandler(bool mapping, bool in)
 {
-    cliente->sendMessage(sendStateRemoteControlled(mapping, in));
+    cliente->sendMessage(ToJson::sendStateRemoteControlled(mapping, in));
 }
 
 void StringHandler::setCurrentMove(const QString &lineal, const QString &angular)
@@ -111,7 +116,7 @@ void StringHandler::setCurrentMove(const QString &lineal, const QString &angular
     else if (moveStopLocal && !moveStop)
     {
         // El robot se detuvo: enviar posición cero y detener mensajes periódicos
-        cliente->sendMessage(sendJoystickPosition(0.0f, 0.0f));
+        cliente->sendMessage(ToJson::sendJoystickPosition(0.0f, 0.0f));
         periodicTimer->stop();
         moveStop = true;
     }
@@ -181,15 +186,12 @@ QString StringHandler::updateMapPaintPoint(QImage &mapa, int columna, int fila, 
 
 void StringHandler::getImageMapSlam(const QJsonObject &json)
 {
-    qDebug() << "HHOOLLAAAA";
     periodicTimer->stop();
     QByteArray data = QByteArray::fromBase64(json["data"].toString().toUtf8());
     totalSize = json["total_size"].toInt();
     totalFrames = json["total_frame"].toInt();
     if (json["num_frame"].toInt() == 0 && receivedFrames != 0)
-    {
         receivedFrames = 0;
-    }
 
     // Append the received fragment to the image buffer
     imageBuffer.append(data);
@@ -235,6 +237,70 @@ void StringHandler::getImageMapSlam(const QJsonObject &json)
     }
 }
 
+void StringHandler::getImageMapPath(const QJsonObject &json)
+{
+    QByteArray data = QByteArray::fromBase64(json["data"].toString().toUtf8());
+    totalSize = json["total_size"].toInt();
+    totalFrames = json["total_frame"].toInt();
+    if (json["num_frame"].toInt() == 0 && receivedFrames != 0)
+        receivedFrames = 0;
+
+    // Append the received fragment to the image buffer
+    imageBuffer.append(data);
+
+    qDebug() << "Received frame:" << json["num_frame"].toInt() << "of" << totalFrames << "num recivedFrames: " << receivedFrames;
+    receivedFrames++;
+
+    // If all frames are received, save the image
+    if (receivedFrames == totalFrames)
+    {
+        qDebug() << "TODOS LOS FRAMS RECIBIDOS";
+        if (imageBuffer.isEmpty())
+        {
+            qWarning() << "Error: imageBuffer is empty";
+            return;
+        }
+
+        QImage image;
+        if (!image.loadFromData(imageBuffer, "PNG")) // Verificar si la imagen se carga correctamente
+        {
+            qWarning() << "Error: Unable to load image from imageBuffer";
+            return;
+        }
+        qDebug() << "Image successfully loaded. Size:" << image.size();
+        QString imageSource;
+        {
+            if (image.isNull())
+            {
+                qWarning("Error al cargar el image");
+                return;
+            }
+            if (image.format() != QImage::Format_ARGB32)
+            {
+                image = image.convertToFormat(QImage::Format_ARGB32);
+            }
+            QBuffer buffer;
+            buffer.open(QIODevice::WriteOnly);
+
+            if (!image.save(&buffer, "PNG"))
+            {
+                qWarning("Error al guardar el mapa modificado como PNG");
+            }
+            else
+            {
+                qDebug() << "Mapa guardado";
+            }
+            imageSource = (buffer.data().toBase64());
+        }
+        mapInfo->setImgSource(imageSource);
+        imageBuffer.clear();
+        totalSize = 0;
+        receivedFrames = 0;
+        totalFrames = 0;
+    }
+}
+
+
 void StringHandler::setImageSource(const QString &source)
 {
     if (source.isEmpty())
@@ -265,14 +331,12 @@ void StringHandler::setImage(const QByteArray &data)
         if (image.loadFromData(data))
         { // Intenta cargar los datos como una imagen
             // Convertir la imagen a un URL de datos en memoria
-            qDebug() << "CONVIRTIENDO";
             QByteArray imageData;
             QBuffer buffer(&imageData);
             buffer.open(QIODevice::WriteOnly);
             image.save(&buffer, "PGM"); // Guarda la imagen en formato PGM en memoria
 
             m_imageSource = "data:image/pgm;base64," + imageData.toBase64();
-            qDebug() << "poraquí " << m_imageSource;
             emit imageSourceChanged();
         }
         else
@@ -338,10 +402,10 @@ void StringHandler::setNameMap(const QString &newNameMap)
     {
         if (m_nameMap == newNameMap)
         {
-            cliente->sendMessage(sendSaveMap(newNameMap, 1));
+            cliente->sendMessage(ToJson::sendSaveMap(newNameMap, 1));
             return;
         }
-        cliente->sendMessage(sendSaveMap(newNameMap, 1)); // Si se repite en algun futuro dar un error cliente->sendMessage(sendSaveMap(newNameMap, 0));
+        cliente->sendMessage(ToJson::sendSaveMap(newNameMap, 1)); // Si se repite en algun futuro dar un error cliente->sendMessage(sendSaveMap(newNameMap, 0));
     }
     m_nameMap = newNameMap;
     emit nameMapChanged();
@@ -367,5 +431,5 @@ void StringHandler::loadData(const std::vector<std::string> &data) {
 
 void StringHandler::requestMapName()
 {
-    cliente->sendMessage(sendRequestMapName());
+    cliente->sendMessage(ToJson::sendRequestMapName());
 }

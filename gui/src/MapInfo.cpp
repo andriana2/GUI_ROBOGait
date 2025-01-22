@@ -9,6 +9,12 @@ void MapInfo::setClient(Cliente *cli)
         return;
     cliente = cli;
 }
+void MapInfo::setStringHandler(StringHandler *sh)
+{
+    if (stringHandler == sh)
+        return;
+    stringHandler = sh;
+}
 
 QString MapInfo::mapName() const
 {
@@ -17,9 +23,9 @@ QString MapInfo::mapName() const
 
 void MapInfo::setMapName(const QString &newMapName)
 {
-    cliente->sendMessage(sendRequestMap(newMapName));
     if (m_mapName == newMapName)
         return;
+    cliente->sendMessage(ToJson::sendRequestMap(newMapName));
     m_mapName = newMapName;
     emit mapNameChanged();
 }
@@ -50,6 +56,7 @@ void MapInfo::setOriginalPosition(const int &x, const int &y)
     if (m_originalPosition == Pixel{x_original,y_original})
         return;
     m_originalPosition = Pixel{x_original,y_original};
+    qDebug() << "+++Map name: "<< m_mapName << " position x: " << x_original << " position y: " << y_original;
     emit originalPositionChanged();
 }
 
@@ -116,9 +123,14 @@ QString MapInfo::imgSource() const
 
 void MapInfo::setImgSource(const QString &newImgSource)
 {
-    if (m_imgSource == newImgSource)
-        return;
-    m_imgSource = newImgSource;
+    if (newImgSource.isEmpty())
+    {
+        m_imgSource = "";
+    }
+    else
+    {
+        m_imgSource = "data:image/png;base64," + newImgSource;
+    }
     emit imgSourceChanged();
 }
 
@@ -163,4 +175,36 @@ void MapInfo::clearInfoImage()
     m_imgSource = "";
     m_finalPathOrientation = 0.0f; // radianes de la posicion final del robot
     m_finalPathPosition = Pixel();
+    repeated_delegate_list_view = 0;
 }
+
+bool MapInfo::checkPixelBlack()
+{
+    QString base64Data = m_imgSource;
+    if (m_imgSource.startsWith("data:image/png;base64,")) {
+        base64Data = m_imgSource.mid(QString("data:image/png;base64,").length());
+    }
+
+    // Decodificar la imagen de Base64
+    QByteArray imageData = QByteArray::fromBase64(base64Data.toUtf8());
+    QImage image;
+    if (!image.loadFromData(imageData)) {
+        qWarning() << "No se pudo cargar la imagen de los datos base64.";
+        return false;
+    }
+
+    // Verificar si las coordenadas están dentro del rango
+    if (m_originalPosition.x < 0 || m_originalPosition.x >= m_imageSize.y || m_originalPosition.y < 0 || m_originalPosition.y >= m_imageSize.y) {
+        qDebug() << "Las coordenadas están fuera del rango de la imagen.";
+        return false;
+    }
+
+    // Obtener el color del píxel
+    QColor pixelColor = image.pixelColor(m_originalPosition.x, m_originalPosition.y);
+
+    int intensity = pixelColor.red(); // O green() o blue(), todos serán iguales
+     qDebug() << "Intensidad " << intensity;
+    return intensity == 0;
+}
+
+

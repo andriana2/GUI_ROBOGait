@@ -59,13 +59,12 @@ ApplicationFlowForm {
                 applicationFlow.state = applicationFlow.previousState
             }
         }
-        if (applicationFlow.state === "mapPath")
+        else if (applicationFlow.state === "mapPath")
         {
             mapInfo.clearInfoImage()
             mystackview.pop()
             applicationFlow.state = applicationFlow.previousState
         }
-
         else{
             mystackview.pop()
             applicationFlow.state = applicationFlow.previousState
@@ -132,6 +131,7 @@ ApplicationFlowForm {
     }
     function select_map_push()
     {
+        console.log("UUUUUUUUUUUUUUUUUUUUUUUUUUU")
         stringHandler.requestMapName()
         //stringHandler.loadData(["Mapa 1", "Mapa 2", "Mapa 3"])
         mystackview.push(selectMap)
@@ -139,7 +139,7 @@ ApplicationFlowForm {
     }
     function map_path_push()
     {
-        stringHandler.requestMapName()
+        //stringHandler.requestMapName()
         //stringHandler.loadData(["Mapa 1", "Mapa 2", "Mapa 3"])
         mystackview.push(mapPath)
         applicationFlow.state = "mapPath"

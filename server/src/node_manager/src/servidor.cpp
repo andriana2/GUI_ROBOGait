@@ -180,7 +180,14 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Map_SLAM))
             {
                 std::string path = PATH2MAP;
-                if (parsed_json.contains("map_name") && parsed_json["map_name"] == "")
+                if (parsed_json.contains("map_name") && parsed_json["map_name"] != "")
+                {
+                    path += "/" + replaceSpaces(parsed_json["map_name"]) + ".pgm";
+                    int width = 0, height = 0;
+                    getImageSize(path, width, height);
+                    sendMsg(sendInfoMap(parsed_json["map_name"], width, height));
+                }
+                else
                 {
                     FinalPosition fp = nodeManager.getPositionRobotPixel(path + "/temporal_map.yaml");
                     path += "/temporal_map.pgm";
@@ -189,11 +196,6 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
                     sendMsg(sendRobotPositionPixel(fp.x_pixel, fp.y_pixel, fp.yaw));
 
                     nodeManager.refresh_map();
-                }
-                else
-                {
-                    path += parsed_json["map_name"];
-
                 }
 
                 // Ejecutar sendImageMap en un hilo separado
@@ -244,6 +246,11 @@ void Servidor::sendImageMap(const std::string &name_map)
 {
     try
     {
+        bool img_map_SLAM;
+        if (name_map.find("temporal") != std::string::npos)
+            img_map_SLAM = true;
+        else
+            img_map_SLAM = false;
         const std::size_t maxJsonSize = 2048; // Tamaño máximo por paquete
 
         // Leer imagen PGM usando OpenCV
@@ -274,7 +281,7 @@ void Servidor::sendImageMap(const std::string &name_map)
             std::string hexData = toBase64(buffer.data(), bytesRead);
 
             // Crear el JSON
-            nlohmann::json jsonMessage = sendImgMapSlam(hexData, bytesRead, totalSize, numFrame, totalFrames);
+            nlohmann::json jsonMessage = sendImgMap(hexData, bytesRead, totalSize, numFrame, totalFrames, img_map_SLAM);
 
             // Serializar el JSON
             std::string jsonStr = jsonMessage.dump();
@@ -299,63 +306,3 @@ void Servidor::sendImageMap(const std::string &name_map)
         std::cerr << "Error en sendImageMap: " << e.what() << std::endl;
     }
 }
-
-// void Servidor::sendImageMap(const std::string &name_map)
-// {
-//     try
-//     {
-//         const std::size_t maxJsonSize = 1024; // Tamaño máximo por paquete
-
-//         std::ifstream file(name_map, std::ios::binary);
-//         if (!file)
-//             throw std::runtime_error("No se pudo abrir el archivo " + name_map);
-
-//         // Leer el contenido del archivo
-//         file.seekg(0, std::ios::end);
-//         std::size_t totalSize = file.tellg();
-//         file.seekg(0, std::ios::beg);
-
-//         const std::size_t maxDataSize = 600; // Espacio reservado para los datos de la imagen
-//         std::vector<char> buffer(maxDataSize);
-//         std::size_t bytesSent = 0;
-//         std::size_t numFrame = 0;
-//         std::size_t totalFrames = (totalSize + maxDataSize - 1) / maxDataSize; // Calcular total de frames
-
-//         while (bytesSent < totalSize)
-//         {
-//             file.read(buffer.data(), maxDataSize);
-//             std::size_t bytesRead = file.gcount();
-
-//             // Convertir datos a hexadecimal
-//             std::string hexData = toBase64(buffer.data(), bytesRead);
-
-//             // Crear el JSON
-//             json jsonMessage = sendImgMapSlam(hexData, bytesRead, totalSize, numFrame, totalFrames);
-
-//             // Serializar el JSON
-//             std::string jsonStr = jsonMessage.dump();
-
-//             // Verificar que el tamaño total no exceda el límite
-//             // pri1(jsonStr);
-//             if (jsonStr.size() > maxJsonSize)
-//             {
-//                 std::string str = "El JSON generado excede el tamaño máximo permitido " + std::to_string(jsonStr.size());
-//                 throw std::runtime_error(str);
-//             }
-//             else if (jsonStr.size() < maxJsonSize)
-//             {
-//                 jsonStr.append(maxJsonSize - jsonStr.size(), ' ');
-//             }
-
-//             // Enviar el JSON por el socket
-//             boost::asio::write(socket_, boost::asio::buffer(jsonStr));
-
-//             bytesSent += bytesRead;
-//             numFrame++;
-//         }
-//     }
-//     catch (const std::exception &e)
-//     {
-//         std::cerr << "Error en sendImageMap: " << e.what() << std::endl;
-//     }
-// }

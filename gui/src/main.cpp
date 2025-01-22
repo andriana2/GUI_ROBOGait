@@ -29,7 +29,9 @@ int main(int argc, char *argv[])
     cliente.setStringHandler(&stringHandler);
     cliente.setMapInfo(&mapInfo);
     stringHandler.setClient(&cliente);
+    stringHandler.setMapInfo(&mapInfo);
     mapInfo.setClient(&cliente);
+    mapInfo.setStringHandler(&stringHandler);
 
 
 

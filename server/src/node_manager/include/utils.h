@@ -9,6 +9,7 @@
 #include <memory>
 #include <stdexcept>
 #include <filesystem>
+#include <fstream>
 
 #include "header.h"
 
@@ -37,5 +38,8 @@ std::string replaceSpaces(const std::string &name);
 std::string restoreSpaces(const std::string &name);
 
 std::vector<std::string> getMapName(std::string const &path);
+
+void getImageSize(std::string const &path, int &width_output, int &height_output);
+
 
 #endif // UTILS_H

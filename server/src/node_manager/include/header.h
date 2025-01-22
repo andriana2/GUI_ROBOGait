@@ -13,9 +13,11 @@ enum Target {
     Map_SLAM,
     Robot_Position_Pixel,
     Img_Map_SLAM,
+    Img_Map_Path,
     Save_Map,
     State_Remote_Controlled,
     Map_Name,
+    Map_Info_Image_Size,
     Change_Map_Name,
     Delete_Map,
     Img_Map_Select

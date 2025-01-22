@@ -130,6 +130,10 @@ Target stringToTarget(const QString &str)
     {
         return Img_Map_SLAM;
     }
+    else if (str == "Img_Map_Path")
+    {
+        return Img_Map_Path;
+    }
     else if (str == "Save_Map")
     {
         return Save_Map;
@@ -145,6 +149,22 @@ Target stringToTarget(const QString &str)
     else if (str == "Map_Name")
     {
         return Map_Name;
+    }
+    else if (str == "Map_Info_Image_Size")
+    {
+        return Map_Info_Image_Size;
+    }
+    else if (str == "Change_Map_Name")
+    {
+        return Change_Map_Name;
+    }
+    else if (str == "Delete_Map")
+    {
+        return Delete_Map;
+    }
+    else if (str == "Img_Map_Select")
+    {
+        return Img_Map_Select;
     }
     else
     {
@@ -165,12 +185,16 @@ QString targetToString(Target target)
         return "Robot_Position_Pixel";
     case Img_Map_SLAM:
         return "Img_Map_SLAM";
+    case Img_Map_Path:
+        return "Img_Map_Path";
     case Save_Map:
         return "Save_Map";
     case State_Remote_Controlled:
         return "State_Remote_Controlled";
     case Map_Name:
         return "Map_Name";
+    case Map_Info_Image_Size:
+        return "Map_Info_Image_Size";
     case Change_Map_Name:
         return "Change_Map_Name";
     case Delete_Map:

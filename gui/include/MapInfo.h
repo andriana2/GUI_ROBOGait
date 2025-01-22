@@ -20,9 +20,11 @@
 #include <QTimer>
 
 #include "cliente.h"
+#include "StringHandler.h"
 #include "utils.h"
 
 class Cliente;
+class StringHandler;
 
 class MapInfo : public QObject
 {
@@ -46,6 +48,7 @@ public:
     explicit MapInfo(QObject *parent = nullptr);
 
     void setClient(Cliente *cli);
+    void setStringHandler(StringHandler *sh);
 
     QString mapName() const;
     Q_INVOKABLE void setMapName(const QString &newMapName);
@@ -79,6 +82,8 @@ public:
 
     Q_INVOKABLE void clearInfoImage();
 
+    Q_INVOKABLE bool checkPixelBlack();
+
 signals:
     void mapNameChanged();
     void orientationChanged();
@@ -93,6 +98,8 @@ signals:
 
 private:
     Cliente *cliente;
+    StringHandler *stringHandler;
+    bool repeated_delegate_list_view = 0;
 
     QString m_mapName; // nombre del mapa
     float m_orientation; // orietacion del robot en la posicion inicial
