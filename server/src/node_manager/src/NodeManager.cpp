@@ -17,13 +17,44 @@ void NodeManager::create_publisher(Target const &target)
     //         RCLCPP_INFO(node_manager->get_logger(), "Publisher /cmd_vel creado.");
     //     }
     // }
-    // else if (target == Map_SLAM)
+    // else if (target == Request_Map_SLAM)
     // {
     //     if (!tf_service_client_)
     //     {
     //         // Crear el publisher si no existe
     //         tf_service_client_ = node_manager->create_client<interface_srv::srv::GetRobotPosition>("get_transform");
     //         RCLCPP_INFO(node_manager->get_logger(), "Robot Pose Client initialized.");
+    //     }
+    // }
+    // else if (target == Goal_Pose)
+    // {
+    //     if (!initial_pose_publisher_)
+    //     {
+    //         initial_pose_publisher_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("/initialpose", 10);
+    //         RCLCPP_INFO(node_manager->get_logger(), "Publisher /initialpose.");
+    //     }
+    //     if (!goal_pose_publisher_)
+    //     {
+    //         goal_pose_publisher_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("/goal_pose", 10);
+    //         RCLCPP_INFO(node_manager->get_logger(), "Publisher /goal_pose.");
+    //     }
+    // }
+    // else if (target = Waypoint_Follower)
+    // {
+    //     if (!initial_pose_publisher_)
+    //     {
+    //         initial_pose_publisher_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("/initialpose", 10);
+    //         RCLCPP_INFO(node_manager->get_logger(), "Publisher /initialpose.");
+    //     }
+    //     if (!waypoint_follower_client_)
+    //     {
+    //         waypoint_follower_client_ = rclcpp_action::create_client<nav2_msgs::action::FollowWaypoints>(this, "/follow_waypoints");
+    //         RCLCPP_INFO(node_manager->get_logger(), "Close Cliente /waypoint_follower.");
+    //         while (!client_->wait_for_action_server())
+    //         {
+    //             RCLCPP_INFO(this->get_logger(), "Esperando al servidor de acción...");
+    //             rclcpp::sleep_for(std::chrono::seconds(1));
+    //         }
     //     }
     // }
 }
@@ -35,15 +66,42 @@ void NodeManager::close_publisher(Target const &target)
     //     if (!cmd_vel_publisher_)
     //     {
     //         cmd_vel_publisher_.reset();
-    //         RCLCPP_INFO(node_manager->get_logger(), "Publisher /cmd_vel destroy.");
+    //         RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /cmd_vel destroy.");
     //     }
     // }
-    // else if (target == Map_SLAM)
+    // else if (target == Request_Map_SLAM)
     // {
     //     if (!tf_service_client_)
     //     {
     //         tf_service_client_.reset();
-    //         RCLCPP_INFO(node_manager->get_logger(), "Robot Pose Client destroy.");
+    //         RCLCPP_INFO(node_manager->get_logger(), "Close Robot Pose Client destroy.");
+    //     }
+    // }
+    //  else if (target == Goal_Pose)
+    // {
+    //     if (!initial_pose_publisher_)
+    //     {
+    //         initial_pose_publisher_.reset();
+    //         RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /initialpose.");
+    //     }
+    //     if (!goal_pose_publisher_)
+    //     {
+    //         goal_pose_publisher_.reset();
+    //         RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /goal_pose.");
+    //     }
+    // }
+    // else if (target = Waypoint_Follower)
+    // {
+    //     if (!initial_pose_publisher_)
+    //     {
+    //         initial_pose_publisher_.reset();
+    //         RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /initialpose.");
+    //     }
+    //     if (!waypoint_follower_client_)
+    //     {
+    //         waypoint_follower_client_.reset();
+    //         RCLCPP_INFO(node_manager->get_logger(), "Close Cliente /waypoint_follower.");
+        
     //     }
     // }
 }

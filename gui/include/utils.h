@@ -18,7 +18,7 @@ enum Header {
 
 enum Target {
     Joystick_Position,
-    Map_SLAM,
+    Request_Map_SLAM,
     Robot_Position_Pixel,
     Img_Map_SLAM,
     Img_Map_Path,

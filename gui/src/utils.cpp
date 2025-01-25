@@ -118,9 +118,9 @@ Target stringToTarget(const QString &str)
     {
         return Joystick_Position;
     }
-    else if (str == "Map_SLAM")
+    else if (str == "Request_Map_SLAM")
     {
-        return Map_SLAM;
+        return Request_Map_SLAM;
     }
     else if (str == "Robot_Position_Pixel")
     {
@@ -179,8 +179,8 @@ QString targetToString(Target target)
     {
     case Joystick_Position:
         return "Joystick_Position";
-    case Map_SLAM:
-        return "Map_SLAM";
+    case Request_Map_SLAM:
+        return "Request_Map_SLAM";
     case Robot_Position_Pixel:
         return "Robot_Position_Pixel";
     case Img_Map_SLAM:

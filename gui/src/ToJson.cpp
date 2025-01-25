@@ -20,7 +20,7 @@ QJsonDocument sendRequestMap(QString const &map_name) {
     qDebug() << "heeeeeee";
     QJsonObject jsonObj;
     jsonObj["opt"] = headerToString(REQUEST_IMG);
-    jsonObj["target"] = targetToString(Map_SLAM);
+    jsonObj["target"] = targetToString(Request_Map_SLAM);
     jsonObj["map_name"] = map_name;
 
     // jsonDoc.setObject(jsonObj);

@@ -39,8 +39,8 @@ std::string targetToString(Target target)
     {
     case Joystick_Position:
         return "Joystick_Position";
-    case Map_SLAM:
-        return "Map_SLAM";
+    case Request_Map_SLAM:
+        return "Request_Map_SLAM";
     case Robot_Position_Pixel:
         return "Robot_Position_Pixel";
     case Img_Map_SLAM:
@@ -70,8 +70,8 @@ Target stringToTarget(const std::string &str)
 {
     if (str == "Joystick_Position")
         return Joystick_Position;
-    if (str == "Map_SLAM")
-        return Map_SLAM;
+    if (str == "Request_Map_SLAM")
+        return Request_Map_SLAM;
     if (str == "Robot_Position_Pixel")
         return Robot_Position_Pixel;
     if (str == "Img_Map_SLAM")

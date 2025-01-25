@@ -10,7 +10,7 @@ enum Header {
 
 enum Target {
     Joystick_Position,
-    Map_SLAM,
+    Request_Map_SLAM,
     Robot_Position_Pixel,
     Img_Map_SLAM,
     Img_Map_Path,
@@ -20,7 +20,9 @@ enum Target {
     Map_Info_Image_Size,
     Change_Map_Name,
     Delete_Map,
-    Img_Map_Select
+    Img_Map_Select,
+    Goal_Pose,
+    Waypoint_Follower
 };
 
 struct FinalPosition

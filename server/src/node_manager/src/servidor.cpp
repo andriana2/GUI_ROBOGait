@@ -122,7 +122,7 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
                 if (!parsed_json["in"])
                 {
                     // bkill the process (all)
-                    nodeManager.close_publisher(Map_SLAM);
+                    nodeManager.close_publisher(Request_Map_SLAM);
                     nodeManager.close_publisher(Joystick_Position);
                     // SI HE INICIALIZADO ALGO CON UN ROS2 RUN O LAUNCH HAY QUE HACER UN KILL
                     // RVIZ
@@ -131,7 +131,7 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
                 else if (parsed_json.contains("mapping") && parsed_json["mapping"] == true)
                 {
                     pri1("Iniciado el publisher de map slam");
-                    nodeManager.create_publisher(Map_SLAM);
+                    nodeManager.create_publisher(Request_Map_SLAM);
                 }
                 nodeManager.create_publisher(Joystick_Position);
             }
@@ -177,7 +177,7 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
         }
         else if (parsed_json.contains("opt") && parsed_json["opt"] == headerToString(REQUEST_IMG))
         {
-            if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Map_SLAM))
+            if (parsed_json.contains("target") && parsed_json["target"] == targetToString(Request_Map_SLAM))
             {
                 std::string path = PATH2MAP;
                 if (parsed_json.contains("map_name") && parsed_json["map_name"] != "")
