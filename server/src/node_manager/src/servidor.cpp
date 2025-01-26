@@ -112,22 +112,6 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
     startRead();
 }
 
-// void Servidor::handleMsg(const json &json_msg)
-// {
-//     if (json_msg.contains("target") && json_msg["target"] == targetToString(Joystick_Position))
-//         handleMsgJoystickPosition(json_msg);
-//     else if (json_msg.contains("target") && json_msg["target"] == targetToString(State_Remote_Controlled))
-//         handleMsgStateRemoteControlled(json_msg);
-//     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Delete_Map))
-//         handleMsgDeleteMap(json_msg);
-//     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Change_Map_Name))
-//         handleMsgChangeMapName(json_msg);
-//     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Save_Map))
-//         handleMsgSaveMap(json_msg);
-//     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Goal_Pose))
-//         handleMsgGoalPose(json_msg);
-// }
-
 void Servidor::handleRequestMsg(const json &json_msg)
 {
     if (json_msg.contains("target") && json_msg["target"] == targetToString(Map_Name))
@@ -171,79 +155,6 @@ void Servidor::handleRequestImg(const json &json_msg)
         sendMapThread.detach();
     }
 }
-
-// void Servidor::handleMsgJoystickPosition(const json &json_msg)
-// {
-//     float linear, angular;
-//     nodeManager.create_publisher(stringToTarget(json_msg["target"]));
-//     toJson::getPositionJoystick(json_msg, linear, angular); // json
-//     pri1(std::to_string(linear) + "<-linear angular ->" + std::to_string(angular));
-//     nodeManager.execute_position(linear, angular);
-// }
-
-// void Servidor::handleMsgStateRemoteControlled(const json &json_msg)
-// {
-//     if (!json_msg["in"])
-//     {
-//         // bkill the process (all)
-//         nodeManager.close_publisher(Request_Map_SLAM);
-//         nodeManager.close_publisher(Joystick_Position);
-//         // SI HE INICIALIZADO ALGO CON UN ROS2 RUN O LAUNCH HAY QUE HACER UN KILL
-//         // RVIZ
-//         startRead();
-//     }
-//     else if (json_msg.contains("mapping") && json_msg["mapping"] == true)
-//     {
-//         nodeManager.create_publisher(Request_Map_SLAM);
-//     }
-//     nodeManager.create_publisher(Joystick_Position);
-// }
-
-// void Servidor::handleMsgDeleteMap(const json &json_msg)
-// {
-//     std::string path = PATH2MAP;
-//     path += "/" + replaceSpaces(json_msg["map_name"]);
-//     std::string path1 = path + ".pgm";
-//     if (std::remove(path1.c_str()) == 0)
-//         std::cout << "Archivo eliminado exitosamente: " << path << std::endl;
-//     else
-//         std::cerr << "Error al eliminar el archivo: " << path << std::endl;
-//     std::string path2 = path + ".yaml";
-//     if (std::remove(path2.c_str()) == 0)
-//         std::cout << "Archivo eliminado exitosamente: " << path << std::endl;
-//     else
-//         std::cerr << "Error al eliminar el archivo: " << path << std::endl;
-// }
-
-// void Servidor::handleMsgChangeMapName(const json &json_msg)
-// {
-//     // if (fs::exists(nuevoNombre))
-//     // {
-//     //     std::cerr << "Error: El archivo \"" << nuevoNombre << "\" ya existe." << std::endl;
-//     //     return 1; // Salir con código de error
-//     // }
-
-//     // // Intentar renombrar el archivo
-//     // if (std::rename(nombreOriginal.c_str(), nuevoNombre.c_str()) == 0)
-//     // {
-//     //     std::cout << "El archivo se renombró exitosamente a: " << nuevoNombre << std::endl;
-//     // }
-//     // else
-//     // {
-//     //     std::cerr << "Error al renombrar el archivo: " << nombreOriginal << std::endl;
-//     // }
-// }
-
-// void Servidor::handleMsgSaveMap(const json &json_msg)
-// {
-//     std::string path = PATH2MAP;
-//     path += "/" + replaceSpaces(json_msg["map_name"]);
-//     nodeManager.refresh_map(json_msg["map_name"]);
-// }
-
-// void Servidor::handleMsgGoalPose(const json &json_msg)
-// {
-// }
 
 void Servidor::sendMsg(const json &json_msg)
 {

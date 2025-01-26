@@ -41,5 +41,6 @@ std::vector<std::string> getMapName(std::string const &path);
 
 void getImageSize(std::string const &path, int &width_output, int &height_output);
 
+std::vector<std::string> splitCommand(const std::string& command);
 
 #endif // UTILS_H

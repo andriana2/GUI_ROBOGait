@@ -39,31 +39,20 @@ struct FinalPosition
 #define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f /home/robogait/Desktop/gui_andri/gui_/server/maps"
 
 // launch
-#define RVIZ_LAUNCH_MAPING "ros2 launch turtlebot3_cartographer cartographer.launch.py &" // &ejecutar en segundo plano
+#define CARTOGRAPHER_LAUNCH "ros2 launch turtlebot3_cartographer cartographer_noRviz.launch.py" // &ejecutar en segundo plano
+#define NAME_CARTOGRAPHER_LAUNCH "turtlebot3_cartographer"
 
-// kill
-#define RVIZ_LAUNCH_MAPING_KILL "pgrep -f 'ros2 launch turtlebot3_cartographer cartographer.launch.py'"
+#define NAV2_BRINGUP_LAUNCH "ros2 launch nav2_bringup bringup_launch.py use_sim_time:=True map:=/my_map.yaml"
+#define NAME_NAV2_BRINGUP_LAUNCH "nav2_bringup"
 
-//    if (number == 10) // como matar procesos
-//     {
-//         if (!turtlesim_started_)
-//         {
-//             std::system("ros2 run turtlesim turtlesim_node &"); // Ejecuta turtlesim en segundo plano
-//             turtlesim_started_ = true;
-//         }
-//     }
-//     else if (number == 11)
-//     {
-//         if (turtlesim_started_)
-//         {
-//             std::system("pkill turtlesim_node"); // Detiene el nodo de turtlesim
-//             turtlesim_started_ = false;
-//         }
-//     }
+// #define RVIZ_LAUNCH_MAPING "ros2 launch turtlebot3_cartographer cartographer.launch.py &" // &ejecutar en segundo plano
 
 // topic
 #define TF_TOPIC "/tf"
-#define CMD_TOPIC "/cmd_vel"
+#define CMD_VEL_TOPIC "/cmd_vel"
+#define INITIAL_POSE_TOPIC "/initialpose"
+#define GOAL_POSE_TOPIC "/goal_pose"
+#define WAYPOINT_FOLLOWER_ACTION "/follow_waypoints"
 
 // turtlesim
 #define CMD_TOPIC_TURTLESIM "/turtle1/cmd_vel"

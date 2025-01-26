@@ -19,6 +19,7 @@ add_executable(node_manager
     src/utils.cpp
     src/toJson.cpp
     src/HandleMsg.cpp
+    src/ProcessController.cpp
 )
 
 ament_target_dependencies(node_manager rclcpp geometry_msgs interface_srv nav2_msgs rclcpp_action)

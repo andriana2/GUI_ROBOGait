@@ -89,4 +89,5 @@ void HandleMsg::SaveMap(const json &json_msg)
 
 void HandleMsg::GoalPose(const json &json_msg)
 {
+    
 }

@@ -276,3 +276,13 @@ void getImageSize(std::string const &path, int &width_output, int &height_output
     height_output = height;
     file.close();
 }
+
+std::vector<std::string> splitCommand(const std::string& command) {
+    std::vector<std::string> args;
+    std::istringstream stream(command);
+    std::string arg;
+    while (stream >> arg) {
+        args.push_back(arg);
+    }
+    return args;
+}

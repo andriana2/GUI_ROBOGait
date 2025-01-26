@@ -14,6 +14,7 @@ class HandleMsg
 public:
     HandleMsg(NodeManager &nodeManager);
     void handleMsgJson(const json &json_msg);
+private:
     void JoystickPosition(const json &json_msg);
     void StateRemoteControlled(const json &json_msg);
     void DeleteMap(const json &json_msg);
@@ -21,7 +22,6 @@ public:
     void SaveMap(const json &json_msg);
     void GoalPose(const json &json_msg);
 
-private:
     NodeManager &nodeManager;
 
 };

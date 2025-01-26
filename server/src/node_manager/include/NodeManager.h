@@ -4,6 +4,7 @@
 #include <string>
 
 #include "utils.h"
+#include "ProcessController.h"
 
 #include <rclcpp/rclcpp.hpp>
 #include "interface_srv/srv/get_robot_position.hpp"
@@ -39,9 +40,11 @@ private:
 
 
     rclcpp::Node::SharedPtr node_manager;
-    void kill_launch_file(std::string const &command);
+    ProcessController processController;
 
-    bool rviz_active;
+    bool slam_launch_file = false;
+    bool goal_pose_launch_file = false;
+    bool waypoint_follower_launch_file = false;
 };
 
 #endif // NODEMANAGER_H

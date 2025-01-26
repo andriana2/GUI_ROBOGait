@@ -1,109 +1,137 @@
 #include "../include/NodeManager.h"
 #include <iostream>
 
-NodeManager::NodeManager(rclcpp::Node::SharedPtr node_ptr)
+NodeManager::NodeManager(rclcpp::Node::SharedPtr node_ptr) : processController()
 {
     node_manager = node_ptr;
-    rviz_active = false;
 }
 
 void NodeManager::create_publisher(Target const &target)
 {
-    // if (target == Joystick_Position)
-    // {
-    //     if (!cmd_vel_publisher_)
-    //     {
-    //         cmd_vel_publisher_ = node_manager->create_publisher<geometry_msgs::msg::Twist>(CMD_TOPIC, 10);
-    //         RCLCPP_INFO(node_manager->get_logger(), "Publisher /cmd_vel creado.");
-    //     }
-    // }
-    // else if (target == Request_Map_SLAM)
-    // {
-    //     if (!tf_service_client_)
-    //     {
-    //         // Crear el publisher si no existe
-    //         tf_service_client_ = node_manager->create_client<interface_srv::srv::GetRobotPosition>("get_transform");
-    //         RCLCPP_INFO(node_manager->get_logger(), "Robot Pose Client initialized.");
-    //     }
-    // }
-    // else if (target == Goal_Pose)
-    // {
-    //     if (!initial_pose_publisher_)
-    //     {
-    //         initial_pose_publisher_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("/initialpose", 10);
-    //         RCLCPP_INFO(node_manager->get_logger(), "Publisher /initialpose.");
-    //     }
-    //     if (!goal_pose_publisher_)
-    //     {
-    //         goal_pose_publisher_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("/goal_pose", 10);
-    //         RCLCPP_INFO(node_manager->get_logger(), "Publisher /goal_pose.");
-    //     }
-    // }
-    // else if (target = Waypoint_Follower)
-    // {
-    //     if (!initial_pose_publisher_)
-    //     {
-    //         initial_pose_publisher_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("/initialpose", 10);
-    //         RCLCPP_INFO(node_manager->get_logger(), "Publisher /initialpose.");
-    //     }
-    //     if (!waypoint_follower_client_)
-    //     {
-    //         waypoint_follower_client_ = rclcpp_action::create_client<nav2_msgs::action::FollowWaypoints>(this, "/follow_waypoints");
-    //         RCLCPP_INFO(node_manager->get_logger(), "Close Cliente /waypoint_follower.");
-    //         while (!client_->wait_for_action_server())
-    //         {
-    //             RCLCPP_INFO(this->get_logger(), "Esperando al servidor de acción...");
-    //             rclcpp::sleep_for(std::chrono::seconds(1));
-    //         }
-    //     }
-    // }
+    if (target == Joystick_Position)
+    {
+        if (!cmd_vel_publisher_)
+        {
+            cmd_vel_publisher_ = node_manager->create_publisher<geometry_msgs::msg::Twist>(CMD_VEL_TOPIC, 10);
+            RCLCPP_INFO(node_manager->get_logger(), "Publisher /cmd_vel creado.");
+        }
+    }
+    else if (target == Request_Map_SLAM)
+    {
+        if (slam_launch_file == false)
+        {
+            processController.startProcess(NAME_CARTOGRAPHER_LAUNCH, CARTOGRAPHER_LAUNCH);
+            slam_launch_file = true;
+        }
+        if (!tf_service_client_)
+        {
+            // Crear el publisher si no existe
+            tf_service_client_ = node_manager->create_client<interface_srv::srv::GetRobotPosition>("get_transform");
+            RCLCPP_INFO(node_manager->get_logger(), "Robot Pose Client initialized.");
+        }
+    }
+    else if (target == Goal_Pose)
+    {
+        if (goal_pose_launch_file == false)
+        {
+            processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, NAV2_BRINGUP_LAUNCH);
+            goal_pose_launch_file = true;
+        }
+        if (!initial_pose_publisher_)
+        {
+            initial_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(INITIAL_POSE_TOPIC, 10);
+            RCLCPP_INFO(node_manager->get_logger(), "Publisher /initialpose.");
+        }
+        if (!goal_pose_publisher_)
+        {
+            goal_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseStamped>(GOAL_POSE_TOPIC, 10);
+            RCLCPP_INFO(node_manager->get_logger(), "Publisher /goal_pose.");
+        }
+    }
+    else if (target == Waypoint_Follower)
+    {
+        if (goal_pose_launch_file == false)
+        {
+            processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, NAV2_BRINGUP_LAUNCH);
+            goal_pose_launch_file = true;
+        }
+        if (!initial_pose_publisher_)
+        {
+            initial_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(INITIAL_POSE_TOPIC, 10);
+            RCLCPP_INFO(node_manager->get_logger(), "Publisher /initialpose.");
+        }
+        if (!waypoint_follower_client_)
+        {
+            waypoint_follower_client_ = rclcpp_action::create_client<nav2_msgs::action::FollowWaypoints>(node_manager, WAYPOINT_FOLLOWER_ACTION);
+            RCLCPP_INFO(node_manager->get_logger(), "Close Cliente /waypoint_follower.");
+            while (!waypoint_follower_client_->wait_for_action_server())
+            {
+                RCLCPP_INFO(node_manager->get_logger(), "Esperando al servidor de acción...");
+                rclcpp::sleep_for(std::chrono::seconds(1));
+            }
+        }
+    }
 }
 
 void NodeManager::close_publisher(Target const &target)
 {
-    // if (target == Joystick_Position)
-    // {
-    //     if (!cmd_vel_publisher_)
-    //     {
-    //         cmd_vel_publisher_.reset();
-    //         RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /cmd_vel destroy.");
-    //     }
-    // }
-    // else if (target == Request_Map_SLAM)
-    // {
-    //     if (!tf_service_client_)
-    //     {
-    //         tf_service_client_.reset();
-    //         RCLCPP_INFO(node_manager->get_logger(), "Close Robot Pose Client destroy.");
-    //     }
-    // }
-    //  else if (target == Goal_Pose)
-    // {
-    //     if (!initial_pose_publisher_)
-    //     {
-    //         initial_pose_publisher_.reset();
-    //         RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /initialpose.");
-    //     }
-    //     if (!goal_pose_publisher_)
-    //     {
-    //         goal_pose_publisher_.reset();
-    //         RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /goal_pose.");
-    //     }
-    // }
-    // else if (target = Waypoint_Follower)
-    // {
-    //     if (!initial_pose_publisher_)
-    //     {
-    //         initial_pose_publisher_.reset();
-    //         RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /initialpose.");
-    //     }
-    //     if (!waypoint_follower_client_)
-    //     {
-    //         waypoint_follower_client_.reset();
-    //         RCLCPP_INFO(node_manager->get_logger(), "Close Cliente /waypoint_follower.");
-
-    //     }
-    // }
+    if (target == Joystick_Position)
+    {
+        if (!cmd_vel_publisher_)
+        {
+            cmd_vel_publisher_.reset();
+            RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /cmd_vel destroy.");
+        }
+    }
+    else if (target == Request_Map_SLAM)
+    {
+        if (slam_launch_file)
+        {
+            processController.stopProcess(NAME_CARTOGRAPHER_LAUNCH);
+            slam_launch_file = false;
+        }
+        if (!tf_service_client_)
+        {
+            tf_service_client_.reset();
+            RCLCPP_INFO(node_manager->get_logger(), "Close Robot Pose Client destroy.");
+        }
+    }
+    else if (target == Goal_Pose)
+    {
+        if (goal_pose_launch_file)
+        {
+            processController.stopProcess(NAME_NAV2_BRINGUP_LAUNCH);
+            goal_pose_launch_file = false;
+        }
+        if (!initial_pose_publisher_)
+        {
+            initial_pose_publisher_.reset();
+            RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /initialpose.");
+        }
+        if (!goal_pose_publisher_)
+        {
+            goal_pose_publisher_.reset();
+            RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /goal_pose.");
+        }
+    }
+    else if (target == Waypoint_Follower)
+    {
+        if (goal_pose_launch_file)
+        {
+            processController.stopProcess(NAME_NAV2_BRINGUP_LAUNCH);
+            goal_pose_launch_file = false;
+        }
+        if (!initial_pose_publisher_)
+        {
+            initial_pose_publisher_.reset();
+            RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /initialpose.");
+        }
+        if (!waypoint_follower_client_)
+        {
+            waypoint_follower_client_.reset();
+            RCLCPP_INFO(node_manager->get_logger(), "Close Cliente /waypoint_follower.");
+        }
+    }
 }
 
 // VERSION DE CUANDO ESTOY EN CASA
@@ -217,30 +245,5 @@ void NodeManager::execute_position(float const &linear, float const &angular)
         twist_msg.angular.z = angular;
         cmd_vel_publisher_->publish(twist_msg);
         std::cout << "valores publicados linear: " << linear << " angular: " << angular << std::endl;
-    }
-}
-
-void NodeManager::kill_launch_file(std::string const &command)
-{
-    FILE *fp = popen(command.c_str(), "r");
-    if (!fp)
-    {
-        std::cerr << "Error al obtener el PID." << std::endl;
-        return;
-    }
-
-    int pid;
-    fscanf(fp, "%d", &pid); // Obtén el PID
-    fclose(fp);
-
-    // Si el PID fue encontrado, matamos el proceso.
-    if (pid > 0)
-    {
-        std::cout << "Matando el proceso con PID: " << pid << std::endl;
-        kill(pid, SIGTERM); // Enviar la señal SIGTERM para terminar el proceso
-    }
-    else
-    {
-        std::cerr << "Proceso no encontrado." << std::endl;
     }
 }
