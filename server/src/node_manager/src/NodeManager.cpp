@@ -101,7 +101,7 @@ void NodeManager::close_publisher(Target const &target)
     //     {
     //         waypoint_follower_client_.reset();
     //         RCLCPP_INFO(node_manager->get_logger(), "Close Cliente /waypoint_follower.");
-        
+
     //     }
     // }
 }
@@ -111,32 +111,8 @@ struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_
 {
     float x_robot = 0, y_robot = 0, yaw_robot = 0.0;
     struct FinalPosition final_position;
-
-    // if (!tf_service_client_->wait_for_service(std::chrono::seconds(1)))
-    // {
-    //     RCLCPP_WARN(node_manager->get_logger(), "Service not available, waiting...");
-    //     // return;
-    // }
-    // auto request = std::make_shared<interface_srv::srv::GetRobotPosition::Request>();
-
-    // // Enviar solicitud y procesar la respuesta
-    // auto future = tf_service_client_->async_send_request(request);
-
     try
     {
-        // Esperar la respuesta con un timeout
-        // auto response = future.get();
-        // if (response->success == true)
-        // {
-        //     RCLCPP_INFO(node_manager->get_logger(), "La informacion ha llegado correctamente");
-        //     x_robot = response->x;
-        //     y_robot = response->y;
-        //     yaw_robot = response->yaw;
-        // }
-
-        // Lo relacionado con el path
-
-        // Cargar el archivo .yaml
         pri1(path_yaml);
         YAML::Node config = YAML::LoadFile(path_yaml);
 
@@ -163,6 +139,7 @@ struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_
     return final_position;
 }
 
+// VERSION DE CUANDO ESTOY EN LA UNIVERSIDAD
 // struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_yaml)
 // {
 //     float x_robot, y_robot, yaw_robot;
@@ -223,17 +200,12 @@ void NodeManager::refresh_map(std::string const &map_name)
 {
     std::string command = MAP_SAVER_CLI;
     command += "/" + replaceSpaces(map_name);
-    // command += "/temporal_map";
     int result = system(command.c_str());
 
     if (result == 0)
-    {
         std::cout << "El comando se ejecutó correctamente. " << command << std::endl;
-    }
     else
-    {
         std::cerr << "Hubo un error al ejecutar el comando. " << command << std::endl;
-    }
 }
 
 void NodeManager::execute_position(float const &linear, float const &angular)

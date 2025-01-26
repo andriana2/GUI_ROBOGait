@@ -26,7 +26,7 @@ public:
     // void create_publisher(Target const &target, std::string const &path = "");
 
     void execute_position(float const &linear, float const &angular);
-    void refresh_map(std::string const &map_name = "/temporal_map");
+    void refresh_map(std::string const &map_name = "temporal_map");
 
     struct FinalPosition getPositionRobotPixel(std::string const &path_yaml);
 

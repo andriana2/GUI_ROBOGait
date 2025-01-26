@@ -5,17 +5,19 @@
 #include <nlohmann/json.hpp> // Asegúrate de incluir la biblioteca
 #include "utils.h"
 
-using json = nlohmann::json;
+namespace toJson
+{
+    using json = nlohmann::json;
 
-json sendRobotPositionPixel(int x, int y, float yaw);
+    json sendRobotPositionPixel(int x, int y, float yaw);
 
-json sendImgMap(const std::string data, int size_data, int total_size_img, int num_frame, int total_frame, bool img_map_slam);
+    json sendImgMap(const std::string data, int size_data, int total_size_img, int num_frame, int total_frame, bool img_map_slam);
 
-void getPositionJoystick(json const &j, float &linear_output, float &angular_output);
+    void getPositionJoystick(json const &j, float &linear_output, float &angular_output);
 
-json sendMapName(std::vector<std::string> const &vec_map_name);
+    json sendMapName(std::vector<std::string> const &vec_map_name);
 
-json sendInfoMap(std::string const &map_name, int const &width, int const &height);
+    json sendInfoMap(std::string const &map_name, int const &width, int const &height);
 
-
+}
 #endif // TOJSON_H

@@ -25,6 +25,7 @@
 #include "toJson.h"
 
 #include "NodeManager.h"
+#include "HandleMsg.h"
 
 using json = nlohmann::json;
 
@@ -46,8 +47,19 @@ private:
     // void signalHandler(int signal);
 
     void handleType(std::vector<std::string> const &jsons);
-    void sendMsg(const json &json_msg);
+    
+    void handleRequestMsg(const json &json_msg);
+    void handleRequestImg(const json &json_msg);
+    // void handleMsg(const json &json_msg);
+    
+    // void handleMsgJoystickPosition(const json &json_msg);
+    // void handleMsgStateRemoteControlled(const json &json_msg);
+    // void handleMsgDeleteMap(const json &json_msg);
+    // void handleMsgChangeMapName(const json &json_msg);
+    // void handleMsgSaveMap(const json &json_msg);
+    // void handleMsgGoalPose(const json &json_msg);
 
+    void sendMsg(const json &json_msg);
     void sendImageMap(const std::string &name_map);
 
     boost::asio::io_context io_context_;

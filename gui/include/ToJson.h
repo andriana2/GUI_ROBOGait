@@ -4,23 +4,24 @@
 #include <QJsonObject>
 // #include "utils.h"
 
-namespace ToJson{
+namespace ToJson
+{
 
-QJsonDocument sendJoystickPosition(const float &angular, const float &linear);
+    QJsonDocument sendJoystickPosition(const float &angular, const float &linear);
 
-QJsonDocument sendRequestMap(QString const &map_name = "");
+    QJsonDocument sendRequestMap(QString const &map_name = "");
 
-QJsonDocument sendSaveMap(const QString& map_name, bool repeated);
+    QJsonDocument sendSaveMap(const QString &map_name, bool repeated);
 
-QJsonDocument sendStateRemoteControlled(bool mapping, bool in);
+    QJsonDocument sendStateRemoteControlled(bool mapping, bool in);
 
-void getRobotPositionPixel(const QJsonDocument &JsonDoc, int x_output, int y_output, float yaw_output);
+    void getRobotPositionPixel(const QJsonDocument &JsonDoc, int x_output, int y_output, float yaw_output);
 
-QJsonDocument sendRequestMapName();
+    QJsonDocument sendRequestMapName();
 
-QJsonDocument sendChangeMapName(const QString& new_map_name,const QString& last_map_name);
+    QJsonDocument sendChangeMapName(const QString &new_map_name, const QString &last_map_name);
 
-QJsonDocument sendDeleteMap(const QString& map_name);
+    QJsonDocument sendDeleteMap(const QString &map_name);
 
 }
 
