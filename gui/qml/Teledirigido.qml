@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import "extras"
 
 TeledirigidoForm {
     property bool visible_value: visible_value

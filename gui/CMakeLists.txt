@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Network)
 
 set(qml_singletons
-    qml/ConstantVariables.qml
+    qml/extras/ConstantVariables.qml
 )
 
 # set_source_files_properties(${qml_singletons}
@@ -24,6 +24,7 @@ qt_add_executable(appgui
     src/utils.cpp
     src/cliente.cpp
     src/ToJson.cpp
+    src/MapInfo.cpp
 
 
     include/StringHandler.h
@@ -31,6 +32,7 @@ qt_add_executable(appgui
     include/cliente.h
     include/ToJson.h
     include/MapInfo.h
+
 )
 
 qt_add_qml_module(appgui
@@ -45,19 +47,19 @@ qt_add_qml_module(appgui
     qml/HomeForm.ui.qml
     qml/Ip.qml
     qml/IpForm.ui.qml
-    
+
     qml/MenuForm.ui.qml
     qml/Teledirigido.qml
     qml/TeledirigidoForm.ui.qml
     qml/MenuPrincipal.qml
-    qml/CustomToolBarForm.ui.qml
-    qml/CustomToolBar.qml
-    qml/Joystick.qml
-    qml/JoystickForm.ui.qml
+    qml/extras/CustomToolBarForm.ui.qml
+    qml/extras/CustomToolBar.qml
+    qml/extras/Joystick.qml
+    qml/extras/JoystickForm.ui.qml
     qml/Map.qml
     qml/MapForm.ui.qml
-    qml/SavePage.qml
-    qml/SavePageForm.ui.qml
+    qml/extras/SavePage.qml
+    qml/extras/SavePageForm.ui.qml
     qml/SelectMap.qml
     qml/SelectMapForm.ui.qml
     ${qml_singletons}
@@ -73,7 +75,9 @@ qt_add_qml_module(appgui
     images/keyboard_left.svg
     images/saveButton.png
     images/my_map.png
-    SOURCES src/MapInfo.cpp
+
+
+    # qml/extras/qmldir
 
     # images/android_icons/mipmap-mdpi/logo48.png
     # images/android_icons/mipmap-hdpi/logo72.png
@@ -120,3 +124,5 @@ include(GNUInstallDirs)
 install(TARGETS appgui
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+install(DIRECTORY qml DESTINATION ${CMAKE_INSTALL_BINDIR})

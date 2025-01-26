@@ -21,7 +21,7 @@ Item {
             id: backButton
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
-            icon.source: "../images/keyboard_left.svg"
+            icon.source: "../../images/keyboard_left.svg"
             icon.width: 24
             icon.height: 24
             background: null
@@ -39,7 +39,7 @@ Item {
             id: saveButton
             anchors.left: backButton.right
             anchors.verticalCenter: parent.verticalCenter
-            icon.source: "../images/saveButton.png"
+            icon.source: "../../images/saveButton.png"
             icon.width: 24
             icon.height: 24
             background: null
@@ -61,7 +61,7 @@ Item {
 
             Image {
                 id: logo
-                source: "../images/logo.png"
+                source: "../../images/logo.png"
                 sourceSize.height: 25
                 sourceSize.width: height * 1.4
             }
@@ -94,7 +94,7 @@ Item {
 //             //            Layout.fillHeight: false
 //             //            Layout.fillWidth: false
 //             scale: 2
-//             icon.source: "../images/keyboard_left.svg"
+//             icon.source: "../../images/keyboard_left.svg"
 //             flat: true
 //             background: null
 //             transitions: Transition {
@@ -110,7 +110,7 @@ Item {
 //         }
 //         Image {
 //             id: logo
-//             source: "../images/logo.png"
+//             source: "../../images/logo.png"
 //             Layout.alignment: Qt.AlignCenter
 //             sourceSize.height: 25
 //             sourceSize.width: height * 1.4
