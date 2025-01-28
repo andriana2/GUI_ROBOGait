@@ -11,8 +11,6 @@ Rectangle {
 
     property string mapPageForm_previousState: ""
     property string mapPageForm_nextState: ""
-    height: 700
-    width: 1300
 
     property alias mp_initialPosition: initialPosition
     property alias mp_initialOrientation: initialOrientation
@@ -20,65 +18,74 @@ Rectangle {
     property alias mp_goalPosePosition: goalPosePosition
     property alias mp_goalPoseOrientation: goalPoseOrientation
 
-    Text {
-        id: mapPageForm_text
-        x: 922
-        width: 360
-        height: 151
-        color: "#ffffff"
-        text: qsTr("Al hacer clic en el mapa, se coloca el robot sobre él")
-        anchors.right: parent.right
-        anchors.top: parent.top
-        font.pixelSize: 40
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        font.styleName: "Medium"
-        font.bold: true
-        wrapMode: Text.Wrap
-        anchors.rightMargin: 18
-        anchors.topMargin: 0
-    }
-
-    Button {
-        id: mapPageForm_buttonNext
-        x: 975
-        y: 616
-        width: 271
-        height: 68
-        anchors.right: parent.right
+    Item {
+        id: rectagle_conteiner
+        width: parent.width / 3
+        height: parent.height
         anchors.bottom: parent.bottom
-        anchors.rightMargin: 9
-        anchors.bottomMargin: 16
-        font.pointSize: 40
-        background: Rectangle {
-            color: "transparent" // Fondo transparente
-            border.color: "transparent" // Sin bordes
+        anchors.top: parent.top
+        anchors.topMargin: 40
+        anchors.right: parent.right
+        Text {
+            id: mapPageForm_text
+            x: 922
+            width: parent.width
+            height: parent.width/8
+            color: "#ffffff"
+            text: qsTr("Al hacer clic en el mapa, se coloca el robot sobre él")
+            anchors.right: parent.right
+            anchors.top: parent.top
+            font.pixelSize: 40
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            font.styleName: "Medium"
+            font.bold: true
+            wrapMode: Text.Wrap
+            anchors.rightMargin: 18
+            anchors.topMargin: 0
         }
 
-        contentItem: Row {
-            id: row
-            // Contenido del botón
-            anchors.centerIn: parent
-            spacing: 10
-
-            Text {
-                text: qsTr("Siguiente")
-                horizontalAlignment: Text.AlignRight
-                font.pointSize: 35
-                color: "white" // Color del texto
-                verticalAlignment: Text.AlignVCenter
+        Button {
+            id: mapPageForm_buttonNext
+            x: 975
+            y: 616
+            width: 271
+            height: 68
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.rightMargin: 9
+            anchors.bottomMargin: 16
+            font.pointSize: 40
+            background: Rectangle {
+                color: "transparent" // Fondo transparente
+                border.color: "transparent" // Sin bordes
             }
-            Image {
-                id: svgImage
-                source: "../images/keyboard_left.svg"
-                anchors.verticalCenterOffset: 3
-                // Ruta a tu imagen
-                rotation: 180
-                width: 50 // Ancho de la imagen
-                height: 50
-                anchors.verticalCenter: parent.verticalCenter
-                fillMode: Image.PreserveAspectFit
-                // Alto de la imagen
+
+            contentItem: Row {
+                id: row
+                // Contenido del botón
+                anchors.centerIn: parent
+                spacing: 10
+
+                Text {
+                    text: qsTr("Siguiente")
+                    horizontalAlignment: Text.AlignRight
+                    font.pointSize: 35
+                    color: "white" // Color del texto
+                    verticalAlignment: Text.AlignVCenter
+                }
+                Image {
+                    id: svgImage
+                    source: "../images/keyboard_left.svg"
+                    anchors.verticalCenterOffset: 3
+                    // Ruta a tu imagen
+                    rotation: 180
+                    width: 50 // Ancho de la imagen
+                    height: 50
+                    anchors.verticalCenter: parent.verticalCenter
+                    fillMode: Image.PreserveAspectFit
+                    // Alto de la imagen
+                }
             }
         }
     }
@@ -127,7 +134,7 @@ Rectangle {
 
     Component {
         id: initialPosition
-        MapForm {
+        Map {
             visible: true
         }
     }

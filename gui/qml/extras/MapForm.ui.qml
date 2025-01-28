@@ -7,6 +7,12 @@ Item {
     property alias area: area
     property string imageSource: mapInfo.imgSource // Ruta de la imagen
 
+    ErrorRectangle {
+        id: errorPopup
+        anchors.centerIn: parent
+        errorRectangleTextError.text: "Error: Has puesto el robot en una posicion donde esta prohibido."
+    }
+
     RowLayout {
         z: canvas.z + 1
         id: botones
@@ -91,19 +97,19 @@ Item {
 
             // Dibujar un círculo en la posición donde se hizo clic
             ctx.drawImage(
-                markerImage, // Imagen fuente
-                lastX - scaledWidth / 2, // Coordenada X ajustada
-                lastY - scaledHeight / 2, // Coordenada Y ajustada
-                scaledWidth, // Ancho escalado
-                scaledHeight // Alto escalado
-            );
+                        markerImage, // Imagen fuente
+                        lastX - scaledWidth / 2, // Coordenada X ajustada
+                        lastY - scaledHeight / 2, // Coordenada Y ajustada
+                        scaledWidth, // Ancho escalado
+                        scaledHeight // Alto escalado
+                        );
             console.log("LastX: " + lastX + " LastY: " + lastY )
             mapInfo.setPositionScreen(lastX,lastY)
             circleDrawn = true; // Marcar que el círculo fue dibujado
 
             if(mapInfo.checkPixelBlack())
             {
-                errorPopup.visible = true
+                errorPopup.open()
                 console.log("Es negro");
                 clear()
             }

@@ -29,7 +29,7 @@ Popup {
         }
 
         MouseArea {
-            anchors.fill: root
+            anchors.fill: parent
             onClicked: root.close()  // Cierra el popup al hacer clic
         }
     }
