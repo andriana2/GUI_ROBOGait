@@ -22,6 +22,7 @@ Item {
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
             icon.source: "../../images/keyboard_left.svg"
+            icon.color: "white"
             icon.width: 24
             icon.height: 24
             background: null
@@ -42,6 +43,7 @@ Item {
             icon.source: "../../images/saveButton.png"
             icon.width: 24
             icon.height: 24
+            icon.color: "white"
             background: null
             transitions: Transition {
                 NumberAnimation {

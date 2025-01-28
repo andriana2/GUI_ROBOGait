@@ -52,30 +52,40 @@ qt_add_qml_module(appgui
     qml/Teledirigido.qml
     qml/TeledirigidoForm.ui.qml
     qml/MenuPrincipal.qml
+    qml/MapPage.qml
+    qml/SelectMap.qml
+    qml/SelectMapForm.ui.qml
+
     qml/extras/CustomToolBarForm.ui.qml
     qml/extras/CustomToolBar.qml
     qml/extras/Joystick.qml
     qml/extras/JoystickForm.ui.qml
-    qml/Map.qml
-    qml/MapForm.ui.qml
+    qml/extras/Map.qml
+    qml/extras/MapForm.ui.qml
     qml/extras/SavePage.qml
     qml/extras/SavePageForm.ui.qml
-    qml/SelectMap.qml
-    qml/SelectMapForm.ui.qml
+    qml/extras/OrientationCircle.qml
+    qml/extras/OrientationCircleForm.ui.qml
+    qml/extras/ErrorRectangle.qml
+
     ${qml_singletons}
 
 
     RESOURCES
-    images/logo.png
-    images/x.png
-    images/down.png
-    images/giro_der.png
-    images/giro_izq.png
-    images/up.png
+    images/keyboard_left.png
+    images/pen-to-square-regular.svg
+    images/check-solid.svg
     images/keyboard_left.svg
     images/saveButton.png
+    images/eraser-solid.svg
+    images/logo.png
+    images/trash-solid.svg
+    images/file-arrow-down-solid.svg
     images/my_map.png
-
+    images/keyboard_left1.svg
+    images/pencil-solid.svg
+    images/robot_with_arrow.png
+    images/map-pin-solid.svg
 
     # qml/extras/qmldir
 
