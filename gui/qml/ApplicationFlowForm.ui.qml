@@ -98,7 +98,7 @@ Rectangle {
     }
     Component {
         id: mapPath
-        Map {
+        MapPage {
             visible: true
         }
     }

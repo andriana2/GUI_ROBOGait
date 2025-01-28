@@ -73,9 +73,9 @@ Rectangle {
         anchors.bottomMargin: 28
 
         background: Rectangle {
-            color: "#ffffff"  // Color inicial
+            color: "#ffffff" // Color inicial
             radius: 6
-            border.color: "#454545"  // Borde del mismo color que el texto
+            border.color: "#454545" // Borde del mismo color que el texto
             border.width: 2
         }
 
@@ -95,11 +95,10 @@ Rectangle {
         anchors.rightMargin: 10
 
         background: Rectangle {
-            color: "#ffffff"  // Color inicial
+            color: "#ffffff" // Color inicial
             radius: 6
-            border.color: "#454545"  // Borde del mismo color que el texto
+            border.color: "#454545" // Borde del mismo color que el texto
             border.width: 2
-
         }
 
         contentItem: Label {
@@ -108,7 +107,6 @@ Rectangle {
             font.pixelSize: 18
         }
     }
-
 
     Button {
         id: save
@@ -125,7 +123,7 @@ Rectangle {
         }
         contentItem: Label {
             text: parent.text
-            color: save.enabled ? "white" : "#454545"  // Cambia el color del texto
+            color: save.enabled ? "white" : "#454545" // Cambia el color del texto
             font.pixelSize: 18
         }
     }
@@ -133,7 +131,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;height:210}D{i:1}D{i:2}D{i:4}D{i:3}D{i:5}D{i:6}D{i:7}
+    D{i:0;height:210}D{i:1}D{i:2}D{i:4}D{i:3}D{i:5}D{i:8}D{i:11}
 }
 ##^##*/
 

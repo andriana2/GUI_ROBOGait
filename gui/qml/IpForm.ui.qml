@@ -14,36 +14,56 @@ Item {
 
         Text {
             id: text1
+            color: "#000000"
             text: qsTr("Introduce la IP ")
             anchors.verticalCenter: parent.verticalCenter
-            font.pixelSize: 12
+            font.pixelSize: 40
+
             horizontalAlignment: Text.AlignHCenter
-            anchors.verticalCenterOffset: -70
+            anchors.verticalCenterOffset: -110
             anchors.horizontalCenter: parent.horizontalCenter
-            scale: 3.347
         }
 
         Button {
             id: buttonEnviar
+            width: 81
+            height: 27
             text: qsTr("Enviar")
             anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: 30
+            anchors.verticalCenterOffset: -15
             anchors.horizontalCenter: parent.horizontalCenter
+
+            background: Rectangle {
+                color: "#ffffff" // Color inicial
+                radius: 6
+                border.color: "#045671" // Borde del mismo color que el texto
+                border.width: 2
+            }
+
+            contentItem: Label {
+                text: parent.text
+                color: "#454545"
+                font.pixelSize: 15
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
         }
 
         TextArea {
             id: textArea
             anchors.verticalCenter: parent.verticalCenter
             horizontalAlignment: Text.AlignHCenter
-            anchors.verticalCenterOffset: -20
+            font.pointSize: 15
+            anchors.verticalCenterOffset: -60
             anchors.horizontalCenter: parent.horizontalCenter
-            placeholderText: qsTr("Escribe la IP aquí")
+            placeholderText: qsTr("Dirección IP")
         }
     }
 }
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}D{i:2}D{i:3}D{i:4}D{i:1}
+    D{i:0;autoSize:true;height:480;width:640}D{i:2}D{i:3}D{i:6}D{i:1}
 }
 ##^##*/
+

@@ -7,7 +7,6 @@ Item {
     property alias area: area
     property string imageSource: mapInfo.imgSource // Ruta de la imagen
 
-
     RowLayout {
         z: canvas.z + 1
         id: botones

@@ -53,6 +53,7 @@ qt_add_qml_module(appgui
     qml/TeledirigidoForm.ui.qml
     qml/MenuPrincipal.qml
     qml/MapPage.qml
+    qml/MapPageForm.ui.qml
     qml/SelectMap.qml
     qml/SelectMapForm.ui.qml
 
