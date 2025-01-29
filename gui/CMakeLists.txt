@@ -73,7 +73,6 @@ qt_add_qml_module(appgui
 
 
     RESOURCES
-    images/keyboard_left.png
     images/pen-to-square-regular.svg
     images/check-solid.svg
     images/keyboard_left.svg
@@ -83,10 +82,10 @@ qt_add_qml_module(appgui
     images/trash-solid.svg
     images/file-arrow-down-solid.svg
     images/my_map.png
-    images/keyboard_left1.svg
     images/pencil-solid.svg
     images/robot_with_arrow.png
     images/map-pin-solid.svg
+    images/robot.png
 
     # qml/extras/qmldir
 

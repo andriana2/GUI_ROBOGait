@@ -4,20 +4,23 @@ import "extras"
 
 Rectangle {
     id: root
+    // width: 13/*00
+    // height: 70*/0
     color: "#518bb7"
     property alias mapPageForm_mystackview: mapPageForm_mystackview
     property alias mapPageForm_buttonNext: mapPageForm_buttonNext
     property alias mapPageForm_text: mapPageForm_text
+    property alias mapPageForm_orientationCircleForm: orientationCircle
 
     property string mapPageForm_previousState: ""
     property string mapPageForm_nextState: ""
 
-    property alias mp_initialPosition: initialPosition
-    property alias mp_initialOrientation: initialOrientation
-    property alias mp_selectAction: selectAction
-    property alias mp_goalPosePosition: goalPosePosition
-    property alias mp_goalPoseOrientation: goalPoseOrientation
+    property alias mp_mapPage: mapPage
 
+    // property alias mp_initialOrientation: initialOrientation
+    // property alias mp_selectAction: selectAction
+    // property alias mp_goalPosePosition: goalPosePosition
+    // property alias mp_goalPoseOrientation: goalPoseOrientation
     Item {
         id: rectagle_conteiner
         width: parent.width / 3
@@ -29,28 +32,35 @@ Rectangle {
         Text {
             id: mapPageForm_text
             x: 922
-            width: parent.width
-            height: parent.width/8
+            width: parent.width - 20
+            height: parent.width / 8
             color: "#ffffff"
             text: qsTr("Al hacer clic en el mapa, se coloca el robot sobre él")
             anchors.right: parent.right
             anchors.top: parent.top
-            font.pixelSize: 40
+            font.pixelSize: 30
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             font.styleName: "Medium"
             font.bold: true
             wrapMode: Text.Wrap
             anchors.rightMargin: 18
-            anchors.topMargin: 0
+            anchors.topMargin: -20
+        }
+
+        OrientationCircle {
+            id: orientationCircle
+            anchors.top: mapPageForm_text.bottom
+            anchors.horizontalCenter: mapPageForm_text.horizontalCenter
+            anchors.topMargin: 100
         }
 
         Button {
             id: mapPageForm_buttonNext
-            x: 975
-            y: 616
-            width: 271
-            height: 68
+            x: 8
+            y: 376
+            width: 196
+            height: 48
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.rightMargin: 9
@@ -70,7 +80,7 @@ Rectangle {
                 Text {
                     text: qsTr("Siguiente")
                     horizontalAlignment: Text.AlignRight
-                    font.pointSize: 35
+                    font.pointSize: 25
                     color: "white" // Color del texto
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -80,8 +90,8 @@ Rectangle {
                     anchors.verticalCenterOffset: 3
                     // Ruta a tu imagen
                     rotation: 180
-                    width: 50 // Ancho de la imagen
-                    height: 50
+                    width: 40 // Ancho de la imagen
+                    height: 40
                     anchors.verticalCenter: parent.verticalCenter
                     fillMode: Image.PreserveAspectFit
                     // Alto de la imagen
@@ -96,77 +106,19 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        initialItem: initialPosition.createObject(mapPageForm_mystackview)
-        pushEnter: Transition {
-            PropertyAnimation {
-                property: "x"
-                from: mystackview.width
-                to: 0
-                duration: 400
-            }
+        initialItem: Map {
+            id: mapPage
         }
-        //! [mystackview view]
-        pushExit: Transition {
-            PropertyAnimation {
-                property: "x"
-                from: 0
-                to: -mystackview.width
-                duration: 400
-            }
-        }
-        popEnter: Transition {
-            PropertyAnimation {
-                property: "x"
-                from: -mystackview.width
-                to: 0
-                duration: 400
-            }
-        }
-        popExit: Transition {
-            PropertyAnimation {
-                property: "x"
-                from: 0
-                to: mystackview.width
-                duration: 400
-            }
-        }
-    }
-
-    Component {
-        id: initialPosition
-        Map {
-            visible: true
-        }
-    }
-    Component {
-        id: initialOrientation
-        Map {
-            visible: true
-        }
-    }
-    Component {
-        id: selectAction
-        Map {
-            visible: true
-        }
-    }
-    Component {
-        id: goalPosePosition
-        Map {
-            visible: true
-        }
-    }
-    Component {
-        id: goalPoseOrientation
-        Map {
-            visible: true
-        }
+        pushEnter: null
+        pushExit: null
+        popEnter: null
+        popExit: null
     }
 }
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.5}D{i:1}D{i:2}D{i:7}D{i:16}D{i:18}D{i:20}D{i:22}D{i:24}
+    D{i:0;autoSize:true;height:480;width:640}D{i:2}D{i:3}D{i:4}D{i:1}D{i:9}
 }
 ##^##*/
 

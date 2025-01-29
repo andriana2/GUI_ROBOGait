@@ -1,7 +1,7 @@
 #include "../include/MapInfo.h"
 #include "include/ToJson.h"
 
-MapInfo::MapInfo(QObject *parent){}
+MapInfo::MapInfo(QObject *parent){ clearInfoImage();}
 
 void MapInfo::setClient(Cliente *cli)
 {
@@ -203,7 +203,7 @@ bool MapInfo::checkPixelBlack()
     QColor pixelColor = image.pixelColor(m_originalPosition.x, m_originalPosition.y);
 
     int intensity = pixelColor.red(); // O green() o blue(), todos serán iguales
-     qDebug() << "Intensidad " << intensity;
+    qDebug() << "Intensidad " << intensity;
     return intensity == 0;
 }
 
