@@ -27,7 +27,7 @@ Item {
         Button {
             id: buttonEnviar
             width: 81
-            height: 27
+            height: 40
             text: qsTr("Enviar")
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: -15

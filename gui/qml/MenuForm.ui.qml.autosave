@@ -6,6 +6,8 @@ import "extras"
 Rectangle {
     id: rectangle
     color: "#518bb7"
+    border.color: "#ffffff"
+    // border.color: "#ffffff"
     property alias hacer_mapa_mouse_area: hacer_mapa_mouse_area
     property alias mapa_mouse_area: mapa_mouse_area
     property alias teledirigido_mouse_area: teledirigido_mouse_area
@@ -14,6 +16,7 @@ Rectangle {
         anchors.verticalCenterOffset: -39
         anchors.centerIn: parent // Centra el GridLayout en el contenedor
         spacing: 60 // Espacio entre filas
+        
 
         Rectangle {
             id: teledirigido_button

@@ -241,6 +241,7 @@ std::vector<std::string> getMapName(std::string const &path)
         {
             // Utilizamos .stem() para obtener el nombre del archivo sin extensión
             std::string name_without_extension = file.path().stem().string();
+            name_without_extension = restoreSpaces(name_without_extension);
             pri1(name_without_extension);
             map_name.push_back(name_without_extension);
         }

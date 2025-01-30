@@ -29,27 +29,27 @@ Rectangle {
         font.styleName: "Light Italic"
     }
 
-    Text {
-        id: text1
-        x: 309
-        width: 142
-        height: 22
-        text: qsTr("Nombre del archivo")
-        anchors.left: parent.left
-        anchors.top: text_header.bottom
-        font.pixelSize: 16
-        anchors.leftMargin: 36
-        anchors.topMargin: 10
-    }
+    // Text {
+    //     id: text1
+    //     x: 309
+    //     width: 142
+    //     height: 22
+    //     text: qsTr("Nombre del archivo")
+    //     anchors.left: parent.left
+    //     anchors.top: text_header.bottom
+    //     font.pixelSize: 16
+    //     anchors.leftMargin: 36
+    //     anchors.topMargin: 10
+    // }
     Rectangle {
         id: rectangle1
         border.color: "black"
         color: parent.color
         border.width: 2
         anchors.left: parent.left
-        anchors.top: text1.bottom
+        anchors.top: text_header.bottom
         anchors.leftMargin: 26
-        anchors.topMargin: 20
+        anchors.topMargin: 35
         radius: 4
         TextArea {
             id: text_name

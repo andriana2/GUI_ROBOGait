@@ -135,7 +135,7 @@ Item {
 
         onPaint: {
             var ctx = getContext('2d');
-            ctx.clearRect(0, 0, width, height); // Limpiar el Canvas antes de dibujar
+            /*ctx.clearRect(0, 0, width, height);*/ // Limpiar el Canvas antes de dibujar
 
             switch (map_currentState) {
             case "map_initialPosition":
@@ -143,26 +143,31 @@ Item {
                 if (!enablePainting || lastX === -1 || lastY === -1 || circleDrawn === true) {
                     return;
                 }
+                ctx.clearRect(0, 0, width, height);
                 drawAndValidateImage(lastX, lastY, 0.0);
                 break;
             case "map_initialOrientation":
                 console.log("map_initialOrientation")
+                ctx.clearRect(0, 0, width, height);
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 break;
             case "map_selectAction":
                 console.log("map_selectAction")
+                ctx.clearRect(0, 0, width, height);
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 break;
             case "map_goalPosePosition":
                 console.log("map_goalPosePosition")
-                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 if (!enablePainting || lastX === -1 || lastY === -1 || circleDrawn === true) {
                     return;
                 }
+                ctx.clearRect(0, 0, width, height);
                 drawAndValidateImage(lastX, lastY, 0.0);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 break;
             case "map_goalPoseOrientation":
                 console.log("map_goalPoseOrientation")
+                ctx.clearRect(0, 0, width, height);
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 drawAndValidateImage(mapInfo.finalPathPosition.x, mapInfo.finalPathPosition.y, mapInfo.finalPathOrientation);
                 break;

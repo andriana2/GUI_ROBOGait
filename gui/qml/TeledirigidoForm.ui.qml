@@ -115,7 +115,7 @@ Rectangle {
     SavePage {
         id: save_page
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -20
+        anchors.verticalCenterOffset: -60
         anchors.horizontalCenter: parent.horizontalCenter
         // state_save_page: state_save_page
     }
@@ -123,8 +123,8 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}D{i:2}D{i:1}D{i:4}D{i:3}D{i:6}D{i:8}D{i:9}
-D{i:7}D{i:5}D{i:10}
+    D{i:0;autoSize:true;height:700;width:1300}D{i:2}D{i:1}D{i:4}D{i:3}D{i:6}D{i:7}D{i:5}
+D{i:10}
 }
 ##^##*/
 

@@ -47,7 +47,8 @@ MapPageForm {
             PropertyChanges {
                 target: mapPage
                 mapPageForm_previousState: ""
-                mapPageForm_nextState: "selectAction"
+                // mapPageForm_nextState: "selectAction"
+                mapPageForm_nextState: "mp_goalPosePosition"
             }
             PropertyChanges {
                 target: mapPageForm_text

@@ -15,7 +15,7 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
     connect(periodicTimer, &QTimer::timeout, this, [this]()
             {
                 static int i = 0;
-                if (m_mapping && i == 3) {
+                if (m_mapping && i == 10) {
                     cliente->sendMessage(ToJson::sendRequestMap());
                     i = 0;
                 }
@@ -23,7 +23,7 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
 
                 {
                     cliente->sendMessage(ToJson::sendJoystickPosition(currentAngular, currentLineal));
-                    if (i == 3)
+                    if (i == 10)
                         i = 0;
                 }
                 i++; });
