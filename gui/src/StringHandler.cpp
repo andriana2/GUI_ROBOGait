@@ -20,7 +20,12 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
                     i = 0;
                 }
                 else
+
+                {
                     cliente->sendMessage(ToJson::sendJoystickPosition(currentAngular, currentLineal));
+                    if (i == 3)
+                        i = 0;
+                }
                 i++; });
 }
 void StringHandler::setClient(Cliente *cli) { cliente = cli; }
@@ -32,13 +37,13 @@ void StringHandler::setMapInfo(MapInfo *mapIn)
 
 bool StringHandler::isInSameNetwork(const QString &ip1, const std::string &subnetMask)
 {
-    QString ip_borrar_en_cuanto_sea_posible = "10.0.2.15";
-    // if (ip1.isEmpty() || ip1 == "")
-    // {
-    //     return 0;
-    // }
-    // std::string ip1_ = ip1.toStdString(); // CAAAAAAAMMMMMMMBIAAAAAAR
-    std::string ip1_ = ip_borrar_en_cuanto_sea_posible.toStdString();
+    // QString ip_borrar_en_cuanto_sea_posible = "10.0.2.15";
+    if (ip1.isEmpty() || ip1 == "")
+    {
+        return 0;
+    }
+    std::string ip1_ = ip1.toStdString(); // CAAAAAAAMMMMMMMBIAAAAAAR
+    // std::string ip1_ = ip_borrar_en_cuanto_sea_posible.toStdString();
     for (char ch : ip1_)
     {
         if (!(std::isdigit(ch) || ch == '.'))
@@ -77,8 +82,8 @@ bool StringHandler::isInSameNetwork(const QString &ip1, const std::string &subne
     // cliente.connectToServer(ip1, 8080);
     // cliente.connectToServer("127.0.0.1", 8080);
 
-    // cliente->connect2host(ip1);
-    cliente->connect2host(ip_borrar_en_cuanto_sea_posible);
+    cliente->connect2host(ip1);
+    // cliente->connect2host(ip_borrar_en_cuanto_sea_posible);
 
 
 
