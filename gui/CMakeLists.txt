@@ -68,6 +68,8 @@ qt_add_qml_module(appgui
     qml/extras/OrientationCircle.qml
     qml/extras/OrientationCircleForm.ui.qml
     qml/extras/ErrorRectangle.qml
+    qml/extras/BoxImages.qml
+    qml/extras/BoxImagesForm.ui.qml
 
     ${qml_singletons}
 
@@ -86,6 +88,7 @@ qt_add_qml_module(appgui
     images/robot_with_arrow.png
     images/map-pin-solid.svg
     images/robot.png
+    images/wheel.svg
 
     # qml/extras/qmldir
 

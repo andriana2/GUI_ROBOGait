@@ -6,6 +6,7 @@ Item {
     property alias canvas: canvas
     property alias area: area
     property string map_currentState: map_currentState
+    property alias imageDisplay: imageDisplay
 
     ErrorRectangle {
         id: errorPopup
@@ -13,26 +14,25 @@ Item {
         errorRectangleTextError.text: "Error: Has puesto el robot en una posicion donde esta prohibido."
     }
 
-
-    RowLayout {
-        z: canvas.z + 1
-        id: botones
-        anchors.horizontalCenter: parent.horizontalCenter
-        Button {
-            text: 'Clear'
-            onClicked: canvas.clear()
-        }
-        Button {
-            text: 'Paint'
-            onClicked: {
-                mapInfo.setScreenSize(imageDisplay.width, imageDisplay.height)
-                canvas.enablePainting = true
-            }
-        }
-        Button {
-            text: 'Exit'
-        }
-    }
+    // RowLayout {
+    //     z: canvas.z + 1
+    //     id: botones
+    //     anchors.horizontalCenter: parent.horizontalCenter
+    //     Button {
+    //         text: 'Clear'
+    //         onClicked: canvas.clear()
+    //     }
+    //     Button {
+    //         text: 'Paint'
+    //         onClicked: {
+    //             mapInfo.setScreenSize(imageDisplay.width, imageDisplay.height)
+    //             canvas.enablePainting = true
+    //         }
+    //     }
+    //     Button {
+    //         text: 'Exit'
+    //     }
+    // }
 
     Rectangle {
         id: mapa
@@ -143,6 +143,7 @@ Item {
                 if (!enablePainting || lastX === -1 || lastY === -1 || circleDrawn === true) {
                     return;
                 }
+                console.log("dibujando...")
                 ctx.clearRect(0, 0, width, height);
                 drawAndValidateImage(lastX, lastY, 0.0);
                 break;

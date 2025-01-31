@@ -9,13 +9,18 @@ Rectangle {
     color: "#518bb7"
     property alias mapPageForm_mystackview: mapPageForm_mystackview
     property alias mapPageForm_buttonNext: mapPageForm_buttonNext
+    property alias mapPageForm_buttonPrevious: mapPageForm_buttonPrevious
     property alias mapPageForm_text: mapPageForm_text
     property alias mapPageForm_orientationCircleForm: orientationCircle
+    property alias mapPageForm_boxImages: boxImages
 
     property string mapPageForm_previousState: ""
     property string mapPageForm_nextState: ""
 
-    property alias mp_mapPage: mapPage
+    property string mapPageForm_previousState_text: "Anterior"
+    property string mapPageForm_nextState_text: "Siguiente"
+
+    property alias mp_map: map
 
     // property alias mp_initialOrientation: initialOrientation
     // property alias mp_selectAction: selectAction
@@ -55,6 +60,13 @@ Rectangle {
             anchors.topMargin: 100
         }
 
+        BoxImages {
+            id: boxImages
+            anchors.top: mapPageForm_text.bottom
+            anchors.horizontalCenter: mapPageForm_text.horizontalCenter
+            anchors.topMargin: 70
+        }
+
         Button {
             id: mapPageForm_buttonNext
             x: 8
@@ -78,7 +90,7 @@ Rectangle {
                 spacing: 10
 
                 Text {
-                    text: qsTr("Siguiente")
+                    text: qsTr(mapPageForm_nextState_text)
                     horizontalAlignment: Text.AlignRight
                     font.pointSize: 25
                     color: "white" // Color del texto
@@ -98,6 +110,46 @@ Rectangle {
                 }
             }
         }
+
+        Button {
+            id: mapPageForm_buttonPrevious
+            width: 196
+            height: 48
+            anchors.right: mapPageForm_buttonNext.left
+            anchors.bottom: parent.bottom
+            anchors.rightMargin: 20
+            anchors.bottomMargin: 16
+            font.pointSize: 40
+            background: Rectangle {
+                color: "transparent" // Fondo transparente
+                border.color: "transparent" // Sin bordes
+            }
+
+            contentItem: Row {
+                id: row2
+                // Contenido del botón
+                anchors.centerIn: parent
+                spacing: 10
+
+                Image {
+                    id: svgImage2
+                    source: "../images/keyboard_left.svg"
+                    anchors.verticalCenterOffset: 3
+                    width: 40
+                    height: 40
+                    anchors.verticalCenter: parent.verticalCenter
+                    fillMode: Image.PreserveAspectFit
+                    // Alto de la imagen
+                }
+                Text {
+                    text: qsTr(mapPageForm_previousState_text)
+                    horizontalAlignment: Text.AlignRight
+                    font.pointSize: 25
+                    color: "white" // Color del texto
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+        }
     }
 
     StackView {
@@ -107,7 +159,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         initialItem: Map {
-            id: mapPage
+            id: map
         }
         pushEnter: null
         pushExit: null
@@ -118,7 +170,8 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}D{i:2}D{i:3}D{i:4}D{i:1}D{i:9}
+    D{i:0;autoSize:true;formeditorZoom:0.66;height:700;width:1300}D{i:2}D{i:3}D{i:4}D{i:5}
+D{i:10}D{i:1}D{i:15}
 }
 ##^##*/
 

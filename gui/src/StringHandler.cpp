@@ -35,6 +35,55 @@ void StringHandler::setMapInfo(MapInfo *mapIn)
     mapInfo = mapIn;
 }
 
+#ifdef EN_CASA
+bool StringHandler::isInSameNetwork(const QString &ip1, const std::string &subnetMask)
+{
+    QString ip_borrar_en_cuanto_sea_posible = "10.0.2.15";
+    // if (ip1.isEmpty() || ip1 == "")
+    // {
+    //     return 0;
+    // }
+    // std::string ip1_ = ip1.toStdString(); // CAAAAAAAMMMMMMMBIAAAAAAR
+    std::string ip1_ = ip_borrar_en_cuanto_sea_posible.toStdString();
+    for (char ch : ip1_)
+    {
+        if (!(std::isdigit(ch) || ch == '.'))
+        {
+            return false;
+        }
+    }
+
+    QString ip2 = obtenerIP();
+    std::string ip2_ = ip2.toStdString();
+    std::cout << ip2_ << std::endl;
+    auto ipToInt = [](const std::string &ip) -> std::vector<int>
+    {
+        std::vector<int> parts;
+        std::stringstream ss(ip);
+        std::string segment;
+        while (std::getline(ss, segment, '.'))
+        {
+            parts.push_back(std::stoi(segment));
+        }
+        return parts;
+    };
+
+    std::vector<int> ip1Parts = ipToInt(ip1_);
+    std::vector<int> ip2Parts = ipToInt(ip2_);
+    std::vector<int> maskParts = ipToInt(subnetMask);
+
+    for (int i = 0; i < 4; ++i)
+    {
+        if ((ip1Parts[i] & maskParts[i]) != (ip2Parts[i] & maskParts[i]))
+        {
+            return false;
+        }
+    }
+    cliente->connect2host(ip_borrar_en_cuanto_sea_posible);
+    return true;
+}
+
+#else
 bool StringHandler::isInSameNetwork(const QString &ip1, const std::string &subnetMask)
 {
     // QString ip_borrar_en_cuanto_sea_posible = "10.0.2.15";
@@ -84,12 +133,9 @@ bool StringHandler::isInSameNetwork(const QString &ip1, const std::string &subne
 
     cliente->connect2host(ip1);
     // cliente->connect2host(ip_borrar_en_cuanto_sea_posible);
-
-
-
-    //--------------
     return true;
 }
+#endif
 
 QString StringHandler::getImageSource()
 {

@@ -9,6 +9,8 @@
 #include <QVector>
 #include <qobjectdefs.h>
 
+#define EN_CASA 1
+
 enum Header {
     MSG,
     REQUEST_MSG,

@@ -1,6 +1,8 @@
 #ifndef HEADER_H
 #define HEADER_H
 
+
+#define EN_CASA 1
 enum Header {
     MSG,
     REQUEST_MSG,
@@ -32,8 +34,11 @@ struct FinalPosition
     float yaw;
 };
 
+#ifdef EN_CASA
+#define PATH2MAP "/home/andri/Desktop/gui_nuevo/gui_/server/maps" //casa
+#else
 #define PATH2MAP "/home/robogait/Desktop/gui_andri/gui/server/maps" // uni
-// #define PATH2MAP "/home/andri/Desktop/gui_nuevo/gui_/server/maps" //casa
+#endif
 
 // #define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f " + PATH2MAP + " "
 #define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f /home/robogait/Desktop/gui_andri/gui/server/maps"
