@@ -63,7 +63,7 @@ ApplicationFlowForm {
         }
         else if (applicationFlow.state === "mapPath")
         {
-            mapInfo.clearInfoImage()
+            // mapInfo.clearInfoImage()
             mystackview.pop()
             applicationFlow.state = applicationFlow.previousState
         }

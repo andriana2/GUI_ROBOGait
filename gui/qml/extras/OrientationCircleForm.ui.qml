@@ -73,7 +73,7 @@ Item {
                     angleDegrees += 360;
                 }
                 robotImage.rotation = angleDegrees;
-                console.log("Orientacion en ORIENTATIONCIRCLEFORM.QML" + angleDegrees)
+                // console.log("Orientacion en ORIENTATIONCIRCLEFORM.QML" + angleDegrees)
                 angleDegrees = 360 - angleDegrees;
                 orientation = angleDegrees;
                 angleDisplay.text = "Ángulo: " + angleDegrees.toFixed(2) + "º";

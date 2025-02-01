@@ -56,7 +56,7 @@ void MapInfo::setOriginalPosition(const int &x, const int &y)
     if (m_originalPosition == Pixel{x_original,y_original})
         return;
     m_originalPosition = Pixel{x_original,y_original};
-    qDebug() << "+++Map name: "<< m_mapName << " position x: " << x_original << " position y: " << y_original;
+    // qDebug() << "+++Map name: "<< m_mapName << " position x: " << x_original << " position y: " << y_original;
     emit originalPositionChanged();
 }
 
@@ -203,8 +203,22 @@ bool MapInfo::checkPixelBlack()
     QColor pixelColor = image.pixelColor(m_originalPosition.x, m_originalPosition.y);
 
     int intensity = pixelColor.red(); // O green() o blue(), todos serán iguales
-    qDebug() << "Intensidad " << intensity;
+    // qDebug() << "Intensidad " << intensity;
     return intensity == 0;
 }
 
 
+
+Pixel MapInfo::finalScreenPosition() const
+{
+    return m_finalScreenPosition;
+}
+
+void MapInfo::setFinalScreenPosition(const int &x, const int &y)
+{
+    if (m_positionScreen == Pixel{x,y})
+        return;
+    m_finalScreenPosition = Pixel{x,y};
+    setFinalPathPosition(x,y);
+    emit finalPathPositionChanged();
+}

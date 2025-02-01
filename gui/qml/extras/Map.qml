@@ -84,52 +84,64 @@ Item {
                 console.log("TIPO currentstate: " + map_currentState)
                 canvas.requestPaint();
             }
+            function onFinalPathOrientationChanged() {
+                console.log("TIPO currentstate: " + map_currentState)
+                canvas.requestPaint();
+            }
         }
 
         function drawAndValidateImage(x, y, orientation) {
             var ctx = getContext('2d');
-            ctx.clearRect(0, 0, width, height); // Limpiar el Canvas antes de dibujar
+            // ctx.clearRect(0, 0, width, height); // Limpiar el Canvas antes de dibujar
 
             var scaledWidth, scaledHeight;
             if (orientation === 0.0) {
                 scaledWidth = imageRobot.width * scale;
                 scaledHeight = imageRobot.height * scale;
                 ctx.drawImage(
-                    imageRobot,
-                    x - scaledWidth / 2,
-                    y - scaledHeight / 2,
-                    scaledWidth,
-                    scaledHeight
-                );
-                console.log("Posición: X=" + x + " Y=" + y);
-                mapInfo.setPositionScreen(x, y);
+                            imageRobot,
+                            x - scaledWidth / 2,
+                            y - scaledHeight / 2,
+                            scaledWidth,
+                            scaledHeight
+                            );
+                // console.log("Posición: X=" + x + " Y=" + y);
+
+                if (map_currentState === "map_initialPosition")
+                    mapInfo.setPositionScreen(x, y);
+                else if (map_currentState === "map_goalPosePosition")
+                    mapInfo.setFinalScreenPosition(x, y);
+
+                circleDrawn = true;
+
+                if (mapInfo.checkPixelBlack()) {
+                    errorPopup.open();
+                    console.log("Es negro");
+                    clear();
+                } else {
+                    console.log("Es blanco");
+                }
             } else {
                 scaledWidth = imageRobotWithArrow.width * scale;
                 scaledHeight = imageRobotWithArrow.height * scale;
                 ctx.save(); // Guardar el estado actual del contexto
                 ctx.translate(x, y); // Trasladar el origen al punto (x, y)
                 ctx.rotate((360 - orientation) * Math.PI / 180); // Rotar el contexto en radianes
-                console.log("Orientacion en MAP.QML " + orientation);
+                // console.log("Orientacion en MAP.QML " + orientation);
                 ctx.drawImage(
-                    imageRobotWithArrow,
-                    -scaledWidth / 2, // Ajustar la posición para centrar la imagen
-                    -scaledHeight / 2,
-                    scaledWidth,
-                    scaledHeight
-                );
+                            imageRobotWithArrow,
+                            -scaledWidth / 2, // Ajustar la posición para centrar la imagen
+                            -scaledHeight / 2,
+                            scaledWidth,
+                            scaledHeight
+                            );
                 ctx.restore(); // Restaurar el estado del contexto
-                console.log("Posición: X=" + x + " Y=" + y + " Orientación: " + orientation);
-                mapInfo.setPositionScreen(x, y);
-            }
-
-            circleDrawn = true;
-
-            if (mapInfo.checkPixelBlack()) {
-                errorPopup.open();
-                console.log("Es negro");
-                clear();
-            } else {
-                console.log("Es blanco");
+                // console.log("Posición: X=" + x + " Y=" + y + " Orientación: " + orientation);
+                if (map_currentState === "map_initialPosition")
+                    mapInfo.setPositionScreen(x, y);
+                else if (map_currentState === "map_goalPosePosition")
+                    mapInfo.setFinalScreenPosition(x, y);
+                circleDrawn = true;
             }
         }
 
@@ -140,16 +152,25 @@ Item {
             switch (map_currentState) {
             case "map_initialPosition":
                 console.log("map_initialPosition")
-                if (!enablePainting || lastX === -1 || lastY === -1 || circleDrawn === true) {
-                    return;
+                if(mapInfo.positionScreen.x !== 0 && mapInfo.positionScreen.y !== 0)
+                {
+                    ctx.clearRect(0, 0, width, height);
+                    drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, 0.0);
                 }
-                console.log("dibujando...")
-                ctx.clearRect(0, 0, width, height);
-                drawAndValidateImage(lastX, lastY, 0.0);
+                else
+                {
+                    if (!enablePainting || lastX === -1 || lastY === -1 || circleDrawn === true) {
+                        return;
+                    }
+                    ctx.clearRect(0, 0, width, height);
+                    drawAndValidateImage(lastX, lastY, 0.0);
+                }
                 break;
             case "map_initialOrientation":
                 console.log("map_initialOrientation")
                 ctx.clearRect(0, 0, width, height);
+                console.log("Orientation: " + mapInfo.orientation);
+                mp_map.canvas.enablePainting = false
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 break;
             case "map_selectAction":
@@ -158,19 +179,30 @@ Item {
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 break;
             case "map_goalPosePosition":
-                console.log("map_goalPosePosition")
-                if (!enablePainting || lastX === -1 || lastY === -1 || circleDrawn === true) {
-                    return;
+                if(mapInfo.finalPathPosition.x !== 0 && mapInfo.finalPathPosition.y !== 0)
+                {
+                    ctx.clearRect(0, 0, width, height);
+                    drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                    drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, 0.0);
                 }
-                ctx.clearRect(0, 0, width, height);
-                drawAndValidateImage(lastX, lastY, 0.0);
-                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                else {
+                    console.log("map_goalPosePosition")
+                    console.log("enablePainting: " + enablePainting + " lastX " + lastX + " lastY " + lastY  + " circleDrawn " + circleDrawn)
+                    drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                    circleDrawn = false
+                    if (!enablePainting || lastX === -1 || lastY === -1 || circleDrawn === true) {
+                        return;
+                    }
+                    // ctx.clearRect(0, 0, width, height);
+                    drawAndValidateImage(lastX, lastY, 0.0);
+                }
                 break;
             case "map_goalPoseOrientation":
                 console.log("map_goalPoseOrientation")
                 ctx.clearRect(0, 0, width, height);
+                mp_map.canvas.enablePainting = false
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
-                drawAndValidateImage(mapInfo.finalPathPosition.x, mapInfo.finalPathPosition.y, mapInfo.finalPathOrientation);
+                drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, mapInfo.finalPathOrientation);
                 break;
             default:
                 console.log("Estado no reconocido: ", map_currentState);
@@ -197,7 +229,13 @@ Item {
             lastX = -1;
             lastY = -1;
             circleDrawn = false;
-            mapInfo.setPositionScreen(0, 0);
+            if (map_currentState === "map_initialPosition")
+                mapInfo.setPositionScreen(0, 0);
+            else if (map_currentState === "map_goalPosePosition")
+            {
+                mapInfo.setFinalPathPosition(0, 0);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+            }
         }
 
         function clear_internal() {

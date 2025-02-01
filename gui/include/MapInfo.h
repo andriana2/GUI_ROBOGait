@@ -41,6 +41,7 @@ class MapInfo : public QObject
 
     Q_PROPERTY(float finalPathOrientation READ finalPathOrientation WRITE setFinalPathOrientation NOTIFY finalPathOrientationChanged FINAL)
     Q_PROPERTY(Pixel finalPathPosition READ finalPathPosition NOTIFY finalPathPositionChanged FINAL)
+    Q_PROPERTY(Pixel finalScreenPosition READ finalScreenPosition NOTIFY finalScreenPositionChanged FINAL)
 
 
 
@@ -84,6 +85,9 @@ public:
 
     Q_INVOKABLE bool checkPixelBlack();
 
+    Pixel finalScreenPosition() const;
+    Q_INVOKABLE void setFinalScreenPosition(const int &x, const int &y);
+
 signals:
     void mapNameChanged();
     void orientationChanged();
@@ -95,6 +99,8 @@ signals:
     void imgSourceChanged();
     void finalPathOrientationChanged();
     void finalPathPositionChanged();
+
+    void finalScreenPositionChanged();
 
 private:
     Cliente *cliente;
@@ -114,6 +120,7 @@ private:
     //Valores de la posicion en funcion del mapa real pero con los datos del mapa screen
     // Es decir inserte la posicion del screen y se guardara la final
 
+    Pixel m_finalScreenPosition;
 };
 
 #endif // MAPINFO_H

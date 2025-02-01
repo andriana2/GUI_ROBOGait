@@ -8,28 +8,28 @@ OrientationCircleForm {
     mouseAreaCircle.onReleased: {
         if (state === "orientacion_inicial") {
             mapInfo.setOrientation(orientation);
-            console.log("Círculo orientación inicial liberado: " + mapInfo.orientation);
+            // console.log("Círculo orientación inicial liberado: " + mapInfo.orientation);
         } else if (state === "orientacion_final") {
             mapInfo.setFinalPathOrientation(orientation);
-            console.log("Círculo orientación final liberado: " + mapInfo.finalPathOrientation);
+            // console.log("Círculo orientación final liberado: " + mapInfo.finalPathOrientation);
         }
     }
     mouseAreaCircle.onClicked: {
         if (state === "orientacion_inicial") {
             mapInfo.setOrientation(orientation);
-            console.log("Círculo orientación inicial liberado: " + mapInfo.orientation);
+            // console.log("Círculo orientación inicial liberado: " + mapInfo.orientation);
         } else if (state === "orientacion_final") {
             mapInfo.setFinalPathOrientation(orientation);
-            console.log("Círculo orientación final liberado: " + mapInfo.finalPathOrientation);
+            // console.log("Círculo orientación final liberado: " + mapInfo.finalPathOrientation);
         }
     }
     mouseAreaCircle.onPositionChanged: {
         if (state === "orientacion_inicial") {
             mapInfo.setOrientation(orientation);
-            console.log("Círculo orientación inicial liberado: " + mapInfo.orientation);
+            // console.log("Círculo orientación inicial liberado: " + mapInfo.orientation);
         } else if (state === "orientacion_final") {
             mapInfo.setFinalPathOrientation(orientation);
-            console.log("Círculo orientación final liberado: " + mapInfo.finalPathOrientation);
+            // console.log("Círculo orientación final liberado: " + mapInfo.finalPathOrientation);
         }
     }
 

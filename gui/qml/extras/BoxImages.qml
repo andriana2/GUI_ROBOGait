@@ -144,10 +144,10 @@ BoxImagesForm {
                 visible: true
                 enabled: true
             }
-            PropertyChanges { target: orientationCircle; image_source_check: "../../images/check-solid.svg" }
-            PropertyChanges { target: orientationCircle; image_source_ok: "../../images/wheel.svg" }
-            PropertyChanges { target: orientationCircle; image_source_clear: "../../images/eraser-solid.svg" }
-            PropertyChanges { target: orientationCircle; image_source_edit: "../../images/pencil-solid.svg" }
+            PropertyChanges { target: boxImages; image_source_check: "../../images/check-solid.svg" }
+            PropertyChanges { target: boxImages; image_source_ok: "../../images/wheel.svg" }
+            PropertyChanges { target: boxImages; image_source_clear: "../../images/eraser-solid.svg" }
+            PropertyChanges { target: boxImages; image_source_edit: "../../images/pencil-solid.svg" }
         }
     ]
 
