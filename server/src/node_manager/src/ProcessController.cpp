@@ -2,8 +2,24 @@
 
 ProcessController::ProcessController(){}
 
+bool ProcessController::isNodeRunning(const std::string& node_name) {
+    auto node = rclcpp::Node::make_shared("node_checker");
+    auto node_names = node->get_node_names();
+
+    for (const auto& name : node_names) {
+        if (name == node_name) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void ProcessController::startProcess(const std::string &name, const std::string &command)
 {
+    if(isNodeRunning(name) && (command.find("ros2 run") != std::string::npos)) {
+        std::cout << "ProcessController: El nodo \"" << name << "\" ya está en ejecución.\n";
+        return;
+    }
     if (processMap.find(name) != processMap.end())
     {
         std::cout << "ProcessController: El proceso \"" << name << "\" ya está en ejecución.\n";

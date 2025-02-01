@@ -1,6 +1,8 @@
 #ifndef PROCESSCONTROLLER_H
 #define PROCESSCONTROLLER_H
 
+#include <rclcpp/rclcpp.hpp>
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -16,6 +18,7 @@ class ProcessController
 {
 public:
     ProcessController();
+    bool isNodeRunning(const std::string& node_name);
     void startProcess(const std::string &name, const std::string &command);
     void stopProcess(const std::string &name);
     void stopAllProcesses();

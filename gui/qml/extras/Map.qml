@@ -81,11 +81,9 @@ Item {
         Connections {
             target: mapInfo
             function onOrientationChanged() {
-                console.log("TIPO currentstate: " + map_currentState)
                 canvas.requestPaint();
             }
             function onFinalPathOrientationChanged() {
-                console.log("TIPO currentstate: " + map_currentState)
                 canvas.requestPaint();
             }
         }
@@ -150,13 +148,7 @@ Item {
                             scaledWidth,
                             scaledHeight
                             );
-                ctx.restore(); // Restaurar el estado del contexto
-                // console.log("Posición: X=" + x + " Y=" + y + " Orientación: " + orientation);
-                // if (map_currentState === "map_initialPosition")
-                //     mapInfo.setPositionScreen(x, y);
-                // else if (map_currentState === "map_goalPosePosition")
-                //     mapInfo.setFinalScreenPosition(x, y);
-                circleDrawn = true;
+                ctx.restore();
             }
         }
 
@@ -197,7 +189,6 @@ Item {
             case "map_goalPosePosition":
                 if(mapInfo.finalPathPosition.x !== 0 && mapInfo.finalPathPosition.y !== 0)
                 {
-                    console.log("Hola")
                     ctx.clearRect(0, 0, width, height);
                     drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                     drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, 0.0);
