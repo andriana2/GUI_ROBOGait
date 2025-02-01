@@ -83,7 +83,7 @@ public:
 
     Q_INVOKABLE void clearInfoImage();
 
-    Q_INVOKABLE bool checkPixelBlack();
+    Q_INVOKABLE bool checkPixelBlack(const int &x, const int &y);
 
     Pixel finalScreenPosition() const;
     Q_INVOKABLE void setFinalScreenPosition(const int &x, const int &y);

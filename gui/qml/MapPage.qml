@@ -293,10 +293,10 @@ MapPageForm {
             }
             PropertyChanges {
                 target: mapPageForm_buttonNext
-                enabled: true
-                opacity: 1
+                enabled: false
+                opacity: 0
             }
-            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Comprobación")}
+            // PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Comprobación")}
             PropertyChanges {
                 target: mapPageForm_buttonPrevious
                 enabled: true
@@ -332,8 +332,8 @@ MapPageForm {
             }
             PropertyChanges {
                 target: mapPageForm_buttonNext
-                enabled: true
-                opacity: 1
+                enabled: false
+                opacity: 0
             }
             PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Comprobación")}
             PropertyChanges {

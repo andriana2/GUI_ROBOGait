@@ -108,19 +108,34 @@ Item {
                 // console.log("Posición: X=" + x + " Y=" + y);
 
                 if (map_currentState === "map_initialPosition")
+                {
                     mapInfo.setPositionScreen(x, y);
-                else if (map_currentState === "map_goalPosePosition")
-                    mapInfo.setFinalScreenPosition(x, y);
+                    circleDrawn = true;
 
-                circleDrawn = true;
-
-                if (mapInfo.checkPixelBlack()) {
-                    errorPopup.open();
-                    console.log("Es negro");
-                    clear();
-                } else {
-                    console.log("Es blanco");
+                    if (mapInfo.checkPixelBlack(mapInfo.originalPosition.x, mapInfo.originalPosition.y)) {
+                        errorPopup.open();
+                        console.log("Es negro");
+                        clear();
+                    } else {
+                        console.log("Es blanco");
+                    }
                 }
+
+                else if (map_currentState === "map_goalPosePosition")
+                {
+                    mapInfo.setFinalScreenPosition(x, y);
+                    circleDrawn = true;
+                    console.log(" lastX " + lastX + " lastY " + lastY  + " mapInfoOriginalX " + mapInfo.finalPathPosition.x+ " mapInfoOriginalY " + mapInfo.finalPathPosition.y)
+
+                    if (mapInfo.checkPixelBlack(mapInfo.finalPathPosition.x, mapInfo.finalPathPosition.y)) {
+                        errorPopup.open();
+                        console.log("Es negro");
+                        clear();
+                    } else {
+                        console.log("Es blanco");
+                    }
+                }
+
             } else {
                 scaledWidth = imageRobotWithArrow.width * scale;
                 scaledHeight = imageRobotWithArrow.height * scale;
@@ -137,10 +152,10 @@ Item {
                             );
                 ctx.restore(); // Restaurar el estado del contexto
                 // console.log("Posición: X=" + x + " Y=" + y + " Orientación: " + orientation);
-                if (map_currentState === "map_initialPosition")
-                    mapInfo.setPositionScreen(x, y);
-                else if (map_currentState === "map_goalPosePosition")
-                    mapInfo.setFinalScreenPosition(x, y);
+                // if (map_currentState === "map_initialPosition")
+                //     mapInfo.setPositionScreen(x, y);
+                // else if (map_currentState === "map_goalPosePosition")
+                //     mapInfo.setFinalScreenPosition(x, y);
                 circleDrawn = true;
             }
         }
@@ -178,9 +193,11 @@ Item {
                 ctx.clearRect(0, 0, width, height);
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 break;
+
             case "map_goalPosePosition":
                 if(mapInfo.finalPathPosition.x !== 0 && mapInfo.finalPathPosition.y !== 0)
                 {
+                    console.log("Hola")
                     ctx.clearRect(0, 0, width, height);
                     drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                     drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, 0.0);
@@ -188,15 +205,16 @@ Item {
                 else {
                     console.log("map_goalPosePosition")
                     console.log("enablePainting: " + enablePainting + " lastX " + lastX + " lastY " + lastY  + " circleDrawn " + circleDrawn)
+                    ctx.clearRect(0, 0, width, height);
                     drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                     circleDrawn = false
                     if (!enablePainting || lastX === -1 || lastY === -1 || circleDrawn === true) {
                         return;
                     }
-                    // ctx.clearRect(0, 0, width, height);
                     drawAndValidateImage(lastX, lastY, 0.0);
                 }
                 break;
+
             case "map_goalPoseOrientation":
                 console.log("map_goalPoseOrientation")
                 ctx.clearRect(0, 0, width, height);

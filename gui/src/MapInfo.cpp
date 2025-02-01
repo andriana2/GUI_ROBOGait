@@ -156,10 +156,13 @@ void MapInfo::setFinalPathPosition(const int &x, const int &y)
 {
     int x_original = std::round((static_cast<double>(x) * m_imageSize.x) / m_screenSize.x);
     int y_original = std::round((static_cast<double>(y) * m_imageSize.y) / m_screenSize.y);
+    // qDebug() << "++++++++++++++"<< "x_original  " <<x_original <<" y_original  " << y_original ;
+    // qDebug() << "--------------" << "x_original  " <<m_finalPathPosition.x <<" y_original  " << m_finalPathPosition.y ;
 
     if (m_finalPathPosition == Pixel{x_original,y_original})
         return;
     m_finalPathPosition = Pixel{x_original,y_original};
+    // qDebug() << "x_original  " <<m_finalPathPosition.x <<" y_original  " << m_finalPathPosition.y ;
     emit finalPathPositionChanged();
 }
 
@@ -178,7 +181,7 @@ void MapInfo::clearInfoImage()
     repeated_delegate_list_view = 0;
 }
 
-bool MapInfo::checkPixelBlack()
+bool MapInfo::checkPixelBlack(const int &x, const int &y)
 {
     QString base64Data = m_imgSource;
     if (m_imgSource.startsWith("data:image/png;base64,")) {
@@ -194,13 +197,13 @@ bool MapInfo::checkPixelBlack()
     }
 
     // Verificar si las coordenadas están dentro del rango
-    if (m_originalPosition.x < 0 || m_originalPosition.x >= m_imageSize.y || m_originalPosition.y < 0 || m_originalPosition.y >= m_imageSize.y) {
+    if (x < 0 || x >= m_imageSize.y || y < 0 || y >= m_imageSize.y) {
         qDebug() << "Las coordenadas están fuera del rango de la imagen.";
         return false;
     }
 
     // Obtener el color del píxel
-    QColor pixelColor = image.pixelColor(m_originalPosition.x, m_originalPosition.y);
+    QColor pixelColor = image.pixelColor(x, y);
 
     int intensity = pixelColor.red(); // O green() o blue(), todos serán iguales
     // qDebug() << "Intensidad " << intensity;
@@ -216,9 +219,9 @@ Pixel MapInfo::finalScreenPosition() const
 
 void MapInfo::setFinalScreenPosition(const int &x, const int &y)
 {
-    if (m_positionScreen == Pixel{x,y})
+    if (m_finalScreenPosition == Pixel{x,y})
         return;
     m_finalScreenPosition = Pixel{x,y};
     setFinalPathPosition(x,y);
-    emit finalPathPositionChanged();
+    emit finalScreenPositionChanged();
 }
