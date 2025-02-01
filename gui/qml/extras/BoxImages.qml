@@ -133,6 +133,8 @@ BoxImagesForm {
                 target: bif_ok
                 visible: true
                 enabled: true
+                anchors.verticalCenterOffset: -200
+                anchors.horizontalCenterOffset: -190
             }
             PropertyChanges {
                 target: bif_clear

@@ -71,6 +71,7 @@ public:
 
     QList<Pixel> pixels() const;
     Q_INVOKABLE void addInfoImageOriginal(const int &x, const int &y);
+    Q_INVOKABLE void clearListPixels();
 
     QString imgSource() const;
     Q_INVOKABLE void setImgSource(const QString &newImgSource);

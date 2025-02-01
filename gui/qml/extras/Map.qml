@@ -64,6 +64,9 @@ Item {
         height: imageDisplay.height
         anchors.centerIn: mapa
 
+        property var points: []
+        property bool startPointExecuted: false
+
         property int lastX: -1
         property int lastY: -1
         property bool circleDrawn: false
@@ -151,11 +154,25 @@ Item {
                 ctx.restore();
             }
         }
+        function drawPath(x, y){
+            var ctx = getContext("2d")
+            // ctx.clearRect(0, 0, width, height) // Limpiar el lienzo
+
+            if (points.length > 1) {
+                ctx.beginPath()
+                ctx.strokeStyle = "black"
+                ctx.lineWidth = 2
+
+                ctx.moveTo(points[0].x, points[0].y)
+                for (var i = 1; i < points.length; i++) {
+                    ctx.lineTo(points[i].x, points[i].y)
+                }
+                ctx.stroke()
+            }
+        }
 
         onPaint: {
             var ctx = getContext('2d');
-            /*ctx.clearRect(0, 0, width, height);*/ // Limpiar el Canvas antes de dibujar
-
             switch (map_currentState) {
             case "map_initialPosition":
                 console.log("map_initialPosition")
@@ -213,6 +230,13 @@ Item {
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, mapInfo.finalPathOrientation);
                 break;
+            case "map_drawPath":
+                console.log("map_drawPath")
+                ctx.clearRect(0, 0, width, height);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                drawPath(mapInfo.positionScreen.x, mapInfo.positionScreen.y);
+
+                break;
             default:
                 console.log("Estado no reconocido: ", map_currentState);
                 break;
@@ -222,19 +246,43 @@ Item {
         MouseArea {
             id: area
             anchors.fill: parent
-            onPressed: {
-                if (canvas.enablePainting) {
-                    canvas.lastX = mouseX;
-                    canvas.lastY = mouseY;
-                    canvas.requestPaint();
-                }
+            onPressed: (mouse) =>  {
+                           if(map_currentState === "map_drawPath" && canvas.enablePainting)
+                           {
+                               if (canvas.startPointExecuted === false) {
+                                   // Dibuja línea desde el último punto guardado hasta el nuevo punto inicial
+                                   canvas.points = [{x: mapInfo.positionScreen.x, y: mapInfo.positionScreen.y}]
+                               } else {
+                                   // Si no hay último punto, inicia con el punto actual
+                                   canvas.points = [{x: mouseX, y: mouseY}]
+                               }
+                               canvas.requestPaint()
+                           }
+                           else{
+                               if (canvas.enablePainting) {
+                                   canvas.lastX = mouseX;
+                                   canvas.lastY = mouseY;
+                                   canvas.requestPaint();
+                               }
+                           }
+                       }
+            onPositionChanged: (mouse) => {
+                                   if(map_currentState === "map_drawPath" && canvas.enablePainting)
+                                   {
+                                       canvas.points.push({x: mouseX, y: mouseY})
+                                       mapInfo.addInfoImageOriginal(mouseX, mouseY)
+                                       canvas.requestPaint()
+                                   }
+                               }
+            onReleased: {
+                canvas.enablePainting = false;  // Desactiva la pintura cuando se suelta el clic
             }
         }
+
 
         function clear() {
             var ctx = getContext('2d');
             ctx.clearRect(0, 0, width, height);
-            canvas.requestPaint();
             lastX = -1;
             lastY = -1;
             circleDrawn = false;
@@ -245,15 +293,20 @@ Item {
                 mapInfo.setFinalPathPosition(0, 0);
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
             }
+            canvas.requestPaint();
         }
 
         function clear_internal() {
             var ctx = getContext('2d');
             ctx.clearRect(0, 0, width, height);
-            canvas.requestPaint();
             lastX = -1;
             lastY = -1;
             circleDrawn = false;
+            if (map_currentState === "map_drawPath")
+            {
+                canvas.points = []
+            }
+            canvas.requestPaint();
         }
     }
 }

@@ -111,8 +111,14 @@ void MapInfo::addInfoImageOriginal(const int &x, const int &y)
     int y_original = std::round((static_cast<double>(y) * m_imageSize.y) / m_screenSize.y);
 
     m_pixels.append(Pixel{x_original, y_original});
+    qDebug() << "x_original  " <<x_original <<" y_original  " << y_original;
 
     emit pixelsChanged();
+}
+
+void MapInfo::clearListPixels()
+{
+    m_pixels.clear();
 }
 
 
