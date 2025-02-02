@@ -2,11 +2,15 @@
 
 # Lista de archivos a compilar y ejecutar
 archivos=(
+    # "reducir_punto.cpp"
     # "bezier.cpp"
+    "bezier2.cpp"
     # "suavizarTrayectoriaChaikin.cpp"
+    # "chaikin.cpp"
     # "suavizarTrayectoriaKalman.cpp"
-    "suavizarTrayectoriaMediaMovil.cpp"
-    "trayectoria_corner_cutting.cpp"
+    # "suavizarTrayectoriaMediaMovil.cpp"
+    # "trayectoria_corner_cutting.cpp"
+    "corner_cutting.cpp"
 )
 
 # Compilar y ejecutar cada archivo
