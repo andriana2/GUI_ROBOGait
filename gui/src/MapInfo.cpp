@@ -1,7 +1,7 @@
 #include "../include/MapInfo.h"
 #include "include/ToJson.h"
 
-MapInfo::MapInfo(QObject *parent){ clearInfoImage();}
+MapInfo::MapInfo(QObject *parent) { clearInfoImage(); }
 
 void MapInfo::setClient(Cliente *cli)
 {
@@ -53,9 +53,9 @@ void MapInfo::setOriginalPosition(const int &x, const int &y)
     int x_original = std::round((static_cast<double>(x) * m_imageSize.x) / m_screenSize.x);
     int y_original = std::round((static_cast<double>(y) * m_imageSize.y) / m_screenSize.y);
 
-    if (m_originalPosition == Pixel{x_original,y_original})
+    if (m_originalPosition == Pixel{x_original, y_original})
         return;
-    m_originalPosition = Pixel{x_original,y_original};
+    m_originalPosition = Pixel{x_original, y_original};
     // qDebug() << "+++Map name: "<< m_mapName << " position x: " << x_original << " position y: " << y_original;
     emit originalPositionChanged();
 }
@@ -67,10 +67,10 @@ Pixel MapInfo::positionScreen() const
 
 void MapInfo::setPositionScreen(const int &x, const int &y)
 {
-    if (m_positionScreen == Pixel{x,y})
+    if (m_positionScreen == Pixel{x, y})
         return;
-    m_positionScreen = Pixel{x,y};
-    setOriginalPosition(x,y);
+    m_positionScreen = Pixel{x, y};
+    setOriginalPosition(x, y);
     emit positionScreenChanged();
 }
 
@@ -111,16 +111,15 @@ void MapInfo::addInfoImageOriginal(const int &x, const int &y)
     int y_original = std::round((static_cast<double>(y) * m_imageSize.y) / m_screenSize.y);
 
     m_pixels.append(Pixel{x_original, y_original});
-    qDebug() << "x_original  " <<x_original <<" y_original  " << y_original;
+    qDebug() << "x_original  " << x_original << " y_original  " << y_original;
 
-    emit pixelsChanged();
+    // emit pixelsChanged();
 }
 
 void MapInfo::clearListPixels()
 {
     m_pixels.clear();
 }
-
 
 QString MapInfo::imgSource() const
 {
@@ -165,9 +164,9 @@ void MapInfo::setFinalPathPosition(const int &x, const int &y)
     // qDebug() << "++++++++++++++"<< "x_original  " <<x_original <<" y_original  " << y_original ;
     // qDebug() << "--------------" << "x_original  " <<m_finalPathPosition.x <<" y_original  " << m_finalPathPosition.y ;
 
-    if (m_finalPathPosition == Pixel{x_original,y_original})
+    if (m_finalPathPosition == Pixel{x_original, y_original})
         return;
-    m_finalPathPosition = Pixel{x_original,y_original};
+    m_finalPathPosition = Pixel{x_original, y_original};
     // qDebug() << "x_original  " <<m_finalPathPosition.x <<" y_original  " << m_finalPathPosition.y ;
     emit finalPathPositionChanged();
 }
@@ -190,20 +189,23 @@ void MapInfo::clearInfoImage()
 bool MapInfo::checkPixelBlack(const int &x, const int &y)
 {
     QString base64Data = m_imgSource;
-    if (m_imgSource.startsWith("data:image/png;base64,")) {
+    if (m_imgSource.startsWith("data:image/png;base64,"))
+    {
         base64Data = m_imgSource.mid(QString("data:image/png;base64,").length());
     }
 
     // Decodificar la imagen de Base64
     QByteArray imageData = QByteArray::fromBase64(base64Data.toUtf8());
     QImage image;
-    if (!image.loadFromData(imageData)) {
+    if (!image.loadFromData(imageData))
+    {
         qWarning() << "No se pudo cargar la imagen de los datos base64.";
         return false;
     }
 
     // Verificar si las coordenadas están dentro del rango
-    if (x < 0 || x >= m_imageSize.y || y < 0 || y >= m_imageSize.y) {
+    if (x < 0 || x >= m_imageSize.y || y < 0 || y >= m_imageSize.y)
+    {
         qDebug() << "Las coordenadas están fuera del rango de la imagen.";
         return false;
     }
@@ -216,8 +218,6 @@ bool MapInfo::checkPixelBlack(const int &x, const int &y)
     return intensity == 0;
 }
 
-
-
 Pixel MapInfo::finalScreenPosition() const
 {
     return m_finalScreenPosition;
@@ -225,9 +225,101 @@ Pixel MapInfo::finalScreenPosition() const
 
 void MapInfo::setFinalScreenPosition(const int &x, const int &y)
 {
-    if (m_finalScreenPosition == Pixel{x,y})
+    if (m_finalScreenPosition == Pixel{x, y})
         return;
-    m_finalScreenPosition = Pixel{x,y};
-    setFinalPathPosition(x,y);
+    m_finalScreenPosition = Pixel{x, y};
+    setFinalPathPosition(x, y);
     emit finalScreenPositionChanged();
 }
+
+QVariantList MapInfo::getPixels()
+{
+    if(m_pixels.empty())
+        return QVariantList();
+
+    QList<Pixel> pixelListSubsampling = subsampling(m_pixels, 10);
+    QList<Pixel> pixelList = smoothBezierPath(pixelListSubsampling);
+    m_pixels = pixelList;
+    QVariantList points;
+
+
+    for (const Pixel &p : pixelList)
+    {
+        int x_original = std::round((static_cast<double>(p.x) * m_screenSize.x) / m_imageSize.x);
+        int y_original = std::round((static_cast<double>(p.y) * m_screenSize.y) / m_imageSize.y);
+        QVariantMap point;
+        point["x"] = x_original;
+        point["y"] = y_original;
+        points.append(point);
+    }
+    emit pixelsChanged();
+    qDebug() << "PASO POR GETpIXELS";
+    return points;
+}
+
+Pixel MapInfo::cubicBezier(float t, const Pixel &p0, const Pixel &p1, const Pixel &p2, const Pixel &p3) const
+{
+    float u = 1 - t;
+    float tt = t * t;
+    float uu = u * u;
+    float uuu = uu * u;
+    float ttt = tt * t;
+
+    Pixel pixel;
+    pixel.x = uuu * p0.x + 3 * uu * t * p1.x + 3 * u * tt * p2.x + ttt * p3.x;
+    pixel.y = uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y;
+
+    return pixel;
+}
+
+QList<Pixel> MapInfo::smoothBezierPath(const QList<Pixel> &pixel) const
+{
+    QList<Pixel> result;
+    if (pixel.size() < 4)
+        return pixel; // Si hay menos de 4 puntos, devolver la lista original
+
+    for (int i = 0; i < pixel.size() - 3; i += 3)
+    {
+        for (float t = 0; t <= 1; t += 0.05)
+        {
+            result.append(cubicBezier(t, pixel[i], pixel[i + 1], pixel[i + 2], pixel[i + 3]));
+        }
+    }
+
+    // Asegurar que el último punto siempre se incluya
+    if (result.last().x != pixel.last().x || result.last().y != pixel.last().y)
+    {
+        result.append(pixel.last());
+    }
+
+    return result;
+}
+
+
+QList<Pixel> MapInfo::subsampling(const QList<Pixel> &pixel, double umbral) const
+{
+    QList<Pixel> result;
+    if (pixel.isEmpty())
+        return result;
+
+    result.append(m_originalPosition);
+    result.append(pixel.first()); // Agregar el primer punto
+
+    for (int i = 1; i < pixel.size(); ++i)
+    {
+        double distancia = std::hypot(pixel[i].x - result.last().x, pixel[i].y - result.last().y);
+        if (distancia > umbral)
+        {
+            result.append(pixel[i]);
+        }
+    }
+
+    // Asegurar que el último punto siempre se incluya
+    if (result.last().x != pixel.last().x || result.last().y != pixel.last().y)
+    {
+        result.append(pixel.last());
+    }
+
+    return result;
+}
+

@@ -89,6 +89,17 @@ public:
     Pixel finalScreenPosition() const;
     Q_INVOKABLE void setFinalScreenPosition(const int &x, const int &y);
 
+    Q_INVOKABLE QVariantList getPixels();
+
+    Pixel cubicBezier(float t, const Pixel& p0, const Pixel& p1, const Pixel& p2, const Pixel& p3) const;
+
+    QList<Pixel> smoothBezierPath(const QList<Pixel> &pixel) const;
+
+    QList<Pixel> subsampling(const QList<Pixel> &pixel, double umbral) const;
+
+
+
+
 signals:
     void mapNameChanged();
     void orientationChanged();

@@ -90,10 +90,6 @@ Item {
             function onFinalPathOrientationChanged() {
                 canvas.requestPaint();
             }
-            // function onPixelsChanged() {
-            //     console.log("onPixelsChanged: Actualizando camino...");
-            //     updatePath();
-            // }
         }
 
         function drawAndValidateImage(x, y, orientation) {

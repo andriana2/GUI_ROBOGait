@@ -68,6 +68,12 @@ MapPageForm {
     mapPageForm_boxImages.onBif_check_pressed: {
         if (state === "selectAction")
             mapPage.state = "mp_goalPosePosition"
+        if (state === "mp_drawPath")
+        {
+            console.log("Le he dado a check pressed")
+            mp_map.checkPath = true
+            mp_map.canvas.updatePath()
+        }
     }
 
     mapPageForm_boxImages.onBif_ok_pressed: {
@@ -89,6 +95,7 @@ MapPageForm {
             mp_map.canvas.clear_internal()
             mapInfo.clearListPixels()
             mp_map.canvas.enablePainting = true
+            mp_map.checkPath = false
         }
     }
 
