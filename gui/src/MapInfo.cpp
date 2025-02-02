@@ -253,7 +253,6 @@ QVariantList MapInfo::getPixels()
         points.append(point);
     }
     emit pixelsChanged();
-    qDebug() << "PASO POR GETpIXELS";
     return points;
 }
 
