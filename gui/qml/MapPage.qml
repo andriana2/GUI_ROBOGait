@@ -5,10 +5,10 @@ MapPageForm {
 
     id:mapPage
     state: "mp_initialPosition"
-    signal mapPage_clear_pressed()
-    signal mapPage_ok_pressed()
-    signal mapPage_check_pressed()
-    signal mapPage_edit_pressed()
+    // signal mapPage_clear_pressed()
+    // signal mapPage_draw_path_pressed()
+    // signal mapPage_check_pressed()
+    // signal mapPage_edit_pressed()
 
     ErrorRectangle {
         id: errorPopup
@@ -68,7 +68,7 @@ MapPageForm {
     mapPageForm_boxImages.onBif_check_pressed: {
         if (state === "selectAction")
             mapPage.state = "mp_goalPosePosition"
-        if (state === "mp_drawPath")
+        else if (state === "mp_drawPath")
         {
             console.log("Le he dado a check pressed")
             mp_map.checkPath = true
@@ -76,9 +76,26 @@ MapPageForm {
         }
     }
 
-    mapPageForm_boxImages.onBif_ok_pressed: {
+    mapPageForm_boxImages.onBif_draw_path_pressed: {
         if (state === "selectAction")
             mapPage.state = "mp_drawPath"
+
+    }
+
+    mapPageForm_boxImages.onBif_check_black_pressed: {
+        if (state === "mp_drawPath")
+        {
+            if(mapInfo.checkPathBlack())
+            {
+                errorPopup.open()
+                console.log("Le he dado a check black pressed")
+            }
+            else
+            {
+                console.log("TODO BIEN")
+            }
+        }
+
     }
 
 

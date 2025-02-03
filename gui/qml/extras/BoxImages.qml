@@ -4,8 +4,9 @@ BoxImagesForm {
     id: boxImages
     state: "bi_draw_robot"
     signal bif_clear_pressed()
-    signal bif_ok_pressed()
+    signal bif_draw_path_pressed()
     signal bif_check_pressed()
+    signal bif_check_black_pressed()
     signal bif_edit_pressed()
 
 
@@ -24,8 +25,11 @@ BoxImagesForm {
     bif_edit.onClicked: {
         boxImages.bif_edit_pressed()
     }
-    bif_ok.onClicked: {
-        boxImages.bif_ok_pressed()
+    bif_draw_path.onClicked: {
+        boxImages.bif_draw_path_pressed()
+    }
+    bif_check_black.onClicked: {
+        boxImages.bif_check_black_pressed()
     }
 
     states: [
@@ -40,7 +44,7 @@ BoxImagesForm {
                 enabled: false
             }
             PropertyChanges {
-                target: bif_ok
+                target: bif_draw_path
                 visible: false
                 enabled: false
             }
@@ -53,6 +57,11 @@ BoxImagesForm {
                 target: bif_edit
                 visible: true
                 enabled: true
+            }
+            PropertyChanges {
+                target: bif_check_black
+                visible: false
+                enabled: false
             }
             PropertyChanges { target: boxImages; image_source_edit: "../../images/pencil-solid.svg" }
             PropertyChanges { target: boxImages; image_source_clear: "../../images/eraser-solid.svg" }
@@ -68,7 +77,7 @@ BoxImagesForm {
                 enabled: false
             }
             PropertyChanges {
-                target: bif_ok
+                target: bif_draw_path
                 visible: false
                 enabled: false
             }
@@ -79,6 +88,11 @@ BoxImagesForm {
             }
             PropertyChanges {
                 target: bif_edit
+                visible: false
+                enabled: false
+            }
+            PropertyChanges {
+                target: bif_check_black
                 visible: false
                 enabled: false
             }
@@ -98,7 +112,7 @@ BoxImagesForm {
                 anchors.horizontalCenterOffset: -90
             }
             PropertyChanges {
-                target: bif_ok
+                target: bif_draw_path
                 visible: true
                 enabled: true
                 width: 120
@@ -116,8 +130,13 @@ BoxImagesForm {
                 visible: false
                 enabled: false
             }
+            PropertyChanges {
+                target: bif_check_black
+                visible: false
+                enabled: false
+            }
             PropertyChanges { target: boxImages; image_source_check: "../../images/map-pin-solid.svg" }
-            PropertyChanges { target: boxImages; image_source_ok: "../../images/wheel.svg" }
+            PropertyChanges { target: boxImages; image_source_draw_path: "../../images/wheel.svg" }
         },
         State {
             name: "bi_draw_path"
@@ -130,11 +149,16 @@ BoxImagesForm {
                 enabled: true
             }
             PropertyChanges {
-                target: bif_ok
+                target: bif_check_black
                 visible: true
                 enabled: true
-                anchors.verticalCenterOffset: -200
-                anchors.horizontalCenterOffset: -190
+                anchors.verticalCenterOffset: 50
+                anchors.horizontalCenterOffset: -100
+            }
+            PropertyChanges {
+                target: bif_draw_path
+                visible: false
+                enabled: false
             }
             PropertyChanges {
                 target: bif_clear
@@ -147,7 +171,7 @@ BoxImagesForm {
                 enabled: true
             }
             PropertyChanges { target: boxImages; image_source_check: "../../images/check-solid.svg" }
-            PropertyChanges { target: boxImages; image_source_ok: "../../images/wheel.svg" }
+            PropertyChanges { target: boxImages; image_source_check_black: "../../images/file-arrow-down-solid.svg" }
             PropertyChanges { target: boxImages; image_source_clear: "../../images/eraser-solid.svg" }
             PropertyChanges { target: boxImages; image_source_edit: "../../images/pencil-solid.svg" }
         }

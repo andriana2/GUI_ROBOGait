@@ -234,14 +234,13 @@ void MapInfo::setFinalScreenPosition(const int &x, const int &y)
 
 QVariantList MapInfo::getPixels()
 {
-    if(m_pixels.empty())
+    if (m_pixels.empty())
         return QVariantList();
 
     QList<Pixel> pixelListSubsampling = subsampling(m_pixels, 10);
     QList<Pixel> pixelList = smoothBezierPath(pixelListSubsampling);
     m_pixels = pixelList;
     QVariantList points;
-
 
     for (const Pixel &p : pixelList)
     {
@@ -294,7 +293,6 @@ QList<Pixel> MapInfo::smoothBezierPath(const QList<Pixel> &pixel) const
     return result;
 }
 
-
 QList<Pixel> MapInfo::subsampling(const QList<Pixel> &pixel, double umbral) const
 {
     QList<Pixel> result;
@@ -322,3 +320,104 @@ QList<Pixel> MapInfo::subsampling(const QList<Pixel> &pixel, double umbral) cons
     return result;
 }
 
+bool MapInfo::isBlack(const cv::Mat &image, cv::Point point)
+{
+    if (point.x >= 0 && point.x < image.cols && point.y >= 0 && point.y < image.rows)
+    {
+        return image.at<uchar>(point) == 0; // Black in a binary image is 0
+    }
+    return false;
+}
+
+std::vector<cv::Point> MapInfo::getLinePixels(cv::Point p1, cv::Point p2)
+{
+    std::vector<cv::Point> points;
+    cv::LineIterator it(cv::Mat(), p1, p2, 8);
+    for (int i = 0; i < it.count; i++, ++it)
+    {
+        points.push_back(it.pos());
+    }
+    return points;
+}
+
+bool MapInfo::linePassesThroughBlack(const cv::Mat &image, cv::Point p1, cv::Point p2)
+{
+    std::vector<cv::Point> pixels = getLinePixels(p1, p2);
+    for (const cv::Point &p : pixels)
+    {
+        if (isBlack(image, p))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+cv::Mat MapInfo::base64ToMat(const QString &base64Data)
+{
+    // Remove Base64 prefix if present
+    QString data = base64Data;
+    if (data.startsWith("data:image/png;base64,"))
+    {
+        data = data.mid(QString("data:image/png;base64,").length());
+    }
+
+    // Decode Base64 to QByteArray
+    QByteArray byteArray = QByteArray::fromBase64(data.toUtf8());
+
+    // Convert QByteArray to cv::Mat using OpenCV
+    std::vector<uchar> buffer(byteArray.begin(), byteArray.end());
+    cv::Mat image = cv::imdecode(buffer, cv::IMREAD_COLOR);
+
+    if (image.empty())
+    {
+        qDebug() << "Failed to decode Base64 image.";
+    }
+    else
+    {
+        qDebug() << "Image decoded successfully: " << image.cols << "x" << image.rows;
+    }
+
+    return image;
+}
+
+bool MapInfo::checkPathBlack()
+{
+    std::vector<cv::Point> trajectory;
+    for (const Pixel &p : m_pixels)
+    {
+        trajectory.emplace_back(p.x, p.y);
+    }
+
+    QString base64Data = m_imgSource;
+    if (m_imgSource.startsWith("data:image/png;base64,"))
+    {
+        base64Data = m_imgSource.mid(QString("data:image/png;base64,").length());
+    }
+    cv::Mat image = base64ToMat(base64Data);
+    if (image.empty())
+    {
+        std::cerr << "Error loading the image" << std::endl;
+        return -1;
+    }
+
+    cv::threshold(image, image, 128, 255, cv::THRESH_BINARY);
+
+    for (const cv::Point &p : trajectory) {
+        if (isBlack(image, p)) {
+            std::cout << "Point (" << p.x << "," << p.y << ") is in a black area." << std::endl;
+            return true;
+        }
+    }
+
+    // Check if the lines pass through a black area
+    for (size_t i = 0; i < trajectory.size() - 1; i++) {
+        if (linePassesThroughBlack(image, trajectory[i], trajectory[i + 1])) {
+            std::cout << "The line between (" << trajectory[i].x << "," << trajectory[i].y
+                      << ") and (" << trajectory[i + 1].x << "," << trajectory[i + 1].y
+                      << ") passes through a black area." << std::endl;
+            return true;
+        }
+        return false;
+    }
+}

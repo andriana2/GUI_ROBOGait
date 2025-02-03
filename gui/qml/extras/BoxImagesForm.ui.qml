@@ -7,14 +7,16 @@ Item {
     height: 200
 
     property alias bif_check: bif_check
-    property alias bif_ok: bif_ok
+    property alias bif_draw_path: bif_draw_path
     property alias bif_clear: bif_clear
     property alias bif_edit: bif_edit
+    property alias bif_check_black: bif_check_black
 
     property string image_source_edit
     property string image_source_clear
-    property string image_source_ok
+    property string image_source_draw_path
     property string image_source_check
+    property string image_source_check_black
 
     Button {
         id: bif_clear
@@ -44,13 +46,13 @@ Item {
     }
 
     Button {
-        id: bif_ok
+        id: bif_draw_path
         width: 70
         height: 70
         anchors.verticalCenterOffset: -50
         anchors.horizontalCenter: parent.horizontalCenter
         background: Image {
-            source: boxImageForm.image_source_ok
+            source: boxImageForm.image_source_draw_path
             fillMode: Image.PreserveAspectFit
         }
     }
@@ -64,6 +66,19 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         background: Image {
             source: boxImageForm.image_source_check
+            fillMode: Image.PreserveAspectFit
+        }
+    }
+
+    Button {
+        id: bif_check_black
+        width: 70
+        height: 70
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: 50
+        anchors.horizontalCenter: parent.horizontalCenter
+        background: Image {
+            source: boxImageForm.image_source_check_black
             fillMode: Image.PreserveAspectFit
         }
     }

@@ -19,6 +19,10 @@
 
 #include <QTimer>
 
+#include <opencv2/opencv.hpp>
+#include <vector>
+#include <iostream>
+
 #include "cliente.h"
 #include "StringHandler.h"
 #include "utils.h"
@@ -97,7 +101,11 @@ public:
 
     QList<Pixel> subsampling(const QList<Pixel> &pixel, double umbral) const;
 
-
+    bool isBlack(const cv::Mat &image, cv::Point point);
+    std::vector<cv::Point> getLinePixels(cv::Point p1, cv::Point p2);
+    bool linePassesThroughBlack(const cv::Mat &image, cv::Point p1, cv::Point p2);
+    cv::Mat base64ToMat(const QString &base64);
+    Q_INVOKABLE bool checkPathBlack();
 
 
 signals:
