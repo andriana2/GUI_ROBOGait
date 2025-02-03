@@ -316,15 +316,17 @@ QList<Pixel> MapInfo::subsampling(const QList<Pixel> &pixel, double umbral) cons
     {
         result.append(pixel.last());
     }
-
     return result;
 }
 
-bool MapInfo::isBlack(const cv::Mat &image, cv::Point point)
+bool MapInfo::isBlack(const QImage &image, cv::Point point)
 {
-    if (point.x >= 0 && point.x < image.cols && point.y >= 0 && point.y < image.rows)
+    if (point.x >= 0 && point.x < m_imageSize.x && point.y >= 0 && point.y < m_imageSize.y)
     {
-        return image.at<uchar>(point) == 0; // Black in a binary image is 0
+        QColor pixelColor = image.pixelColor(point.x, point.y);
+
+        int intensity = pixelColor.red(); // Black in a binary image is 0
+        return intensity == 0;
     }
     return false;
 }
@@ -340,7 +342,7 @@ std::vector<cv::Point> MapInfo::getLinePixels(cv::Point p1, cv::Point p2)
     return points;
 }
 
-bool MapInfo::linePassesThroughBlack(const cv::Mat &image, cv::Point p1, cv::Point p2)
+bool MapInfo::linePassesThroughBlack(const QImage &image, cv::Point p1, cv::Point p2)
 {
     std::vector<cv::Point> pixels = getLinePixels(p1, p2);
     for (const cv::Point &p : pixels)
@@ -390,34 +392,69 @@ bool MapInfo::checkPathBlack()
     }
 
     QString base64Data = m_imgSource;
-    if (m_imgSource.startsWith("data:image/png;base64,"))
+    if (base64Data.startsWith("data:image/png;base64,"))
     {
-        base64Data = m_imgSource.mid(QString("data:image/png;base64,").length());
-    }
-    cv::Mat image = base64ToMat(base64Data);
-    if (image.empty())
-    {
-        std::cerr << "Error loading the image" << std::endl;
-        return -1;
+        base64Data = base64Data.mid(QString("data:image/png;base64,").length());
     }
 
-    cv::threshold(image, image, 128, 255, cv::THRESH_BINARY);
+    QByteArray imageData = QByteArray::fromBase64(base64Data.toUtf8());
+    QImage image;
+    if (!image.loadFromData(imageData))
+    {
+        qWarning() << "No se pudo cargar la imagen de los datos base64.";
+        return false;
+    }
+
+    // Convertir base64 a cv::Mat
+    // cv::Mat image = base64ToMat(base64Data);
+    // if (image.empty())
+    // {
+    //     std::cerr << "Error loading the image" << std::endl;
+    //     return false;
+    // }
+
+    // Convertir la imagen a escala de grises y binarizarla
+    // cv::threshold(image, image, 128, 255, cv::THRESH_BINARY);
+
+    bool foundBlack = false;
 
     for (const cv::Point &p : trajectory) {
         if (isBlack(image, p)) {
             std::cout << "Point (" << p.x << "," << p.y << ") is in a black area." << std::endl;
-            return true;
+
+            // Dibujar un punto rojo en la imagen original
+            cv::Mat imgColor = base64ToMat(base64Data); // Recargar imagen a color
+            cv::circle(imgColor, p, 5, cv::Scalar(0, 0, 255), -1); // Rojo (BGR: 0,0,255)
+
+            // Guardar la imagen con la marca
+            cv::imwrite("/home/andri/Desktop/marked_image.png", imgColor);
+
+            foundBlack = true;
+            break; // Si solo queremos marcar el primer punto negro encontrado
         }
     }
 
-    // Check if the lines pass through a black area
+    // Verificar si alguna línea pasa por un área negra
     for (size_t i = 0; i < trajectory.size() - 1; i++) {
+        
         if (linePassesThroughBlack(image, trajectory[i], trajectory[i + 1])) {
             std::cout << "The line between (" << trajectory[i].x << "," << trajectory[i].y
                       << ") and (" << trajectory[i + 1].x << "," << trajectory[i + 1].y
                       << ") passes through a black area." << std::endl;
-            return true;
+            
+            // Dibujar un punto rojo en el centro de la línea
+            cv::Mat imgColor = base64ToMat(base64Data); // Recargar imagen a color
+            cv::Point midPoint = (trajectory[i] + trajectory[i + 1]) / 2;
+            cv::circle(imgColor, midPoint, 5, cv::Scalar(0, 0, 255), -1);
+
+            // Guardar la imagen con la marca
+            cv::imwrite("/home/andri/Desktop/marked_image.png", imgColor);
+
+            foundBlack = true;
+            break;
         }
-        return false;
     }
+
+    return foundBlack;
 }
+

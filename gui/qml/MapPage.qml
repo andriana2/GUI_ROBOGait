@@ -88,7 +88,6 @@ MapPageForm {
             if(mapInfo.checkPathBlack())
             {
                 errorPopup.open()
-                console.log("Le he dado a check black pressed")
             }
             else
             {
