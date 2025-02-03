@@ -8,7 +8,7 @@ NodeManager::NodeManager(rclcpp::Node::SharedPtr node_ptr) : processController()
 
 void NodeManager::create_publisher(Target const &target)
 {
-#if EN_CASA == 0
+#if !EN_CASA
     if (target == Joystick_Position)
     {
         if (!cmd_vel_publisher_)
@@ -51,7 +51,7 @@ void NodeManager::create_publisher(Target const &target)
     }
     else if (target == Waypoint_Follower)
     {
-        if (goal_pose_launch_file == false)
+        if (!goal_pose_launch_file)
         {
             processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, NAV2_BRINGUP_LAUNCH);
             goal_pose_launch_file = true;
@@ -77,7 +77,7 @@ void NodeManager::create_publisher(Target const &target)
 
 void NodeManager::close_publisher(Target const &target)
 {
-#if EN_CASA == 0
+#if !EN_CASA
     if (target == Joystick_Position)
     {
         if (!cmd_vel_publisher_)
@@ -241,3 +241,5 @@ void NodeManager::execute_position(float const &linear, float const &angular)
         std::cout << "valores publicados linear: " << linear << " angular: " << angular << std::endl;
     }
 }
+
+
