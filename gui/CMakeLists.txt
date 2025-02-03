@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Network)
-find_package(OpenCV REQUIRED)
+# find_package(OpenCV REQUIRED)
 
 set(qml_singletons
     qml/extras/ConstantVariables.qml

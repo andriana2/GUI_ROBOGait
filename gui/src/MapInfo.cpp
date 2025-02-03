@@ -319,7 +319,7 @@ QList<Pixel> MapInfo::subsampling(const QList<Pixel> &pixel, double umbral) cons
     return result;
 }
 
-bool MapInfo::isBlack(const QImage &image, cv::Point point)
+bool MapInfo::isBlack(const QImage &image, Pixel point)
 {
     if (point.x >= 0 && point.x < m_imageSize.x && point.y >= 0 && point.y < m_imageSize.y)
     {
@@ -331,21 +331,37 @@ bool MapInfo::isBlack(const QImage &image, cv::Point point)
     return false;
 }
 
-std::vector<cv::Point> MapInfo::getLinePixels(cv::Point p1, cv::Point p2)
+std::vector<Pixel> MapInfo::getLinePixels(Pixel p1, Pixel p2)
 {
-    std::vector<cv::Point> points;
-    cv::LineIterator it(cv::Mat(), p1, p2, 8);
-    for (int i = 0; i < it.count; i++, ++it)
+    std::vector<Pixel> points;
+    int dx = std::abs(p2.x - p1.x), sx = p1.x < p2.x ? 1 : -1;
+    int dy = -std::abs(p2.y - p1.y), sy = p1.y < p2.y ? 1 : -1;
+    int err = dx + dy, e2;
+
+    while (true)
     {
-        points.push_back(it.pos());
+        points.push_back(p1);
+        if (p1.x == p2.x && p1.y == p2.y)
+            break;
+        e2 = 2 * err;
+        if (e2 >= dy)
+        {
+            err += dy;
+            p1.x += sx;
+        }
+        if (e2 <= dx)
+        {
+            err += dx;
+            p1.y += sy;
+        }
     }
     return points;
 }
 
-bool MapInfo::linePassesThroughBlack(const QImage &image, cv::Point p1, cv::Point p2)
+bool MapInfo::linePassesThroughBlack(const QImage &image, Pixel p1, Pixel p2)
 {
-    std::vector<cv::Point> pixels = getLinePixels(p1, p2);
-    for (const cv::Point &p : pixels)
+    std::vector<Pixel> pixels = getLinePixels(p1, p2);
+    for (const Pixel &p : pixels)
     {
         if (isBlack(image, p))
         {
@@ -355,41 +371,9 @@ bool MapInfo::linePassesThroughBlack(const QImage &image, cv::Point p1, cv::Poin
     return false;
 }
 
-cv::Mat MapInfo::base64ToMat(const QString &base64Data)
-{
-    // Remove Base64 prefix if present
-    QString data = base64Data;
-    if (data.startsWith("data:image/png;base64,"))
-    {
-        data = data.mid(QString("data:image/png;base64,").length());
-    }
-
-    // Decode Base64 to QByteArray
-    QByteArray byteArray = QByteArray::fromBase64(data.toUtf8());
-
-    // Convert QByteArray to cv::Mat using OpenCV
-    std::vector<uchar> buffer(byteArray.begin(), byteArray.end());
-    cv::Mat image = cv::imdecode(buffer, cv::IMREAD_COLOR);
-
-    if (image.empty())
-    {
-        qDebug() << "Failed to decode Base64 image.";
-    }
-    else
-    {
-        qDebug() << "Image decoded successfully: " << image.cols << "x" << image.rows;
-    }
-
-    return image;
-}
-
 bool MapInfo::checkPathBlack()
 {
-    std::vector<cv::Point> trajectory;
-    for (const Pixel &p : m_pixels)
-    {
-        trajectory.emplace_back(p.x, p.y);
-    }
+    QList<Pixel> trajectory = m_pixels;
 
     QString base64Data = m_imgSource;
     if (base64Data.startsWith("data:image/png;base64,"))
@@ -405,53 +389,17 @@ bool MapInfo::checkPathBlack()
         return false;
     }
 
-    // Convertir base64 a cv::Mat
-    // cv::Mat image = base64ToMat(base64Data);
-    // if (image.empty())
-    // {
-    //     std::cerr << "Error loading the image" << std::endl;
-    //     return false;
-    // }
-
-    // Convertir la imagen a escala de grises y binarizarla
-    // cv::threshold(image, image, 128, 255, cv::THRESH_BINARY);
-
     bool foundBlack = false;
 
-    for (const cv::Point &p : trajectory) {
+    for (const Pixel &p : trajectory) {
         if (isBlack(image, p)) {
-            std::cout << "Point (" << p.x << "," << p.y << ") is in a black area." << std::endl;
-
-            // Dibujar un punto rojo en la imagen original
-            cv::Mat imgColor = base64ToMat(base64Data); // Recargar imagen a color
-            cv::circle(imgColor, p, 5, cv::Scalar(0, 0, 255), -1); // Rojo (BGR: 0,0,255)
-
-            // Guardar la imagen con la marca
-            cv::imwrite("/home/andri/Desktop/marked_image.png", imgColor);
-
             foundBlack = true;
-            break; // Si solo queremos marcar el primer punto negro encontrado
         }
     }
 
-    // Verificar si alguna línea pasa por un área negra
     for (size_t i = 0; i < trajectory.size() - 1; i++) {
-        
         if (linePassesThroughBlack(image, trajectory[i], trajectory[i + 1])) {
-            std::cout << "The line between (" << trajectory[i].x << "," << trajectory[i].y
-                      << ") and (" << trajectory[i + 1].x << "," << trajectory[i + 1].y
-                      << ") passes through a black area." << std::endl;
-            
-            // Dibujar un punto rojo en el centro de la línea
-            cv::Mat imgColor = base64ToMat(base64Data); // Recargar imagen a color
-            cv::Point midPoint = (trajectory[i] + trajectory[i + 1]) / 2;
-            cv::circle(imgColor, midPoint, 5, cv::Scalar(0, 0, 255), -1);
-
-            // Guardar la imagen con la marca
-            cv::imwrite("/home/andri/Desktop/marked_image.png", imgColor);
-
             foundBlack = true;
-            break;
         }
     }
 

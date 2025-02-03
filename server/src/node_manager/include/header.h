@@ -2,7 +2,7 @@
 #define HEADER_H
 
 
-#define EN_CASA 1
+#define EN_CASA 0
 enum Header {
     MSG,
     REQUEST_MSG,
@@ -34,7 +34,7 @@ struct FinalPosition
     float yaw;
 };
 
-#ifdef EN_CASA
+#if EN_CASA
 #define PATH2MAP "/home/andri/Desktop/gui_nuevo/gui_/server/maps" //casa
 #else
 #define PATH2MAP "/home/robogait/Desktop/gui_andri/gui/server/maps" // uni

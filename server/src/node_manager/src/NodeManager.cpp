@@ -139,7 +139,7 @@ void NodeManager::close_publisher(Target const &target)
 }
 
 // VERSION DE CUANDO ESTOY EN CASA
-#ifdef EN_CASA
+#if EN_CASA
 struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_yaml)
 {
     float x_robot = 0, y_robot = 0, yaw_robot = 0.0;

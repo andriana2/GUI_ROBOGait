@@ -9,7 +9,7 @@
 #include <QVector>
 #include <qobjectdefs.h>
 
-#define EN_CASA 1
+#define EN_CASA 0
 
 enum Header {
     MSG,
