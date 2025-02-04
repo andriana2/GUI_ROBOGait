@@ -117,4 +117,14 @@ namespace ToJson
         return QJsonDocument(jsonObj);
     }
 
+    QJsonDocument sendStateMenu(bool in)
+    {
+        QJsonObject jsonObj;
+        jsonObj["opt"] = headerToString(MSG);
+        jsonObj["target"] = targetToString(State_Menu);
+        jsonObj["in"] = in;
+        return QJsonDocument(jsonObj);
+
+    }
+
 } // namespace ToJson

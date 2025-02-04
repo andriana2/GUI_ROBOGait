@@ -126,12 +126,15 @@ void Servidor::handleRequestImg(const json &json_msg)
     if (json_msg.contains("target") && json_msg["target"] == targetToString(Request_Map_SLAM))
     {
         std::string path = PATH2MAP;
-        if (json_msg.contains("map_name") && json_msg["map_name"] != "")
+        if (json_msg.contains("map_name") && !json_msg["map_name"].empty())
         {
+            std::cout << "+++++++++++++++Mapa seleccionado: " << json_msg["map_name"] << std::endl;
             path += "/" + replaceSpaces(json_msg["map_name"]) + ".pgm";
             int width = 0, height = 0;
             getImageSize(path, width, height);
             sendMsg(toJson::sendInfoMap(json_msg["map_name"], width, height));
+            std::thread sendMapThread(&Servidor::sendImageMap, this, path, false);
+            sendMapThread.detach();
         }
         else
         {
@@ -141,9 +144,9 @@ void Servidor::handleRequestImg(const json &json_msg)
             // send robot position pixels
             sendMsg(toJson::sendRobotPositionPixel(fp.x_pixel, fp.y_pixel, fp.yaw));
             nodeManager.refresh_map();
+            std::thread sendMapThread(&Servidor::sendImageMap, this, path, true);
+            sendMapThread.detach();
         }
-        std::thread sendMapThread(&Servidor::sendImageMap, this, path);
-        sendMapThread.detach();
     }
     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Img_Map_Select))
     {
@@ -151,7 +154,7 @@ void Servidor::handleRequestImg(const json &json_msg)
         path += "/" + replaceSpaces(json_msg["map_name"]);
 
         // nodeManager.refresh_map(json_msg["map_name"]);
-        std::thread sendMapThread(&Servidor::sendImageMap, this, path);
+        std::thread sendMapThread(&Servidor::sendImageMap, this, path, false);
         sendMapThread.detach();
     }
 }
@@ -163,15 +166,15 @@ void Servidor::sendMsg(const json &json_msg)
     boost::asio::write(socket_, boost::asio::buffer(jsonStr));
 }
 
-void Servidor::sendImageMap(const std::string &name_map)
+void Servidor::sendImageMap(const std::string &name_map, bool img_map_SLAM)
 {
     try
     {
-        bool img_map_SLAM;
-        if (name_map.find("temporal") != std::string::npos)
-            img_map_SLAM = true;
-        else
-            img_map_SLAM = false;
+        // bool img_map_SLAM;
+        // if (name_map.find("temporal") != std::string::npos)
+        //     img_map_SLAM = true;
+        // else
+        //     img_map_SLAM = false;
         const std::size_t maxJsonSize = 2048; // Tamaño máximo por paquete
 
         // Leer imagen PGM usando OpenCV

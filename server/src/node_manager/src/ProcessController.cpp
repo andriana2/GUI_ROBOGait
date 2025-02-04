@@ -44,7 +44,7 @@ void ProcessController::startProcess(const std::string &name, const std::string 
         // Proceso hijo
         execvp(cArgs[0], cArgs.data());
         std::cerr << "ProcessController: Error al ejecutar el comando: " << command << std::endl;
-        std::exit(1);
+        _exit(1);
     }
     else if (pid < 0)
     {
@@ -66,11 +66,23 @@ void ProcessController::stopProcess(const std::string &name)
     if (it != processMap.end())
     {
         pid_t pid = it->second;
-        kill(pid, SIGINT); // Enviar señal para detener el proceso
+        kill(pid, SIGTERM); // Enviar señal para detener el proceso
 
         // Esperar a que el proceso termine
         int status;
-        waitpid(pid, &status, 0);
+        while (waitpid(pid, &status, 0) == -1) {
+            if (errno != EINTR) {
+                std::cerr << "ProcessController: Error al esperar el proceso \"" << name << "\".\n";
+                break;
+            }
+        }
+
+        // Verificar si el proceso sigue en ejecución y usar SIGKILL como respaldo
+        if (kill(pid, 0) == 0) {
+            kill(pid, SIGKILL);
+            waitpid(pid, &status, 0);
+        }
+
         std::cout << "ProcessController: Proceso \"" << name << "\" detenido (PID: " << pid << ").\n";
 
         // Eliminar el proceso del mapa
@@ -87,9 +99,16 @@ void ProcessController::stopAllProcesses()
 {
     for (const auto &[name, pid] : processMap)
     {
-        kill(pid, SIGINT);
+        kill(pid, SIGTERM);
         int status;
         waitpid(pid, &status, 0);
+
+        // Verificar si el proceso sigue en ejecución y usar SIGKILL como respaldo
+        if (kill(pid, 0) == 0) {
+            kill(pid, SIGKILL);
+            waitpid(pid, &status, 0);
+        }
+
         std::cout << "ProcessController: Proceso \"" << name << "\" detenido (PID: " << pid << ").\n";
     }
     processMap.clear();

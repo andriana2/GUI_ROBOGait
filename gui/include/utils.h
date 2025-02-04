@@ -26,6 +26,7 @@ enum Target {
     Img_Map_Path,
     Save_Map,
     State_Remote_Controlled,
+    State_Menu,
     Map_Name,
     Map_Info_Image_Size,
     Change_Map_Name,

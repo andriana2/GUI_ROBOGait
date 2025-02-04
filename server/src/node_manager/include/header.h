@@ -3,6 +3,7 @@
 
 
 #define EN_CASA 0
+#define ROBOT 0
 enum Header {
     MSG,
     REQUEST_MSG,
@@ -18,6 +19,7 @@ enum Target {
     Img_Map_Path,
     Save_Map,
     State_Remote_Controlled,
+    State_Menu,
     Map_Name,
     Map_Info_Image_Size,
     Change_Map_Name,
@@ -38,6 +40,11 @@ struct FinalPosition
 #define PATH2MAP "/home/andri/Desktop/gui_nuevo/gui_/server/maps" //casa
 #else
 #define PATH2MAP "/home/robogait/Desktop/gui_andri/gui/server/maps" // uni
+// #define SOURCE_GAZEBO ""bash -i -c 'source /usr/share/gazebo/setup.sh && echo \"Gazebo configurado\"'""
+#define START_ROBOT "ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py"
+#define NAME_START_ROBOT "turtlebot3_gazebo"
+// #else
+// #define START_ROBOT ""
 #endif
 
 // #define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f " + PATH2MAP + " "

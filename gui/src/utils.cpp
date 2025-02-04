@@ -142,6 +142,10 @@ Target stringToTarget(const QString &str)
     {
         return State_Remote_Controlled;
     }
+    else if (str == "State_Menu")
+    {
+        return State_Menu;
+    }
     else if (str == "Img_Map_Select")
     {
         return Img_Map_Select;
@@ -191,6 +195,8 @@ QString targetToString(Target target)
         return "Save_Map";
     case State_Remote_Controlled:
         return "State_Remote_Controlled";
+    case State_Menu:
+        return "State_Menu";
     case Map_Name:
         return "Map_Name";
     case Map_Info_Image_Size:

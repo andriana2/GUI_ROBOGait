@@ -491,3 +491,8 @@ void StringHandler::requestMapName()
 {
     cliente->sendMessage(ToJson::sendRequestMapName());
 }
+
+void StringHandler::menu_page(bool in)
+{
+    cliente->sendMessage(ToJson::sendStateMenu(in));
+}

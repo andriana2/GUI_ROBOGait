@@ -173,6 +173,9 @@ ApplicationFlowForm {
                 target:applicationFlow
                 previousState: "Home"
             }
+            StateChangeScript {
+                script: stringHandler.menu_page(0)
+            }
             PropertyChanges {
                 target: toolbar
                 backButton.opacity: 0
@@ -187,6 +190,9 @@ ApplicationFlowForm {
         },
         State {
             name: "menu_app"
+            StateChangeScript {
+                script: stringHandler.menu_page(1)
+            }
             PropertyChanges {
                 target:applicationFlow
                 previousState: "ip"

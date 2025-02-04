@@ -31,6 +31,11 @@ public:
 
     struct FinalPosition getPositionRobotPixel(std::string const &path_yaml);
 
+    void start_robot();
+    void stop_robot();
+
+    
+
 private:
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_publisher_;
     rclcpp::Client<interface_srv::srv::GetRobotPosition>::SharedPtr tf_service_client_;
@@ -45,6 +50,7 @@ private:
     bool slam_launch_file = false;
     bool goal_pose_launch_file = false;
     bool waypoint_follower_launch_file = false;
+    bool start_robot_launch_file = false;
 };
 
 #endif // NODEMANAGER_H

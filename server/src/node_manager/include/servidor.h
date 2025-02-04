@@ -60,7 +60,7 @@ private:
     // void handleMsgGoalPose(const json &json_msg);
 
     void sendMsg(const json &json_msg);
-    void sendImageMap(const std::string &name_map);
+    void sendImageMap(const std::string &name_map, bool img_map_SLAM);
 
     boost::asio::io_context io_context_;
     boost::asio::ip::tcp::acceptor acceptor_;

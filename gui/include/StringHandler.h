@@ -78,6 +78,8 @@ public:
     Q_INVOKABLE void loadData(const std::vector<std::string> &data);
     Q_INVOKABLE void requestMapName();
 
+    Q_INVOKABLE void menu_page(bool in);
+
 signals:
 
     void imageReceived(const QString &image);

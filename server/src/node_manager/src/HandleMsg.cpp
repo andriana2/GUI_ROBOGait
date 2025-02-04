@@ -16,6 +16,12 @@ void HandleMsg::handleMsgJson(const json &json_msg)
         SaveMap(json_msg);
     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Goal_Pose))
         GoalPose(json_msg);
+    else if (json_msg.contains("target") && json_msg["target"] == targetToString(State_Menu))
+        StateMenu(json_msg);
+    else if (json_msg.contains("target") && json_msg["target"] == targetToString(Waypoint_Follower))
+        WaypointFollower(json_msg);
+    else
+        std::cerr << "Error: Target no encontrado." << std::endl;
 }
 
 void HandleMsg::JoystickPosition(const json &json_msg)
@@ -89,5 +95,31 @@ void HandleMsg::SaveMap(const json &json_msg)
 
 void HandleMsg::GoalPose(const json &json_msg)
 {
+    // nodeManager.create_publisher(Goal_Pose);
+    // std::string path_yaml = PATH2MAP + "/" + json_msg["map_name"] + ".yaml";
+    // YAML::Node map_yaml = YAML::LoadFile(path_yaml);
+    // origin_x_ = map_yaml["origin"][0].as<double>();
+    // origin_y_ = map_yaml["origin"][1].as<double>();
+    // resolution_ = map_yaml["resolution"].as<double>();
+
     
+
+
+}
+
+void HandleMsg::WaypointFollower(const json &json_msg)
+{
+}
+
+void HandleMsg::StateMenu(const json &json_msg)
+{
+    // pri1("Hola");
+    if (json_msg["in"])
+    {
+        nodeManager.start_robot();
+    }
+    else
+    {
+        // nodeManager.stop_robot();
+    }
 }

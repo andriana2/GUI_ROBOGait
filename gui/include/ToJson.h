@@ -23,6 +23,9 @@ namespace ToJson
 
     QJsonDocument sendDeleteMap(const QString &map_name);
 
+    QJsonDocument sendStateMenu(bool in);
+
+
 }
 
 #endif // TOJSON_H

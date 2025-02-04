@@ -51,6 +51,8 @@ std::string targetToString(Target target)
         return "Save_Map";
     case State_Remote_Controlled:
         return "State_Remote_Controlled";
+    case State_Menu:
+        return "State_Menu";
     case Map_Name:
         return "Map_Name";
     case Map_Info_Image_Size:
@@ -82,6 +84,8 @@ Target stringToTarget(const std::string &str)
         return Save_Map;
     if (str == "State_Remote_Controlled")
         return State_Remote_Controlled;
+    if (str == "State_Menu")
+        return State_Menu;
     if (str == "Map_Name")
         return Map_Name;
     if (str == "Map_Info_Image_Size")
@@ -254,7 +258,7 @@ void getImageSize(std::string const &path, int &width_output, int &height_output
     std::ifstream file(path); // Cambia "imagen.pgm" por la ruta de tu archivo
     if (!file.is_open())
     {
-        std::cerr << "Error al abrir el archivo: "<< path << std::endl;
+        std::cerr << "Error al abrir el archivo: " << path << std::endl;
         exit(1);
     }
 
@@ -278,11 +282,13 @@ void getImageSize(std::string const &path, int &width_output, int &height_output
     file.close();
 }
 
-std::vector<std::string> splitCommand(const std::string& command) {
+std::vector<std::string> splitCommand(const std::string &command)
+{
     std::vector<std::string> args;
     std::istringstream stream(command);
     std::string arg;
-    while (stream >> arg) {
+    while (stream >> arg)
+    {
         args.push_back(arg);
     }
     return args;

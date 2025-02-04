@@ -9,6 +9,7 @@ NodeManager::NodeManager(rclcpp::Node::SharedPtr node_ptr) : processController()
 void NodeManager::create_publisher(Target const &target)
 {
 #if !EN_CASA
+    pri1("Estoy en create_publisher");
     if (target == Joystick_Position)
     {
         if (!cmd_vel_publisher_)
@@ -242,4 +243,21 @@ void NodeManager::execute_position(float const &linear, float const &angular)
     }
 }
 
+void NodeManager::start_robot()
+{
+    if (!start_robot_launch_file)
+    {
+        pri1("Comienzo robot");
+        // processController.startProcess(START_ROBOT, NAME_START_ROBOT);
+        // start_robot_launch_file = true;
+    }
+}
 
+void NodeManager::stop_robot()
+{
+    if (start_robot_launch_file)
+    {
+        processController.stopProcess(NAME_START_ROBOT);
+        start_robot_launch_file = false;
+    }
+}
