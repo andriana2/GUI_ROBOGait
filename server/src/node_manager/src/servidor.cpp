@@ -54,7 +54,7 @@ void Servidor::closeServer()
         // Cerrar el socket
         if (socket_.is_open())
         {
-            pri1("Estoy intentando cerrarme mucho");
+            pri1("Estoy intentando cerrarme");
             socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
             socket_.close();
         }

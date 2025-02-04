@@ -261,3 +261,56 @@ void NodeManager::stop_robot()
         start_robot_launch_file = false;
     }
 }
+
+void NodeManager::publish_initial_pose(double x, double y, double theta)
+{
+    // Crear el mensaje de tipo PoseWithCovarianceStamped
+    auto msg = geometry_msgs::msg::PoseWithCovarianceStamped();
+    msg.header.frame_id = "map"; // Referencia al marco del mapa
+
+    // Asignar la posición (x, y) y orientación (theta)
+    msg.pose.pose.position.x = x;
+    msg.pose.pose.position.y = y;
+    msg.pose.pose.position.z = 0.0; // Generalmente, el robot opera en un plano 2D
+
+    // Convertir theta (en radianes) a cuaternión
+    msg.pose.pose.orientation = create_quaternion_from_yaw(theta);
+
+    // Configurar la matriz de covarianza
+    for (int i = 0; i < 36; i++)
+    {
+        msg.pose.covariance[i] = 0.0;
+    }
+    msg.pose.covariance[0] = 0.05;  // Varianza en x (50 cm)
+    msg.pose.covariance[7] = 0.05;  // Varianza en y (50 cm)
+    msg.pose.covariance[35] = 0.15; // Varianza en yaw (15 grados)
+
+    // Publicar el mensaje
+    initial_pose_publisher_->publish(msg);
+    RCLCPP_INFO(node_manager->get_logger(), "Pose inicial publicada: x=%.2f, y=%.2f, theta=%.2f", x, y, theta);
+}
+
+geometry_msgs::msg::Quaternion NodeManager::create_quaternion_from_yaw(double yaw)
+{
+    geometry_msgs::msg::Quaternion quaternion;
+    quaternion.x = 0.0;
+    quaternion.y = 0.0;
+    quaternion.z = sin(yaw / 2.0);
+    quaternion.w = cos(yaw / 2.0);
+    return quaternion;
+}
+
+void NodeManager::publish_goal_pose(double x, double y, double theta)
+{
+    geometry_msgs::msg::Quaternion orientation = create_quaternion_from_yaw(theta);
+    geometry_msgs::msg::PoseStamped goal_pose;
+    goal_pose.header.frame_id = "map";                 // Usualmente 'map' o 'odom'
+    goal_pose.pose.position.x = x;                     // Establecer la posición x
+    goal_pose.pose.position.y = y;                     // Establecer la posición y
+    goal_pose.pose.position.z = 0.0;                   // Z usualmente es 0.0 para el plano 2D
+    goal_pose.pose.orientation = orientation;          // Establecer la orientación
+
+    // Publicar el mensaje
+    goal_pose_publisher_->publish(goal_pose);
+    RCLCPP_INFO(node_manager->get_logger(), "Publicando goal_pose: (x: %.2f, y: %.2f, theta: %.2f)", x, y, theta);
+}

@@ -36,6 +36,12 @@ struct FinalPosition
     float yaw;
 };
 
+struct RealPositionMeters
+{
+    float x;
+    float y;
+};
+
 #if EN_CASA
 #define PATH2MAP "/home/andri/Desktop/gui_nuevo/gui_/server/maps" //casa
 #else

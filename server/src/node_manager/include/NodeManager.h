@@ -14,7 +14,6 @@
 #include "rclcpp_action/rclcpp_action.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 
-
 #include <yaml-cpp/yaml.h> // leer el archivo yaml
 
 class NodeManager
@@ -31,10 +30,11 @@ public:
 
     struct FinalPosition getPositionRobotPixel(std::string const &path_yaml);
 
+    void publish_initial_pose(double x, double y, double theta);
+    void publish_goal_pose(double x, double y, double theta);
+
     void start_robot();
     void stop_robot();
-
-    
 
 private:
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_publisher_;
@@ -43,6 +43,7 @@ private:
     rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_pose_publisher_;
     rclcpp_action::Client<nav2_msgs::action::FollowWaypoints>::SharedPtr waypoint_follower_client_;
 
+    geometry_msgs::msg::Quaternion create_quaternion_from_yaw(double yaw);
 
     rclcpp::Node::SharedPtr node_manager;
     ProcessController processController;

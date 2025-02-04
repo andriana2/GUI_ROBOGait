@@ -293,3 +293,31 @@ std::vector<std::string> splitCommand(const std::string &command)
     }
     return args;
 }
+
+RealPositionMeters getRealPosition(const std::string &path_yaml, const int x_pixel, const int y_pixel)
+{
+    RealPositionMeters real_position;
+    try
+    {
+        YAML::Node config = YAML::LoadFile(path_yaml);
+
+        // Obtener la resolución
+        float resolution = config["resolution"].as<float>();
+        std::cout << "Resolución: " << resolution << std::endl;
+
+        // Obtener los valores de origen
+        auto origin = config["origin"];
+        float origin_x = origin[0].as<float>();
+        float origin_y = origin[1].as<float>();
+        std::cout << "Origen X: " << origin_x << ", Origen Y: " << origin_y << std::endl;
+
+        real_position.x = x_pixel * resolution + origin_x;
+        real_position.y = y_pixel * resolution + origin_y;
+        std::cout << "Real X: " << real_position.x << ", Real Y: " << real_position.y << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error al leer el archivo YAML: " << e.what() << std::endl;
+    }
+    return real_position;
+}

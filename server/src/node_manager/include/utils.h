@@ -14,6 +14,8 @@
 #include "header.h"
 
 #include <nlohmann/json.hpp>
+#include "yaml-cpp/yaml.h"
+
 
 using json = nlohmann::json;
 
@@ -42,5 +44,7 @@ std::vector<std::string> getMapName(std::string const &path);
 void getImageSize(std::string const &path, int &width_output, int &height_output);
 
 std::vector<std::string> splitCommand(const std::string& command);
+
+RealPositionMeters getRealPosition(const std::string &path_yaml, const int x_pixel, const int y_pixel);
 
 #endif // UTILS_H
