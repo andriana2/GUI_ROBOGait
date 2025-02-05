@@ -95,8 +95,11 @@ void HandleMsg::SaveMap(const json &json_msg)
 
 void HandleMsg::GoalPose(const json &json_msg)
 {
+    nodeManager.start_goal_pose(json_msg["map_name"].get<std::string>());
     nodeManager.create_publisher(Goal_Pose);
+    // std::cout << "JSON recibido: " << json_msg.dump(4) << std::endl;
     std::string path_yaml = PATH2MAP;
+
     path_yaml += "/" + json_msg["map_name"].get<std::string>() + ".yaml";
     RealPositionMeters initialpose = getRealPosition(path_yaml, json_msg["x_initialpose"], json_msg["y_initialpose"]);
     nodeManager.publish_initial_pose(initialpose.x, initialpose.y, json_msg["theta_initialpose"]);
@@ -106,12 +109,12 @@ void HandleMsg::GoalPose(const json &json_msg)
 
 void HandleMsg::WaypointFollower(const json &json_msg)
 {
+    nodeManager.start_waypoint_follower(json_msg["map_name"].get<std::string>());
     nodeManager.create_publisher(Goal_Pose);
     std::string path_yaml = PATH2MAP;
     path_yaml += "/" + json_msg["map_name"].get<std::string>() + ".yaml";
     RealPositionMeters initialpose = getRealPosition(path_yaml, json_msg["x_initialpose"], json_msg["y_initialpose"]);
     nodeManager.publish_initial_pose(initialpose.x, initialpose.y, json_msg["theta_initialpose"]);
-    
 }
 
 void HandleMsg::StateMenu(const json &json_msg)
@@ -120,6 +123,8 @@ void HandleMsg::StateMenu(const json &json_msg)
     if (json_msg["in"])
     {
         nodeManager.start_robot();
+        nodeManager.close_publisher(Goal_Pose);
+        nodeManager.close_publisher(Waypoint_Follower);
     }
     else
     {

@@ -25,6 +25,7 @@ void MapInfo::setMapName(const QString &newMapName)
 {
     if (m_mapName == newMapName)
         return;
+    clearInfoImage();
     cliente->sendMessage(ToJson::sendRequestMap(newMapName));
     m_mapName = newMapName;
     emit mapNameChanged();
@@ -56,7 +57,6 @@ void MapInfo::setOriginalPosition(const int &x, const int &y)
     if (m_originalPosition == Pixel{x_original, y_original})
         return;
     m_originalPosition = Pixel{x_original, y_original};
-    // qDebug() << "+++Map name: "<< m_mapName << " position x: " << x_original << " position y: " << y_original;
     emit originalPositionChanged();
 }
 
@@ -391,14 +391,18 @@ bool MapInfo::checkPathBlack()
 
     bool foundBlack = false;
 
-    for (const Pixel &p : trajectory) {
-        if (isBlack(image, p)) {
+    for (const Pixel &p : trajectory)
+    {
+        if (isBlack(image, p))
+        {
             foundBlack = true;
         }
     }
 
-    for (size_t i = 0; i < trajectory.size() - 1; i++) {
-        if (linePassesThroughBlack(image, trajectory[i], trajectory[i + 1])) {
+    for (size_t i = 0; i < trajectory.size() - 1; i++)
+    {
+        if (linePassesThroughBlack(image, trajectory[i], trajectory[i + 1]))
+        {
             foundBlack = true;
         }
     }
@@ -406,3 +410,7 @@ bool MapInfo::checkPathBlack()
     return foundBlack;
 }
 
+void MapInfo::sendGoalPose()
+{
+    cliente->sendMessage(ToJson::sendGoalPose(m_mapName, m_originalPosition.x, m_originalPosition.y, m_orientation, m_finalPathPosition.x, m_finalPathPosition.y, m_finalPathOrientation));
+}

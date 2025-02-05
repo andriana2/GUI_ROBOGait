@@ -63,6 +63,10 @@ std::string targetToString(Target target)
         return "Delete_Map";
     case Img_Map_Select:
         return "Img_Map_Select";
+    case Goal_Pose:
+        return "Goal_Pose";
+    case Waypoint_Follower:
+        return "Waypoint_Follower";
     default:
         return "UNKNOWN";
     }
@@ -96,6 +100,10 @@ Target stringToTarget(const std::string &str)
         return Delete_Map;
     if (str == "Img_Map_Select")
         return Img_Map_Select;
+    if (str == "Goal_Pose")
+        return Goal_Pose;
+    if (str == "Waypoint_Follower")
+        return Waypoint_Follower;
 
     throw std::invalid_argument("Invalid Target string: " + str);
 }

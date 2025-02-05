@@ -34,11 +34,6 @@ void NodeManager::create_publisher(Target const &target)
     }
     else if (target == Goal_Pose)
     {
-        if (goal_pose_launch_file == false)
-        {
-            processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, NAV2_BRINGUP_LAUNCH);
-            goal_pose_launch_file = true;
-        }
         if (!initial_pose_publisher_)
         {
             initial_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(INITIAL_POSE_TOPIC, 10);
@@ -313,4 +308,30 @@ void NodeManager::publish_goal_pose(double x, double y, double theta)
     // Publicar el mensaje
     goal_pose_publisher_->publish(goal_pose);
     RCLCPP_INFO(node_manager->get_logger(), "Publicando goal_pose: (x: %.2f, y: %.2f, theta: %.2f)", x, y, theta);
+}
+
+void NodeManager::start_goal_pose(std::string const &map_name)
+{
+    if (!goal_pose_launch_file)
+    {
+        std::string bringup = NAV2_BRINGUP_LAUNCH;
+        bringup += PATH2MAP;
+        bringup += "/" + map_name + ".yaml";
+        pri1("Start bring up GOAL POSE:" + bringup);
+        processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, bringup);
+        goal_pose_launch_file = true;
+    }
+}
+
+void NodeManager::start_waypoint_follower(std::string const &map_name)
+{
+    if (!waypoint_follower_launch_file)
+    {
+        std::string bringup = NAV2_BRINGUP_LAUNCH;
+        bringup += PATH2MAP;
+        bringup += "/" + map_name + ".yaml";
+        pri1("Start bring up:" + bringup);
+        processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, bringup);
+        waypoint_follower_launch_file = true;
+    }
 }

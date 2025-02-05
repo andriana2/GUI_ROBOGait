@@ -170,6 +170,14 @@ Target stringToTarget(const QString &str)
     {
         return Img_Map_Select;
     }
+    else if(str == "Goal_Pose")
+    {
+        return Goal_Pose;
+    }
+    else if(str == "Waypoint_Follower")
+    {
+        return Waypoint_Follower;
+    }
     else
     {
         Q_ASSERT(false);
@@ -207,6 +215,10 @@ QString targetToString(Target target)
         return "Delete_Map";
     case Img_Map_Select:
         return "Img_Map_Select";
+    case Goal_Pose:
+        return "Goal_Pose";
+    case Waypoint_Follower:
+        return "Waypoint_Follower";
     default:
         Q_ASSERT(false);
         return "Joystick_Position";

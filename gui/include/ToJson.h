@@ -25,6 +25,8 @@ namespace ToJson
 
     QJsonDocument sendStateMenu(bool in);
 
+    QJsonDocument sendGoalPose(QString const &map_name, int const &x_initialpose, int const &y_initialpose, float const &theta_initialpose, int const &x_goalpose, int const &y_goalpose, float const &theta_goalpose);
+
 
 }
 

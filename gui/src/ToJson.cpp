@@ -127,4 +127,20 @@ namespace ToJson
 
     }
 
+    QJsonDocument sendGoalPose(QString const &map_name, int const &x_initialpose, int const &y_initialpose, float const &theta_initialpose, int const &x_goalpose, int const &y_goalpose, float const &theta_goalpose)
+    {
+        QJsonObject jsonObj;
+        jsonObj["opt"] = headerToString(MSG);
+        jsonObj["target"] = targetToString(Goal_Pose);
+        jsonObj["map_name"] = map_name;
+        jsonObj["x_initialpose"] = x_initialpose;
+        jsonObj["y_initialpose"] = y_initialpose;
+        jsonObj["theta_initialpose"] = theta_initialpose;
+        jsonObj["x_goalpose"] = x_goalpose;
+        jsonObj["y_goalpose"] = y_goalpose;
+        jsonObj["theta_goalpose"] = theta_goalpose;
+        return QJsonDocument(jsonObj);
+
+    }
+
 } // namespace ToJson

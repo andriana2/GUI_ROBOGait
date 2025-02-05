@@ -111,6 +111,8 @@ public:
 
     std::vector<Pixel> getLinePixels(Pixel p1, Pixel p2);
 
+    Q_INVOKABLE void sendGoalPose();
+
 signals:
     void mapNameChanged();
     void orientationChanged();

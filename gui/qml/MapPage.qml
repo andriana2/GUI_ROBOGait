@@ -54,11 +54,22 @@ MapPageForm {
                 errorPopup.open()
                 return;
             }
+            mapInfo.sendGoalPose()
+        }
+        if(state === "mp_drawPath")
+        {
+            if(mapInfo.pixels.size() === 0)
+            {
+                errorPopup.errorRectangleTextError.text = "Error: Has intentado seguir adelante sin dibujar la trayectoria"
+                errorPopup.open()
+                return;
+            }
         }
 
-
-        mapPage.state = mapPage.mapPageForm_nextState
-
+        if(state === "mp_initialOrientation" || state === "mp_goalPosePosition" || state === "mp_initialPosition")
+        {
+            mapPage.state = mapPage.mapPageForm_nextState
+        }
     }
 
     mapPageForm_buttonPrevious.onClicked: {
@@ -326,10 +337,10 @@ MapPageForm {
             }
             PropertyChanges {
                 target: mapPageForm_buttonNext
-                enabled: false
-                opacity: 0
+                enabled: true
+                opacity: 1
             }
-            // PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Comprobación")}
+            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Enviar")}
             PropertyChanges {
                 target: mapPageForm_buttonPrevious
                 enabled: true
@@ -365,10 +376,10 @@ MapPageForm {
             }
             PropertyChanges {
                 target: mapPageForm_buttonNext
-                enabled: false
-                opacity: 0
+                enabled: true
+                opacity: 1
             }
-            // PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Comprobación")}
+            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Enviar")}
             PropertyChanges {
                 target: mapPageForm_buttonPrevious
                 enabled: true

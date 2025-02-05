@@ -60,7 +60,7 @@ struct RealPositionMeters
 #define CARTOGRAPHER_LAUNCH "ros2 launch turtlebot3_cartographer cartographer_noRviz.launch.py use_sim_time:=True" // &ejecutar en segundo plano
 #define NAME_CARTOGRAPHER_LAUNCH "turtlebot3_cartographer"
 
-#define NAV2_BRINGUP_LAUNCH "ros2 launch nav2_bringup bringup_launch.py use_sim_time:=True map:=/my_map.yaml"
+#define NAV2_BRINGUP_LAUNCH "ros2 launch nav2_bringup bringup_launch.py use_sim_time:=True map:="
 #define NAME_NAV2_BRINGUP_LAUNCH "nav2_bringup"
 
 // #define RVIZ_LAUNCH_MAPING "ros2 launch turtlebot3_cartographer cartographer.launch.py &" // &ejecutar en segundo plano
