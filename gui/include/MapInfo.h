@@ -112,6 +112,7 @@ public:
     std::vector<Pixel> getLinePixels(Pixel p1, Pixel p2);
 
     Q_INVOKABLE void sendGoalPose();
+    Q_INVOKABLE void sendWaypointFollower();
 
 signals:
     void mapNameChanged();

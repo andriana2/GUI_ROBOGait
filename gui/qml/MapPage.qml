@@ -58,12 +58,13 @@ MapPageForm {
         }
         if(state === "mp_drawPath")
         {
-            if(mapInfo.pixels.size() === 0)
+            if(mapInfo.pixels.length === 0)
             {
                 errorPopup.errorRectangleTextError.text = "Error: Has intentado seguir adelante sin dibujar la trayectoria"
                 errorPopup.open()
                 return;
             }
+            mapInfo.sendWaypointFollower()
         }
 
         if(state === "mp_initialOrientation" || state === "mp_goalPosePosition" || state === "mp_initialPosition")

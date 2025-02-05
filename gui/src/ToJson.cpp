@@ -1,5 +1,6 @@
 #include "../include/ToJson.h"
 #include "../include/utils.h"
+#include "qjsonarray.h"
 
 namespace ToJson
 {
@@ -154,19 +155,16 @@ namespace ToJson
         return QJsonDocument(jsonObj);
     }
 
-    QJsonDocument sendWaypointFollower(QString const &map_name, int const &x_initialpose, int const &y_initialpose, float const &theta_initialpose, , int const &height)
+    QJsonDocument sendWaypointFollower(QString const &map_name, int const &x_initialpose, int const &y_initialpose, float const &theta_initialpose, QList<Pixel> pixels , int const &height)
     {
         QJsonObject jsonObj;
         jsonObj["opt"] = headerToString(MSG);
-        jsonObj["target"] = targetToString(Goal_Pose);
+        jsonObj["target"] = targetToString(Waypoint_Follower);
         jsonObj["map_name"] = map_name;
-        // int original_fila = mapa.height() - 1 - inverted_fila;
-        // jsonObj["x_initialpose"] = wight - 1 - x_initialpose;// OOOOJJJJOOOO porque en qt el origen de coordenadas esta invertido
-        // jsonObj["x_goalpose"] = wight - 1 - x_goalpose;// OOOOJJJJOOOO porque en qt el origen de coordenadas esta invertido
-        jsonObj["x_initialpose"] = x_initialpose;// OOOOJJJJOOOO porque en qt el origen de coordenadas esta invertido
-        jsonObj["x_goalpose"] = x_goalpose;// OOOOJJJJOOOO porque en qt el origen de coordenadas esta invertido
-        jsonObj["y_initialpose"] = height - 1 - y_initialpose;
-        jsonObj["y_goalpose"] = height - 1 - y_goalpose;
+        jsonObj["x_initialpose"] = x_initialpose;
+        // jsonObj["x_goalpose"] = x_goalpose;
+        jsonObj["y_initialpose"] = height - 1 - y_initialpose; // OOOOJJJJOOOO porque en qt el origen de coordenadas esta invertido
+        // jsonObj["y_goalpose"] = height - 1 - y_goalpose; // OOOOJJJJOOOO porque en qt el origen de coordenadas esta invertido
 
         float originalAngle = 360 - theta_initialpose;
         if (originalAngle >= 360) {
@@ -174,11 +172,16 @@ namespace ToJson
         }
         jsonObj["theta_initialpose"] = originalAngle;
 
-        float originalAngleGoalPose = 360 - theta_goalpose;
-        if (originalAngleGoalPose >= 360) {
-            originalAngleGoalPose -= 360;
+        QJsonArray jsonArray;
+        for (auto& pixel : pixels)
+        {
+            QJsonObject pixelObject;
+            pixelObject["x"] = pixel.x;
+            pixelObject["y"] = height - 1 - pixel.y;
+            jsonArray.append(pixelObject);
         }
-        jsonObj["theta_goalpose"] = originalAngleGoalPose;
+        jsonObj["waypoints"] = jsonArray;
+
         return QJsonDocument(jsonObj);
     }
 

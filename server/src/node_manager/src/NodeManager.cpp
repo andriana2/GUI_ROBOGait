@@ -60,7 +60,7 @@ void NodeManager::create_publisher(Target const &target)
         if (!waypoint_follower_client_)
         {
             waypoint_follower_client_ = rclcpp_action::create_client<nav2_msgs::action::FollowWaypoints>(node_manager, WAYPOINT_FOLLOWER_ACTION);
-            RCLCPP_INFO(node_manager->get_logger(), "Close Cliente /waypoint_follower.");
+            RCLCPP_INFO(node_manager->get_logger(), "Create Cliente /waypoint_follower.");
             while (!waypoint_follower_client_->wait_for_action_server())
             {
                 RCLCPP_INFO(node_manager->get_logger(), "Esperando al servidor de acción...");
@@ -293,7 +293,7 @@ geometry_msgs::msg::Quaternion NodeManager::create_quaternion_from_yaw(double ya
     quaternion.y = 0.0;
     quaternion.z = sin(yaw_radians / 2.0);
     quaternion.w = cos(yaw_radians / 2.0);
-    std::cout <<" z=" << quaternion.z << ", w=" << quaternion.w << std::endl;
+    std::cout << " z=" << quaternion.z << ", w=" << quaternion.w << std::endl;
     return quaternion;
 }
 
@@ -301,11 +301,11 @@ void NodeManager::publish_goal_pose(double x, double y, double theta)
 {
     geometry_msgs::msg::Quaternion orientation = create_quaternion_from_yaw(theta);
     geometry_msgs::msg::PoseStamped goal_pose;
-    goal_pose.header.frame_id = "map";                 // Usualmente 'map' o 'odom'
-    goal_pose.pose.position.x = x;                     // Establecer la posición x
-    goal_pose.pose.position.y = y;                     // Establecer la posición y
-    goal_pose.pose.position.z = 0.0;                   // Z usualmente es 0.0 para el plano 2D
-    goal_pose.pose.orientation = orientation;          // Establecer la orientación
+    goal_pose.header.frame_id = "map";        // Usualmente 'map' o 'odom'
+    goal_pose.pose.position.x = x;            // Establecer la posición x
+    goal_pose.pose.position.y = y;            // Establecer la posición y
+    goal_pose.pose.position.z = 0.0;          // Z usualmente es 0.0 para el plano 2D
+    goal_pose.pose.orientation = orientation; // Establecer la orientación
 
     // Publicar el mensaje
     goal_pose_publisher_->publish(goal_pose);
@@ -335,6 +335,31 @@ void NodeManager::start_waypoint_follower(std::string const &map_name)
         pri1("Start bring up:" + bringup);
         processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, bringup);
         waypoint_follower_launch_file = true;
+    }
+}
+
+void NodeManager::publish_waypoint_follower(const std::vector<geometry_msgs::msg::PoseStamped> &waypoints)
+{
+    if (waypoint_follower_client_)
+    {
+        auto goal_msg = nav2_msgs::action::FollowWaypoints::Goal();
+        goal_msg.poses = waypoints;
+
+        auto send_goal_options = rclcpp_action::Client<nav2_msgs::action::FollowWaypoints>::SendGoalOptions();
+        send_goal_options.result_callback = [](const auto &future)
+        {
+            auto result = future.result; // Acceder al resultado correctamente
+            if (result == nullptr)
+            {
+                RCLCPP_ERROR(rclcpp::get_logger("NodeManager"), "Waypoint following failed");
+            }
+            else
+            {
+                RCLCPP_INFO(rclcpp::get_logger("NodeManager"), "Waypoint following succeeded");
+            }
+        };
+
+        waypoint_follower_client_->async_send_goal(goal_msg, send_goal_options);
     }
 }
 

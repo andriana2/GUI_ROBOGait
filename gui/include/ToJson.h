@@ -2,7 +2,7 @@
 #define TOJSON_H
 #include <QJsonDocument>
 #include <QJsonObject>
-// #include "utils.h"
+#include "utils.h"
 
 namespace ToJson
 {
@@ -27,6 +27,7 @@ namespace ToJson
 
     QJsonDocument sendGoalPose(QString const &map_name, int const &x_initialpose, int const &y_initialpose, float const &theta_initialpose, int const &x_goalpose, int const &y_goalpose, float const &theta_goalpose, int const &height);
 
+    QJsonDocument sendWaypointFollower(QString const &map_name, int const &x_initialpose, int const &y_initialpose, float const &theta_initialpose, QList<Pixel> pixels, int const &height);
 
 }
 

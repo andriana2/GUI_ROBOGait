@@ -96,7 +96,7 @@ void HandleMsg::SaveMap(const json &json_msg)
 void HandleMsg::GoalPose(const json &json_msg)
 {
     nodeManager.start_goal_pose(json_msg["map_name"].get<std::string>());
-    
+
     nodeManager.create_publisher(Goal_Pose);
     // std::cout << "JSON recibido: " << json_msg.dump(4) << std::endl;
     std::string path_yaml = PATH2MAP;
@@ -111,11 +111,45 @@ void HandleMsg::GoalPose(const json &json_msg)
 void HandleMsg::WaypointFollower(const json &json_msg)
 {
     nodeManager.start_waypoint_follower(json_msg["map_name"].get<std::string>());
-    nodeManager.create_publisher(Goal_Pose);
+    nodeManager.create_publisher(Waypoint_Follower);
     std::string path_yaml = PATH2MAP;
     path_yaml += "/" + json_msg["map_name"].get<std::string>() + ".yaml";
     RealPositionMeters initialpose = getRealPosition(path_yaml, json_msg["x_initialpose"], json_msg["y_initialpose"]);
     nodeManager.publish_initial_pose(initialpose.x, initialpose.y, json_msg["theta_initialpose"]);
+
+    std::vector<geometry_msgs::msg::PoseStamped> waypoints;
+
+    double last_angle = 0.0;
+    for (size_t i = 0; i < json_msg["waypoints"].size(); ++i)
+    {
+        const auto &waypoint = json_msg["waypoints"][i];
+        geometry_msgs::msg::PoseStamped pose_stamped;
+        pose_stamped.header.frame_id = "map"; // O el marco que sea adecuado para tu caso
+        pose_stamped.header.stamp = rclcpp::Clock().now();
+
+        // Asignar las posiciones
+        RealPositionMeters real_position = getRealPosition(path_yaml, waypoint["x"], waypoint["y"]);
+        pose_stamped.pose.position.x = real_position.x;
+        pose_stamped.pose.position.y = real_position.y;
+        pose_stamped.pose.position.z = 0.0; // Z en 0, a menos que tengas altura
+
+        // Puedes establecer una orientación por defecto (por ejemplo, sin rotación)
+        if (i < json_msg["waypoints"].size() - 1) // Asegúrate de no salir del índice
+        {
+            RealPositionMeters real_position_static = getRealPosition(path_yaml, json_msg["waypoints"][i + 1]["x"], json_msg["waypoints"][i + 1]["y"]);
+
+            double next_x = real_position_static.x;
+            double next_y = real_position_static.y;
+            last_angle = calculate_angle(pose_stamped.pose.position.x, pose_stamped.pose.position.y, next_x, next_y);
+        } // Orientación de identidad
+        pose_stamped.pose.orientation = nodeManager.create_quaternion_from_yaw(last_angle);
+
+        std::cout << "x=" << pose_stamped.pose.position.x << ", y=" << pose_stamped.pose.position.y << ", theta=" << last_angle << std::endl;
+        // Agregar al vector
+        waypoints.push_back(pose_stamped);
+    }
+    std::cout << "Primera fase completada "<< std::endl;
+    nodeManager.publish_waypoint_follower(waypoints);
 }
 
 void HandleMsg::StateMenu(const json &json_msg)

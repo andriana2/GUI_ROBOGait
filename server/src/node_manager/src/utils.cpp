@@ -330,3 +330,8 @@ RealPositionMeters getRealPosition(const std::string &path_yaml, const int x_pix
     }
     return real_position;
 }
+
+double calculate_angle(double x1, double y1, double x2, double y2)
+{
+    return std::atan2(y2 - y1, x2 - x1);  // Ángulo en radianes
+}

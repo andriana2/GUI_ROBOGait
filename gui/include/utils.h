@@ -7,18 +7,20 @@
 
 #include <QString>
 #include <QVector>
-#include <qobjectdefs.h>
+#include <QJsonObject>
 
 #define EN_CASA 0
 
-enum Header {
+enum Header
+{
     MSG,
     REQUEST_MSG,
     IMG,
     REQUEST_IMG
 };
 
-enum Target {
+enum Target
+{
     Joystick_Position,
     Request_Map_SLAM,
     Robot_Position_Pixel,
@@ -44,7 +46,8 @@ struct FinalPosition
     bool active;
 };
 
-struct Pixel {
+struct Pixel
+{
     Q_GADGET
     Q_PROPERTY(int x MEMBER x)
     Q_PROPERTY(int y MEMBER y)
@@ -53,28 +56,36 @@ public:
     int x = 0; // Inicialización predeterminada
     int y = 0; // Inicialización predeterminada
 
-    Pixel() = default; // Constructor predeterminado
+    Pixel() = default;                  // Constructor predeterminado
     Pixel(int x, int y) : x(x), y(y) {} // Constructor con parámetros
 
-    bool operator==(const Pixel& other) const {
+    bool operator==(const Pixel &other) const
+    {
         return x == other.x && y == other.y;
     }
 
-    bool operator!=(const Pixel& other) const {
+    bool operator!=(const Pixel &other) const
+    {
         return !(*this == other);
+    }
+    QJsonObject toJson() const
+    {
+        QJsonObject jsonObject;
+        jsonObject["x"] = x;
+        jsonObject["y"] = y;
+        return jsonObject;
     }
 };
 
-
-QVector<QString> extractJSONObjects(const QString& input);
+QVector<QString> extractJSONObjects(const QString &input);
 QByteArray fromHex(const QString &hex);
 
 QString obtenerIP();
 
-Header stringToHeader(const QString& str);
+Header stringToHeader(const QString &str);
 QString headerToString(Header header);
 
-Target stringToTarget(const QString& str);
+Target stringToTarget(const QString &str);
 QString targetToString(Target target);
 
 #endif // UTILS_H

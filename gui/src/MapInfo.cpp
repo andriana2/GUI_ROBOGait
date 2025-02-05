@@ -414,3 +414,8 @@ void MapInfo::sendGoalPose()
 {
     cliente->sendMessage(ToJson::sendGoalPose(m_mapName, m_originalPosition.x, m_originalPosition.y, m_orientation, m_finalPathPosition.x, m_finalPathPosition.y, m_finalPathOrientation, m_imageSize.y));
 }
+
+void MapInfo::sendWaypointFollower()
+{
+    cliente->sendMessage(ToJson::sendWaypointFollower(m_mapName, m_originalPosition.x, m_originalPosition.y, m_orientation, m_pixels, m_imageSize.y));
+}

@@ -32,6 +32,7 @@ public:
 
     void publish_initial_pose(double x, double y, double theta);
     void publish_goal_pose(double x, double y, double theta);
+    void publish_waypoint_follower(const std::vector<geometry_msgs::msg::PoseStamped> &waypoints);
 
     void start_robot();
     void stop_robot();
@@ -39,7 +40,10 @@ public:
     void start_goal_pose(std::string const &map_name);
     void start_waypoint_follower(std::string const &map_name);
 
+
     void reset();
+    geometry_msgs::msg::Quaternion create_quaternion_from_yaw(double yaw);
+
 private:
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_publisher_;
     rclcpp::Client<interface_srv::srv::GetRobotPosition>::SharedPtr tf_service_client_;
@@ -47,7 +51,6 @@ private:
     rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_pose_publisher_;
     rclcpp_action::Client<nav2_msgs::action::FollowWaypoints>::SharedPtr waypoint_follower_client_;
 
-    geometry_msgs::msg::Quaternion create_quaternion_from_yaw(double yaw);
 
     rclcpp::Node::SharedPtr node_manager;
     ProcessController processController;

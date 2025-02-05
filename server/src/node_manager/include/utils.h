@@ -47,4 +47,6 @@ std::vector<std::string> splitCommand(const std::string& command);
 
 RealPositionMeters getRealPosition(const std::string &path_yaml, const int x_pixel, const int y_pixel);
 
+double calculate_angle(double x1, double y1, double x2, double y2);
+
 #endif // UTILS_H
