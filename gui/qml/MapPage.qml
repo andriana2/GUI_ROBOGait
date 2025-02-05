@@ -116,7 +116,9 @@ MapPageForm {
 
     mapPageForm_boxImages.onBif_clear_pressed: {
         if (state === "mp_initialPosition" || state === "mp_goalPosePosition")
-            mp_map.canvas.clear()
+        {    mp_map.canvas.clear()
+            mp_map.canvas.enablePainting = true
+        }
         else if (state === "mp_drawPath")
         {
             mp_map.canvas.clear_internal()

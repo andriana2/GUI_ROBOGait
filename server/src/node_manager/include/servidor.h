@@ -47,11 +47,11 @@ private:
     // void signalHandler(int signal);
 
     void handleType(std::vector<std::string> const &jsons);
-    
+
     void handleRequestMsg(const json &json_msg);
     void handleRequestImg(const json &json_msg);
     // void handleMsg(const json &json_msg);
-    
+
     // void handleMsgJoystickPosition(const json &json_msg);
     // void handleMsgStateRemoteControlled(const json &json_msg);
     // void handleMsgDeleteMap(const json &json_msg);

@@ -194,7 +194,7 @@ void StringHandler::setCurrentMove(const QString &lineal, const QString &angular
 
 QString StringHandler::updateMapPaintPoint(QImage &mapa, int columna, int fila, float yaw)
 {
-    fila = mapa.height() - 1 - fila;
+    fila = mapa.height() - 1 - fila; // OOOOJJJJOOOO porque en qt el origen de coordenadas esta invertido
     if (mapa.isNull())
     {
         qWarning("Error al cargar el mapa");

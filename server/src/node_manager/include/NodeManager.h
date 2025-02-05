@@ -38,6 +38,8 @@ public:
 
     void start_goal_pose(std::string const &map_name);
     void start_waypoint_follower(std::string const &map_name);
+
+    void reset();
 private:
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_publisher_;
     rclcpp::Client<interface_srv::srv::GetRobotPosition>::SharedPtr tf_service_client_;

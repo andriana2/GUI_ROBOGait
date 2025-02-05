@@ -96,6 +96,7 @@ void HandleMsg::SaveMap(const json &json_msg)
 void HandleMsg::GoalPose(const json &json_msg)
 {
     nodeManager.start_goal_pose(json_msg["map_name"].get<std::string>());
+    
     nodeManager.create_publisher(Goal_Pose);
     // std::cout << "JSON recibido: " << json_msg.dump(4) << std::endl;
     std::string path_yaml = PATH2MAP;

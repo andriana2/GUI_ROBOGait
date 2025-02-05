@@ -321,6 +321,7 @@ RealPositionMeters getRealPosition(const std::string &path_yaml, const int x_pix
 
         real_position.x = x_pixel * resolution + origin_x;
         real_position.y = y_pixel * resolution + origin_y;
+
         std::cout << "Real X: " << real_position.x << ", Real Y: " << real_position.y << std::endl;
     }
     catch (const std::exception &e)

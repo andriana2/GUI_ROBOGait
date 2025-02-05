@@ -34,6 +34,7 @@ void Servidor::resetConnection()
         std::cout << "Cerrando la conexión con el cliente...\n";
         socket_.close();
         buf_.clear();  // Limpia el buffer
+        nodeManager.reset();
         startAccept(); // Espera por un nuevo cliente
     }
     catch (const std::exception &e)
@@ -69,6 +70,7 @@ void Servidor::closeServer()
 
 void Servidor::startRead()
 {
+    pri1("estoy en StartRead");
     socket_.async_read_some(
         boost::asio::buffer(buffer_array),
         [this](const boost::system::error_code &ec, long unsigned int bytes_transferred)

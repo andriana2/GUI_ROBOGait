@@ -287,11 +287,13 @@ void NodeManager::publish_initial_pose(double x, double y, double theta)
 
 geometry_msgs::msg::Quaternion NodeManager::create_quaternion_from_yaw(double yaw)
 {
+    double yaw_radians = yaw * M_PI / 180.0;
     geometry_msgs::msg::Quaternion quaternion;
     quaternion.x = 0.0;
     quaternion.y = 0.0;
-    quaternion.z = sin(yaw / 2.0);
-    quaternion.w = cos(yaw / 2.0);
+    quaternion.z = sin(yaw_radians / 2.0);
+    quaternion.w = cos(yaw_radians / 2.0);
+    std::cout <<" z=" << quaternion.z << ", w=" << quaternion.w << std::endl;
     return quaternion;
 }
 
@@ -334,4 +336,9 @@ void NodeManager::start_waypoint_follower(std::string const &map_name)
         processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, bringup);
         waypoint_follower_launch_file = true;
     }
+}
+
+void NodeManager::reset()
+{
+    processController.stopAllProcesses();
 }
