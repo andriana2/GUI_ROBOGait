@@ -11,6 +11,7 @@ MenuForm {
         applicationFlow.select_map_push()
     }
     hacer_mapa_mouse_area.onClicked: {
+        mapInfo.sendStopProcesses()
 
     }
 

@@ -188,8 +188,9 @@ namespace ToJson
     {
         QJsonObject jsonObj;
         jsonObj["opt"] = headerToString(MSG);
-        jsonObj["target"] = targetToString(Waypoint_Follower);
+        jsonObj["target"] = targetToString(Stop_Process);
         jsonObj["stop"] = true;
+        return QJsonDocument(jsonObj);
     }
 
 

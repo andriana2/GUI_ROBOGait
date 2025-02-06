@@ -20,6 +20,8 @@ void HandleMsg::handleMsgJson(const json &json_msg)
         StateMenu(json_msg);
     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Waypoint_Follower))
         WaypointFollower(json_msg);
+    else if (json_msg.contains("target") && json_msg["target"] == targetToString(Stop_Process))
+        nodeManager.reset();
     else
         std::cerr << "Error: Target no encontrado." << std::endl;
 }

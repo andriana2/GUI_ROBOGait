@@ -128,7 +128,7 @@ void Servidor::handleRequestImg(const json &json_msg)
     if (json_msg.contains("target") && json_msg["target"] == targetToString(Request_Map_SLAM))
     {
         std::string path = PATH2MAP;
-        if (json_msg.contains("map_name") && !json_msg["map_name"].empty())
+        if (json_msg.contains("map_name") && json_msg["map_name"].empty())
         {
             std::cout << "+++++++++++++++Mapa seleccionado: " << json_msg["map_name"] << std::endl;
             path += "/" + replaceSpaces(json_msg["map_name"]) + ".pgm";
