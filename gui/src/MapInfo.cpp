@@ -237,7 +237,7 @@ QVariantList MapInfo::getPixels()
     if (m_pixels.empty())
         return QVariantList();
 
-    QList<Pixel> pixelListSubsampling = subsampling(m_pixels, 10);
+    QList<Pixel> pixelListSubsampling = subsampling(m_pixels, 15);
     QList<Pixel> pixelList = smoothBezierPath(pixelListSubsampling);
     m_pixels = pixelList;
     QVariantList points;
@@ -418,4 +418,9 @@ void MapInfo::sendGoalPose()
 void MapInfo::sendWaypointFollower()
 {
     cliente->sendMessage(ToJson::sendWaypointFollower(m_mapName, m_originalPosition.x, m_originalPosition.y, m_orientation, m_pixels, m_imageSize.y));
+}
+
+void MapInfo::sendStopProcesses()
+{
+    cliente->sendMessage(ToJson::stopProcesses());
 }

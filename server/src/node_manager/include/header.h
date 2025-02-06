@@ -26,7 +26,8 @@ enum Target {
     Delete_Map,
     Img_Map_Select,
     Goal_Pose,
-    Waypoint_Follower
+    Waypoint_Follower,
+    Stop_Process
 };
 
 struct FinalPosition
@@ -74,5 +75,41 @@ struct RealPositionMeters
 
 // turtlesim
 #define CMD_TOPIC_TURTLESIM "/turtle1/cmd_vel"
+
+
+
+// #if EN_CASA
+// #define PATH2MAP "/home/andri/Desktop/gui_nuevo/gui_/server/maps" //casa
+// #else
+// #define PATH2MAP "/home/robogait/Desktop/gui_andri/gui/server/maps" // uni
+// // #define SOURCE_GAZEBO ""bash -i -c 'source /usr/share/gazebo/setup.sh && echo \"Gazebo configurado\"'""
+// #define START_ROBOT "ros2 launch roverrotics_driver mini.launch.py"
+// #define NAME_START_ROBOT "roverrotics_driver"
+// // #else
+// // #define START_ROBOT ""
+// #endif
+
+// // #define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f " + PATH2MAP + " "
+// #define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f /home/robogait/Desktop/gui_andri/gui/server/maps"
+
+// // launch
+// #define CARTOGRAPHER_LAUNCH "ros2 launch roverrobotics_driver slam_launch.py" // &ejecutar en segundo plano
+// #define NAME_CARTOGRAPHER_LAUNCH "roverrobotics_driver_slam"
+
+// #define NAV2_BRINGUP_LAUNCH "ros2 launch roverrobotics_driver navigation_launch.py"
+// #define NAME_NAV2_BRINGUP_LAUNCH "roverrobotics_driver_navigation"
+
+// // #define RVIZ_LAUNCH_MAPING "ros2 launch turtlebot3_cartographer cartographer.launch.py &" // &ejecutar en segundo plano
+
+// // topic
+// #define TF_TOPIC "/tf"
+// #define CMD_VEL_TOPIC "/cmd_vel"
+// #define INITIAL_POSE_TOPIC "/initialpose"
+// #define GOAL_POSE_TOPIC "/goal_pose"
+// #define WAYPOINT_FOLLOWER_ACTION "/follow_waypoints"
+
+// // turtlesim
+// #define CMD_TOPIC_TURTLESIM "/turtle1/cmd_vel"
+
 
 #endif // HEADER_H

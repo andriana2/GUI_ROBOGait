@@ -67,6 +67,8 @@ std::string targetToString(Target target)
         return "Goal_Pose";
     case Waypoint_Follower:
         return "Waypoint_Follower";
+    case Stop_Process:
+        return "Stop_Process";
     default:
         return "UNKNOWN";
     }
@@ -104,6 +106,8 @@ Target stringToTarget(const std::string &str)
         return Goal_Pose;
     if (str == "Waypoint_Follower")
         return Waypoint_Follower;
+    if (str == "Stop_Process")
+        return Stop_Process;
 
     throw std::invalid_argument("Invalid Target string: " + str);
 }
@@ -333,5 +337,5 @@ RealPositionMeters getRealPosition(const std::string &path_yaml, const int x_pix
 
 double calculate_angle(double x1, double y1, double x2, double y2)
 {
-    return std::atan2(y2 - y1, x2 - x1);  // Ángulo en radianes
+    return std::atan2(y2 - y1, x2 - x1); // Ángulo en radianes
 }

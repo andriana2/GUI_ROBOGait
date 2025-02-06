@@ -35,7 +35,8 @@ enum Target
     Delete_Map,
     Img_Map_Select,
     Goal_Pose,
-    Waypoint_Follower
+    Waypoint_Follower,
+    Stop_Process
 };
 
 struct FinalPosition

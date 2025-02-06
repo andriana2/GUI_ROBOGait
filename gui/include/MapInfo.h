@@ -113,6 +113,7 @@ public:
 
     Q_INVOKABLE void sendGoalPose();
     Q_INVOKABLE void sendWaypointFollower();
+    Q_INVOKABLE void sendStopProcesses();
 
 signals:
     void mapNameChanged();

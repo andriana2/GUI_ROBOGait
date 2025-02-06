@@ -184,6 +184,13 @@ namespace ToJson
 
         return QJsonDocument(jsonObj);
     }
+    QJsonDocument stopProcesses()
+    {
+        QJsonObject jsonObj;
+        jsonObj["opt"] = headerToString(MSG);
+        jsonObj["target"] = targetToString(Waypoint_Follower);
+        jsonObj["stop"] = true;
+    }
 
 
 } // namespace ToJson

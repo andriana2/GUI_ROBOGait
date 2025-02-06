@@ -115,69 +115,39 @@ QString headerToString(Header header)
 Target stringToTarget(const QString &str)
 {
     if (str == "Joystick_Position")
-    {
         return Joystick_Position;
-    }
     else if (str == "Request_Map_SLAM")
-    {
         return Request_Map_SLAM;
-    }
     else if (str == "Robot_Position_Pixel")
-    {
         return Robot_Position_Pixel;
-    }
     else if (str == "Img_Map_SLAM")
-    {
         return Img_Map_SLAM;
-    }
     else if (str == "Img_Map_Path")
-    {
         return Img_Map_Path;
-    }
     else if (str == "Save_Map")
-    {
         return Save_Map;
-    }
     else if (str == "State_Remote_Controlled")
-    {
         return State_Remote_Controlled;
-    }
     else if (str == "State_Menu")
-    {
         return State_Menu;
-    }
     else if (str == "Img_Map_Select")
-    {
         return Img_Map_Select;
-    }
     else if (str == "Map_Name")
-    {
         return Map_Name;
-    }
     else if (str == "Map_Info_Image_Size")
-    {
         return Map_Info_Image_Size;
-    }
     else if (str == "Change_Map_Name")
-    {
         return Change_Map_Name;
-    }
     else if (str == "Delete_Map")
-    {
         return Delete_Map;
-    }
     else if (str == "Img_Map_Select")
-    {
         return Img_Map_Select;
-    }
-    else if(str == "Goal_Pose")
-    {
+    else if (str == "Goal_Pose")
         return Goal_Pose;
-    }
-    else if(str == "Waypoint_Follower")
-    {
+    else if (str == "Waypoint_Follower")
         return Waypoint_Follower;
-    }
+    else if (str == "Stop_Process")
+        return Stop_Process;
     else
     {
         Q_ASSERT(false);
@@ -219,6 +189,8 @@ QString targetToString(Target target)
         return "Goal_Pose";
     case Waypoint_Follower:
         return "Waypoint_Follower";
+    case Stop_Process:
+        return "Stop_Process";
     default:
         Q_ASSERT(false);
         return "Joystick_Position";
