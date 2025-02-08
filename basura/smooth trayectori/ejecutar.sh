@@ -4,7 +4,7 @@
 archivos=(
     # "reducir_punto.cpp"
     # "bezier.cpp"
-    "filtro_puntos.cpp"
+    "INCREIBLE_filtro_puntos.cpp"
     # "suavizarTrayectoriaChaikin.cpp"
     # "chaikin.cpp"
     # "suavizarTrayectoriaKalman.cpp"
