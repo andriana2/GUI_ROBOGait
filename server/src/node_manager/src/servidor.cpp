@@ -135,10 +135,13 @@ void Servidor::handleRequestImg(const json &json_msg)
         if (json_msg.contains("map_name") && json_msg["map_name"] != "")
         {
             std::cout << "+++++++++++++++Mapa seleccionado: " << json_msg["map_name"] << std::endl;
+            float resolution = 0.0;
+            getResolution(path + "/" + replaceSpaces(json_msg["map_name"]) + ".yaml", resolution);
             path += "/" + replaceSpaces(json_msg["map_name"]) + ".pgm";
             int width = 0, height = 0;
             getImageSize(path, width, height);
-            sendMsg(toJson::sendInfoMap(json_msg["map_name"], width, height));
+            
+            sendMsg(toJson::sendInfoMap(json_msg["map_name"], width, height, resolution));
             std::thread sendMapThread(&Servidor::sendImageMap, this, path, false);
             sendMapThread.detach();
         }

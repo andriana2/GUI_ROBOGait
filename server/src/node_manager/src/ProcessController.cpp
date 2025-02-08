@@ -16,10 +16,13 @@ bool ProcessController::isNodeRunning(const std::string& node_name) {
 
 void ProcessController::startProcess(const std::string &name, const std::string &command)
 {
+    // Verifica si el nodo ya está corriendo
     if(isNodeRunning(name) && (command.find("ros2 run") != std::string::npos)) {
         std::cout << "ProcessController: El nodo \"" << name << "\" ya está en ejecución.\n";
         return;
     }
+
+    // Verifica si el proceso ya está en ejecución
     if (processMap.find(name) != processMap.end())
     {
         std::cout << "ProcessController: El proceso \"" << name << "\" ya está en ejecución.\n";
@@ -29,11 +32,11 @@ void ProcessController::startProcess(const std::string &name, const std::string 
     // Divide la cadena en argumentos
     std::vector<std::string> args = splitCommand(command);
 
-    // Convierte los argumentos en un arreglo de punteros a char*
-    std::vector<char *> cArgs;
+    // Convierte los argumentos en un arreglo de punteros a const char*
+    std::vector<const char *> cArgs;
     for (const auto &arg : args)
     {
-        cArgs.push_back(const_cast<char *>(arg.c_str()));
+        cArgs.push_back(arg.c_str());
     }
     cArgs.push_back(nullptr); // Termina con nullptr como requiere execvp
 
@@ -42,8 +45,10 @@ void ProcessController::startProcess(const std::string &name, const std::string 
     if (pid == 0)
     {
         // Proceso hijo
-        execvp(cArgs[0], cArgs.data());
+        execvp(cArgs[0], const_cast<char * const *>(cArgs.data()));
         std::cerr << "ProcessController: Error al ejecutar el comando: " << command << std::endl;
+        perror("execvp"); // Imprime el error específico de execvp
+        std::cerr << "Ejecutando comando: " << command << std::endl;
         _exit(1);
     }
     else if (pid < 0)
@@ -58,6 +63,7 @@ void ProcessController::startProcess(const std::string &name, const std::string 
         std::cout << "ProcessController: Proceso \"" << name << "\" iniciado con PID: " << pid << std::endl;
     }
 }
+
 
 // Función para detener un proceso
 void ProcessController::stopProcess(const std::string &name)

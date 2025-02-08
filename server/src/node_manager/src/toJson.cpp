@@ -74,14 +74,14 @@ namespace toJson
             {"vec_map_name", vec_map_name}};
     }
 
-    json sendInfoMap(std::string const &map_name, int const &width, int const &height)
+    json sendInfoMap(std::string const &map_name, int const &width, int const &height, float const &resolution)
     {
         return {
             {"opt", headerToString(MSG)},
             {"target", targetToString(Map_Info_Image_Size)},
             {"map_name", map_name},
             {"width", width},
-            {"height", height}};
+            {"height", height},
+            {"resolution", resolution}};
     }
-
 }

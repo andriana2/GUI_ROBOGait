@@ -243,8 +243,8 @@ void NodeManager::start_robot()
     if (!start_robot_launch_file)
     {
         pri1("Comienzo robot");
-        // processController.startProcess(START_ROBOT, NAME_START_ROBOT);
-        // start_robot_launch_file = true;
+        processController.startProcess(NAME_START_ROBOT, START_ROBOT);
+        start_robot_launch_file = true;
     }
 }
 

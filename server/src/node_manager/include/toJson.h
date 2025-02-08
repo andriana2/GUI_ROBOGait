@@ -17,7 +17,7 @@ namespace toJson
 
     json sendMapName(std::vector<std::string> const &vec_map_name);
 
-    json sendInfoMap(std::string const &map_name, int const &width, int const &height);
+    json sendInfoMap(std::string const &map_name, int const &width, int const &height, float const &resolution);
 
 }
 #endif // TOJSON_H

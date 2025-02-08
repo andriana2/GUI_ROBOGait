@@ -21,7 +21,6 @@
 
 // #include <opencv2/opencv.hpp>
 #include <vector>
-#include <iostream>
 
 #include "cliente.h"
 #include "StringHandler.h"
@@ -47,6 +46,7 @@ class MapInfo : public QObject
     Q_PROPERTY(Pixel finalPathPosition READ finalPathPosition NOTIFY finalPathPositionChanged FINAL)
     Q_PROPERTY(Pixel finalScreenPosition READ finalScreenPosition NOTIFY finalScreenPositionChanged FINAL)
 
+    Q_PROPERTY(float resolution READ resolution WRITE setResolution NOTIFY resolutionChanged FINAL)
 
 
 public:
@@ -116,6 +116,9 @@ public:
     Q_INVOKABLE void sendWaypointFollower();
     Q_INVOKABLE void sendStopProcesses();
 
+    float resolution() const;
+    void setResolution(float newResolution);
+
 signals:
     void mapNameChanged();
     void orientationChanged();
@@ -129,6 +132,8 @@ signals:
     void finalPathPositionChanged();
 
     void finalScreenPositionChanged();
+
+    void resolutionChanged();
 
 private:
     Cliente *cliente;
@@ -149,6 +154,7 @@ private:
     // Es decir inserte la posicion del screen y se guardara la final
 
     Pixel m_finalScreenPosition;
+    float m_resolution;
 };
 
 #endif // MAPINFO_H

@@ -485,3 +485,16 @@ void MapInfo::sendStopProcesses()
 {
     cliente->sendMessage(ToJson::stopProcesses());
 }
+
+float MapInfo::resolution() const
+{
+    return m_resolution;
+}
+
+void MapInfo::setResolution(float newResolution)
+{
+    if (qFuzzyCompare(m_resolution, newResolution))
+        return;
+    m_resolution = newResolution;
+    emit resolutionChanged();
+}

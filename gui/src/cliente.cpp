@@ -88,7 +88,8 @@ void Cliente::processJson(const QJsonDocument &json)
         {
             mapInfo->setImageSize(jsonObj["width"].toInt(), jsonObj["height"].toInt());
             mapInfo->setMapName(jsonObj["map_name"].toString());
-            qDebug() << "width: " << jsonObj["width"].toInt() << "height: " << jsonObj["height"].toInt() << " Map name: " << jsonObj["map_name"].toString();
+            mapInfo->setResolution(jsonObj["resolution"].toDouble());
+            qDebug() << "width: " << jsonObj["width"].toInt() << "height: " << jsonObj["height"].toInt() << " Map name: " << jsonObj["map_name"].toString() << " Resolution: " << jsonObj["resolution"].toDouble();
         }
     }
     else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_MSG)

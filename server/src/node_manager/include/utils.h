@@ -43,6 +43,8 @@ std::vector<std::string> getMapName(std::string const &path);
 
 void getImageSize(std::string const &path, int &width_output, int &height_output);
 
+float getResolution(std::string const &path, float &resolution_output);
+
 std::vector<std::string> splitCommand(const std::string& command);
 
 RealPositionMeters getRealPosition(const std::string &path_yaml, const int x_pixel, const int y_pixel);

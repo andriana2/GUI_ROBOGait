@@ -267,7 +267,7 @@ std::vector<std::string> getMapName(std::string const &path)
 
 void getImageSize(std::string const &path, int &width_output, int &height_output)
 {
-    std::ifstream file(path); // Cambia "imagen.pgm" por la ruta de tu archivo
+    std::ifstream file(path);
     if (!file.is_open())
     {
         std::cerr << "Error al abrir el archivo: " << path << std::endl;
@@ -292,6 +292,24 @@ void getImageSize(std::string const &path, int &width_output, int &height_output
     width_output = width;
     height_output = height;
     file.close();
+}
+
+float getResolution(std::string const &path, float &resolution_output)
+{
+    try
+    {
+        YAML::Node config = YAML::LoadFile(path);
+
+        // Obtener la resolución
+        resolution_output = config["resolution"].as<float>();
+        std::cout << "Resolución: " << resolution_output << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error al leer el archivo YAML: " << e.what() << std::endl;
+        resolution_output = 0.0f; // Valor por defecto en caso de error
+    }
+    return resolution_output;
 }
 
 std::vector<std::string> splitCommand(const std::string &command)

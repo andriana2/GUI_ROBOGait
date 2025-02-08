@@ -21,7 +21,6 @@ namespace ToJson
 
     QJsonDocument sendRequestMap(QString const &map_name)
     {
-        qDebug() << "heeeeeee";
         QJsonObject jsonObj;
         jsonObj["opt"] = headerToString(REQUEST_IMG);
         jsonObj["target"] = targetToString(Request_Map_SLAM);
