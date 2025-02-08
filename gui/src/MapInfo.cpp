@@ -237,8 +237,7 @@ QVariantList MapInfo::getPixels()
     if (m_pixels.empty())
         return QVariantList();
 
-    QList<Pixel> pixelListSubsampling = subsampling(m_pixels, 15);
-    QList<Pixel> pixelList = smoothBezierPath(pixelListSubsampling);
+    QList<Pixel> pixelList = filtrarPuntosCercanos(suavizarTrayectoria(filtrarPuntosCercanos(m_pixels, 6), 3), 4);
     m_pixels = pixelList;
     QVariantList points;
 
@@ -255,69 +254,131 @@ QVariantList MapInfo::getPixels()
     return points;
 }
 
-Pixel MapInfo::cubicBezier(float t, const Pixel &p0, const Pixel &p1, const Pixel &p2, const Pixel &p3) const
-{
-    float u = 1 - t;
-    float tt = t * t;
-    float uu = u * u;
-    float uuu = uu * u;
-    float ttt = tt * t;
 
-    Pixel pixel;
-    pixel.x = uuu * p0.x + 3 * uu * t * p1.x + 3 * u * tt * p2.x + ttt * p3.x;
-    pixel.y = uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y;
+QList<Pixel> MapInfo::filtrarPuntosCercanos(const QList<Pixel>& puntos, int distancia) {
+    if (puntos.empty()) return {};
 
-    return pixel;
-}
+    QList<Pixel> puntosOrdenados = puntos;
+    QList<Pixel> filtrados;
+    filtrados.append(m_originalPosition);
+    filtrados.push_back(puntosOrdenados[0]);
 
-QList<Pixel> MapInfo::smoothBezierPath(const QList<Pixel> &pixel) const
-{
-    QList<Pixel> result;
-    if (pixel.size() < 4)
-        return pixel; // Si hay menos de 4 puntos, devolver la lista original
+    for (size_t i = 1; i < puntosOrdenados.size(); ++i) {
+        const Pixel& ultimo = filtrados.back();
+        const Pixel& actual = puntosOrdenados[i];
 
-    for (int i = 0; i < pixel.size() - 3; i += 3)
-    {
-        for (float t = 0; t <= 1; t += 0.05)
-        {
-            result.append(cubicBezier(t, pixel[i], pixel[i + 1], pixel[i + 2], pixel[i + 3]));
+        // Si la diferencia en x e y es mayor a la distancia, se agrega el punto
+        if (std::abs(actual.x - ultimo.x) >= distancia || std::abs(actual.y - ultimo.y) >= distancia) {
+            filtrados.push_back(actual);
         }
     }
+    filtrados.push_back(puntos.back());
 
-    // Asegurar que el último punto siempre se incluya
-    if (result.last().x != pixel.last().x || result.last().y != pixel.last().y)
-    {
-        result.append(pixel.last());
-    }
-
-    return result;
+    return filtrados;
 }
 
-QList<Pixel> MapInfo::subsampling(const QList<Pixel> &pixel, double umbral) const
-{
-    QList<Pixel> result;
-    if (pixel.isEmpty())
-        return result;
-
-    result.append(m_originalPosition);
-    result.append(pixel.first()); // Agregar el primer punto
-
-    for (int i = 1; i < pixel.size(); ++i)
-    {
-        double distancia = std::hypot(pixel[i].x - result.last().x, pixel[i].y - result.last().y);
-        if (distancia > umbral)
-        {
-            result.append(pixel[i]);
-        }
-    }
-
-    // Asegurar que el último punto siempre se incluya
-    if (result.last().x != pixel.last().x || result.last().y != pixel.last().y)
-    {
-        result.append(pixel.last());
-    }
-    return result;
+double MapInfo::distancia(const Pixel& p1, const Pixel& p2) {
+    return std::sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }
+
+// Función para crear un punto intermedio a una distancia específica
+Pixel MapInfo::puntoIntermedio(const Pixel& p1, const Pixel& p2, double distanciaObjetivo) {
+    double distTotal = distancia(p1, p2);
+    if (distTotal < 1e-6) return p1; // Evitar divisiones por cero
+    double t = distanciaObjetivo / distTotal;
+    return {static_cast<int>(p1.x + t * (p2.x - p1.x)), static_cast<int>(p1.y + t * (p2.y - p1.y))};
+}
+
+// Función para suavizar giros de 90° eliminando la esquina y agregando puntos intermedios
+QList<Pixel> MapInfo::suavizarTrayectoria(const QList<Pixel>& puntos, double distanciaSuavizado) {
+    if (puntos.size() < 3) return puntos; // No hay giros que suavizar con menos de 3 puntos
+
+    QList<Pixel> resultado;
+    resultado.push_back(puntos[0]); // Primer punto siempre se mantiene
+
+    for (size_t i = 1; i < puntos.size() - 1; ++i) {
+        Pixel A = puntos[i - 1];
+        Pixel B = puntos[i];
+        Pixel C = puntos[i + 1];
+
+        // Crear puntos intermedios a distancia "distanciaSuavizado"
+        Pixel P1 = puntoIntermedio(A, B, distanciaSuavizado);
+        Pixel P2 = puntoIntermedio(C, B, distanciaSuavizado);
+
+        // Agregar los puntos intermedios y saltar B (eliminamos la esquina)
+        resultado.push_back(P1);
+        resultado.push_back(P2);
+    }
+
+    resultado.push_back(puntos.back()); // Último punto siempre se mantiene
+    return resultado;
+}
+
+
+
+// Pixel MapInfo::cubicBezier(float t, const Pixel &p0, const Pixel &p1, const Pixel &p2, const Pixel &p3) const
+// {
+//     float u = 1 - t;
+//     float tt = t * t;
+//     float uu = u * u;
+//     float uuu = uu * u;
+//     float ttt = tt * t;
+
+//     Pixel pixel;
+//     pixel.x = uuu * p0.x + 3 * uu * t * p1.x + 3 * u * tt * p2.x + ttt * p3.x;
+//     pixel.y = uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y;
+
+//     return pixel;
+// }
+
+// QList<Pixel> MapInfo::smoothBezierPath(const QList<Pixel> &pixel) const
+// {
+//     QList<Pixel> result;
+//     if (pixel.size() < 4)
+//         return pixel; // Si hay menos de 4 puntos, devolver la lista original
+
+//     for (int i = 0; i < pixel.size() - 3; i += 3)
+//     {
+//         for (float t = 0; t <= 1; t += 0.05)
+//         {
+//             result.append(cubicBezier(t, pixel[i], pixel[i + 1], pixel[i + 2], pixel[i + 3]));
+//         }
+//     }
+
+//     // Asegurar que el último punto siempre se incluya
+//     if (result.last().x != pixel.last().x || result.last().y != pixel.last().y)
+//     {
+//         result.append(pixel.last());
+//     }
+
+//     return result;
+// }
+
+// QList<Pixel> MapInfo::subsampling(const QList<Pixel> &pixel, double umbral) const
+// {
+//     QList<Pixel> result;
+//     if (pixel.isEmpty())
+//         return result;
+
+//     result.append(m_originalPosition);
+//     result.append(pixel.first()); // Agregar el primer punto
+
+//     for (int i = 1; i < pixel.size(); ++i)
+//     {
+//         double distancia = std::hypot(pixel[i].x - result.last().x, pixel[i].y - result.last().y);
+//         if (distancia > umbral)
+//         {
+//             result.append(pixel[i]);
+//         }
+//     }
+
+//     // Asegurar que el último punto siempre se incluya
+//     if (result.last().x != pixel.last().x || result.last().y != pixel.last().y)
+//     {
+//         result.append(pixel.last());
+//     }
+//     return result;
+// }
 
 bool MapInfo::isBlack(const QImage &image, Pixel point)
 {

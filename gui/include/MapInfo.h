@@ -95,16 +95,17 @@ public:
 
     Q_INVOKABLE QVariantList getPixels();
 
-    Pixel cubicBezier(float t, const Pixel& p0, const Pixel& p1, const Pixel& p2, const Pixel& p3) const;
-
-    QList<Pixel> smoothBezierPath(const QList<Pixel> &pixel) const;
-
-    QList<Pixel> subsampling(const QList<Pixel> &pixel, double umbral) const;
 
     // bool isBlack(const cv::Mat &image, cv::Point point);
     bool isBlack(const QImage &image, Pixel point);
     // std::vector<cv::Point> getLinePixels(cv::Point p1, cv::Point p2);
     bool linePassesThroughBlack(const QImage &image, Pixel p1, Pixel p2);
+
+    QList<Pixel> filtrarPuntosCercanos(const QList<Pixel>& puntos, int distancia);
+    double distancia(const Pixel& p1, const Pixel& p2);
+    Pixel puntoIntermedio(const Pixel& p1, const Pixel& p2, double distanciaObjetivo);
+    QList<Pixel> suavizarTrayectoria(const QList<Pixel>& puntos, double distanciaSuavizado = 2.0);
+
 
     // cv::Mat base64ToMat(const QString &base64);
     Q_INVOKABLE bool checkPathBlack();

@@ -42,7 +42,7 @@ public:
 
 
     void reset();
-    geometry_msgs::msg::Quaternion create_quaternion_from_yaw(double yaw);
+    geometry_msgs::msg::Quaternion create_quaternion_from_yaw(double yaw, bool radianes = false);
 
 private:
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_publisher_;

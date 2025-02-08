@@ -62,7 +62,7 @@ std::vector<Punto> suavizarTrayectoria(const std::vector<Punto>& puntos, double 
     std::vector<Punto> resultado;
     resultado.push_back(puntos[0]); // Primer punto siempre se mantiene
 
-    for (size_t i = 1; i < puntos.size() - 2; ++i) {
+    for (size_t i = 1; i < puntos.size() - 1; ++i) {
         Punto A = puntos[i - 1];
         Punto B = puntos[i];
         Punto C = puntos[i + 1];

@@ -77,8 +77,11 @@ void Servidor::startRead()
         {
             if (!ec)
             {
+                pri1("Hola1");
                 std::string buffer_string(buffer_array.data(), bytes_transferred);
+                pri1("Hola2");
                 std::vector<std::string> buffer_vector = splitJson(buffer_string);
+                pri1("Hola3");
                 handleType(buffer_vector);
             }
             else if (ec == boost::asio::error::eof || ec == boost::asio::error::connection_reset)
@@ -125,10 +128,11 @@ void Servidor::handleRequestMsg(const json &json_msg)
 
 void Servidor::handleRequestImg(const json &json_msg)
 {
+    pri1("Estoy en handleRequestImg");
     if (json_msg.contains("target") && json_msg["target"] == targetToString(Request_Map_SLAM))
     {
         std::string path = PATH2MAP;
-        if (json_msg.contains("map_name") && json_msg["map_name"].empty())
+        if (json_msg.contains("map_name") && json_msg["map_name"] != "")
         {
             std::cout << "+++++++++++++++Mapa seleccionado: " << json_msg["map_name"] << std::endl;
             path += "/" + replaceSpaces(json_msg["map_name"]) + ".pgm";
@@ -140,12 +144,16 @@ void Servidor::handleRequestImg(const json &json_msg)
         }
         else
         {
+            pri1("Estoy en else de handleRequestImg");
             FinalPosition fp = nodeManager.getPositionRobotPixel(path + "/temporal_map.yaml");
             path += "/temporal_map.pgm";
 
             // send robot position pixels
+            pri1("Hola4");
             sendMsg(toJson::sendRobotPositionPixel(fp.x_pixel, fp.y_pixel, fp.yaw));
+            pri1("Hola5");
             nodeManager.refresh_map();
+            pri1("Hola6");
             std::thread sendMapThread(&Servidor::sendImageMap, this, path, true);
             sendMapThread.detach();
         }

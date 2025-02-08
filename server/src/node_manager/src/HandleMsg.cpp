@@ -144,7 +144,7 @@ void HandleMsg::WaypointFollower(const json &json_msg)
             double next_y = real_position_static.y;
             last_angle = calculate_angle(pose_stamped.pose.position.x, pose_stamped.pose.position.y, next_x, next_y);
         } // Orientación de identidad
-        pose_stamped.pose.orientation = nodeManager.create_quaternion_from_yaw(last_angle);
+        pose_stamped.pose.orientation = nodeManager.create_quaternion_from_yaw(last_angle, true);
 
         std::cout << "x=" << pose_stamped.pose.position.x << ", y=" << pose_stamped.pose.position.y << ", theta=" << last_angle << std::endl;
         // Agregar al vector

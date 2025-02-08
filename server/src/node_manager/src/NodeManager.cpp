@@ -47,11 +47,11 @@ void NodeManager::create_publisher(Target const &target)
     }
     else if (target == Waypoint_Follower)
     {
-        if (!goal_pose_launch_file)
-        {
-            processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, NAV2_BRINGUP_LAUNCH);
-            goal_pose_launch_file = true;
-        }
+        // if (!goal_pose_launch_file)
+        // {
+        //     processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, NAV2_BRINGUP_LAUNCH);
+        //     goal_pose_launch_file = true;
+        // }
         if (!initial_pose_publisher_)
         {
             initial_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(INITIAL_POSE_TOPIC, 10);
@@ -285,14 +285,18 @@ void NodeManager::publish_initial_pose(double x, double y, double theta)
     RCLCPP_INFO(node_manager->get_logger(), "Pose inicial publicada: x=%.2f, y=%.2f, theta=%.2f", x, y, theta);
 }
 
-geometry_msgs::msg::Quaternion NodeManager::create_quaternion_from_yaw(double yaw)
+geometry_msgs::msg::Quaternion NodeManager::create_quaternion_from_yaw(double yaw, bool radianes)
 {
-    double yaw_radians = yaw * M_PI / 180.0;
+    if (!radianes)
+    {
+        yaw = yaw * M_PI / 180.0;
+    }
+    // double yaw_radians = yaw * M_PI / 180.0;
     geometry_msgs::msg::Quaternion quaternion;
     quaternion.x = 0.0;
     quaternion.y = 0.0;
-    quaternion.z = sin(yaw_radians / 2.0);
-    quaternion.w = cos(yaw_radians / 2.0);
+    quaternion.z = sin(yaw / 2.0);
+    quaternion.w = cos(yaw / 2.0);
     std::cout << " z=" << quaternion.z << ", w=" << quaternion.w << std::endl;
     return quaternion;
 }
