@@ -59,6 +59,8 @@ ApplicationFlowForm {
                 // console.log("estoy en backButton !mapping")
                 mystackview.pop()
                 applicationFlow.state = applicationFlow.previousState
+                stringHandler.sendStateRemoteControlledHandler(1,0)
+
             }
         }
         else if (applicationFlow.state === "mapPath")

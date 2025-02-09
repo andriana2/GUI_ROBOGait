@@ -56,6 +56,10 @@ struct RealPositionMeters
 
 // #define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f " + PATH2MAP + " "
 #define MAP_SAVER_CLI "ros2 run nav2_map_server map_saver_cli -t /map -f /home/robogait/Desktop/gui_andri/gui/server/maps"
+#define NAME_MAP_SAVER_CLI "nav2_map_save"
+
+#define TF_SERVICE "ros2 run tf_service tf_service_node"
+#define NAME_TF_SERVICE "tf_service"
 
 // launch
 #define CARTOGRAPHER_LAUNCH "ros2 launch turtlebot3_cartographer cartographer_noRviz.launch.py use_sim_time:=True" // &ejecutar en segundo plano

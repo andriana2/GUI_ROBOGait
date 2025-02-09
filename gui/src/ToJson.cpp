@@ -140,13 +140,13 @@ namespace ToJson
         jsonObj["y_initialpose"] = height - 1 - y_initialpose;
         jsonObj["y_goalpose"] = height - 1 - y_goalpose;
 
-        float originalAngle = 360 - theta_initialpose;
+        float originalAngle = theta_initialpose;
         if (originalAngle >= 360) {
             originalAngle -= 360;
         }
         jsonObj["theta_initialpose"] = originalAngle;
 
-        float originalAngleGoalPose = 360 - theta_goalpose;
+        float originalAngleGoalPose = theta_goalpose;
         if (originalAngleGoalPose >= 360) {
             originalAngleGoalPose -= 360;
         }
@@ -165,7 +165,7 @@ namespace ToJson
         jsonObj["y_initialpose"] = height - 1 - y_initialpose; // OOOOJJJJOOOO porque en qt el origen de coordenadas esta invertido
         // jsonObj["y_goalpose"] = height - 1 - y_goalpose; // OOOOJJJJOOOO porque en qt el origen de coordenadas esta invertido
 
-        float originalAngle = 360 - theta_initialpose;
+        float originalAngle =theta_initialpose;
         if (originalAngle >= 360) {
             originalAngle -= 360;
         }

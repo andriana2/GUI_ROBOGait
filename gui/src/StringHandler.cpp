@@ -87,7 +87,7 @@ bool StringHandler::isInSameNetwork(const QString &ip1, const std::string &subne
 #else
 bool StringHandler::isInSameNetwork(const QString &ip1, const std::string &subnetMask)
 {
-    qDebug() << "HOLA";
+    // qDebug() << "HOLA";
     if (ip1.isEmpty() || ip1 == "")
     {
         return 0;

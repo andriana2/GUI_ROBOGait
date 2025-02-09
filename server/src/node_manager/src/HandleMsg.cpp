@@ -31,7 +31,7 @@ void HandleMsg::JoystickPosition(const json &json_msg)
     float linear, angular;
     nodeManager.create_publisher(stringToTarget(json_msg["target"]));
     toJson::getPositionJoystick(json_msg, linear, angular); // json
-    pri1(std::to_string(linear) + "<-linear angular ->" + std::to_string(angular));
+    // pri1(std::to_string(linear) + "<-linear angular ->" + std::to_string(angular));
     nodeManager.execute_position(linear, angular);
 }
 
@@ -92,18 +92,19 @@ void HandleMsg::SaveMap(const json &json_msg)
 {
     std::string path = PATH2MAP;
     path += "/" + replaceSpaces(json_msg["map_name"]);
-    nodeManager.refresh_map(json_msg["map_name"]);
+    nodeManager.refresh_map(replaceSpaces(json_msg["map_name"]));
 }
 
 void HandleMsg::GoalPose(const json &json_msg)
 {
-    nodeManager.start_goal_pose(json_msg["map_name"].get<std::string>());
+    std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
+    nodeManager.start_goal_pose(map_name_without_spaces);
 
     nodeManager.create_publisher(Goal_Pose);
     // std::cout << "JSON recibido: " << json_msg.dump(4) << std::endl;
     std::string path_yaml = PATH2MAP;
 
-    path_yaml += "/" + json_msg["map_name"].get<std::string>() + ".yaml";
+    path_yaml += "/" + map_name_without_spaces + ".yaml";
     RealPositionMeters initialpose = getRealPosition(path_yaml, json_msg["x_initialpose"], json_msg["y_initialpose"]);
     nodeManager.publish_initial_pose(initialpose.x, initialpose.y, json_msg["theta_initialpose"]);
     RealPositionMeters goalpose = getRealPosition(path_yaml, json_msg["x_goalpose"], json_msg["y_goalpose"]);
@@ -112,10 +113,12 @@ void HandleMsg::GoalPose(const json &json_msg)
 
 void HandleMsg::WaypointFollower(const json &json_msg)
 {
-    nodeManager.start_waypoint_follower(json_msg["map_name"].get<std::string>());
+    std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
+
+    nodeManager.start_waypoint_follower(map_name_without_spaces);
     nodeManager.create_publisher(Waypoint_Follower);
     std::string path_yaml = PATH2MAP;
-    path_yaml += "/" + json_msg["map_name"].get<std::string>() + ".yaml";
+    path_yaml += "/" + map_name_without_spaces + ".yaml";
     RealPositionMeters initialpose = getRealPosition(path_yaml, json_msg["x_initialpose"], json_msg["y_initialpose"]);
     nodeManager.publish_initial_pose(initialpose.x, initialpose.y, json_msg["theta_initialpose"]);
 

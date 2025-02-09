@@ -150,7 +150,7 @@ struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_
 
     final_position.x_pixel = static_cast<int>((x_robot - origin_x) / resolution);
     final_position.y_pixel = static_cast<int>((y_robot - origin_y) / resolution);
-    final_position.yaw = -1 * yaw_robot;
+    final_position.yaw = yaw_robot;
 
     return final_position;
 }
@@ -203,7 +203,7 @@ struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_
 
         final_position.x_pixel = static_cast<int>((x_robot - origin_x) / resolution);
         final_position.y_pixel = static_cast<int>((y_robot - origin_y) / resolution);
-        final_position.yaw = -1 * yaw_robot;
+        final_position.yaw = yaw_robot;
         std::cout << "Pixel X: " << final_position.x_pixel << ", Pixel Y: " << final_position.y_pixel << ", YAW: " << final_position.yaw << std::endl;
     }
     catch (const std::exception &e)
@@ -218,12 +218,13 @@ void NodeManager::refresh_map(std::string const &map_name)
 {
     std::string command = MAP_SAVER_CLI;
     command += "/" + replaceSpaces(map_name);
-    int result = system(command.c_str());
+    // int result = system(command.c_str());
+    processController.startProcess(NAME_MAP_SAVER_CLI, command);
 
-    if (result == 0)
-        std::cout << "El comando se ejecutó correctamente. " << command << std::endl;
-    else
-        std::cerr << "Hubo un error al ejecutar el comando. " << command << std::endl;
+    // if (result == 0)
+    //     std::cout << "El comando se ejecutó correctamente. " << command << std::endl;
+    // else
+    //     std::cerr << "Hubo un error al ejecutar el comando. " << command << std::endl;
 }
 
 void NodeManager::execute_position(float const &linear, float const &angular)
@@ -244,6 +245,7 @@ void NodeManager::start_robot()
     {
         pri1("Comienzo robot");
         processController.startProcess(NAME_START_ROBOT, START_ROBOT);
+        processController.startProcess(NAME_TF_SERVICE, TF_SERVICE);
         start_robot_launch_file = true;
     }
 }
@@ -336,7 +338,7 @@ void NodeManager::start_waypoint_follower(std::string const &map_name)
         std::string bringup = NAV2_BRINGUP_LAUNCH;
         bringup += PATH2MAP;
         bringup += "/" + map_name + ".yaml";
-        pri1("Start bring up:" + bringup);
+        pri1("Start bring up waypoint follower:" + bringup);
         processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, bringup);
         waypoint_follower_launch_file = true;
     }
@@ -369,5 +371,10 @@ void NodeManager::publish_waypoint_follower(const std::vector<geometry_msgs::msg
 
 void NodeManager::reset()
 {
+    slam_launch_file = false;
+    goal_pose_launch_file = false;
+    waypoint_follower_launch_file = false;
+    start_robot_launch_file = false;
+    processController.listProcesses();
     processController.stopAllProcesses();
 }

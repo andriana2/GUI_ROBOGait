@@ -77,11 +77,11 @@ void Servidor::startRead()
         {
             if (!ec)
             {
-                pri1("Hola1");
+                // pri1("Hola1");
                 std::string buffer_string(buffer_array.data(), bytes_transferred);
-                pri1("Hola2");
+                // pri1("Hola2");
                 std::vector<std::string> buffer_vector = splitJson(buffer_string);
-                pri1("Hola3");
+                // pri1("Hola3");
                 handleType(buffer_vector);
             }
             else if (ec == boost::asio::error::eof || ec == boost::asio::error::connection_reset)
@@ -128,16 +128,18 @@ void Servidor::handleRequestMsg(const json &json_msg)
 
 void Servidor::handleRequestImg(const json &json_msg)
 {
-    pri1("Estoy en handleRequestImg");
+    // pri1("Estoy en handleRequestImg");
     if (json_msg.contains("target") && json_msg["target"] == targetToString(Request_Map_SLAM))
     {
         std::string path = PATH2MAP;
         if (json_msg.contains("map_name") && json_msg["map_name"] != "")
         {
-            std::cout << "+++++++++++++++Mapa seleccionado: " << json_msg["map_name"] << std::endl;
+            std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
+
+            std::cout << "+++++++++++++++Mapa seleccionado: " << map_name_without_spaces << std::endl;
             float resolution = 0.0;
-            getResolution(path + "/" + replaceSpaces(json_msg["map_name"]) + ".yaml", resolution);
-            path += "/" + replaceSpaces(json_msg["map_name"]) + ".pgm";
+            getResolution(path + "/" + map_name_without_spaces + ".yaml", resolution);
+            path += "/" + map_name_without_spaces + ".pgm";
             int width = 0, height = 0;
             getImageSize(path, width, height);
             
@@ -147,16 +149,16 @@ void Servidor::handleRequestImg(const json &json_msg)
         }
         else
         {
-            pri1("Estoy en else de handleRequestImg");
+            // pri1("Estoy en else de handleRequestImg");
             FinalPosition fp = nodeManager.getPositionRobotPixel(path + "/temporal_map.yaml");
             path += "/temporal_map.pgm";
 
             // send robot position pixels
-            pri1("Hola4");
+            // pri1("Hola4");
             sendMsg(toJson::sendRobotPositionPixel(fp.x_pixel, fp.y_pixel, fp.yaw));
-            pri1("Hola5");
+            // pri1("Hola5");
             nodeManager.refresh_map();
-            pri1("Hola6");
+            // pri1("Hola6");
             std::thread sendMapThread(&Servidor::sendImageMap, this, path, true);
             sendMapThread.detach();
         }
@@ -231,8 +233,8 @@ void Servidor::sendImageMap(const std::string &name_map, bool img_map_SLAM)
             }
 
             // Enviar el JSON por el socket
-            pri1("IMAGEN ENVIADA: " + jsonStr);
-            pri1(std::to_string(jsonStr.size()));
+            pri1("IMAGEN ENVIADA size: " + std::to_string(jsonStr.size()));
+            // pri1(std::to_string(jsonStr.size()));
             boost::asio::write(socket_, boost::asio::buffer(jsonStr));
             bytesSent += bytesRead;
             numFrame++;
