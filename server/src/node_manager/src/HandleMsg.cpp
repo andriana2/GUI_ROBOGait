@@ -14,6 +14,10 @@ void HandleMsg::handleMsgJson(const json &json_msg)
         ChangeMapName(json_msg);
     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Save_Map))
         SaveMap(json_msg);
+    else if (json_msg.contains("target") && json_msg["target"] == targetToString(Initial_Pose))
+        InitialPose(json_msg);
+    else if (json_msg.contains("target") && json_msg["target"] == targetToString(Init_Bringup))
+        InitBringup(json_msg);
     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Goal_Pose))
         GoalPose(json_msg);
     else if (json_msg.contains("target") && json_msg["target"] == targetToString(State_Menu))
@@ -95,18 +99,31 @@ void HandleMsg::SaveMap(const json &json_msg)
     nodeManager.refresh_map(replaceSpaces(json_msg["map_name"]));
 }
 
-void HandleMsg::GoalPose(const json &json_msg)
+void HandleMsg::InitBringup(const json &json_msg)
 {
     std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
-    nodeManager.start_goal_pose(map_name_without_spaces);
+    nodeManager.start_bringup(map_name_without_spaces);
+}
 
-    nodeManager.create_publisher(Goal_Pose);
-    // std::cout << "JSON recibido: " << json_msg.dump(4) << std::endl;
+void HandleMsg::InitialPose(const json &json_msg)
+{
+    std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
+    // nodeManager.start_initial_pose(map_name_without_spaces);
+    nodeManager.create_publisher(Initial_Pose);
     std::string path_yaml = PATH2MAP;
-
     path_yaml += "/" + map_name_without_spaces + ".yaml";
     RealPositionMeters initialpose = getRealPosition(path_yaml, json_msg["x_initialpose"], json_msg["y_initialpose"]);
     nodeManager.publish_initial_pose(initialpose.x, initialpose.y, json_msg["theta_initialpose"]);
+}
+
+void HandleMsg::GoalPose(const json &json_msg)
+{
+    std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
+
+    nodeManager.create_publisher(Goal_Pose);
+    std::string path_yaml = PATH2MAP;
+
+    path_yaml += "/" + map_name_without_spaces + ".yaml";
     RealPositionMeters goalpose = getRealPosition(path_yaml, json_msg["x_goalpose"], json_msg["y_goalpose"]);
     nodeManager.publish_goal_pose(goalpose.x, goalpose.y, json_msg["theta_goalpose"]);
 }
@@ -115,12 +132,9 @@ void HandleMsg::WaypointFollower(const json &json_msg)
 {
     std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
 
-    nodeManager.start_waypoint_follower(map_name_without_spaces);
     nodeManager.create_publisher(Waypoint_Follower);
     std::string path_yaml = PATH2MAP;
     path_yaml += "/" + map_name_without_spaces + ".yaml";
-    RealPositionMeters initialpose = getRealPosition(path_yaml, json_msg["x_initialpose"], json_msg["y_initialpose"]);
-    nodeManager.publish_initial_pose(initialpose.x, initialpose.y, json_msg["theta_initialpose"]);
 
     std::vector<geometry_msgs::msg::PoseStamped> waypoints;
 
@@ -153,7 +167,7 @@ void HandleMsg::WaypointFollower(const json &json_msg)
         // Agregar al vector
         waypoints.push_back(pose_stamped);
     }
-    std::cout << "Primera fase completada "<< std::endl;
+    std::cout << "Primera fase completada " << std::endl;
     nodeManager.publish_waypoint_follower(waypoints);
 }
 

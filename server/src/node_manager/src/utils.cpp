@@ -43,6 +43,10 @@ std::string targetToString(Target target)
         return "Request_Map_SLAM";
     case Robot_Position_Pixel:
         return "Robot_Position_Pixel";
+    case Request_Robot_Position:
+        return "Request_Robot_Position";
+    case Robot_Position_Pixel_Initialpose:
+        return "Robot_Position_Pixel_Initialpose";
     case Img_Map_SLAM:
         return "Img_Map_SLAM";
     case Img_Map_Path:
@@ -63,6 +67,10 @@ std::string targetToString(Target target)
         return "Delete_Map";
     case Img_Map_Select:
         return "Img_Map_Select";
+    case Init_Bringup:
+        return "Init_Bringup";
+    case Initial_Pose:
+        return "Initial_Pose";
     case Goal_Pose:
         return "Goal_Pose";
     case Waypoint_Follower:
@@ -82,6 +90,10 @@ Target stringToTarget(const std::string &str)
         return Request_Map_SLAM;
     if (str == "Robot_Position_Pixel")
         return Robot_Position_Pixel;
+    if (str == "Request_Robot_Position")
+        return Request_Robot_Position;
+    if (str == "Robot_Position_Pixel_Initialpose")
+        return Robot_Position_Pixel_Initialpose;
     if (str == "Img_Map_SLAM")
         return Img_Map_SLAM;
     if (str == "Img_Map_Path")
@@ -102,6 +114,10 @@ Target stringToTarget(const std::string &str)
         return Delete_Map;
     if (str == "Img_Map_Select")
         return Img_Map_Select;
+    if (str == "Init_Bringup")
+        return Init_Bringup;
+    if (str == "Initial_Pose")
+        return Initial_Pose;
     if (str == "Goal_Pose")
         return Goal_Pose;
     if (str == "Waypoint_Follower")

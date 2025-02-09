@@ -120,6 +120,10 @@ Target stringToTarget(const QString &str)
         return Request_Map_SLAM;
     else if (str == "Robot_Position_Pixel")
         return Robot_Position_Pixel;
+    else if (str == "Request_Robot_Position")
+        return Request_Robot_Position;
+    else if (str == "Robot_Position_Pixel_Initialpose")
+        return Robot_Position_Pixel_Initialpose;
     else if (str == "Img_Map_SLAM")
         return Img_Map_SLAM;
     else if (str == "Img_Map_Path")
@@ -142,6 +146,10 @@ Target stringToTarget(const QString &str)
         return Delete_Map;
     else if (str == "Img_Map_Select")
         return Img_Map_Select;
+    else if (str == "Init_Bringup")
+        return Init_Bringup;
+    else if (str == "Initial_Pose")
+        return Initial_Pose;
     else if (str == "Goal_Pose")
         return Goal_Pose;
     else if (str == "Waypoint_Follower")
@@ -165,6 +173,10 @@ QString targetToString(Target target)
         return "Request_Map_SLAM";
     case Robot_Position_Pixel:
         return "Robot_Position_Pixel";
+    case Request_Robot_Position:
+        return "Request_Robot_Position";
+    case Robot_Position_Pixel_Initialpose:
+        return "Robot_Position_Pixel_Initialpose";
     case Img_Map_SLAM:
         return "Img_Map_SLAM";
     case Img_Map_Path:
@@ -185,6 +197,10 @@ QString targetToString(Target target)
         return "Delete_Map";
     case Img_Map_Select:
         return "Img_Map_Select";
+    case Init_Bringup:
+        return "Init_Bringup";
+    case Initial_Pose:
+        return "Initial_Pose";
     case Goal_Pose:
         return "Goal_Pose";
     case Waypoint_Follower:

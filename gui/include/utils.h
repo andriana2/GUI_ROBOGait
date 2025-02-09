@@ -23,7 +23,9 @@ enum Target
 {
     Joystick_Position,
     Request_Map_SLAM,
+    Request_Robot_Position,
     Robot_Position_Pixel,
+    Robot_Position_Pixel_Initialpose,
     Img_Map_SLAM,
     Img_Map_Path,
     Save_Map,
@@ -34,6 +36,8 @@ enum Target
     Change_Map_Name,
     Delete_Map,
     Img_Map_Select,
+    Init_Bringup,
+    Initial_Pose,
     Goal_Pose,
     Waypoint_Follower,
     Stop_Process

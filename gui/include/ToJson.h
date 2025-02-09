@@ -19,15 +19,21 @@ namespace ToJson
 
     QJsonDocument sendRequestMapName();
 
+    QJsonDocument sendRequestRobotPosition(QString const &map_name);
+
     QJsonDocument sendChangeMapName(const QString &new_map_name, const QString &last_map_name);
 
     QJsonDocument sendDeleteMap(const QString &map_name);
 
     QJsonDocument sendStateMenu(bool in);
 
-    QJsonDocument sendGoalPose(QString const &map_name, int const &x_initialpose, int const &y_initialpose, float const &theta_initialpose, int const &x_goalpose, int const &y_goalpose, float const &theta_goalpose, int const &height);
+    QJsonDocument initBringUp(QString const &map_name);
 
-    QJsonDocument sendWaypointFollower(QString const &map_name, int const &x_initialpose, int const &y_initialpose, float const &theta_initialpose, QList<Pixel> pixels, int const &height);
+    QJsonDocument sendInitialPose(QString const &map_name, int const &x_initialpose, int const &y_initialpose, float const &theta_initialpose,int const &height);
+
+    QJsonDocument sendGoalPose(QString const &map_name, int const &x_goalpose, int const &y_goalpose, float const &theta_goalpose, int const &height);
+
+    QJsonDocument sendWaypointFollower(QString const &map_name, QList<Pixel> pixels , int const &height);
 
     QJsonDocument stopProcesses();
 }

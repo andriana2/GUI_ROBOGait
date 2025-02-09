@@ -21,6 +21,8 @@ private:
     void DeleteMap(const json &json_msg);
     void ChangeMapName(const json &json_msg);
     void SaveMap(const json &json_msg);
+    void InitBringup(const json &json_msg);
+    void InitialPose(const json &json_msg);
     void GoalPose(const json &json_msg);
     void WaypointFollower(const json &json_msg);
     void StateMenu(const json &json_msg);

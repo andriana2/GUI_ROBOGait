@@ -47,7 +47,7 @@ class MapInfo : public QObject
     Q_PROPERTY(Pixel finalScreenPosition READ finalScreenPosition NOTIFY finalScreenPositionChanged FINAL)
 
     Q_PROPERTY(float resolution READ resolution WRITE setResolution NOTIFY resolutionChanged FINAL)
-
+    Q_PROPERTY(bool checkInitInitialPose READ checkInitInitialPose WRITE setCheckInitInitialPose NOTIFY checkInitInitialPoseChanged FINAL)
 
 public:
     explicit MapInfo(QObject *parent = nullptr);
@@ -112,12 +112,19 @@ public:
 
     std::vector<Pixel> getLinePixels(Pixel p1, Pixel p2);
 
+    Q_INVOKABLE void initBringUp();
+    Q_INVOKABLE void sendInitialPose();
     Q_INVOKABLE void sendGoalPose();
     Q_INVOKABLE void sendWaypointFollower();
     Q_INVOKABLE void sendStopProcesses();
 
     float resolution() const;
     void setResolution(float newResolution);
+
+    bool checkInitInitialPose() const;
+    Q_INVOKABLE void setCheckInitInitialPose(bool newCheckInitInitialPose);
+
+    void getRobotPositionInitialpose(const QJsonObject &json);
 
 signals:
     void mapNameChanged();
@@ -135,10 +142,14 @@ signals:
 
     void resolutionChanged();
 
+    void checkInitInitialPoseChanged();
+
 private:
     Cliente *cliente;
     StringHandler *stringHandler;
     bool repeated_delegate_list_view = 0;
+
+    QTimer *periodicTimerMapInfo;
 
     QString m_mapName; // nombre del mapa
     float m_orientation; // orietacion del robot en la posicion inicial
@@ -155,6 +166,9 @@ private:
 
     Pixel m_finalScreenPosition;
     float m_resolution;
+    bool m_checkInitInitialPose;
+
+
 };
 
 #endif // MAPINFO_H

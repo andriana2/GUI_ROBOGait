@@ -34,11 +34,11 @@ void NodeManager::create_publisher(Target const &target)
     }
     else if (target == Goal_Pose)
     {
-        if (!initial_pose_publisher_)
-        {
-            initial_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(INITIAL_POSE_TOPIC, 10);
-            RCLCPP_INFO(node_manager->get_logger(), "Publisher /initialpose.");
-        }
+        // if (!initial_pose_publisher_)
+        // {
+        //     initial_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(INITIAL_POSE_TOPIC, 10);
+        //     RCLCPP_INFO(node_manager->get_logger(), "Publisher /initialpose.");
+        // }
         if (!goal_pose_publisher_)
         {
             goal_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseStamped>(GOAL_POSE_TOPIC, 10);
@@ -47,16 +47,11 @@ void NodeManager::create_publisher(Target const &target)
     }
     else if (target == Waypoint_Follower)
     {
-        // if (!goal_pose_launch_file)
+        // if (!initial_pose_publisher_)
         // {
-        //     processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, NAV2_BRINGUP_LAUNCH);
-        //     goal_pose_launch_file = true;
+        //     initial_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(INITIAL_POSE_TOPIC, 10);
+        //     RCLCPP_INFO(node_manager->get_logger(), "Publisher /initialpose.");
         // }
-        if (!initial_pose_publisher_)
-        {
-            initial_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(INITIAL_POSE_TOPIC, 10);
-            RCLCPP_INFO(node_manager->get_logger(), "Publisher /initialpose.");
-        }
         if (!waypoint_follower_client_)
         {
             waypoint_follower_client_ = rclcpp_action::create_client<nav2_msgs::action::FollowWaypoints>(node_manager, WAYPOINT_FOLLOWER_ACTION);
@@ -66,6 +61,14 @@ void NodeManager::create_publisher(Target const &target)
                 RCLCPP_INFO(node_manager->get_logger(), "Esperando al servidor de acción...");
                 rclcpp::sleep_for(std::chrono::seconds(1));
             }
+        }
+    }
+    else if (target == Initial_Pose)
+    {
+        if (!initial_pose_publisher_)
+        {
+            initial_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(INITIAL_POSE_TOPIC, 10);
+            RCLCPP_INFO(node_manager->get_logger(), "Publisher /initialpose.");
         }
     }
 #endif
@@ -97,10 +100,10 @@ void NodeManager::close_publisher(Target const &target)
     }
     else if (target == Goal_Pose)
     {
-        if (goal_pose_launch_file)
+        if (bringup_launch_file)
         {
             processController.stopProcess(NAME_NAV2_BRINGUP_LAUNCH);
-            goal_pose_launch_file = false;
+            bringup_launch_file = false;
         }
         if (!initial_pose_publisher_)
         {
@@ -115,10 +118,10 @@ void NodeManager::close_publisher(Target const &target)
     }
     else if (target == Waypoint_Follower)
     {
-        if (goal_pose_launch_file)
+        if (bringup_launch_file)
         {
             processController.stopProcess(NAME_NAV2_BRINGUP_LAUNCH);
-            goal_pose_launch_file = false;
+            bringup_launch_file = false;
         }
         if (!initial_pose_publisher_)
         {
@@ -318,29 +321,16 @@ void NodeManager::publish_goal_pose(double x, double y, double theta)
     RCLCPP_INFO(node_manager->get_logger(), "Publicando goal_pose: (x: %.2f, y: %.2f, theta: %.2f)", x, y, theta);
 }
 
-void NodeManager::start_goal_pose(std::string const &map_name)
+void NodeManager::start_bringup(std::string const &map_name)
 {
-    if (!goal_pose_launch_file)
+    if (!bringup_launch_file)
     {
         std::string bringup = NAV2_BRINGUP_LAUNCH;
         bringup += PATH2MAP;
         bringup += "/" + map_name + ".yaml";
         pri1("Start bring up GOAL POSE:" + bringup);
         processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, bringup);
-        goal_pose_launch_file = true;
-    }
-}
-
-void NodeManager::start_waypoint_follower(std::string const &map_name)
-{
-    if (!waypoint_follower_launch_file)
-    {
-        std::string bringup = NAV2_BRINGUP_LAUNCH;
-        bringup += PATH2MAP;
-        bringup += "/" + map_name + ".yaml";
-        pri1("Start bring up waypoint follower:" + bringup);
-        processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, bringup);
-        waypoint_follower_launch_file = true;
+        bringup_launch_file = true;
     }
 }
 
@@ -372,8 +362,7 @@ void NodeManager::publish_waypoint_follower(const std::vector<geometry_msgs::msg
 void NodeManager::reset()
 {
     slam_launch_file = false;
-    goal_pose_launch_file = false;
-    waypoint_follower_launch_file = false;
+    bringup_launch_file = false;
     start_robot_launch_file = false;
     processController.listProcesses();
     processController.stopAllProcesses();

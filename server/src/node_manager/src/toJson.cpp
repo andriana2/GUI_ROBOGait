@@ -14,6 +14,17 @@ namespace toJson
             {"yaw", yaw}};
     }
 
+    json sendRobotPositionInitialpose(int x, int y, float yaw)
+    {
+        pri1("Send x" + std::to_string(x) + "Send y = " + std::to_string(y) + "Send yaw = " + std::to_string(yaw));
+        return {
+            {"opt", headerToString(MSG)},
+            {"target", targetToString(Robot_Position_Pixel_Initialpose)},
+            {"x", x},
+            {"y", y},
+            {"yaw", yaw}};
+    }
+
     json sendImgMap(const std::string data, int size_data, int total_size_img, int num_frame, int total_frame, bool img_map_slam)
     {
         std::string target_name;
@@ -45,9 +56,7 @@ namespace toJson
             }
         }
         else
-        {
             std::cerr << "Error: La clave 'linear' no existe o no es una cadena válida." << std::endl;
-        }
 
         if (j.contains("angular") && j["angular"].is_string())
         {
@@ -57,13 +66,12 @@ namespace toJson
             }
             catch (const std::exception &e)
             {
-                std::cerr << "Error: No se pudo convertir 'angular' a float: " << e.what() << std::endl;
+                std::cerr
+                    << "Error: No se pudo convertir 'angular' a float: " << e.what() << std::endl;
             }
         }
         else
-        {
             std::cerr << "Error: La clave 'angular' no existe o no es una cadena válida." << std::endl;
-        }
     }
 
     json sendMapName(std::vector<std::string> const &vec_map_name)

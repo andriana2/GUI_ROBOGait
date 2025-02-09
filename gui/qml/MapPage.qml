@@ -26,6 +26,7 @@ MapPageForm {
                 errorPopup.open()
                 return;
             }
+            mapInfo.initBringUp();
         }
         if(state === "mp_goalPosePosition")
         {
@@ -45,6 +46,8 @@ MapPageForm {
                 errorPopup.open()
                 return;
             }
+            if(!mapInfo.checkInitInitialPose)
+                mapInfo.sendInitialPose();
         }
         if(state === "mp_goalPoseOrientation")
         {
@@ -91,6 +94,8 @@ MapPageForm {
     mapPageForm_boxImages.onBif_draw_path_pressed: {
         if (state === "selectAction")
             mapPage.state = "mp_drawPath"
+        if(!mapInfo.checkInitInitialPose)
+            mapInfo.sendInitialPose();
 
     }
 
@@ -328,7 +333,7 @@ MapPageForm {
             PropertyChanges {
                 target: mapPage
                 mapPageForm_previousState: "mp_goalPosePosition"
-                mapPageForm_nextState: ""
+                mapPageForm_nextState: "mp_outGoalPose"
             }
             PropertyChanges {
                 target: mapPageForm_text
@@ -396,6 +401,44 @@ MapPageForm {
             PropertyChanges {
                 target: mapPageForm_boxImages
                 state: "bi_draw_path"
+            }
+        },
+        State {
+            name: "mp_outGoalPose"
+            StateChangeScript {
+                script: mp_map.canvas.requestPaint()
+            }
+            PropertyChanges {
+                target: mapPage
+                mapPageForm_previousState: "mp_goalPosePosition"
+                mapPageForm_nextState: ""
+            }
+            PropertyChanges {
+                target: mapPageForm_text
+                text: qsTr("Moviendo")
+            }
+            PropertyChanges {
+                target: mapPageForm_orientationCircleForm
+                state: "nothing"
+            }
+            PropertyChanges {
+                target: mapPageForm_buttonNext
+                enabled: false
+                opacity: 0
+            }
+            // PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Enviar")}
+            PropertyChanges {
+                target: mapPageForm_buttonPrevious
+                enabled: false
+                opacity: 0
+            }
+            PropertyChanges {
+                target: mp_map
+                map_currentState: "map_outGoalPose"
+            }
+            PropertyChanges {
+                target: mapPageForm_boxImages
+                state: "bi_nothing"
             }
         }
     ]

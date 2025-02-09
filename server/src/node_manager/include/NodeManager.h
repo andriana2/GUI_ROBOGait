@@ -37,8 +37,7 @@ public:
     void start_robot();
     void stop_robot();
 
-    void start_goal_pose(std::string const &map_name);
-    void start_waypoint_follower(std::string const &map_name);
+    void start_bringup(std::string const &map_name);
 
 
     void reset();
@@ -56,8 +55,7 @@ private:
     ProcessController processController;
 
     bool slam_launch_file = false;
-    bool goal_pose_launch_file = false;
-    bool waypoint_follower_launch_file = false;
+    bool bringup_launch_file = false;
     bool start_robot_launch_file = false;
 };
 

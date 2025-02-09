@@ -90,6 +90,9 @@ Item {
             function onFinalPathOrientationChanged() {
                 canvas.requestPaint();
             }
+            function onPositionScreenChanged(){
+                canvas.requestPaint();
+            }
         }
 
         function drawAndValidateImage(x, y, orientation) {
@@ -242,6 +245,11 @@ Item {
                 ctx.clearRect(0, 0, width, height);
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 drawPath(ctx);
+                break;
+            case "map_outGoalPose":
+                console.log("map_outGoalPose")
+                ctx.clearRect(0, 0, width, height);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
 
                 break;
             default:

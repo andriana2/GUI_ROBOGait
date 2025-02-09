@@ -11,6 +11,8 @@ namespace toJson
 
     json sendRobotPositionPixel(int x, int y, float yaw);
 
+    json sendRobotPositionInitialpose(int x, int y, float yaw);
+
     json sendImgMap(const std::string data, int size_data, int total_size_img, int num_frame, int total_frame, bool img_map_slam);
 
     void getPositionJoystick(json const &j, float &linear_output, float &angular_output);

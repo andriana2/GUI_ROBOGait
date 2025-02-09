@@ -33,7 +33,7 @@ void Servidor::resetConnection()
     {
         std::cout << "Cerrando la conexión con el cliente...\n";
         socket_.close();
-        buf_.clear();  // Limpia el buffer
+        buf_.clear(); // Limpia el buffer
         nodeManager.reset();
         startAccept(); // Espera por un nuevo cliente
     }
@@ -119,10 +119,27 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
 
 void Servidor::handleRequestMsg(const json &json_msg)
 {
+    pri1("Estoy en handleRequestMsg");
     if (json_msg.contains("target") && json_msg["target"] == targetToString(Map_Name))
     {
         std::string path = PATH2MAP;
         sendMsg(toJson::sendMapName(getMapName(path)));
+    }
+    else if (json_msg.contains("target") && json_msg["target"] == targetToString(Request_Robot_Position))
+    {
+        pri1("Estoy en handleRequestMsg EEEEEELLLLSSSEEEEE");
+
+        std::string path = PATH2MAP;
+        if (json_msg.contains("map_name") && json_msg["map_name"] != "")
+        {
+            pri1("hola");
+            std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
+            path += "/" + map_name_without_spaces + ".yaml";
+            pri1("hola2");
+            FinalPosition fp = nodeManager.getPositionRobotPixel(path);
+            pri1("hola3");
+            sendMsg(toJson::sendRobotPositionInitialpose(fp.x_pixel, fp.y_pixel, fp.yaw));
+        }
     }
 }
 
@@ -142,7 +159,7 @@ void Servidor::handleRequestImg(const json &json_msg)
             path += "/" + map_name_without_spaces + ".pgm";
             int width = 0, height = 0;
             getImageSize(path, width, height);
-            
+
             sendMsg(toJson::sendInfoMap(json_msg["map_name"], width, height, resolution));
             std::thread sendMapThread(&Servidor::sendImageMap, this, path, false);
             sendMapThread.detach();

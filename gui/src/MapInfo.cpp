@@ -1,7 +1,24 @@
 #include "../include/MapInfo.h"
 #include "include/ToJson.h"
 
-MapInfo::MapInfo(QObject *parent) { clearInfoImage(); }
+MapInfo::MapInfo(QObject *parent) {
+    periodicTimerMapInfo = new QTimer(this);
+    clearInfoImage();
+    qDebug() << "Hey";
+    connect(periodicTimerMapInfo, &QTimer::timeout, this, [this]()
+            {
+                static int i = 0;
+                if (m_checkInitInitialPose && i == 20) {
+                    cliente->sendMessage(ToJson::sendRequestRobotPosition(mapName()));
+                    i = 0;
+                }
+                else
+                {
+                    if (i == 20)
+                        i = 0;
+                }
+                i++; });
+}
 
 void MapInfo::setClient(Cliente *cli)
 {
@@ -184,6 +201,13 @@ void MapInfo::clearInfoImage()
     m_finalPathOrientation = 0.0f; // radianes de la posicion final del robot
     m_finalPathPosition = Pixel();
     repeated_delegate_list_view = 0;
+    m_resolution = 0.0;
+    m_checkInitInitialPose = false;
+    qDebug() << "Buenas";
+    if (periodicTimerMapInfo->isActive())
+    {
+        periodicTimerMapInfo->stop();
+    }
 }
 
 bool MapInfo::checkPixelBlack(const int &x, const int &y)
@@ -243,11 +267,11 @@ QVariantList MapInfo::getPixels()
 
     for (const Pixel &p : pixelList)
     {
-        int x_original = std::round((static_cast<double>(p.x) * m_screenSize.x) / m_imageSize.x);
-        int y_original = std::round((static_cast<double>(p.y) * m_screenSize.y) / m_imageSize.y);
+        int x_screen = std::round((static_cast<double>(p.x) * m_screenSize.x) / m_imageSize.x);
+        int y_screen = std::round((static_cast<double>(p.y) * m_screenSize.y) / m_imageSize.y);
         QVariantMap point;
-        point["x"] = x_original;
-        point["y"] = y_original;
+        point["x"] = x_screen;
+        point["y"] = y_screen;
         points.append(point);
     }
     emit pixelsChanged();
@@ -313,72 +337,6 @@ QList<Pixel> MapInfo::suavizarTrayectoria(const QList<Pixel>& puntos, double dis
     resultado.push_back(puntos.back()); // Último punto siempre se mantiene
     return resultado;
 }
-
-
-
-// Pixel MapInfo::cubicBezier(float t, const Pixel &p0, const Pixel &p1, const Pixel &p2, const Pixel &p3) const
-// {
-//     float u = 1 - t;
-//     float tt = t * t;
-//     float uu = u * u;
-//     float uuu = uu * u;
-//     float ttt = tt * t;
-
-//     Pixel pixel;
-//     pixel.x = uuu * p0.x + 3 * uu * t * p1.x + 3 * u * tt * p2.x + ttt * p3.x;
-//     pixel.y = uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y;
-
-//     return pixel;
-// }
-
-// QList<Pixel> MapInfo::smoothBezierPath(const QList<Pixel> &pixel) const
-// {
-//     QList<Pixel> result;
-//     if (pixel.size() < 4)
-//         return pixel; // Si hay menos de 4 puntos, devolver la lista original
-
-//     for (int i = 0; i < pixel.size() - 3; i += 3)
-//     {
-//         for (float t = 0; t <= 1; t += 0.05)
-//         {
-//             result.append(cubicBezier(t, pixel[i], pixel[i + 1], pixel[i + 2], pixel[i + 3]));
-//         }
-//     }
-
-//     // Asegurar que el último punto siempre se incluya
-//     if (result.last().x != pixel.last().x || result.last().y != pixel.last().y)
-//     {
-//         result.append(pixel.last());
-//     }
-
-//     return result;
-// }
-
-// QList<Pixel> MapInfo::subsampling(const QList<Pixel> &pixel, double umbral) const
-// {
-//     QList<Pixel> result;
-//     if (pixel.isEmpty())
-//         return result;
-
-//     result.append(m_originalPosition);
-//     result.append(pixel.first()); // Agregar el primer punto
-
-//     for (int i = 1; i < pixel.size(); ++i)
-//     {
-//         double distancia = std::hypot(pixel[i].x - result.last().x, pixel[i].y - result.last().y);
-//         if (distancia > umbral)
-//         {
-//             result.append(pixel[i]);
-//         }
-//     }
-
-//     // Asegurar que el último punto siempre se incluya
-//     if (result.last().x != pixel.last().x || result.last().y != pixel.last().y)
-//     {
-//         result.append(pixel.last());
-//     }
-//     return result;
-// }
 
 bool MapInfo::isBlack(const QImage &image, Pixel point)
 {
@@ -471,14 +429,38 @@ bool MapInfo::checkPathBlack()
     return foundBlack;
 }
 
+void MapInfo::initBringUp()
+{
+    cliente->sendMessage(ToJson::initBringUp(m_mapName));
+}
+
+void MapInfo::sendInitialPose()
+{
+    cliente->sendMessage(ToJson::sendInitialPose(m_mapName, m_originalPosition.x, m_originalPosition.y, m_orientation, m_imageSize.y));
+
+    // if (!periodicTimerMapInfo->isActive())
+    // {
+    //     periodicTimerMapInfo->start(200);
+    // }
+    setCheckInitInitialPose(true);
+}
+
 void MapInfo::sendGoalPose()
 {
-    cliente->sendMessage(ToJson::sendGoalPose(m_mapName, m_originalPosition.x, m_originalPosition.y, m_orientation, m_finalPathPosition.x, m_finalPathPosition.y, m_finalPathOrientation, m_imageSize.y));
+    if (!periodicTimerMapInfo->isActive())
+    {
+        periodicTimerMapInfo->start(200);
+    }
+    cliente->sendMessage(ToJson::sendGoalPose(m_mapName, m_finalPathPosition.x, m_finalPathPosition.y, m_finalPathOrientation, m_imageSize.y));
 }
 
 void MapInfo::sendWaypointFollower()
 {
-    cliente->sendMessage(ToJson::sendWaypointFollower(m_mapName, m_originalPosition.x, m_originalPosition.y, m_orientation, m_pixels, m_imageSize.y));
+    if (!periodicTimerMapInfo->isActive())
+    {
+        periodicTimerMapInfo->start(200);
+    }
+    cliente->sendMessage(ToJson::sendWaypointFollower(m_mapName, m_pixels, m_imageSize.y));
 }
 
 void MapInfo::sendStopProcesses()
@@ -497,4 +479,26 @@ void MapInfo::setResolution(float newResolution)
         return;
     m_resolution = newResolution;
     emit resolutionChanged();
+}
+
+bool MapInfo::checkInitInitialPose() const
+{
+    return m_checkInitInitialPose;
+}
+
+void MapInfo::setCheckInitInitialPose(bool newCheckInitInitialPose)
+{
+    if (m_checkInitInitialPose == newCheckInitInitialPose)
+        return;
+    m_checkInitInitialPose = newCheckInitInitialPose;
+    emit checkInitInitialPoseChanged();
+}
+
+void MapInfo::getRobotPositionInitialpose(const QJsonObject &json)
+{
+    setOrientation(json["yaw"].toDouble());
+
+    int x_screen = std::round((static_cast<double>(json["x"].toInt()) * m_screenSize.x) / m_imageSize.x);
+    int y_screen = std::round((static_cast<double>(json["y"].toInt()) * m_screenSize.y) / m_imageSize.y);
+    setPositionScreen(x_screen, y_screen);
 }
