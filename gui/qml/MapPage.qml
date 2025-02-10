@@ -70,7 +70,7 @@ MapPageForm {
             mapInfo.sendWaypointFollower()
         }
 
-        if(state === "mp_initialOrientation" || state === "mp_goalPosePosition" || state === "mp_initialPosition")
+        if(state === "mp_initialOrientation" || state === "mp_goalPosePosition" || state === "mp_initialPosition" || state === "mp_goalPoseOrientation" || state === "mp_outGoalPose")
         {
             mapPage.state = mapPage.mapPageForm_nextState
         }
@@ -411,7 +411,7 @@ MapPageForm {
             PropertyChanges {
                 target: mapPage
                 mapPageForm_previousState: "mp_goalPosePosition"
-                mapPageForm_nextState: ""
+                mapPageForm_nextState: "selectAction"
             }
             PropertyChanges {
                 target: mapPageForm_text
@@ -423,10 +423,10 @@ MapPageForm {
             }
             PropertyChanges {
                 target: mapPageForm_buttonNext
-                enabled: false
-                opacity: 0
+                enabled: true
+                opacity: 1
             }
-            // PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Enviar")}
+            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Nuevo Camino")}
             PropertyChanges {
                 target: mapPageForm_buttonPrevious
                 enabled: false

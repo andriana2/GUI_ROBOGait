@@ -24,10 +24,8 @@ int main(int argc, char *argv[])
     }
 
     Cliente cliente(8080);
-    qDebug() << "Hola";
     StringHandler stringHandler;
     MapInfo mapInfo;
-    qDebug() << "Hola2";
 
     cliente.setStringHandler(&stringHandler);
     cliente.setMapInfo(&mapInfo);

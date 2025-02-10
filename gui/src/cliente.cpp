@@ -67,6 +67,8 @@ void Cliente::processJson(const QJsonDocument &json)
     {
         if (stringToTarget(jsonObj["target"].toString()) == Robot_Position_Pixel)
             stringHandler->getRobotPositionPixel(jsonObj);
+        if (stringToTarget(jsonObj["target"].toString()) == Robot_Position_Pixel_Initialpose)
+            mapInfo->getRobotPositionInitialpose(jsonObj);
         if (stringToTarget(jsonObj["target"].toString()) == Map_Name) // vector de mapas
         {
             if (jsonObj.contains("vec_map_name") && jsonObj["vec_map_name"].isArray())

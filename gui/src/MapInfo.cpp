@@ -4,7 +4,6 @@
 MapInfo::MapInfo(QObject *parent) {
     periodicTimerMapInfo = new QTimer(this);
     clearInfoImage();
-    qDebug() << "Hey";
     connect(periodicTimerMapInfo, &QTimer::timeout, this, [this]()
             {
                 static int i = 0;
@@ -128,7 +127,7 @@ void MapInfo::addInfoImageOriginal(const int &x, const int &y)
     int y_original = std::round((static_cast<double>(y) * m_imageSize.y) / m_screenSize.y);
 
     m_pixels.append(Pixel{x_original, y_original});
-    qDebug() << "x_original  " << x_original << " y_original  " << y_original;
+    // qDebug() << "x_original  " << x_original << " y_original  " << y_original;
 
     // emit pixelsChanged();
 }
@@ -203,7 +202,6 @@ void MapInfo::clearInfoImage()
     repeated_delegate_list_view = 0;
     m_resolution = 0.0;
     m_checkInitInitialPose = false;
-    qDebug() << "Buenas";
     if (periodicTimerMapInfo->isActive())
     {
         periodicTimerMapInfo->stop();
@@ -465,6 +463,9 @@ void MapInfo::sendWaypointFollower()
 
 void MapInfo::sendStopProcesses()
 {
+    if(checkInitInitialPose() == true)
+        setCheckInitInitialPose(false);
+
     cliente->sendMessage(ToJson::stopProcesses());
 }
 
@@ -499,6 +500,6 @@ void MapInfo::getRobotPositionInitialpose(const QJsonObject &json)
     setOrientation(json["yaw"].toDouble());
 
     int x_screen = std::round((static_cast<double>(json["x"].toInt()) * m_screenSize.x) / m_imageSize.x);
-    int y_screen = std::round((static_cast<double>(json["y"].toInt()) * m_screenSize.y) / m_imageSize.y);
+    int y_screen = screenSize().y - std::round((static_cast<double>(json["y"].toInt()) * m_screenSize.y) / m_imageSize.y);
     setPositionScreen(x_screen, y_screen);
 }

@@ -5,7 +5,7 @@ namespace toJson
 
     json sendRobotPositionPixel(int x, int y, float yaw)
     {
-        pri1("Send x" + std::to_string(x) + "Send y = " + std::to_string(y) + "Send yaw = " + std::to_string(yaw));
+        // pri1("Send x" + std::to_string(x) + "Send y = " + std::to_string(y) + "Send yaw = " + std::to_string(yaw));
         return {
             {"opt", headerToString(MSG)},
             {"target", targetToString(Robot_Position_Pixel)},
@@ -16,7 +16,8 @@ namespace toJson
 
     json sendRobotPositionInitialpose(int x, int y, float yaw)
     {
-        pri1("Send x" + std::to_string(x) + "Send y = " + std::to_string(y) + "Send yaw = " + std::to_string(yaw));
+        yaw = yaw * 180.0 / M_PI;
+        // pri1("Send x" + std::to_string(x) + "Send y = " + std::to_string(y) + "Send yaw = " + std::to_string(yaw));
         return {
             {"opt", headerToString(MSG)},
             {"target", targetToString(Robot_Position_Pixel_Initialpose)},

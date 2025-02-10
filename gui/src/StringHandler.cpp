@@ -494,5 +494,6 @@ void StringHandler::requestMapName()
 
 void StringHandler::menu_page(bool in)
 {
+    mapInfo->setCheckInitInitialPose(false);//OJOOOOOOOOOOOOOOOOOOOOOO
     cliente->sendMessage(ToJson::sendStateMenu(in));
 }

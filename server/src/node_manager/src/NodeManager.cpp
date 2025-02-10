@@ -9,7 +9,7 @@ NodeManager::NodeManager(rclcpp::Node::SharedPtr node_ptr) : processController()
 void NodeManager::create_publisher(Target const &target)
 {
 #if !EN_CASA
-    pri1("Estoy en create_publisher");
+    // pri1("Estoy en create_publisher");
     if (target == Joystick_Position)
     {
         if (!cmd_vel_publisher_)
@@ -70,6 +70,12 @@ void NodeManager::create_publisher(Target const &target)
             initial_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(INITIAL_POSE_TOPIC, 10);
             RCLCPP_INFO(node_manager->get_logger(), "Publisher /initialpose.");
         }
+        if (!tf_service_client_)
+        {
+            // Crear el publisher si no existe
+            tf_service_client_ = node_manager->create_client<interface_srv::srv::GetRobotPosition>("get_transform");
+            RCLCPP_INFO(node_manager->get_logger(), "Robot Pose Client initialized.");
+        }
     }
 #endif
 }
@@ -115,6 +121,11 @@ void NodeManager::close_publisher(Target const &target)
             goal_pose_publisher_.reset();
             RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /goal_pose.");
         }
+        // if (!tf_service_client_)
+        // {
+        //     tf_service_client_.reset();
+        //     RCLCPP_INFO(node_manager->get_logger(), "Close Robot Pose Client destroy.");
+        // }
     }
     else if (target == Waypoint_Follower)
     {
@@ -133,6 +144,11 @@ void NodeManager::close_publisher(Target const &target)
             waypoint_follower_client_.reset();
             RCLCPP_INFO(node_manager->get_logger(), "Close Cliente /waypoint_follower.");
         }
+        // if (!tf_service_client_)
+        // {
+        //     tf_service_client_.reset();
+        //     RCLCPP_INFO(node_manager->get_logger(), "Close Robot Pose Client destroy.");
+        // }
     }
 #endif
 }
@@ -255,6 +271,12 @@ void NodeManager::start_robot()
 
 void NodeManager::stop_robot()
 {
+    if (!tf_service_client_)
+    {
+        tf_service_client_.reset();
+        RCLCPP_INFO(node_manager->get_logger(), "Close Robot Pose Client destroy.");
+    }
+
     if (start_robot_launch_file)
     {
         processController.stopProcess(NAME_START_ROBOT);
@@ -361,6 +383,11 @@ void NodeManager::publish_waypoint_follower(const std::vector<geometry_msgs::msg
 
 void NodeManager::reset()
 {
+    if (!tf_service_client_)
+    {
+        tf_service_client_.reset();
+        RCLCPP_INFO(node_manager->get_logger(), "Close Robot Pose Client destroy.");
+    }
     slam_launch_file = false;
     bringup_launch_file = false;
     start_robot_launch_file = false;

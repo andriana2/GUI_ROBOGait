@@ -127,17 +127,17 @@ void Servidor::handleRequestMsg(const json &json_msg)
     }
     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Request_Robot_Position))
     {
-        pri1("Estoy en handleRequestMsg EEEEEELLLLSSSEEEEE");
+        // pri1("Estoy en handleRequestMsg EEEEEELLLLSSSEEEEE");
 
         std::string path = PATH2MAP;
         if (json_msg.contains("map_name") && json_msg["map_name"] != "")
         {
-            pri1("hola");
+            // pri1("hola");
             std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
             path += "/" + map_name_without_spaces + ".yaml";
-            pri1("hola2");
+            // pri1("hola2");
             FinalPosition fp = nodeManager.getPositionRobotPixel(path);
-            pri1("hola3");
+            // pri1("hola3");
             sendMsg(toJson::sendRobotPositionInitialpose(fp.x_pixel, fp.y_pixel, fp.yaw));
         }
     }
