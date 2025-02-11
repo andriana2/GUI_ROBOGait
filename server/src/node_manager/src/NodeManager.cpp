@@ -233,21 +233,38 @@ struct FinalPosition NodeManager::getPositionRobotPixel(std::string const &path_
 }
 #endif
 
+void NodeManager::execute_command(std::string const &command)
+{
+    int result = system(command.c_str());
+    if (result == 0)
+        std::cout << "El comando se ejecutó correctamente. " << command << std::endl;
+    else
+        std::cerr << "Hubo un error al ejecutar el comando. " << command << std::endl;
+}
+
 void NodeManager::refresh_map(std::string const &map_name)
 {
+#if !EN_CASA
+
     std::string command = MAP_SAVER_CLI;
     command += "/" + replaceSpaces(map_name);
     // int result = system(command.c_str());
-    processController.startProcess(NAME_MAP_SAVER_CLI, command);
+    std::thread t(&NodeManager::execute_command, this, command);
+    t.detach();
+
+    // processController.startProcess(NAME_MAP_SAVER_CLI, command);
 
     // if (result == 0)
     //     std::cout << "El comando se ejecutó correctamente. " << command << std::endl;
     // else
     //     std::cerr << "Hubo un error al ejecutar el comando. " << command << std::endl;
+#endif
 }
 
 void NodeManager::execute_position(float const &linear, float const &angular)
 {
+#if !EN_CASA
+
     if (cmd_vel_publisher_)
     {
         geometry_msgs::msg::Twist twist_msg;
@@ -256,10 +273,13 @@ void NodeManager::execute_position(float const &linear, float const &angular)
         cmd_vel_publisher_->publish(twist_msg);
         std::cout << "valores publicados linear: " << linear << " angular: " << angular << std::endl;
     }
+#endif
 }
 
 void NodeManager::start_robot()
 {
+#if !EN_CASA
+
     if (!start_robot_launch_file)
     {
         pri1("Comienzo robot");
@@ -267,6 +287,7 @@ void NodeManager::start_robot()
         processController.startProcess(NAME_TF_SERVICE, TF_SERVICE);
         start_robot_launch_file = true;
     }
+#endif
 }
 
 void NodeManager::stop_robot()
@@ -286,6 +307,8 @@ void NodeManager::stop_robot()
 
 void NodeManager::publish_initial_pose(double x, double y, double theta)
 {
+#if !EN_CASA
+
     // Crear el mensaje de tipo PoseWithCovarianceStamped
     auto msg = geometry_msgs::msg::PoseWithCovarianceStamped();
     msg.header.frame_id = "map"; // Referencia al marco del mapa
@@ -310,6 +333,8 @@ void NodeManager::publish_initial_pose(double x, double y, double theta)
     // Publicar el mensaje
     initial_pose_publisher_->publish(msg);
     RCLCPP_INFO(node_manager->get_logger(), "Pose inicial publicada: x=%.2f, y=%.2f, theta=%.2f", x, y, theta);
+
+#endif
 }
 
 geometry_msgs::msg::Quaternion NodeManager::create_quaternion_from_yaw(double yaw, bool radianes)
@@ -330,6 +355,8 @@ geometry_msgs::msg::Quaternion NodeManager::create_quaternion_from_yaw(double ya
 
 void NodeManager::publish_goal_pose(double x, double y, double theta)
 {
+#if !EN_CASA
+
     geometry_msgs::msg::Quaternion orientation = create_quaternion_from_yaw(theta);
     geometry_msgs::msg::PoseStamped goal_pose;
     goal_pose.header.frame_id = "map";        // Usualmente 'map' o 'odom'
@@ -341,10 +368,13 @@ void NodeManager::publish_goal_pose(double x, double y, double theta)
     // Publicar el mensaje
     goal_pose_publisher_->publish(goal_pose);
     RCLCPP_INFO(node_manager->get_logger(), "Publicando goal_pose: (x: %.2f, y: %.2f, theta: %.2f)", x, y, theta);
+#endif
 }
 
 void NodeManager::start_bringup(std::string const &map_name)
 {
+#if !EN_CASA
+
     if (!bringup_launch_file)
     {
         std::string bringup = NAV2_BRINGUP_LAUNCH;
@@ -354,10 +384,13 @@ void NodeManager::start_bringup(std::string const &map_name)
         processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, bringup);
         bringup_launch_file = true;
     }
+#endif
 }
 
 void NodeManager::publish_waypoint_follower(const std::vector<geometry_msgs::msg::PoseStamped> &waypoints)
 {
+#if !EN_CASA
+
     if (waypoint_follower_client_)
     {
         auto goal_msg = nav2_msgs::action::FollowWaypoints::Goal();
@@ -379,10 +412,13 @@ void NodeManager::publish_waypoint_follower(const std::vector<geometry_msgs::msg
 
         waypoint_follower_client_->async_send_goal(goal_msg, send_goal_options);
     }
+#endif
 }
 
 void NodeManager::reset()
 {
+#if !EN_CASA
+
     if (!tf_service_client_)
     {
         tf_service_client_.reset();
@@ -393,4 +429,5 @@ void NodeManager::reset()
     start_robot_launch_file = false;
     processController.listProcesses();
     processController.stopAllProcesses();
+#endif
 }

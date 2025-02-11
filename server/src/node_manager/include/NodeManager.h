@@ -26,6 +26,7 @@ public:
     // void create_publisher(Target const &target, std::string const &path = "");
 
     void execute_position(float const &linear, float const &angular);
+    void execute_command(std::string const &command);
     void refresh_map(std::string const &map_name = "temporal_map");
 
     struct FinalPosition getPositionRobotPixel(std::string const &path_yaml);
@@ -39,7 +40,6 @@ public:
 
     void start_bringup(std::string const &map_name);
 
-
     void reset();
     geometry_msgs::msg::Quaternion create_quaternion_from_yaw(double yaw, bool radianes = false);
 
@@ -49,7 +49,6 @@ private:
     rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_publisher_;
     rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_pose_publisher_;
     rclcpp_action::Client<nav2_msgs::action::FollowWaypoints>::SharedPtr waypoint_follower_client_;
-
 
     rclcpp::Node::SharedPtr node_manager;
     ProcessController processController;
