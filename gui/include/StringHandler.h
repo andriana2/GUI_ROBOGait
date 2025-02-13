@@ -80,6 +80,8 @@ public:
 
     Q_INVOKABLE void menu_page(bool in);
 
+    Q_INVOKABLE void closeConnection();
+
 signals:
 
     void imageReceived(const QString &image);

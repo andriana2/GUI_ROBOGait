@@ -22,6 +22,7 @@ class Cliente : public QObject
     Q_OBJECT
 public:
     Cliente(int portNumber); //
+    ~Cliente();
 
     QTcpSocket *socket;
     void setStringHandler(StringHandler *sh);//

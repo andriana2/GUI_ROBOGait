@@ -8,7 +8,6 @@
 #include "../include/cliente.h"
 // #include "../include/Manage.h"
 
-
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
@@ -52,6 +51,10 @@ int main(int argc, char *argv[])
         },
         Qt::QueuedConnection);
     engine.load(url);
+
+    QObject::connect(&app, &QCoreApplication::aboutToQuit, &app, [&cliente]() {
+        cliente.closeConnection();
+    });
 
     return app.exec();
 }

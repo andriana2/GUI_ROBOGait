@@ -46,7 +46,7 @@ MapPageForm {
                 errorPopup.open()
                 return;
             }
-            if(!mapInfo.checkInitInitialPose)
+            // if(!mapInfo.checkInitInitialPose)
                 mapInfo.sendInitialPose();
         }
         if(state === "mp_goalPoseOrientation")
@@ -94,7 +94,7 @@ MapPageForm {
     mapPageForm_boxImages.onBif_draw_path_pressed: {
         if (state === "selectAction")
             mapPage.state = "mp_drawPath"
-        if(!mapInfo.checkInitInitialPose)
+        // if(!mapInfo.checkInitInitialPose)
             mapInfo.sendInitialPose();
 
     }

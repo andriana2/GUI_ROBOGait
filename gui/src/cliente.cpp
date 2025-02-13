@@ -23,6 +23,17 @@ Cliente::Cliente(int portNumber) : QObject() //, stringHandler(nullptr)
     connect(socket, &QTcpSocket::errorOccurred, this, &Cliente::onErrorOccurred);
 }
 
+Cliente::~Cliente() {
+    if (socket->isOpen()) {
+        socket->disconnectFromHost();
+        if (socket->state() != QAbstractSocket::UnconnectedState) {
+            socket->waitForDisconnected(3000);
+        }
+    }
+    delete socket;
+    delete timeoutTimer;
+}
+
 void Cliente::setStringHandler(StringHandler *sh) { stringHandler = sh; }
 
 void Cliente::onReadyRead()
@@ -197,22 +208,20 @@ void Cliente::sendMessage(const QJsonDocument &json)
 //     //     qDebug() << "NO ME HE CONECTADO";
 // }
 
-void Cliente::closeConnection()
-{
+void Cliente::closeConnection() {
+    qDebug() << "Estoy en CLOSE CONNECTION!!!";
     timeoutTimer->stop();
 
-    // qDebug() << tcpSocket->state();
-    disconnect(socket, &QTcpSocket::connected, 0, 0);
     disconnect(socket, &QTcpSocket::readyRead, 0, 0);
 
     bool shouldEmit = false;
-    switch (socket->state())
-    {
-    case 0:
+
+    switch (socket->state()) {
+    case QAbstractSocket::UnconnectedState:
         socket->disconnectFromHost();
         shouldEmit = true;
         break;
-    case 2:
+    case QAbstractSocket::ConnectedState:
         socket->abort();
         shouldEmit = true;
         break;
@@ -220,8 +229,7 @@ void Cliente::closeConnection()
         socket->abort();
     }
 
-    if (shouldEmit)
-    {
+    if (shouldEmit) {
         status = false;
         emit statusChanged(status);
     }
