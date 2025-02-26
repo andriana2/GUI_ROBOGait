@@ -156,6 +156,8 @@ Target stringToTarget(const QString &str)
         return Waypoint_Follower;
     else if (str == "Stop_Process")
         return Stop_Process;
+    else if (str == "Goal_Pose_Path")
+        return Goal_Pose_Path;
     else
     {
         Q_ASSERT(false);
@@ -207,6 +209,8 @@ QString targetToString(Target target)
         return "Waypoint_Follower";
     case Stop_Process:
         return "Stop_Process";
+    case Goal_Pose_Path:
+        return "Goal_Pose_Path";
     default:
         Q_ASSERT(false);
         return "Joystick_Position";

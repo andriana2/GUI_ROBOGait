@@ -48,6 +48,8 @@ class MapInfo : public QObject
 
     Q_PROPERTY(float resolution READ resolution WRITE setResolution NOTIFY resolutionChanged FINAL)
     Q_PROPERTY(bool checkInitInitialPose READ checkInitInitialPose WRITE setCheckInitInitialPose NOTIFY checkInitInitialPoseChanged FINAL)
+    Q_PROPERTY(QList<Pixel> trajectoryGoalPose READ trajectoryGoalPose NOTIFY trajectoryGoalPoseChanged FINAL)
+
 
 public:
     explicit MapInfo(QObject *parent = nullptr);
@@ -126,6 +128,12 @@ public:
 
     void getRobotPositionInitialpose(const QJsonObject &json);
 
+    Q_INVOKABLE QList<Pixel> trajectoryGoalPose() const;
+    void setTrajectoryGoalPose(QList<Pixel> const &trajectory);
+    Q_INVOKABLE void clearTrajectoryGoalPose();
+
+    void parseJsonToQList(const QJsonObject &jsonObj);
+
 signals:
     void mapNameChanged();
     void orientationChanged();
@@ -143,6 +151,8 @@ signals:
     void resolutionChanged();
 
     void checkInitInitialPoseChanged();
+
+    void trajectoryGoalPoseChanged();
 
 private:
     Cliente *cliente;
@@ -169,6 +179,7 @@ private:
     bool m_checkInitInitialPose;
 
 
+    QList<Pixel> m_trajectoryGoalPose;
 };
 
 #endif // MAPINFO_H

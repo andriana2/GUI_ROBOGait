@@ -35,6 +35,7 @@ public:
     bool getStatus(); //
     // void sendRequestImg(const QString &target);
 
+    void parseJsonToQList(const QJsonObject &jsonObj);
 public slots:
     void closeConnection(); //
     void connect2host(const QString hostAddress); //

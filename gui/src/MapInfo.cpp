@@ -1,5 +1,6 @@
 #include "../include/MapInfo.h"
 #include "include/ToJson.h"
+#include <qjsonarray.h>
 
 MapInfo::MapInfo(QObject *parent) {
     periodicTimerMapInfo = new QTimer(this);
@@ -8,7 +9,7 @@ MapInfo::MapInfo(QObject *parent) {
             {
                 static int i = 0;
                 if (m_checkInitInitialPose && i == 20) {
-                    cliente->sendMessage(ToJson::sendRequestRobotPosition(mapName()));
+                    // cliente->sendMessage(ToJson::sendRequestRobotPosition(mapName()));
                     i = 0;
                 }
                 else
@@ -202,6 +203,7 @@ void MapInfo::clearInfoImage()
     repeated_delegate_list_view = 0;
     m_resolution = 0.0;
     m_checkInitInitialPose = false;
+    m_trajectoryGoalPose.clear();
     if (periodicTimerMapInfo->isActive())
     {
         periodicTimerMapInfo->stop();
@@ -502,4 +504,62 @@ void MapInfo::getRobotPositionInitialpose(const QJsonObject &json)
     int x_screen = std::round((static_cast<double>(json["x"].toInt()) * m_screenSize.x) / m_imageSize.x);
     int y_screen = screenSize().y - std::round((static_cast<double>(json["y"].toInt()) * m_screenSize.y) / m_imageSize.y);
     setPositionScreen(x_screen, y_screen);
+}
+
+QList<Pixel> MapInfo::trajectoryGoalPose() const
+{
+    return m_trajectoryGoalPose;
+}
+
+void MapInfo::setTrajectoryGoalPose(const QList<Pixel> &trajectory)
+{
+    m_trajectoryGoalPose = trajectory;
+    emit trajectoryGoalPoseChanged();
+}
+
+void MapInfo::clearTrajectoryGoalPose()
+{
+    m_trajectoryGoalPose.clear();
+}
+
+void MapInfo::parseJsonToQList(const QJsonObject &jsonObj) {
+    if (!jsonObj.contains("points") || !jsonObj["points"].isArray()) {
+        qWarning() << "No se encontró el array 'points' en el JSON";
+        return;
+    }
+
+    QJsonArray jsonArray = jsonObj["points"].toArray();
+    QList<Pixel> pointsList;
+
+    // Iterar sobre el array y convertir cada objeto en un QPointF
+    for (const QJsonValue &value : jsonArray) {
+        if (value.isObject()) {
+            QJsonObject pointObj = value.toObject();
+            if (pointObj.contains("x") && pointObj.contains("y")) {
+                double x = pointObj["x"].toDouble();
+                double y = m_imageSize.y - pointObj["y"].toDouble();
+
+                int x_original = std::round((x * m_screenSize.x) / m_imageSize.x);
+                int y_original = std::round((y * m_screenSize.y) / m_imageSize.y);
+
+                pointsList.append(Pixel{x_original, y_original});
+
+                // Imprimir valores en consola
+                // qDebug().nospace() << "x: " << x
+                //                    << ", y: " << y
+                //                    << " | m_imageSize: (" << m_imageSize.x << ", " << m_imageSize.y << ")"
+                //                    << " | m_screenSize: (" << m_screenSize.x << ", " << m_screenSize.y << ")"
+                //                    << " | x_original: " << x * m_imageSize.x
+                //                    << ", y_original: " << y * m_imageSize.y;
+            }
+        }
+    }
+
+    // Imprimir todos los puntos convertidos
+    qDebug() << "Lista de puntos convertidos:";
+    for (const Pixel &p : pointsList) {
+        qDebug().nospace() << "Pixel -> x: " << p.x << ", y: " << p.y;
+    }
+
+    setTrajectoryGoalPose(pointsList);
 }

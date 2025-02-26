@@ -13,6 +13,7 @@
 #include "nav2_msgs/action/follow_waypoints.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
+#include "nav_msgs/msg/path.hpp"
 
 #include <yaml-cpp/yaml.h> // leer el archivo yaml
 
@@ -42,6 +43,8 @@ public:
 
     void reset();
     geometry_msgs::msg::Quaternion create_quaternion_from_yaw(double yaw, bool radianes = false);
+    std::vector<RealPositionMeters> getRealPositionPath();
+    void topic_plan_callback(const nav_msgs::msg::Path::SharedPtr msg);
 
 private:
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_publisher_;
@@ -49,6 +52,7 @@ private:
     rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initial_pose_publisher_;
     rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_pose_publisher_;
     rclcpp_action::Client<nav2_msgs::action::FollowWaypoints>::SharedPtr waypoint_follower_client_;
+    rclcpp::Subscription<nav_msgs::msg::Path>::SharedPtr plan_path_subscriber_;
 
     rclcpp::Node::SharedPtr node_manager;
     ProcessController processController;
@@ -56,6 +60,8 @@ private:
     bool slam_launch_file = false;
     bool bringup_launch_file = false;
     bool start_robot_launch_file = false;
+
+    std::vector<RealPositionMeters> path_;
 };
 
 #endif // NODEMANAGER_H

@@ -9,7 +9,7 @@
 #include <QVector>
 #include <QJsonObject>
 
-#define EN_CASA 0
+#define EN_CASA 1
 
 enum Header
 {
@@ -40,7 +40,8 @@ enum Target
     Initial_Pose,
     Goal_Pose,
     Waypoint_Follower,
-    Stop_Process
+    Stop_Process,
+    Goal_Pose_Path
 };
 
 struct FinalPosition

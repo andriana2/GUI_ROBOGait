@@ -113,6 +113,57 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             handleRequestMsg(json_msg);
         else
             std::cout << "El campo 'opt' no contiene 'MSG' o 'IMG_REQUEST' o no existe.\n";
+        // pri1("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
+        if (json_msg.contains("opt") && json_msg["opt"] == headerToString(MSG) && json_msg.contains("target") && json_msg["target"] == targetToString(Goal_Pose))
+        {
+            #if EN_CASA
+            // std::vector<RealPositionMeters> path_number = {
+            //     {0.060000020116567576, 0.21000003948807722},
+            //     {0.05966976269587487, 0.32496261902097734},
+            //     {0.05899427516749878, 0.3999589961761081},
+            //     {0.05571277716327838, 0.47487640909666373},
+            //     {0.06928928493394348, 0.5670454091883506},
+            //     {0.07326448564625476, 0.5917274545390518}};
+            std::vector<RealPositionMeters> path_number = nodeManager.getRealPositionPath();
+
+            #else
+            std::vector<RealPositionMeters> path_number = nodeManager.getRealPositionPath();
+
+            #endif
+
+            std::vector<FinalPosition> path_pixel;
+
+            std::string path = PATH2MAP;
+            path += "/" + replaceSpaces(json_msg["map_name"]) + ".yaml";
+            try
+            {
+                YAML::Node config = YAML::LoadFile(path);
+                float resolution = config["resolution"].as<float>();
+                auto origin = config["origin"];
+                float origin_x = origin[0].as<float>();
+                float origin_y = origin[1].as<float>();
+
+                for (const auto &point : path_number)
+                {
+                    FinalPosition final_p;
+                    final_p.x_pixel = static_cast<int>((point.x - origin_x) / resolution);
+                    final_p.y_pixel = static_cast<int>((point.y - origin_y) / resolution);
+                    path_pixel.push_back(final_p);
+                }
+
+                // Imprimir resultados
+                for (const auto &pos : path_pixel)
+                {
+                    std::cout << "Pixel Position: (" << pos.x_pixel << ", " << pos.y_pixel << ")\n";
+                }
+            }
+            catch (const YAML::Exception &e)
+            {
+                std::cerr << "Error al cargar el archivo YAML: " << e.what() << std::endl;
+            }
+
+            sendMsg(toJson::sendGoalPosePath(path_pixel));
+        }
     }
     startRead();
 }

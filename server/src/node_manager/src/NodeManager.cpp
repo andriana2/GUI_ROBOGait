@@ -44,6 +44,11 @@ void NodeManager::create_publisher(Target const &target)
             goal_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseStamped>(GOAL_POSE_TOPIC, 10);
             RCLCPP_INFO(node_manager->get_logger(), "Publisher /goal_pose.");
         }
+        if (!plan_path_subscriber_)
+        {
+            plan_path_subscriber_ = this->create_subscription<nav_msgs::msg::Path>(
+                "/plan", 10, std::bind(&PlanSubscriber::topic_callback, this, std::placeholders::_1));
+        }
     }
     else if (target == Waypoint_Follower)
     {
@@ -77,6 +82,16 @@ void NodeManager::create_publisher(Target const &target)
             RCLCPP_INFO(node_manager->get_logger(), "Robot Pose Client initialized.");
         }
     }
+#else
+    if (target == Goal_Pose)
+    {
+        if (!plan_path_subscriber_)
+        {
+            plan_path_subscriber_ = node_manager->create_subscription<nav_msgs::msg::Path>(
+                "/plan", 10, std::bind(&NodeManager::topic_plan_callback, this, std::placeholders::_1));
+        }
+    }
+
 #endif
 }
 
@@ -121,6 +136,11 @@ void NodeManager::close_publisher(Target const &target)
             goal_pose_publisher_.reset();
             RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /goal_pose.");
         }
+        if (!plan_path_subscriber_)
+        {
+            plan_path_subscriber_.reset();
+            RCLCPP_INFO(node_manager->get_logger(), "Close Subscriber /plan.");
+        }
         // if (!tf_service_client_)
         // {
         //     tf_service_client_.reset();
@@ -149,6 +169,15 @@ void NodeManager::close_publisher(Target const &target)
         //     tf_service_client_.reset();
         //     RCLCPP_INFO(node_manager->get_logger(), "Close Robot Pose Client destroy.");
         // }
+    }
+#else
+    if (target == Goal_Pose)
+    {
+        if (!plan_path_subscriber_)
+        {
+            plan_path_subscriber_.reset();
+            RCLCPP_INFO(node_manager->get_logger(), "Close Subscriber /plan.");
+        }
     }
 #endif
 }
@@ -430,4 +459,21 @@ void NodeManager::reset()
     processController.listProcesses();
     processController.stopAllProcesses();
 #endif
+}
+
+void NodeManager::topic_plan_callback(const nav_msgs::msg::Path::SharedPtr msg)
+{
+    path_.clear(); // Limpiar el vector antes de llenarlo
+
+    for (const auto &pose : msg->poses)
+    {
+        path_.push_back({static_cast<float>(pose.pose.position.x), static_cast<float>(pose.pose.position.y)});
+    }
+
+    RCLCPP_INFO(node_manager->get_logger(), "Received plan with %zu poses", path_.size());
+}
+
+std::vector<RealPositionMeters> NodeManager::getRealPositionPath()
+{
+    return path_;
 }

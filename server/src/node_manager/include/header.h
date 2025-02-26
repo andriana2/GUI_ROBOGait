@@ -2,7 +2,7 @@
 #define HEADER_H
 
 
-#define EN_CASA 0
+#define EN_CASA 1
 #define ROBOT 0
 enum Header {
     MSG,
@@ -31,7 +31,8 @@ enum Target {
     Initial_Pose,
     Goal_Pose,
     Waypoint_Follower,
-    Stop_Process
+    Stop_Process,
+    Goal_Pose_Path
 };
 
 struct FinalPosition
@@ -49,6 +50,8 @@ struct RealPositionMeters
 
 #if EN_CASA
 #define PATH2MAP "/home/andri/Desktop/gui_nuevo/gui_/server/maps" //casa
+#define START_ROBOT ""
+#define NAME_START_ROBOT ""
 #else
 #define PATH2MAP "/home/robogait/Desktop/gui_andri/gui/server/maps" // uni
 // #define SOURCE_GAZEBO ""bash -i -c 'source /usr/share/gazebo/setup.sh && echo \"Gazebo configurado\"'""

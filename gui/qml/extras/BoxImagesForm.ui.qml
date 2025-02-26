@@ -29,6 +29,13 @@ Item {
             source: boxImageForm.image_source_clear
             fillMode: Image.PreserveAspectFit
         }
+        Behavior on scale {
+            NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
+        }
+
+        // Change scale when pressed/released
+        onPressed: scale = 1.2
+        onReleased: scale = 1.0
     }
 
     Button {
@@ -43,6 +50,13 @@ Item {
             source: boxImageForm.image_source_edit
             fillMode: Image.PreserveAspectFit
         }
+        Behavior on scale {
+            NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
+        }
+
+        // Change scale when pressed/released
+        onPressed: scale = 1.2
+        onReleased: scale = 1.0
     }
 
     Button {
@@ -55,6 +69,13 @@ Item {
             source: boxImageForm.image_source_draw_path
             fillMode: Image.PreserveAspectFit
         }
+        Behavior on scale {
+            NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
+        }
+
+        // Change scale when pressed/released
+        onPressed: scale = 1.2
+        onReleased: scale = 1.0
     }
 
     Button {
@@ -68,6 +89,13 @@ Item {
             source: boxImageForm.image_source_check
             fillMode: Image.PreserveAspectFit
         }
+        Behavior on scale {
+            NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
+        }
+
+        // Change scale when pressed/released
+        onPressed: scale = 1.2
+        onReleased: scale = 1.0
     }
 
     Button {
@@ -81,6 +109,13 @@ Item {
             source: boxImageForm.image_source_check_black
             fillMode: Image.PreserveAspectFit
         }
+        Behavior on scale {
+            NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
+        }
+
+        // Change scale when pressed/released
+        onPressed: scale = 1.2
+        onReleased: scale = 1.0
     }
 }
 

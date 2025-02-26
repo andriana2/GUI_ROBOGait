@@ -77,6 +77,8 @@ std::string targetToString(Target target)
         return "Waypoint_Follower";
     case Stop_Process:
         return "Stop_Process";
+    case Goal_Pose_Path:
+        return "Goal_Pose_Path";
     default:
         return "UNKNOWN";
     }
@@ -124,6 +126,8 @@ Target stringToTarget(const std::string &str)
         return Waypoint_Follower;
     if (str == "Stop_Process")
         return Stop_Process;
+    if (str == "Goal_Pose_Path")
+        return Goal_Pose_Path;
 
     throw std::invalid_argument("Invalid Target string: " + str);
 }

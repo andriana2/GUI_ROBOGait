@@ -104,7 +104,17 @@ void Cliente::processJson(const QJsonDocument &json)
             mapInfo->setResolution(jsonObj["resolution"].toDouble());
             qDebug() << "width: " << jsonObj["width"].toInt() << "height: " << jsonObj["height"].toInt() << " Map name: " << jsonObj["map_name"].toString() << " Resolution: " << jsonObj["resolution"].toDouble();
         }
+        if (stringToTarget(jsonObj["target"].toString()) == Goal_Pose_Path)
+        {
+            qDebug()<< "************************************";
+            QString jsonString = json.toJson(QJsonDocument::Indented);
+
+            // Imprimirlo en la consola con qDebug()
+            qDebug().noquote() << "JSON recibido:\n" << jsonString;
+            mapInfo->parseJsonToQList(jsonObj);
+        }
     }
+
     else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_MSG)
     {
     }

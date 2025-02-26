@@ -93,4 +93,16 @@ namespace toJson
             {"height", height},
             {"resolution", resolution}};
     }
+
+    json sendGoalPosePath(std::vector<struct FinalPosition> const &path)
+    {
+        json j;
+        j["opt"] = headerToString(MSG);
+        j["target"] = targetToString(Goal_Pose_Path);
+        for (const auto &p : path)
+        {
+            j["points"].push_back({{"x", p.x_pixel}, {"y", p.y_pixel}});
+        }
+        return j;
+    }
 }

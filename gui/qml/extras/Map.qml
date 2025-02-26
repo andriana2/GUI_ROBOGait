@@ -93,6 +93,9 @@ Item {
             function onPositionScreenChanged(){
                 canvas.requestPaint();
             }
+            function onTrajectoryGoalPoseChanged(){
+                canvas.requestPaint();
+            }
         }
 
         function drawAndValidateImage(x, y, orientation) {
@@ -181,6 +184,28 @@ Item {
             }
         }
 
+        function drawPointsAndLines(ctx) {
+            if (mapInfo.trajectoryGoalPose.length === 0) return;
+            ctx.strokeStyle = "blue";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+
+            // Comienza desde el primer punto
+            var startPoint = mapInfo.trajectoryGoalPose[0];
+            ctx.moveTo(startPoint.x, startPoint.y);
+
+            for (var i = 1; i < mapInfo.trajectoryGoalPose.length; i++) {
+                var point = mapInfo.trajectoryGoalPose[i];
+
+                // Dibujar línea hacia el siguiente punto
+                ctx.lineTo(point.x, point.y);
+            }
+
+            ctx.stroke();
+        }
+
+
+
         onPaint: {
             var ctx = getContext('2d');
             switch (map_currentState) {
@@ -250,7 +275,7 @@ Item {
                 console.log("map_outGoalPose")
                 ctx.clearRect(0, 0, width, height);
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
-
+                drawPointsAndLines(ctx)
                 break;
             default:
                 console.log("Estado no reconocido: ", map_currentState);

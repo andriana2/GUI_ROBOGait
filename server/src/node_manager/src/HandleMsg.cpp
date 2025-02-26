@@ -126,6 +126,7 @@ void HandleMsg::GoalPose(const json &json_msg)
     path_yaml += "/" + map_name_without_spaces + ".yaml";
     RealPositionMeters goalpose = getRealPosition(path_yaml, json_msg["x_goalpose"], json_msg["y_goalpose"]);
     nodeManager.publish_goal_pose(goalpose.x, goalpose.y, json_msg["theta_goalpose"]);
+    
 }
 
 void HandleMsg::WaypointFollower(const json &json_msg)
