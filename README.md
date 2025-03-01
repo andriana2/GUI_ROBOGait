@@ -1,4 +1,4 @@
-# gui
+# GUI ROBOGait
 
 ## ERRORES Y SOLUCION
 ```bash
