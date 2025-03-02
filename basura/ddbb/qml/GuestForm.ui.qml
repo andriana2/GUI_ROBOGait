@@ -3,6 +3,8 @@ import QtQuick.Controls 2.15
 
 Page {
     id: guestPage
+    property alias gp_login: gp_login
+    property alias gp_singin: gp_singin
 
     // width: 1300
     // height: 700
@@ -73,6 +75,7 @@ Page {
                 spacing: 20
 
                 Button {
+                    id: gp_login
                     text: "Iniciar Sesion"
                     font.weight: Font.Light
                     font.capitalization: Font.AllUppercase
@@ -88,6 +91,7 @@ Page {
                 }
 
                 Button {
+                    id: gp_singin
                     text: "Registrarse"
                     font.weight: Font.Light
                     font.capitalization: Font.AllUppercase

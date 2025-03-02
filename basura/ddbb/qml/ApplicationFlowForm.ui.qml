@@ -5,9 +5,7 @@ import "extras"
 Rectangle {
     id: root
     color: "#518bb7"
-    property alias login: login
-    // property alias sign_in: sign_in
-    // property alias guest: guest
+    property alias registerPage: registerPage
 
     property string previousState: ""
     property alias mystackview: mystackview
@@ -29,8 +27,8 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.topMargin: parent.height / 20
-        initialItem: SingIn {
-            id: login
+        initialItem: RegisterPage {
+            id: registerPage
         }
         pushEnter: Transition {
             PropertyAnimation {
@@ -67,35 +65,8 @@ Rectangle {
         }
     }
     // Component {
-    //     id: ip
-    //     Ip {
-    //         visible: true
-    //     }
-    // }
-    // Component {
-    //     id: menu_app
-    //     MenuPrincipal {
-    //         visible:true
-    //     }
-    // }
-    // Component {
-    //     id: teledirigido
-    //     Teledirigido {
-    //         visible_value: applicationFlow.visible_image
-    //         visible: true
-    //         visible_save: applicationFlow.visible_save
-    //         type_save: applicationFlow.type_save
-    //     }
-    // }
-    // Component {
-    //     id: selectMap
-    //     SelectMap {
-    //         visible: true
-    //     }
-    // }
-    // Component {
-    //     id: mapPath
-    //     MapPage {
+    //     id: registerPager
+    //     RegisterPage {
     //         visible: true
     //     }
     // }

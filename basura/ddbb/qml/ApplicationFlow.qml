@@ -6,13 +6,6 @@ ApplicationFlowForm {
     id: applicationFlow
     state: "login"
 
-    function backButton()
-    {
-        mystackview.pop()
-        applicationFlow.state = applicationFlow.previousState
-    }
-
-
     // ! [State]
     states: [
         State{
@@ -40,10 +33,6 @@ ApplicationFlowForm {
                 backButton.enabled: false
                 saveButton.opacity: 0
                 saveButton.enabled: false
-                logo.opacity: 0
-                logo.enabled: false
-                title.opacity: 0
-                title.enabled: false
             }
             PropertyChanges {
                 target: mystackview
@@ -59,22 +48,17 @@ ApplicationFlowForm {
                 }
             }
             PropertyChanges {
-                target:applicationFlow
-                previousState: "menu_app"
+                target: toolbar
+                backButton.opacity: 0
+                backButton.enabled: false
+                saveButton.opacity: 0
+                saveButton.enabled: false
             }
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
             }
-            PropertyChanges {
-                target: toolbar
-                saveButton.opacity: 1
-                saveButton.enabled: true
-                backButton.opacity: 1
-                backButton.enabled: true
-            }
         }
     ]
-
 
 }
