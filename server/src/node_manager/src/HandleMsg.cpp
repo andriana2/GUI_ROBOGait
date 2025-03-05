@@ -1,5 +1,7 @@
 #include "../include/HandleMsg.h"
 
+#include <yaml-cpp/yaml.h>
+
 HandleMsg::HandleMsg(NodeManager &nodeManager) : nodeManager(nodeManager) {}
 
 void HandleMsg::handleMsgJson(const json &json_msg)
@@ -59,7 +61,14 @@ void HandleMsg::StateRemoteControlled(const json &json_msg)
 
 void HandleMsg::DeleteMap(const json &json_msg)
 {
-    std::string path = PATH2MAP;
+    YAML::Node config;
+    try {
+        std::string path_ = PATH;
+        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+    } catch (const std::exception& e) {
+        std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+    }
+    std::string path = config["PATH2MAP"].as<std::string>();
     path += "/" + replaceSpaces(json_msg["map_name"]);
     std::string path1 = path + ".pgm";
     if (std::remove(path1.c_str()) == 0)
@@ -94,7 +103,14 @@ void HandleMsg::ChangeMapName(const json &json_msg)
 
 void HandleMsg::SaveMap(const json &json_msg)
 {
-    std::string path = PATH2MAP;
+    YAML::Node config;
+    try {
+        std::string path_ = PATH;
+        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+    } catch (const std::exception& e) {
+        std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+    }
+    std::string path = config["PATH2MAP"].as<std::string>();
     path += "/" + replaceSpaces(json_msg["map_name"]);
     nodeManager.refresh_map(replaceSpaces(json_msg["map_name"]));
 }
@@ -110,7 +126,16 @@ void HandleMsg::InitialPose(const json &json_msg)
     std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
     // nodeManager.start_initial_pose(map_name_without_spaces);
     nodeManager.create_publisher(Initial_Pose);
-    std::string path_yaml = PATH2MAP;
+
+    YAML::Node config;
+    try {
+        std::string path_ = PATH;
+        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+    } catch (const std::exception& e) {
+        std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+    }
+    std::string path_yaml = config["PATH2MAP"].as<std::string>();
+
     path_yaml += "/" + map_name_without_spaces + ".yaml";
     RealPositionMeters initialpose = getRealPosition(path_yaml, json_msg["x_initialpose"], json_msg["y_initialpose"]);
     nodeManager.publish_initial_pose(initialpose.x, initialpose.y, json_msg["theta_initialpose"]);
@@ -121,7 +146,15 @@ void HandleMsg::GoalPose(const json &json_msg)
     std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
 
     nodeManager.create_publisher(Goal_Pose);
-    std::string path_yaml = PATH2MAP;
+    
+    YAML::Node config;
+    try {
+        std::string path_ = PATH;
+        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+    } catch (const std::exception& e) {
+        std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+    }
+    std::string path_yaml = config["PATH2MAP"].as<std::string>();
 
     path_yaml += "/" + map_name_without_spaces + ".yaml";
     RealPositionMeters goalpose = getRealPosition(path_yaml, json_msg["x_goalpose"], json_msg["y_goalpose"]);
@@ -134,7 +167,16 @@ void HandleMsg::WaypointFollower(const json &json_msg)
     std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
 
     nodeManager.create_publisher(Waypoint_Follower);
-    std::string path_yaml = PATH2MAP;
+
+    YAML::Node config;
+    try {
+        std::string path_ = PATH;
+        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+    } catch (const std::exception& e) {
+        std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+    }
+    std::string path_yaml = config["PATH2MAP"].as<std::string>();
+
     path_yaml += "/" + map_name_without_spaces + ".yaml";
 
     std::vector<geometry_msgs::msg::PoseStamped> waypoints;

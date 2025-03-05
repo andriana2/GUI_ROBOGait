@@ -116,7 +116,7 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
         // pri1("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
         if (json_msg.contains("opt") && json_msg["opt"] == headerToString(MSG) && json_msg.contains("target") && json_msg["target"] == targetToString(Goal_Pose))
         {
-            #if EN_CASA
+#if EN_CASA
             // std::vector<RealPositionMeters> path_number = {
             //     {0.060000020116567576, 0.21000003948807722},
             //     {0.05966976269587487, 0.32496261902097734},
@@ -126,14 +126,25 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             //     {0.07326448564625476, 0.5917274545390518}};
             std::vector<RealPositionMeters> path_number = nodeManager.getRealPositionPath();
 
-            #else
+#else
             std::vector<RealPositionMeters> path_number = nodeManager.getRealPositionPath();
 
-            #endif
+#endif
 
             std::vector<FinalPosition> path_pixel;
 
-            std::string path = PATH2MAP;
+            YAML::Node config;
+            try
+            {
+                std::string path_ = PATH;
+        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            }
+            std::string path = config["PATH2MAP"].as<std::string>();
+
             path += "/" + replaceSpaces(json_msg["map_name"]) + ".yaml";
             try
             {
@@ -173,14 +184,34 @@ void Servidor::handleRequestMsg(const json &json_msg)
     pri1("Estoy en handleRequestMsg");
     if (json_msg.contains("target") && json_msg["target"] == targetToString(Map_Name))
     {
-        std::string path = PATH2MAP;
+        YAML::Node config;
+        try
+        {
+            std::string path_ = PATH;
+        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+        }
+        std::string path = config["PATH2MAP"].as<std::string>();
+
         sendMsg(toJson::sendMapName(getMapName(path)));
     }
     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Request_Robot_Position))
     {
-        // pri1("Estoy en handleRequestMsg EEEEEELLLLSSSEEEEE");
+        YAML::Node config;
+        try
+        {
+            std::string path_ = PATH;
+        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+        }
+        std::string path = config["PATH2MAP"].as<std::string>();
 
-        std::string path = PATH2MAP;
         if (json_msg.contains("map_name") && json_msg["map_name"] != "")
         {
             // pri1("hola");
@@ -199,7 +230,18 @@ void Servidor::handleRequestImg(const json &json_msg)
     // pri1("Estoy en handleRequestImg");
     if (json_msg.contains("target") && json_msg["target"] == targetToString(Request_Map_SLAM))
     {
-        std::string path = PATH2MAP;
+        YAML::Node config;
+        try
+        {
+            std::string path_ = PATH;
+        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+        }
+        std::string path = config["PATH2MAP"].as<std::string>();
+
         if (json_msg.contains("map_name") && json_msg["map_name"] != "")
         {
             std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
@@ -233,7 +275,15 @@ void Servidor::handleRequestImg(const json &json_msg)
     }
     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Img_Map_Select))
     {
-        std::string path = PATH2MAP;
+        YAML::Node config;
+        try {
+            std::string path_ = PATH;
+        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+        } catch (const std::exception& e) {
+            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+        }
+        std::string path = config["PATH2MAP"].as<std::string>();
+
         path += "/" + replaceSpaces(json_msg["map_name"]);
 
         // nodeManager.refresh_map(json_msg["map_name"]);

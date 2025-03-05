@@ -14,7 +14,19 @@ void NodeManager::create_publisher(Target const &target)
     {
         if (!cmd_vel_publisher_)
         {
-            cmd_vel_publisher_ = node_manager->create_publisher<geometry_msgs::msg::Twist>(CMD_VEL_TOPIC, 10);
+            YAML::Node config;
+            try
+            {
+                std::string path_ = PATH;
+                config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            }
+            std::string cmd_vel = config["CMD_VEL_TOPIC"].as<std::string>();
+
+            cmd_vel_publisher_ = node_manager->create_publisher<geometry_msgs::msg::Twist>(cmd_vel, 10);
             RCLCPP_INFO(node_manager->get_logger(), "Publisher /cmd_vel creado.");
         }
     }
@@ -22,7 +34,20 @@ void NodeManager::create_publisher(Target const &target)
     {
         if (slam_launch_file == false)
         {
-            processController.startProcess(NAME_CARTOGRAPHER_LAUNCH, CARTOGRAPHER_LAUNCH);
+            YAML::Node config;
+            try
+            {
+                std::string path_ = PATH;
+                config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            }
+            std::string name_cartographer = config["NAME_CARTOGRAPHER_LAUNCH"].as<std::string>();
+            std::string launch_cartographer = config["CARTOGRAPHER_LAUNCH"].as<std::string>();
+
+            processController.startProcess(name_cartographer, launch_cartographer);
             slam_launch_file = true;
         }
         if (!tf_service_client_)
@@ -41,13 +66,25 @@ void NodeManager::create_publisher(Target const &target)
         // }
         if (!goal_pose_publisher_)
         {
-            goal_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseStamped>(GOAL_POSE_TOPIC, 10);
+            YAML::Node config;
+            try
+            {
+                std::string path_ = PATH;
+                config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            }
+            std::string goal_pose_topic = config["GOAL_POSE_TOPIC"].as<std::string>();
+
+            goal_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseStamped>(goal_pose_topic, 10);
             RCLCPP_INFO(node_manager->get_logger(), "Publisher /goal_pose.");
         }
         if (!plan_path_subscriber_)
         {
-            plan_path_subscriber_ = this->create_subscription<nav_msgs::msg::Path>(
-                "/plan", 10, std::bind(&PlanSubscriber::topic_callback, this, std::placeholders::_1));
+            plan_path_subscriber_ = node_manager->create_subscription<nav_msgs::msg::Path>(
+                "/plan", 10, std::bind(&NodeManager::topic_plan_callback, this, std::placeholders::_1));
         }
     }
     else if (target == Waypoint_Follower)
@@ -59,7 +96,19 @@ void NodeManager::create_publisher(Target const &target)
         // }
         if (!waypoint_follower_client_)
         {
-            waypoint_follower_client_ = rclcpp_action::create_client<nav2_msgs::action::FollowWaypoints>(node_manager, WAYPOINT_FOLLOWER_ACTION);
+            YAML::Node config;
+            try
+            {
+                std::string path_ = PATH;
+                config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            }
+            std::string waypoint_follower_action = config["WAYPOINT_FOLLOWER_ACTION"].as<std::string>();
+
+            waypoint_follower_client_ = rclcpp_action::create_client<nav2_msgs::action::FollowWaypoints>(node_manager, waypoint_follower_action);
             RCLCPP_INFO(node_manager->get_logger(), "Create Cliente /waypoint_follower.");
             while (!waypoint_follower_client_->wait_for_action_server())
             {
@@ -72,7 +121,19 @@ void NodeManager::create_publisher(Target const &target)
     {
         if (!initial_pose_publisher_)
         {
-            initial_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(INITIAL_POSE_TOPIC, 10);
+            YAML::Node config;
+            try
+            {
+                std::string path_ = PATH;
+                config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            }
+            std::string initial_pose_topic = config["INITIAL_POSE_TOPIC"].as<std::string>();
+
+            initial_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(initial_pose_topic, 10);
             RCLCPP_INFO(node_manager->get_logger(), "Publisher /initialpose.");
         }
         if (!tf_service_client_)
@@ -110,7 +171,17 @@ void NodeManager::close_publisher(Target const &target)
     {
         if (slam_launch_file)
         {
-            processController.stopProcess(NAME_CARTOGRAPHER_LAUNCH);
+            YAML::Node config;
+            try
+            {
+                std::string path_ = PATH;
+                config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            }
+            std::string name_cartographer = config["NAME_CARTOGRAPHER_LAUNCH"].as<std::string>();
             slam_launch_file = false;
         }
         if (!tf_service_client_)
@@ -123,7 +194,19 @@ void NodeManager::close_publisher(Target const &target)
     {
         if (bringup_launch_file)
         {
-            processController.stopProcess(NAME_NAV2_BRINGUP_LAUNCH);
+            YAML::Node config;
+            try
+            {
+                std::string path_ = PATH;
+                config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            }
+            std::string name_nav2_bringup = config["NAME_NAV2_BRINGUP_LAUNCH"].as<std::string>();
+
+            processController.stopProcess(name_nav2_bringup);
             bringup_launch_file = false;
         }
         if (!initial_pose_publisher_)
@@ -151,7 +234,19 @@ void NodeManager::close_publisher(Target const &target)
     {
         if (bringup_launch_file)
         {
-            processController.stopProcess(NAME_NAV2_BRINGUP_LAUNCH);
+            YAML::Node config;
+            try
+            {
+                std::string path_ = PATH;
+                config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            }
+            std::string nav2_bringup = config["NAV2_BRINGUP_LAUNCH"].as<std::string>();
+
+            processController.stopProcess(nav2_bringup);
             bringup_launch_file = false;
         }
         if (!initial_pose_publisher_)
@@ -275,13 +370,25 @@ void NodeManager::refresh_map(std::string const &map_name)
 {
 #if !EN_CASA
 
-    std::string command = MAP_SAVER_CLI;
+    YAML::Node config;
+    try
+    {
+        std::string path_ = PATH;
+        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+    }
+    std::string map_saver_cli = config["MAP_SAVER_CLI"].as<std::string>();
+
+    std::string command = map_saver_cli;
     command += "/" + replaceSpaces(map_name);
     // int result = system(command.c_str());
     std::thread t(&NodeManager::execute_command, this, command);
     t.detach();
 
-    // processController.startProcess(NAME_MAP_SAVER_CLI, command);
+    // processController.startProcess(map_saver_cli, command);
 
     // if (result == 0)
     //     std::cout << "El comando se ejecutó correctamente. " << command << std::endl;
@@ -311,9 +418,24 @@ void NodeManager::start_robot()
 
     if (!start_robot_launch_file)
     {
+        YAML::Node config;
+        try
+        {
+            std::string path_ = PATH;
+            config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+        }
+        std::string start_robot = config["START_ROBOT"].as<std::string>();
+        std::string start_robot_name = config["NAME_START_ROBOT"].as<std::string>();
+        std::string name_tf_service = config["NAME_TF_SERVICE"].as<std::string>();
+        std::string tf_service = config["TF_SERVICE"].as<std::string>();
+
         pri1("Comienzo robot");
-        processController.startProcess(NAME_START_ROBOT, START_ROBOT);
-        processController.startProcess(NAME_TF_SERVICE, TF_SERVICE);
+        processController.startProcess(start_robot_name, start_robot);
+        processController.startProcess(name_tf_service, tf_service);
         start_robot_launch_file = true;
     }
 #endif
@@ -329,7 +451,18 @@ void NodeManager::stop_robot()
 
     if (start_robot_launch_file)
     {
-        processController.stopProcess(NAME_START_ROBOT);
+        YAML::Node config;
+        try
+        {
+            std::string path_ = PATH;
+            config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+        }
+        std::string name_robot = config["NAME_START_ROBOT"].as<std::string>();
+        processController.stopProcess(name_robot);
         start_robot_launch_file = false;
     }
 }
@@ -406,11 +539,25 @@ void NodeManager::start_bringup(std::string const &map_name)
 
     if (!bringup_launch_file)
     {
-        std::string bringup = NAV2_BRINGUP_LAUNCH;
-        bringup += PATH2MAP;
+        YAML::Node config;
+        try
+        {
+            std::string path_ = PATH;
+            config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+        }
+        std::string path_yaml = config["PATH2MAP"].as<std::string>();
+        std::string nav2_bringup_launch = config["NAV2_BRINGUP_LAUNCH"].as<std::string>();
+        std::string name_nav2_bringup_launch = config["NAME_NAV2_BRINGUP_LAUNCH"].as<std::string>();
+
+        std::string bringup = nav2_bringup_launch;
+        bringup += path_yaml;
         bringup += "/" + map_name + ".yaml";
         pri1("Start bring up GOAL POSE:" + bringup);
-        processController.startProcess(NAME_NAV2_BRINGUP_LAUNCH, bringup);
+        processController.startProcess(name_nav2_bringup_launch, bringup);
         bringup_launch_file = true;
     }
 #endif

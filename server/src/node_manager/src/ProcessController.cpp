@@ -66,8 +66,17 @@ void ProcessController::startProcess(const std::string &name, const std::string 
         processMap[name] = pid;
         std::cout << "ProcessController: Proceso \"" << name << "\" iniciado con PID: " << pid << std::endl;
 
+        YAML::Node config;
+        try {
+            std::string path_ = PATH;
+        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+        } catch (const std::exception& e) {
+            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+        }
+        std::string name_map_saver_cli = config["NAME_MAP_SAVER_CLI"].as<std::string>();
+
         // Esperar a que el proceso termine pero solo en el caso de guardar mapa
-        if (name == NAME_MAP_SAVER_CLI)
+        if (name == name_map_saver_cli)
         {
             int status;
             waitpid(pid, &status, 0);
@@ -198,9 +207,18 @@ void ProcessController::stopAllProcesses()
         pid_t pid = it->second;
 
         std::cout << "Deteniendo proceso: " << name << " (PID: " << pid << ")" << std::endl;
+        
+        YAML::Node config;
+        try {
+            std::string path_ = PATH;
+        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+        } catch (const std::exception& e) {
+            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+        }
+        std::string name_robot = config["NAME_START_ROBOT"].as<std::string>();
 
         // Intentar una terminación ordenada con SIGTERM
-        if (name == NAME_START_ROBOT)
+        if (name == name_robot)
             kill(pid, SIGINT);
         else
             kill(pid, SIGTERM);
