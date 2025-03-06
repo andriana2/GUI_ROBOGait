@@ -14,9 +14,12 @@ class NetworkDDBB : public QObject {
     Q_OBJECT
 public:
     explicit NetworkDDBB(QObject *parent = nullptr);
-    QFuture<QJsonObject> sendSqlCommand(const QString &query);
+    void sendSqlCommand(const QString& sqlQuery);
 
 private:
+    void onReplyFinished(QNetworkReply* reply);
+    void onError(QNetworkReply::NetworkError error);
+
     QNetworkAccessManager *manager;
 };
 
