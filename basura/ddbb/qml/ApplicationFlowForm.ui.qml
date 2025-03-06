@@ -27,7 +27,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.topMargin: parent.height / 20
-        initialItem: RegisterPage {
+        initialItem: MenuDoctor {
             id: registerPage
         }
         pushEnter: Transition {

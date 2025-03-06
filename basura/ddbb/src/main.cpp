@@ -37,9 +37,9 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection);
     engine.load(url);
 
-    NetworkDDBB sqlClient;
-    sqlClient.sendSqlCommand("SELECT * FROM doctor;");
-    sqlClient.sendSqlCommand("SELECT * FROM manager;");
+    // NetworkDDBB sqlClient;
+    // sqlClient.sendSqlCommand("SELECT * FROM doctor;");
+    // sqlClient.sendSqlCommand("SELECT * FROM manager;");
 
     return app.exec();
 }

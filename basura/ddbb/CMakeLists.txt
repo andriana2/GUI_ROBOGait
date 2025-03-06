@@ -63,8 +63,10 @@ qt_add_qml_module(appddbb
     qml/SignInForm.ui.qml
     qml/SignIn.qml
     qml/GuestForm.ui.qml
-    QML_FILES qml/Guest.qml
-    QML_FILES qml/RegisterPage.qml
+    qml/Guest.qml
+    qml/RegisterPage.qml
+    qml/SigninUser.ui.qml
+    qml/MenuDoctor.ui.qml
 
 )
 
