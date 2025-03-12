@@ -57,6 +57,10 @@ qt_add_qml_module(appgui
     qml/MapPageForm.ui.qml
     qml/SelectMap.qml
     qml/SelectMapForm.ui.qml
+    qml/MenuDoctor.ui.qml
+    qml/SelectPatient.ui.qml
+    qml/Menu.qml
+    qml/RegisterPage.qml
 
     qml/extras/CustomToolBarForm.ui.qml
     qml/extras/CustomToolBar.qml
@@ -71,6 +75,12 @@ qt_add_qml_module(appgui
     qml/extras/ErrorRectangle.qml
     qml/extras/BoxImages.qml
     qml/extras/BoxImagesForm.ui.qml
+    qml/extras/Guest.qml
+    qml/extras/GuestForm.ui.qml
+    qml/extras/Login.qml
+    qml/extras/LoginForm.ui.qml
+    qml/extras/SignIn.qml
+    qml/extras/SignInForm.ui.qml
 
     ${qml_singletons}
 
