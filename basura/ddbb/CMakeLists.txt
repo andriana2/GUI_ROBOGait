@@ -19,6 +19,7 @@ qt_add_executable(appddbb
     #src/StringHandler.cpp
     #src/utils.cpp
 
+    
 
     include/NetworkDDBB.h
     include/database.h
