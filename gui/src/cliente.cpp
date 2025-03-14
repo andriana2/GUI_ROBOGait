@@ -35,6 +35,7 @@ Cliente::~Cliente() {
 }
 
 void Cliente::setStringHandler(StringHandler *sh) { stringHandler = sh; }
+void Cliente::setDatabase(Database *sh) { database = sh; }
 
 void Cliente::onReadyRead()
 {

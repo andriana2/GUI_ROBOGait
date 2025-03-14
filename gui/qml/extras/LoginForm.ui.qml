@@ -3,9 +3,11 @@ import QtQuick.Controls 2.15
 
 Page {
     id: loginPage
-    property alias lp_singin_botton: lp_singin_botton
-    property alias lp_guest_botton: lp_guest_botton
-
+    property alias lp_singin_button: lp_singin_button
+    property alias lp_guest_button: lp_guest_button
+    property alias lp_login_button: lp_login_button
+    property alias usernameField: usernameField
+    property alias passwordField: passwordField
     // width: 1300
     // height: 700
     Rectangle {
@@ -39,6 +41,8 @@ Page {
                     color: "#FFFFFF"
                     border.color: "#CCCCCC"
                 }
+                Keys.onTabPressed: passwordField.focus = true
+                Keys.onReturnPressed: passwordField.focus = true
             }
 
             Rectangle {
@@ -69,9 +73,11 @@ Page {
                     font.pointSize: 20
                     padding: 15
                     echoMode: TextInput.Password // Esto oculta el texto ingresado con asteriscos
+
                 }
             }
             Button {
+                id: lp_login_button
                 width: 400
                 text: "Iniciar Sesion"
                 font.capitalization: Font.AllUppercase
@@ -92,7 +98,7 @@ Page {
                 spacing: 20
 
                 Button {
-                    id: lp_singin_botton
+                    id: lp_singin_button
                     text: "Registrarse"
                     font.weight: Font.Light
                     font.capitalization: Font.AllUppercase
@@ -108,7 +114,7 @@ Page {
                 }
 
                 Button {
-                    id: lp_guest_botton
+                    id: lp_guest_button
                     text: "Invitado"
                     font.weight: Font.Light
                     font.capitalization: Font.AllUppercase

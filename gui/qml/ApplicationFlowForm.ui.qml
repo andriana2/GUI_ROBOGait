@@ -71,7 +71,8 @@ Rectangle {
     }
     Component {
         id: ip
-        Ip {
+        // Ip {
+        RegisterPage {
             visible: true
         }
     }

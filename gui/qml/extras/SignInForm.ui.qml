@@ -3,8 +3,15 @@ import QtQuick.Controls 2.15
 
 Page {
     id: signinPage
-    property alias sip_login_botton: sip_login_botton
-    property alias sip_guest_botton: sip_guest_botton
+    property alias sip_login_button: sip_login_button
+    property alias sip_guest_button: sip_guest_button
+    property alias sip_singIn_button: singInButton
+        property alias nameField: nameField
+    property alias lastnameField: lastnameField
+    property alias usernameField: usernameField
+    property alias passwordField: passwordField
+    property alias repeatpasswordField: repeatpasswordField
+
 
     // width: 1300
     // height: 700
@@ -32,6 +39,8 @@ Page {
                     color: "#FFFFFF"
                     border.color: "#CCCCCC"
                 }
+                Keys.onTabPressed: lastnameField.focus = true
+                Keys.onReturnPressed: lastnameField.focus = true
             }
             TextArea {
                 id: lastnameField
@@ -45,6 +54,8 @@ Page {
                     color: "#FFFFFF"
                     border.color: "#CCCCCC"
                 }
+                Keys.onTabPressed: usernameField.focus = true
+                Keys.onReturnPressed: usernameField.focus = true
             }
             TextArea {
                 id: usernameField
@@ -58,6 +69,8 @@ Page {
                     color: "#FFFFFF"
                     border.color: "#CCCCCC"
                 }
+                                Keys.onTabPressed: passwordField.focus = true
+                Keys.onReturnPressed: passwordField.focus = true
             }
 
             Rectangle {
@@ -88,6 +101,8 @@ Page {
                     font.pointSize: 20
                     padding: 15
                     echoMode: TextInput.Password // Esto oculta el texto ingresado con asteriscos
+                                    Keys.onTabPressed: repeatpasswordField.focus = true
+                Keys.onReturnPressed: repeatpasswordField.focus = true
                 }
             }
 
@@ -123,6 +138,7 @@ Page {
             }
 
             Button {
+                id: singInButton
                 width: 400
                 text: "REGISTRARSE"
                 font.capitalization: Font.AllUppercase
@@ -143,7 +159,7 @@ Page {
                 spacing: 20
 
                 Button {
-                    id: sip_login_botton
+                    id: sip_login_button
                     text: "Iniciar Sesion"
                     font.weight: Font.Light
                     font.capitalization: Font.AllUppercase
@@ -159,7 +175,7 @@ Page {
                 }
 
                 Button {
-                    id: sip_guest_botton
+                    id: sip_guest_button
                     text: "Invitado"
                     font.weight: Font.Light
                     font.capitalization: Font.AllUppercase

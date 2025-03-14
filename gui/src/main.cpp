@@ -6,6 +6,7 @@
 #include <QTranslator>
 #include "../include/StringHandler.h"
 #include "../include/cliente.h"
+#include "../include/database.h"
 // #include "../include/Manage.h"
 
 int main(int argc, char *argv[])
@@ -25,13 +26,17 @@ int main(int argc, char *argv[])
     Cliente cliente(8080);
     StringHandler stringHandler;
     MapInfo mapInfo;
+    Database database;
+
 
     cliente.setStringHandler(&stringHandler);
     cliente.setMapInfo(&mapInfo);
+    cliente.setDatabase(&database);
     stringHandler.setClient(&cliente);
     stringHandler.setMapInfo(&mapInfo);
     mapInfo.setClient(&cliente);
     mapInfo.setStringHandler(&stringHandler);
+    database.setClient(&cliente);
 
 
 
@@ -39,6 +44,7 @@ int main(int argc, char *argv[])
 
     engine.rootContext()->setContextProperty("stringHandler", &stringHandler);
     engine.rootContext()->setContextProperty("mapInfo", &mapInfo);
+    engine.rootContext()->setContextProperty("ddbb", &database);
 
     const QUrl url(QStringLiteral("qrc:/gui/qml/main.qml"));
     QObject::connect(

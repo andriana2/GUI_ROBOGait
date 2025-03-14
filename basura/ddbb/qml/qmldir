@@ -1,4 +1,0 @@
-module Extras
-Joystick 1.0 extras/Joystick.qml
-CustomToolBar 1.0 extras/CustomToolBar.qml
-SavePage 1.0 extras/SavePage.qml

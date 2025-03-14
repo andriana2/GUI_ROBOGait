@@ -26,6 +26,9 @@ qt_add_executable(appgui
     src/cliente.cpp
     src/ToJson.cpp
     src/MapInfo.cpp
+    src/database.cpp
+    src/utils_ddbb.cpp
+    src/NetworkDDBB.cpp
 
 
     include/StringHandler.h
@@ -33,7 +36,9 @@ qt_add_executable(appgui
     include/cliente.h
     include/ToJson.h
     include/MapInfo.h
-
+    include/database.h
+    include/utils_ddbb.h
+    include/NetworkDDBB.h
 )
 
 qt_add_qml_module(appgui
@@ -100,14 +105,6 @@ qt_add_qml_module(appgui
     images/map-pin-solid.svg
     images/robot.png
     images/wheel.svg
-
-    # qml/extras/qmldir
-
-    # images/android_icons/mipmap-mdpi/logo48.png
-    # images/android_icons/mipmap-hdpi/logo72.png
-    # images/android_icons/mipmap-xhdpi/logo96.png
-    # images/android_icons/mipmap-xxhdpi/logo144.png
-    # images/android_icons/mipmap-xxxhdpi/logo192.png
 
 
 )

@@ -5,6 +5,10 @@ Page {
     id: guestPage
     property alias gp_login: gp_login
     property alias gp_singin: gp_singin
+    property alias gp_guest_button: gp_guest_button
+
+    property alias nameField: nameField
+    property alias lastnameField: lastnameField
 
     // width: 1300
     // height: 700
@@ -39,6 +43,8 @@ Page {
                     color: "#FFFFFF"
                     border.color: "#CCCCCC"
                 }
+                Keys.onTabPressed: lastnameField.focus = true
+                Keys.onReturnPressed: lastnameField.focus = true
             }
             TextArea {
                 id: lastnameField
@@ -52,10 +58,14 @@ Page {
                     color: "#FFFFFF"
                     border.color: "#CCCCCC"
                 }
+                Keys.onTabPressed: gp_guest_button.focus = true
+                Keys.onReturnPressed: gp_guest_button.focus = true
+                
             }
 
             Button {
                 width: 400
+                id: gp_guest_button
                 text: "Iniciar como invitado"
                 font.capitalization: Font.AllUppercase
                 font.weight: Font.Medium

@@ -1,6 +1,7 @@
 #ifndef CLIENTE_H
 #define CLIENTE_H
 
+#include "database.h"
 #include "StringHandler.h"
 #include "MapInfo.h"
 
@@ -16,6 +17,7 @@
 
 class StringHandler;
 class MapInfo;
+class Database;
 
 class Cliente : public QObject
 {
@@ -27,6 +29,7 @@ public:
     QTcpSocket *socket;
     void setStringHandler(StringHandler *sh);//
     void setMapInfo(MapInfo *sh);
+    void setDatabase(Database *sh);
 
     void sendMessage(const QJsonDocument &jsone);  //
     // void receiveImageMap(const QByteArray &link);
@@ -63,6 +66,7 @@ private:
     bool status;
     QTimer *timeoutTimer;
 
+    Database *database;
     StringHandler *stringHandler;
     MapInfo *mapInfo;
 };
