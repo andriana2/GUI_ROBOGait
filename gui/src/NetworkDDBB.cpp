@@ -6,14 +6,17 @@ NetworkDDBB::NetworkDDBB(QObject *parent) : QObject(parent) {
     connect(manager, &QNetworkAccessManager::finished, this, &NetworkDDBB::onReplyFinished);
 }
 
-void NetworkDDBB::sendSqlCommand(const QString& sqlQuery) {
+void NetworkDDBB::sendSqlCommand(const QString& sqlQuery, const QString& target, const QJsonArray& args) {
     QUrl url("http://127.0.0.1:5000/execute");  // URL del servidor Flask
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
+    qDebug() << "Enviando consulta SQL:" << sqlQuery;
     // Crear JSON con la consulta SQL
     QJsonObject json;
     json["query"] = sqlQuery;
+    json["target"] = target;
+    json["args"] = args;
 
     // Enviar petición POST con JSON
     QNetworkReply* reply = manager->post(request, QJsonDocument(json).toJson());
@@ -32,6 +35,8 @@ void NetworkDDBB::onReplyFinished(QNetworkReply* reply) {
     QJsonObject jsonObject = jsonResponse.object();
 
     qDebug() << "Respuesta del servidor Flask:" << jsonResponse.toJson(QJsonDocument::Indented);
+
+    emit queryResponseReceived(jsonObject);  // Emit the signal with the response
 
     reply->deleteLater();
 }

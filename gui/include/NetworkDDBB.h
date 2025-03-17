@@ -4,23 +4,26 @@
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QNetworkRequest>
-#include <QJsonObject>
 #include <QJsonDocument>
-#include <QFuture>
-#include <QPromise>
+#include <QJsonObject>
+#include <QJsonArray>
+
 
 class NetworkDDBB : public QObject {
     Q_OBJECT
 public:
     explicit NetworkDDBB(QObject *parent = nullptr);
-    void sendSqlCommand(const QString& sqlQuery);
+    void sendSqlCommand(const QString& sqlQuery, const QString& target, const QJsonArray& args = QJsonArray());
 
-private:
+signals:
+    void queryResponseReceived(const QJsonObject& response);
+
+private slots:
     void onReplyFinished(QNetworkReply* reply);
     void onError(QNetworkReply::NetworkError error);
 
-    QNetworkAccessManager *manager;
+private:
+    QNetworkAccessManager* manager;
 };
 
 #endif // NETWORKDDBB_H

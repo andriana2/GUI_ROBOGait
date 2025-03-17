@@ -1,13 +1,14 @@
 #include "../include/utils_ddbb.h"
+#include <QCryptographicHash>
+#include <QString>
 
-
-std::string quote(const std::string &value)
+QString quote(const QString &value)
 {
-    std::string escaped = value;
+    QString escaped = value;
 
     // Escapar comillas simples reemplazándolas por dobles comillas simples (' -> '')
-    size_t pos = 0;
-    while ((pos = escaped.find("'", pos)) != std::string::npos) {
+    int pos = 0;
+    while ((pos = escaped.indexOf("'", pos)) != -1) {
         escaped.replace(pos, 1, "''");
         pos += 2; // Avanzar después del reemplazo
     }
@@ -16,10 +17,15 @@ std::string quote(const std::string &value)
     return "'" + escaped + "'";
 }
 
-std::string quote(int value) {
-    return std::to_string(value);
+QString quote(int value) {
+    return QString::number(value);
 }
 
-std::string quote(double value) {
-    return std::to_string(value);
+QString quote(double value) {
+    return QString::number(value);
+}
+
+QString hashPassword(const QString &password) {
+    QByteArray hashed = QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256);
+    return QString(hashed.toHex());  // Convert to hexadecimal string
 }

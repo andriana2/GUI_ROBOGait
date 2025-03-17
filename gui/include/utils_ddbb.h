@@ -1,10 +1,11 @@
 #ifndef UTILS_DDBB_H
 #define UTILS_DDBB_H
 
-#include <string>
+#include <QString>
 
-std::string quote(const std::string &value);
-std::string quote(int value);
-std::string quote(double value);
+QString quote(const QString &value);
+QString quote(int value);
+QString quote(double value);
+QString hashPassword(const QString &password);
 
 #endif // UTILS_DDBB_H

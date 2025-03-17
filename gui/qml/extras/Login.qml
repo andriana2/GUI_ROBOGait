@@ -25,7 +25,8 @@ LoginForm {
         }else {
             errorPopup.visible = false
             console.log("Iniciar sesión presionado")
-            // Proceed with login
+            ddbb.login(usernameField.text, passwordField.text)
+
         }
     }
 
