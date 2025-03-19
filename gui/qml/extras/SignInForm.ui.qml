@@ -6,9 +6,10 @@ Page {
     property alias sip_login_button: sip_login_button
     property alias sip_guest_button: sip_guest_button
     property alias sip_singIn_button: singInButton
-        property alias nameField: nameField
+    property alias nameField: nameField
     property alias lastnameField: lastnameField
     property alias usernameField: usernameField
+    property alias roleSelector: roleSelector
     property alias passwordField: passwordField
     property alias repeatpasswordField: repeatpasswordField
 
@@ -72,6 +73,51 @@ Page {
                                 Keys.onTabPressed: passwordField.focus = true
                 Keys.onReturnPressed: passwordField.focus = true
             }
+
+            ComboBox {
+                id: roleSelector
+                width: 400
+                height: 50
+                font.pointSize: 20
+                font.family: "Ubuntu"
+                model: ["Selecciona un rol", "DOCTOR", "MANAGER"]
+                currentIndex: 0
+
+                background: Rectangle {
+                    radius: 10
+                    color: "#FFFFFF"
+                    border.color: "#CCCCCC"
+                }
+
+                delegate: ItemDelegate {
+                    contentItem: Text {
+                        text: modelData
+                        font.pixelSize: 20
+                        color: roleSelector.currentIndex === index ? "blue" : "black"
+                    }
+                }
+
+                indicator: Canvas {
+                    width: 20
+                    height: 20
+                    contextType: "2d"
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        ctx.clearRect(0, 0, width, height)
+                        ctx.fillStyle = "#646464"
+                        ctx.beginPath()
+                        ctx.moveTo(4, 6)
+                        ctx.lineTo(16, 6)
+                        ctx.lineTo(10, 14)
+                        ctx.closePath()
+                        ctx.fill()
+                    }
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.margins: 10
+                }
+            }
+
 
             Rectangle {
                 width: 400
