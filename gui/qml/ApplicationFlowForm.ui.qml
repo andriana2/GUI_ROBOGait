@@ -8,8 +8,11 @@ Rectangle {
     property alias home: home
     property alias ip: ip
     property alias menu_app: menu_app
+    property alias menu_doctor: menu_doctor
+    property alias register_page: register_page
     property alias teledirigido: teledirigido
     property alias selectMap: selectMap
+    property alias select_patient: select_patient
     property alias mapPath: mapPath
 
     property string previousState: ""
@@ -71,7 +74,24 @@ Rectangle {
     }
     Component {
         id: ip
-        // Ip {
+        Ip {
+            visible: true
+        }
+    }
+    Component {
+        id: menu_doctor
+        MenuDoctor {
+            visible:true
+        }
+    }
+    Component {
+        id: select_patient
+        SelectPatient {
+            visible: true
+        }
+    }
+    Component {
+        id: register_page
         RegisterPage {
             visible: true
         }

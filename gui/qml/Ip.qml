@@ -18,12 +18,13 @@ IpForm {
             }
             else {
                 errorPopup.visible = false
-                applicationFlow.menu_push()
+                applicationFlow.register_page_push()
                 console.log("Texto enviado: " + textArea.text)
             }
         }
     }
 
+    //version previa del ErrorRectangle
     Rectangle {
         id: errorPopup
         width: parent.width * 0.8

@@ -185,7 +185,6 @@ void Database::setRole(const QString &newRole)
     if (m_role == newRole)
         return;
     m_role = newRole;
-    qDebug() << "Role changed to:" << m_role;
     emit roleChanged();
 }
 
@@ -199,7 +198,6 @@ void Database::setUsername(const QString &newUsername)
     if (m_username == newUsername)
         return;
     m_username = newUsername;
-    qDebug() << "Username changed to:" << m_username;
     emit usernameChanged();
 }
 

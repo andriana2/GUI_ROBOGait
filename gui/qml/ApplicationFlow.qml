@@ -75,6 +75,11 @@ ApplicationFlowForm {
         }
 
     }
+    function popFunction()
+    {
+        mystackview.pop()
+        applicationFlow.state = applicationFlow.previousState
+    }
     function saveButton()
     {
         if(!stringHandler.saveMap)
@@ -122,8 +127,16 @@ ApplicationFlowForm {
     }
     function menu_push(){
         mystackview.push(menu_app)
+        console.log("roleChanged cambió a:", ddbb.roleChanged);
         applicationFlow.state = "menu_app"
-
+    }
+    function menu_doctor_push(){
+        mystackview.push(menu_doctor)
+        applicationFlow.state = "menu_doctor"
+    }
+    function register_page_push(){
+        mystackview.push(register_page)
+        applicationFlow.state = "register_page"
     }
     function teledirigido_push()
     {
@@ -191,13 +204,76 @@ ApplicationFlowForm {
             }
         },
         State {
+            name: "menu_doctor"
+            StateChangeScript {
+                // script: stringHandler.menu_doctor(1)
+            }
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "register_page"
+            }
+            PropertyChanges {
+                target: toolbar
+                backButton.opacity: 0
+                backButton.enabled: false
+                saveButton.opacity: 0
+                saveButton.enabled: false
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+            }
+        },
+        State {
+            name: "register_page"
+            StateChangeScript {
+                // script: stringHandler.menu_doctor(1)
+            }
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "ip"
+            }
+            PropertyChanges {
+                target: toolbar
+                backButton.opacity: 0
+                backButton.enabled: false
+                saveButton.opacity: 0
+                saveButton.enabled: false
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+            }
+        },
+        State {
+            name: "select_patient"
+            StateChangeScript {
+                script: stringHandler.menu_page(1)
+            }
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "menu_doctor"
+            }
+            PropertyChanges {
+                target: toolbar
+                backButton.opacity: 1
+                backButton.enabled: true
+                saveButton.opacity: 0
+                saveButton.enabled: false
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+            }
+        },
+        State {
             name: "menu_app"
             StateChangeScript {
                 script: stringHandler.menu_page(1)
             }
             PropertyChanges {
                 target:applicationFlow
-                previousState: "ip"
+                previousState: ddbb.role === "DOCTOR" ? "menu_doctor" : "register_page"
             }
             PropertyChanges {
                 target: toolbar

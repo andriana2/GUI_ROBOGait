@@ -26,8 +26,23 @@ LoginForm {
             errorPopup.visible = false
             console.log("Iniciar sesión presionado")
             ddbb.login(usernameField.text, passwordField.text)
-
         }
     }
+
+    Connections {
+        target: ddbb
+        function onRoleChanged() {
+            console.log("⚡ roleChanged cambió a:", ddbb.role);
+            usernameField.text = ""
+            passwordField.text = ""
+
+            if (ddbb.role === "DOCTOR" || ddbb.role === "doctor") {
+                applicationFlow.menu_doctor_push()
+            } else {
+                applicationFlow.menu_push()
+            }
+        }
+    }
+
 
 }

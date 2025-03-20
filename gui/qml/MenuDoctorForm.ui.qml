@@ -2,12 +2,14 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import "extras"
 
-
 Page {
     id: signinPage
 
     width: 1300
     height: 700
+    property alias mouseAreaLogout: mouseAreaLogout
+    property alias mouseAreaAddUser: mouseAreaAddUser
+    property alias mouseAreaSelectUser: mouseAreaSelectUser
     Rectangle {
         id: rectangle
         color: "#518bb7"
@@ -38,10 +40,8 @@ Page {
                 }
 
                 MouseArea {
+                    id: mouseAreaSelectUser
                     anchors.fill: parent
-                    //                    onClicked: {
-                    //                        console.log("Botón presionado")
-                    //                    }
                 }
             }
 
@@ -63,6 +63,7 @@ Page {
                 }
 
                 MouseArea {
+                    id: mouseAreaAddUser
                     anchors.fill: parent
                     //                    onClicked: {
                     //                        console.log("Botón presionado")
@@ -71,7 +72,7 @@ Page {
             }
 
             Rectangle {
-                id: button
+                id: logout
                 width: 500
                 height: 50
                 radius: 10
@@ -88,6 +89,7 @@ Page {
                 }
 
                 MouseArea {
+                    id: mouseAreaLogout
                     anchors.fill: parent
                     //                    onClicked: {
                     //                        console.log("Botón presionado")

@@ -62,9 +62,10 @@ qt_add_qml_module(appgui
     qml/MapPageForm.ui.qml
     qml/SelectMap.qml
     qml/SelectMapForm.ui.qml
-    qml/MenuDoctor.ui.qml
+
+    qml/MenuDoctorForm.ui.qml
+    qml/MenuDoctor.qml
     qml/SelectPatient.ui.qml
-    qml/Menu.qml
     qml/RegisterPage.qml
 
     qml/extras/CustomToolBarForm.ui.qml
@@ -86,6 +87,7 @@ qt_add_qml_module(appgui
     qml/extras/LoginForm.ui.qml
     qml/extras/SignIn.qml
     qml/extras/SignInForm.ui.qml
+
 
     ${qml_singletons}
 

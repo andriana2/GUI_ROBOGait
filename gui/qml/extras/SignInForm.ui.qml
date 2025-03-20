@@ -70,7 +70,7 @@ Page {
                     color: "#FFFFFF"
                     border.color: "#CCCCCC"
                 }
-                                Keys.onTabPressed: passwordField.focus = true
+                Keys.onTabPressed: passwordField.focus = true
                 Keys.onReturnPressed: passwordField.focus = true
             }
 

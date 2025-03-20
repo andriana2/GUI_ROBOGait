@@ -68,9 +68,18 @@ SignInForm {
                 console.log("Registrandose")
                 // Proceed with registration
                 ddbb.signIn(nameField.text, lastnameField.text, usernameField.text,roleSelector.currentText, passwordField.text)
+                register_page.login_push()
+                clear()
             }
         }
     }
-
-
+    function clear()
+    {
+        passwordField.text = ""
+        repeatpasswordField.text = ""
+        lastnameField.text = ""
+        usernameField.text = ""
+        nameField.text = ""
+        roleSelector.currentIndex = 0
+    }
 }

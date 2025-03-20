@@ -31,7 +31,7 @@ public:
     void setClient(Cliente *cli);
 
     Q_INVOKABLE void login(const QString &user, const QString &pass);
-    // Q_INVOKABLE void signIn(const QString &name, const QString &lastname, const QString &username,const QString &role, const QString &pass);
+    Q_INVOKABLE void signIn(const QString &name, const QString &lastname, const QString &username,const QString &role, const QString &pass);
     Q_INVOKABLE void checkUsername(const QString &user);
     // Q_INVOKABLE void guest(const QString &name, const QString &lastname);
 
