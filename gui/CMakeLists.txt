@@ -65,8 +65,11 @@ qt_add_qml_module(appgui
 
     qml/MenuDoctorForm.ui.qml
     qml/MenuDoctor.qml
-    qml/SelectPatient.ui.qml
+    qml/SelectPatient.qml
+    qml/SelectPatientForm.ui.qml
     qml/RegisterPage.qml
+    qml/SigninUser.qml
+    qml/SigninUserForm.ui.qml
 
     qml/extras/CustomToolBarForm.ui.qml
     qml/extras/CustomToolBar.qml
@@ -107,6 +110,7 @@ qt_add_qml_module(appgui
     images/map-pin-solid.svg
     images/robot.png
     images/wheel.svg
+    QML_FILES qml/extras/InformationRectangle.qml
 
 
 )

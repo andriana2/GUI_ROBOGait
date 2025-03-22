@@ -18,7 +18,6 @@ void Database::login(const QString &user, const QString &pass)
     QJsonArray args;
     if (user == "doctor" && pass == "doctor" || user == "a" && pass == "a" || user == "b" && pass == "b" || user == "manager" && pass == "manager")
     {
-        // query = "SELECT * FROM doctor;";
         query = "SELECT 'doctor' AS role, username FROM doctor WHERE username=? AND password =? UNION SELECT 'manager' AS role, username FROM manager WHERE username = ? AND password =?;";
         args.append(user);
         args.append(pass);
@@ -60,11 +59,39 @@ void Database::checkUsername(const QString &user)
     networkDDBB->sendSqlCommand(query, targetToString(Target::CheckUsername), args);
 }
 
+void Database::addPatient(const QString &name, const QString &lastname, int age, double weight, double height, const QString &doctor_username) {
+    QString query;
+    QJsonArray args;
+
+    query = "INSERT INTO Patient (name, lastname, age, weight, height, id_doctor) "
+            "SELECT ?, ?, ?, ?, ?, id FROM doctor WHERE username = ?;";
+
+    args.append(name);
+    args.append(lastname);
+    args.append(age);
+    args.append(weight);
+    args.append(height);
+    args.append(doctor_username);
+
+    networkDDBB->sendSqlCommand(query, targetToString(Target::AddPatient), args);
+}
+
+void Database::selectAllPatient(const QString &username_doctor)
+{
+    QString query;
+    QJsonArray args;
+
+    query = "SELECT name, lastname FROM Patient WHERE id_doctor = (SELECT id FROM doctor WHERE username = ?);";
+
+    args.append(username_doctor);
+
+    networkDDBB->sendSqlCommand(query, targetToString(Target::SelectPatient), args);
+}
+
 void Database::handleQueryResponse(const QJsonObject &response)
 {
     qDebug() << "Respuesta de la consulta recibida:" << response;
 
-    // Extraer el target
     Target target = stringToTarget(response["target"].toString());
 
     switch (target)
@@ -75,7 +102,12 @@ void Database::handleQueryResponse(const QJsonObject &response)
     case Target::CheckUsername:
         handleChechUsernameResponse(response);
         break;
+    case Target::SelectPatient:
+        handleAllPatient(response);
+        break;
     default:
+        if (response["status"].toString() != "success")
+            qWarning() << "ERROR IN TARGET: " << targetToString(target) << " Error: " << response["result"].toString();
         qDebug() << "Target desconocido o sin manejar.";
         break;
     }
@@ -89,10 +121,9 @@ void Database::handleLoginResponse(const QJsonObject &response)
         if (!result.isEmpty() && result[0].isArray())
         {
             qDebug() << "Login successful!";
-            setPassLogin(true); // Login correcto
+            setPassLogin(true);
             QJsonArray innerArray = result[0].toArray();
 
-            // Obtener el primer elemento si existe
             if (!innerArray.isEmpty() && innerArray[0].isString())
             {
                 setRole(innerArray[0].toString());
@@ -102,15 +133,16 @@ void Database::handleLoginResponse(const QJsonObject &response)
         else
         {
             qDebug() << "Invalid username or password.";
-            setPassLogin(false); // Usuario o contraseña incorrectos
+            setPassLogin(false);
         }
     }
     else
     {
         qDebug() << "Error in query:" << response["message"].toString();
-        setPassLogin(false); // Error en la consulta
+        setPassLogin(false);
     }
 }
+
 void Database::handleChechUsernameResponse(const QJsonObject &response)
 {
     if (response["status"].toString() == "success")
@@ -134,6 +166,42 @@ void Database::handleChechUsernameResponse(const QJsonObject &response)
     }
 }
 
+void Database::handleAllPatient(const QJsonObject &response)
+{
+    if (response["status"].toString() == "success")
+    {
+        qDebug() << "handle all patient";
+        qDebug() << response;
+        QJsonArray result = response["result"].toArray();
+        updatePatients(result);
+    }
+    else
+    {
+        qDebug() << "Error in query:" << response["message"].toString();
+    }
+}
+
+void Database::updatePatients(const QJsonArray &result)
+{
+    QStringList patientList;
+    for (const QJsonValue &value : result)
+    {
+        if (value.isArray())
+        {
+            QJsonArray patientArray = value.toArray();
+            if (patientArray.size() == 2)
+            {
+                QString firstName = capitalizeWords(patientArray[0].toString());
+                QString lastName = capitalizeWords(patientArray[1].toString());
+                QString fullName = firstName + " " + lastName;
+                patientList.append(fullName);
+            }
+        }
+    }
+    m_patients->setStringList(patientList);
+    emit patientsChanged();
+}
+
 QString Database::targetToString(Database::Target target)
 {
     static const QMap<Target, QString> targetMap = {
@@ -141,12 +209,13 @@ QString Database::targetToString(Database::Target target)
         {Target::SignIn, "SignIn"},
         {Target::Guest, "Guest"},
         {Target::CheckUsername, "CheckUsername"},
+        {Target::AddPatient, "AddPatient"},
+        {Target::SelectPatient, "SelectPatient"},
         {Target::Unknow, "Unknow"}};
 
-    return targetMap.value(target, "Unknow"); // Valor por defecto si no se encuentra
+    return targetMap.value(target, "Unknow");
 }
 
-// Convierte un QString a Target
 Database::Target Database::stringToTarget(const QString &str)
 {
     static const QMap<QString, Target> stringMap = {
@@ -154,9 +223,11 @@ Database::Target Database::stringToTarget(const QString &str)
         {"SignIn", Target::SignIn},
         {"Guest", Target::Guest},
         {"CheckUsername", Target::CheckUsername},
+        {"AddPatient", Target::AddPatient},
+        {"SelectPatient", Target::SelectPatient},
         {"Unknow", Target::Unknow}};
 
-    return stringMap.value(str, Target::Unknow); // Valor por defecto si no se encuentra
+    return stringMap.value(str, Target::Unknow);
 }
 
 bool Database::passLogin() const
@@ -204,8 +275,9 @@ void Database::setUsername(const QString &newUsername)
 void Database::clear()
 {
     m_passLogin = {false};
-    setRole("");
-    setUsername("");
+    m_role = ("");
+    m_username = ("");
+    m_passCheckUsername = false;
 }
 
 bool Database::passCheckUsername() const
@@ -222,4 +294,9 @@ void Database::setPassCheckUsername(bool newpassCheckUsername)
     }
     m_passCheckUsername = newpassCheckUsername;
     emit passCheckUsernameChanged();
+}
+
+QStringListModel *Database::patients() const
+{
+    return m_patients;
 }

@@ -10,6 +10,7 @@ Rectangle {
     property alias menu_app: menu_app
     property alias menu_doctor: menu_doctor
     property alias register_page: register_page
+    property alias register_patient: register_patient
     property alias teledirigido: teledirigido
     property alias selectMap: selectMap
     property alias select_patient: select_patient
@@ -82,6 +83,7 @@ Rectangle {
         id: menu_doctor
         MenuDoctor {
             visible:true
+            // anchors.fill: parent
         }
     }
     Component {
@@ -91,9 +93,16 @@ Rectangle {
         }
     }
     Component {
+        id: register_patient
+        SigninUser {
+            visible: true
+        }
+    }
+    Component {
         id: register_page
         RegisterPage {
             visible: true
+            // anchors.fill: parent
         }
     }
     Component {

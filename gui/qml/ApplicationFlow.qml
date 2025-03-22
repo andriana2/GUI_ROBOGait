@@ -134,6 +134,14 @@ ApplicationFlowForm {
         mystackview.push(menu_doctor)
         applicationFlow.state = "menu_doctor"
     }
+    function register_patient_push(){
+        mystackview.push(register_patient)
+        applicationFlow.state = "register_patient"
+    }
+    function select_patient_push(){
+        mystackview.push(select_patient)
+        applicationFlow.state = "select_patient"
+    }
     function register_page_push(){
         mystackview.push(register_page)
         applicationFlow.state = "register_page"
@@ -248,7 +256,28 @@ ApplicationFlowForm {
         State {
             name: "select_patient"
             StateChangeScript {
-                script: stringHandler.menu_page(1)
+                // script: stringHandler.menu_page(1)
+            }
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "menu_doctor"
+            }
+            PropertyChanges {
+                target: toolbar
+                backButton.opacity: 1
+                backButton.enabled: true
+                saveButton.opacity: 0
+                saveButton.enabled: false
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+            }
+        },
+        State {
+            name: "register_patient"
+            StateChangeScript {
+                // script: stringHandler.menu_page(1)
             }
             PropertyChanges {
                 target:applicationFlow
@@ -277,8 +306,8 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target: toolbar
-                backButton.opacity: 0
-                backButton.enabled: false
+                backButton.opacity: ddbb.role === "DOCTOR" ? 1 : 0
+                backButton.enabled: ddbb.role === "DOCTOR" ? true : false
                 saveButton.opacity: 0
                 saveButton.enabled: false
             }

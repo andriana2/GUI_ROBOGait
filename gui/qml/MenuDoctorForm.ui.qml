@@ -5,8 +5,8 @@ import "extras"
 Page {
     id: signinPage
 
-    width: 1300
-    height: 700
+    // width: 1300
+    // height: 700
     property alias mouseAreaLogout: mouseAreaLogout
     property alias mouseAreaAddUser: mouseAreaAddUser
     property alias mouseAreaSelectUser: mouseAreaSelectUser

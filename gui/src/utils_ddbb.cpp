@@ -1,6 +1,7 @@
 #include "../include/utils_ddbb.h"
 #include <QCryptographicHash>
 #include <QString>
+#include <QStringList>  // Include the header for QStringList
 
 QString quote(const QString &value)
 {
@@ -28,4 +29,14 @@ QString quote(double value) {
 QString hashPassword(const QString &password) {
     QByteArray hashed = QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256);
     return QString(hashed.toHex());  // Convert to hexadecimal string
+}
+
+QString capitalizeWords(const QString &str) {
+    QStringList words = str.split(' ', Qt::SkipEmptyParts);
+    for (QString &word : words) {
+        if (!word.isEmpty()) {
+            word[0] = word[0].toUpper();
+        }
+    }
+    return words.join(' ');
 }

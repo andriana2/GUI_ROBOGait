@@ -3,11 +3,14 @@
 
 #include <QObject>
 #include <QJsonObject>
+#include <QStringListModel>
+
 #include "NetworkDDBB.h"
 #include "cliente.h"
 #include "include/NetworkDDBB.h"
 #include "cliente.h"
 #include "include/NetworkDDBB.h"
+
 class Cliente;
 
 class Database : public QObject
@@ -18,6 +21,9 @@ class Database : public QObject
     // role is manager and doctor
     Q_PROPERTY(QString role READ role WRITE setRole NOTIFY roleChanged FINAL)
     Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged FINAL)
+    Q_PROPERTY(QStringListModel* patients READ patients NOTIFY patientsChanged FINAL)
+
+
 
 public:
     enum class Target{
@@ -25,6 +31,8 @@ public:
         SignIn,
         Guest,
         CheckUsername,
+        AddPatient,
+        SelectPatient,
         Unknow
     };
     explicit Database(QObject *parent = nullptr);
@@ -34,7 +42,8 @@ public:
     Q_INVOKABLE void signIn(const QString &name, const QString &lastname, const QString &username,const QString &role, const QString &pass);
     Q_INVOKABLE void checkUsername(const QString &user);
     // Q_INVOKABLE void guest(const QString &name, const QString &lastname);
-
+    Q_INVOKABLE void addPatient(const QString &name, const QString &lastname, int age, double weight, double height, const QString &doctor_username);
+    Q_INVOKABLE void selectAllPatient(const QString &username_doctor);
 
     QString targetToString(Target target);
     Target stringToTarget(const QString& str);
@@ -52,6 +61,8 @@ public:
     bool passCheckUsername() const;
     void setPassCheckUsername(bool newPassCheckUsername);
 
+    QStringListModel *patients() const;
+
 private slots:
     void handleQueryResponse(const QJsonObject& response);
 
@@ -64,11 +75,13 @@ signals:
 
     void passCheckUsernameChanged();
 
+    void patientsChanged();
+
 private:
     void handleLoginResponse(const QJsonObject& response);
-    void handleSignInResponse(const QJsonObject& response);
-    void handleGuestResponse(const QJsonObject& response);
     void handleChechUsernameResponse(const QJsonObject& response);
+    void handleAllPatient(const QJsonObject &response);
+    void updatePatients(const QJsonArray &result);
 
     Cliente* cliente;
     NetworkDDBB* networkDDBB;
@@ -78,6 +91,7 @@ private:
     QString m_username;
 
     bool m_passCheckUsername = false;
+    QStringListModel *m_patients = new QStringListModel(this);
 };
 
 #endif // DATABASE_H

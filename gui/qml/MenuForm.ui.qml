@@ -6,6 +6,7 @@ import "extras"
 Rectangle {
     id: rectangle
     color: "#518bb7"
+    border.color: "#ffffff"
     property alias hacer_mapa_mouse_area: hacer_mapa_mouse_area
     property alias mapa_mouse_area: mapa_mouse_area
     property alias teledirigido_mouse_area: teledirigido_mouse_area

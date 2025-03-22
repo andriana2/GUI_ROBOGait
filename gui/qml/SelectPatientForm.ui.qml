@@ -46,7 +46,7 @@ Rectangle {
                 rightMargin: 10
             }
             clip: true
-            model: stringHandler.model
+            model: ddbb.patients
 
             delegate: Item {
                 width: listView.width
@@ -62,14 +62,14 @@ Rectangle {
                         radius: 10
                     }
 
-                    //                    onClicked: {
-                    //                        mapInfo.setMapName(model.display); // Mostrará el texto asociado al botón
-                    //                        applicationFlow.map_path_push()
-                    //                    }
+                                       // onClicked: {
+                                       //     mapInfo.setMapName(model.display); // Mostrará el texto asociado al botón
+                                       //     applicationFlow.map_path_push()
+                                       // }
                     Text {
                         id: textMapName
                         text: display
-                        font.pixelSize: 18
+                        font.pixelSize: 22
                         anchors.horizontalCenter: parent.horizontalCenter
                         color: "#000000"
                         anchors.verticalCenter: parent.verticalCenter

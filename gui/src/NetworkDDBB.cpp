@@ -34,7 +34,7 @@ void NetworkDDBB::onReplyFinished(QNetworkReply* reply) {
     QJsonDocument jsonResponse = QJsonDocument::fromJson(responseData);
     QJsonObject jsonObject = jsonResponse.object();
 
-    qDebug() << "Respuesta del servidor Flask:" << jsonResponse.toJson(QJsonDocument::Indented);
+    // qDebug() << "Respuesta del servidor Flask:" << jsonResponse.toJson(QJsonDocument::Indented);
 
     emit queryResponseReceived(jsonObject);  // Emit the signal with the response
 
