@@ -8,6 +8,7 @@ Item {
     property alias saveButton: saveButton
     property alias logo: logo
     property alias title: title
+    property alias config: config
 
     Rectangle {
         // x: 0
@@ -54,6 +55,28 @@ Item {
             }
         }
 
+        Text {
+            id: username
+            text: "Alopeza"
+            anchors.right: config.left
+            anchors.verticalCenter: parent.verticalCenter
+            font.pixelSize: 17
+            color: "white"
+            font.bold: true
+            anchors.margins: 5
+            anchors.topMargin: 5
+        }
+
+        ConfigurationMenu {
+            id: config
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            width: 30
+            height: 30
+            anchors.margins: 5
+            anchors.topMargin: 5
+        }
+
         // Logo y Título
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
@@ -77,10 +100,7 @@ Item {
             }
         }
     }
-}
-// Item {
-//     //    width: 1300
-//     //    height: 700
+} // Item {//     //    width: 1300//     //    height: 700
 //     id: root
 //     property alias backButton: backButton
 //     property alias logo: logo
@@ -133,8 +153,7 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:1.1;height:480;width:640}D{i:2}D{i:6}D{i:7}D{i:5}
-D{i:1}
+    D{i:0;autoSize:true;formeditorZoom:1.1;height:480;width:640}D{i:2}D{i:5}D{i:8}D{i:1}
 }
 ##^##*/
 

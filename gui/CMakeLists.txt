@@ -90,6 +90,8 @@ qt_add_qml_module(appgui
     qml/extras/LoginForm.ui.qml
     qml/extras/SignIn.qml
     qml/extras/SignInForm.ui.qml
+    qml/extras/InformationRectangle.qml
+    qml/extras/ConfigurationMenu.qml
 
 
     ${qml_singletons}
@@ -110,7 +112,8 @@ qt_add_qml_module(appgui
     images/map-pin-solid.svg
     images/robot.png
     images/wheel.svg
-    QML_FILES qml/extras/InformationRectangle.qml
+    images/circle-user-regular.svg
+
 
 
 )
