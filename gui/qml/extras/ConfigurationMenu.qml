@@ -73,6 +73,19 @@ Rectangle {
             }
             onTriggered: console.log("Cerrar sesión")
         }
+        MenuItem {
+            id: close
+            contentItem: Text {
+                text: "Apagar Robot"
+                font.family: "Ubuntu"
+                font.pixelSize: 14
+                color: "#000000" // Negro
+            }
+            background: Rectangle {
+                color: close.hovered ? "#B0BEC5" : "transparent" // Light gray on hover
+            }
+            onTriggered: console.log("Apagar")
+        }
     }
 
     MouseArea {
