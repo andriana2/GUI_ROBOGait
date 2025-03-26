@@ -2,7 +2,7 @@
 #define HEADER_H
 
 
-#define 
+#define EN_CASA 1
 #define ROBOT 0
 enum Header {
     MSG,

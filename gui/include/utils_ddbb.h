@@ -8,5 +8,6 @@ QString quote(int value);
 QString quote(double value);
 QString hashPassword(const QString &password);
 QString capitalizeWords(const QString &str);
+std::pair<QString, QString> splitNameSurname(const QString &fullName);
 
 #endif // UTILS_DDBB_H

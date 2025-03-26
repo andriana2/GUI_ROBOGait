@@ -9,6 +9,7 @@ Item {
     property alias logo: logo
     property alias title: title
     property alias config: config
+    property alias username: username
 
     Rectangle {
         // x: 0
@@ -57,7 +58,7 @@ Item {
 
         Text {
             id: username
-            text: "Alopeza"
+            text: ddbb.username
             anchors.right: config.left
             anchors.verticalCenter: parent.verticalCenter
             font.pixelSize: 17

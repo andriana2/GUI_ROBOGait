@@ -62,10 +62,10 @@ Rectangle {
                         radius: 10
                     }
 
-                                       // onClicked: {
-                                       //     mapInfo.setMapName(model.display); // Mostrará el texto asociado al botón
-                                       //     applicationFlow.map_path_push()
-                                       // }
+                    onClicked: {
+                        ddbb.getIdFromName(model.display) // Mostrará el texto asociado al botón
+                        applicationFlow.menu_push()
+                    }
                     Text {
                         id: textMapName
                         text: display
@@ -75,23 +75,29 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                     }
 
-                    // Botón de Editar
-                    Button {
-                        id: mapEdit
-                        text: "Editar"
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.right: mapDelete.left
-                        anchors.rightMargin: 20
-                        //                                                        onClicked: console.log("Editar:", model.name)
-                    }
+                    // // Botón de Editar
+                    // Button {
+                    //     id: mapEdit
+                    //     text: "Editar"
+                    //     anchors.verticalCenter: parent.verticalCenter
+                    //     anchors.right: mapDelete.left
+                    //     anchors.rightMargin: 20
+                    //     //                                                        onClicked: console.log("Editar:", model.name)
+                    // }
 
                     // Botón de Borrar
                     Button {
                         id: mapDelete
-                        text: "Borrar"
+                        background: Image {
+                            source: "../images/trash-solid.svg"
+                            sourceSize.width: 25
+                            sourceSize.height: 25
+                            fillMode: Image.PreserveAspectFit
+                        }
+
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
-                        anchors.rightMargin: 10
+                        anchors.rightMargin: 20
                         //                                                        onClicked: listView.model.remove(index)
                     }
                 }

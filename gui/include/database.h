@@ -22,7 +22,7 @@ class Database : public QObject
     Q_PROPERTY(QString role READ role WRITE setRole NOTIFY roleChanged FINAL)
     Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged FINAL)
     Q_PROPERTY(QStringListModel* patients READ patients NOTIFY patientsChanged FINAL)
-
+    Q_PROPERTY(int idPatient READ idPatient WRITE setIdPatient NOTIFY idPatientChanged FINAL)
 
 
 public:
@@ -33,6 +33,7 @@ public:
         CheckUsername,
         AddPatient,
         SelectPatient,
+        GetIdPatient,
         Unknow
     };
     explicit Database(QObject *parent = nullptr);
@@ -63,6 +64,10 @@ public:
 
     QStringListModel *patients() const;
 
+    int idPatient() const;
+    void setIdPatient(int newIdPatient);
+    Q_INVOKABLE void getIdFromName(QString const &complete_name);
+
 private slots:
     void handleQueryResponse(const QJsonObject& response);
 
@@ -77,11 +82,14 @@ signals:
 
     void patientsChanged();
 
+    void idPatientChanged();
+
 private:
     void handleLoginResponse(const QJsonObject& response);
     void handleChechUsernameResponse(const QJsonObject& response);
     void handleAllPatient(const QJsonObject &response);
     void updatePatients(const QJsonArray &result);
+    void handleIdPatient(const QJsonObject &response);
 
     Cliente* cliente;
     NetworkDDBB* networkDDBB;
@@ -92,6 +100,7 @@ private:
 
     bool m_passCheckUsername = false;
     QStringListModel *m_patients = new QStringListModel(this);
+    int m_idPatient;
 };
 
 #endif // DATABASE_H

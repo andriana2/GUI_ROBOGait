@@ -27,52 +27,39 @@ Rectangle {
 
     Menu {
         id: menu
-        width: Math.max(logout.implicitWidth, modify.implicitWidth, changePass.implicitWidth) + 20
+        width: Math.max(logout.implicitWidth, close.implicitWidth) + 30
         background: Rectangle {
             color: "#ffffff" // White background for the menu
             border.color: "#cccccc"
             radius: 5
         }
 
-        MenuItem {
-            id: modify
-            contentItem: Text {
-                text: "Modificar datos"
-                font.family: "Ubuntu"
-                font.pixelSize: 14
-                color: "#000000" // Negro
-            }
-            background: Rectangle {
-                color: modify.hovered ? "#B0BEC5" : "transparent" // Light gray on hover
-            }
-            onTriggered: console.log("Modificar datos")
-        }
-        MenuItem {
-            id: changePass
-            contentItem: Text {
-                text: "Cambiar contraseña"
-                font.family: "Ubuntu"
-                font.pixelSize: 14
-                color: "#000000" // Negro
-            }
-            background: Rectangle {
-                color: changePass.hovered ? "#B0BEC5" : "transparent" // Light gray on hover
-            }
-            onTriggered: console.log("Cambiar contraseña")
-        }
-        MenuItem {
-            id: logout
-            contentItem: Text {
-                text: "Cerrar sesión"
-                font.family: "Ubuntu"
-                font.pixelSize: 14
-                color: "#000000" // Negro
-            }
-            background: Rectangle {
-                color: logout.hovered ? "#B0BEC5" : "transparent" // Light gray on hover
-            }
-            onTriggered: console.log("Cerrar sesión")
-        }
+        // MenuItem {
+        //     id: modify
+        //     contentItem: Text {
+        //         text: "Modificar datos"
+        //         font.family: "Ubuntu"
+        //         font.pixelSize: 14
+        //         color: "#000000" // Negro
+        //     }
+        //     background: Rectangle {
+        //         color: modify.hovered ? "#B0BEC5" : "transparent" // Light gray on hover
+        //     }
+        //     onTriggered: console.log("Modificar datos")
+        // }
+        // MenuItem {
+        //     id: changePass
+        //     contentItem: Text {
+        //         text: "Cambiar contraseña"
+        //         font.family: "Ubuntu"
+        //         font.pixelSize: 14
+        //         color: "#000000" // Negro
+        //     }
+        //     background: Rectangle {
+        //         color: changePass.hovered ? "#B0BEC5" : "transparent" // Light gray on hover
+        //     }
+        //     onTriggered: console.log("Cambiar contraseña")
+        // }
         MenuItem {
             id: close
             contentItem: Text {
@@ -85,6 +72,22 @@ Rectangle {
                 color: close.hovered ? "#B0BEC5" : "transparent" // Light gray on hover
             }
             onTriggered: console.log("Apagar")
+        }
+        MenuItem {
+            id: logout
+            contentItem: Text {
+                text: "Cerrar sesión"
+                font.family: "Ubuntu"
+                font.pixelSize: 14
+                color: "#000000" // Negro
+            }
+            background: Rectangle {
+                color: logout.hovered ? "#B0BEC5" : "transparent" // Light gray on hover
+            }
+            onTriggered: {
+                applicationFlow.popToLogin();
+                ddbb.clear();
+            }
         }
     }
 

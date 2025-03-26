@@ -27,9 +27,9 @@ void Database::login(const QString &user, const QString &pass)
     else
     {
         query = "SELECT 'doctor' AS role, username FROM doctor WHERE username =? AND password =? UNION SELECT 'manager' AS role, username FROM manager WHERE username = ? AND password =?;";
-        args.append(user);
+        args.append(user.toLower());
         args.append(hashPassword(pass));
-        args.append(user);
+        args.append(user.toLower());
         args.append(hashPassword(pass));
     }
     networkDDBB->sendSqlCommand(query, targetToString(Target::Login), args);
@@ -41,9 +41,9 @@ void Database::signIn(const QString &name, const QString &lastname, const QStrin
     QJsonArray args;
 
     query = "INSERT INTO "+ role +" (name, lastname, username, password) VALUES (?,?,?,?);";
-    args.append(name);
-    args.append(lastname);
-    args.append(username);
+    args.append(name.toLower());
+    args.append(lastname.toLower());
+    args.append(username.toLower());
     args.append(hashPassword(pass));
     networkDDBB->sendSqlCommand(query, targetToString(Target::SignIn), args);
 }
@@ -54,8 +54,8 @@ void Database::checkUsername(const QString &user)
     QJsonArray args;
 
     query = "SELECT ((SELECT COUNT(*) FROM doctor WHERE username=?) + (SELECT COUNT(*) FROM manager WHERE username = ?))AS total_count;";
-    args.append(user);
-    args.append(user);
+    args.append(user.toLower());
+    args.append(user.toLower());
     networkDDBB->sendSqlCommand(query, targetToString(Target::CheckUsername), args);
 }
 
@@ -66,12 +66,12 @@ void Database::addPatient(const QString &name, const QString &lastname, int age,
     query = "INSERT INTO Patient (name, lastname, age, weight, height, id_doctor) "
             "SELECT ?, ?, ?, ?, ?, id FROM doctor WHERE username = ?;";
 
-    args.append(name);
-    args.append(lastname);
+    args.append(name.toLower());
+    args.append(lastname.toLower());
     args.append(age);
     args.append(weight);
     args.append(height);
-    args.append(doctor_username);
+    args.append(doctor_username.toLower());
 
     networkDDBB->sendSqlCommand(query, targetToString(Target::AddPatient), args);
 }
@@ -83,7 +83,7 @@ void Database::selectAllPatient(const QString &username_doctor)
 
     query = "SELECT name, lastname FROM Patient WHERE id_doctor = (SELECT id FROM doctor WHERE username = ?);";
 
-    args.append(username_doctor);
+    args.append(username_doctor.toLower());
 
     networkDDBB->sendSqlCommand(query, targetToString(Target::SelectPatient), args);
 }
@@ -105,10 +105,13 @@ void Database::handleQueryResponse(const QJsonObject &response)
     case Target::SelectPatient:
         handleAllPatient(response);
         break;
+    case Target::GetIdPatient:
+        handleIdPatient(response);
+        break;
     default:
         if (response["status"].toString() != "success")
             qWarning() << "ERROR IN TARGET: " << targetToString(target) << " Error: " << response["result"].toString();
-        qDebug() << "Target desconocido o sin manejar.";
+        qDebug() << "Target desconocido o sin manejar. Is: " << response["target"].toString();
         break;
     }
 }
@@ -166,6 +169,31 @@ void Database::handleChechUsernameResponse(const QJsonObject &response)
     }
 }
 
+void Database::handleIdPatient(const QJsonObject &response)
+{
+    if (response["status"].toString() == "success")
+    {
+        QJsonArray result = response["result"].toArray();
+        if (!result.isEmpty() && result[0].isArray())
+        {
+            QJsonArray innerArray = result[0].toArray();
+            if (!innerArray.isEmpty() && innerArray[0].toInt() >= 0)
+            {
+                if (innerArray[0].toInt() > 0){
+                    qDebug()<< "El valor del id patient es: "<<innerArray[0].toInt();
+                    setIdPatient(innerArray[0].toInt());
+                }
+                else
+                    qWarning() << "The id in patient is 0 or less";
+            }
+        }
+    }
+    else
+    {
+        qDebug() << "Error in query:" << response["message"].toString();
+    }
+}
+
 void Database::handleAllPatient(const QJsonObject &response)
 {
     if (response["status"].toString() == "success")
@@ -211,6 +239,7 @@ QString Database::targetToString(Database::Target target)
         {Target::CheckUsername, "CheckUsername"},
         {Target::AddPatient, "AddPatient"},
         {Target::SelectPatient, "SelectPatient"},
+        {Target::GetIdPatient, "GetIdPatient"},
         {Target::Unknow, "Unknow"}};
 
     return targetMap.value(target, "Unknow");
@@ -225,6 +254,7 @@ Database::Target Database::stringToTarget(const QString &str)
         {"CheckUsername", Target::CheckUsername},
         {"AddPatient", Target::AddPatient},
         {"SelectPatient", Target::SelectPatient},
+        {"GetIdPatient", Target::GetIdPatient},
         {"Unknow", Target::Unknow}};
 
     return stringMap.value(str, Target::Unknow);
@@ -299,4 +329,31 @@ void Database::setPassCheckUsername(bool newpassCheckUsername)
 QStringListModel *Database::patients() const
 {
     return m_patients;
+}
+
+int Database::idPatient() const
+{
+    return m_idPatient;
+}
+
+void Database::setIdPatient(int newIdPatient)
+{
+    if (m_idPatient == newIdPatient)
+        return;
+    m_idPatient = newIdPatient;
+    emit idPatientChanged();
+}
+
+void Database::getIdFromName(const QString &complete_name)
+{
+    QString query;
+    QJsonArray args;
+    auto [firstName_, lastName_] = splitNameSurname(complete_name);
+
+    query = "SELECT id FROM Patient WHERE name = ? AND lastname = ?;";
+    args.append(firstName_);
+    args.append(lastName_);
+
+    networkDDBB->sendSqlCommand(query, targetToString(Target::GetIdPatient), args);
+
 }

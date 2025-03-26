@@ -80,6 +80,15 @@ ApplicationFlowForm {
         mystackview.pop()
         applicationFlow.state = applicationFlow.previousState
     }
+    function popToLogin() {
+        console.log("_________________estoy en el estado: " + applicationFlow.state)
+        while (applicationFlow.state !== "register_page" && mystackview.depth > 1) {
+            mystackview.pop();
+            applicationFlow.state = applicationFlow.previousState;
+            console.log("_________________estoy en el estado: " + applicationFlow.state)
+        }
+    }
+
     function saveButton()
     {
         if(!stringHandler.saveMap)
@@ -126,8 +135,12 @@ ApplicationFlowForm {
         applicationFlow.state = "Insert"
     }
     function menu_push(){
+        // if (applicationFlow.state === "select_patient")
+        //     popFunction()
+        // if (applicationFlow.state === "register_patient")
+        //     popFunction()
         mystackview.push(menu_app)
-        console.log("roleChanged cambió a:", ddbb.roleChanged);
+        console.log("roleChanged cambió a: -" + ddbb.role + "-");
         applicationFlow.state = "menu_app"
     }
     function menu_doctor_push(){
@@ -184,6 +197,10 @@ ApplicationFlowForm {
                 logo.enabled: false
                 title.opacity: 0
                 title.enabled: false
+                config.opacity: 0
+                config.enabled: false
+                username.opacity: 0
+                username.enabled: false
             }
             PropertyChanges {
                 target: mystackview
@@ -205,6 +222,10 @@ ApplicationFlowForm {
                 backButton.enabled: false
                 saveButton.opacity: 0
                 saveButton.enabled: false
+                config.opacity: 0
+                config.enabled: false
+                username.opacity: 0
+                username.enabled: false
             }
             PropertyChanges {
                 target: mystackview
@@ -226,6 +247,10 @@ ApplicationFlowForm {
                 backButton.enabled: false
                 saveButton.opacity: 0
                 saveButton.enabled: false
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
             }
             PropertyChanges {
                 target: mystackview
@@ -247,6 +272,10 @@ ApplicationFlowForm {
                 backButton.enabled: false
                 saveButton.opacity: 0
                 saveButton.enabled: false
+                config.opacity: 0
+                config.enabled: false
+                username.opacity: 0
+                username.enabled: false
             }
             PropertyChanges {
                 target: mystackview
@@ -268,6 +297,10 @@ ApplicationFlowForm {
                 backButton.enabled: true
                 saveButton.opacity: 0
                 saveButton.enabled: false
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
             }
             PropertyChanges {
                 target: mystackview
@@ -289,6 +322,10 @@ ApplicationFlowForm {
                 backButton.enabled: true
                 saveButton.opacity: 0
                 saveButton.enabled: false
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
             }
             PropertyChanges {
                 target: mystackview
@@ -302,14 +339,18 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target:applicationFlow
-                previousState: ddbb.role === "DOCTOR" ? "menu_doctor" : "register_page"
+                previousState: ddbb.role === "doctor" ? "select_patient" : "register_page"
             }
             PropertyChanges {
                 target: toolbar
-                backButton.opacity: ddbb.role === "DOCTOR" ? 1 : 0
-                backButton.enabled: ddbb.role === "DOCTOR" ? true : false
+                backButton.opacity: ddbb.role === "doctor" ? 1 : 0
+                backButton.enabled: ddbb.role === "doctor" ? true : false
                 saveButton.opacity: 0
                 saveButton.enabled: false
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
             }
             PropertyChanges {
                 target: mystackview
@@ -338,6 +379,10 @@ ApplicationFlowForm {
                 saveButton.enabled: true
                 backButton.opacity: 1
                 backButton.enabled: true
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
             }
         },
         State {
@@ -361,6 +406,10 @@ ApplicationFlowForm {
                 saveButton.enabled: false
                 backButton.opacity: 1
                 backButton.enabled: true
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
             }
         },
         State {
@@ -384,6 +433,10 @@ ApplicationFlowForm {
                 saveButton.enabled: false
                 backButton.opacity: 1
                 backButton.enabled: true
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
             }
         }
     ]
