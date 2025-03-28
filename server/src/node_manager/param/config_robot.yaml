@@ -1,8 +1,8 @@
 PATH2MAP: "/home/robogait/Desktop/gui_andri/gui/server/maps"
-START_ROBOT: "ros2 launch roverrotics_driver mini.launch.py"
-NAME_START_ROBOT: "roverrotics_driver"
+START_ROBOT: "ros2 launch roverrobotics_driver mini.launch.py"
+NAME_START_ROBOT: "roverrobotics_driver"
 
-MAP_SAVER_CLI: "ros2 run nav2_map_server map_saver_cli -t /map -f "
+MAP_SAVER_CLI: "ros2 run nav2_map_server map_saver_cli -t /map -f  /home/robogait/maps"
 NAME_MAP_SAVER_CLI: "nav2_map_save"
 
 TF_SERVICE: "ros2 run tf_service tf_service_node"
@@ -11,7 +11,7 @@ NAME_TF_SERVICE: "tf_service"
 CARTOGRAPHER_LAUNCH: "ros2 launch roverrobotics_driver slam_launch.py"
 NAME_CARTOGRAPHER_LAUNCH: "roverrobotics_driver_slam"
 
-NAV2_BRINGUP_LAUNCH: "ros2 launch roverrobotics_driver navigation_launch.py map:"
+NAV2_BRINGUP_LAUNCH: "ros2 launch roverrobotics_driver navigation_nuevo.launch.py map:"
 NAME_NAV2_BRINGUP_LAUNCH: "roverrobotics_driver_navigation"
 
 TF_TOPIC: "/tf"
