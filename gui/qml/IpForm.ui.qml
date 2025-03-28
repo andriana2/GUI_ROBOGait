@@ -20,7 +20,7 @@ Item {
             font.pixelSize: 40
 
             horizontalAlignment: Text.AlignHCenter
-            anchors.verticalCenterOffset: -110
+            anchors.verticalCenterOffset: -120
             anchors.horizontalCenter: parent.horizontalCenter
         }
 
@@ -30,7 +30,7 @@ Item {
             height: 40
             text: qsTr("Enviar")
             anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: -15
+            anchors.verticalCenterOffset: -5
             anchors.horizontalCenter: parent.horizontalCenter
 
             background: Rectangle {
