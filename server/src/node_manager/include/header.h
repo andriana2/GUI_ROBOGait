@@ -12,27 +12,27 @@ enum Header {
 };
 
 enum Target {
-    Joystick_Position,
-    Request_Map_SLAM,
-    Robot_Position_Pixel,
-    Robot_Position_Pixel_Initialpose,
-    Request_Robot_Position,
-    Img_Map_SLAM,
-    Img_Map_Path,
-    Save_Map,
-    State_Remote_Controlled,
-    State_Menu,
-    Map_Name,
+    Joystick_Position, // Velocidad linea y angular del robot
+    Request_Map_SLAM,   // Peticion para la imagen del mapa
+    Robot_Position_Pixel, // Posicion del robot en pixeles
+    Robot_Position_Pixel_Initialpose, // Posicion del robot en pixeles en la posicion inicial
+    Request_Robot_Position, // Peticion de la posicion del robot
+    Img_Map_SLAM, // Imagen al hacer SLAM
+    Img_Map_Path, // Imagen al hacer la ruta
+    Save_Map, // Guardar el mapa
+    State_Remote_Controlled, // Estado del robot
+    State_Menu, // Estado del menu para saber si hay que iniciar un programa
+    Map_Name, // Nombres de los mapas
     Map_Info_Image_Size,
-    Change_Map_Name,
-    Delete_Map,
-    Img_Map_Select,
-    Init_Bringup,
-    Initial_Pose,
-    Goal_Pose,
-    Waypoint_Follower,
-    Stop_Process,
-    Goal_Pose_Path
+    Change_Map_Name, // Cambiar el nombre del mapa
+    Delete_Map, // Borrar el mapa
+    Img_Map_Select, // Informacion de la imagen del mapa
+    Init_Bringup, // Iniciar el bringup
+    Initial_Pose, // Posicion inicial del robot
+    Goal_Pose, // Posicion objetivo del robot
+    Waypoint_Follower, // Seguir la trayectoria de unos puntos
+    Stop_Process,   // Detener el proceso
+    Goal_Pose_Path // Posicion objetivo del robot en la trayectoria
 };
 
 struct FinalPosition
