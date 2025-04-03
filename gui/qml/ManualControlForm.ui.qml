@@ -39,7 +39,7 @@ Rectangle {
     }
 
     Item {
-        id: teledirigido
+        id: manualControl
         width: Math.min(275, Math.max(175, parent.width / 4))
         height: width
         anchors.verticalCenter: parent.verticalCenter
@@ -57,10 +57,10 @@ Rectangle {
 
     Row {
         id: switchRow
-        anchors.horizontalCenter: teledirigido.horizontalCenter
-        anchors.verticalCenter: teledirigido.top
+        anchors.horizontalCenter: manualControl.horizontalCenter
+        anchors.verticalCenter: manualControl.top
         anchors.horizontalCenterOffset: -text_mapear.minimumPixelSize
-        anchors.verticalCenterOffset: -teledirigido.height / 3
+        anchors.verticalCenterOffset: -manualControl.height / 3
         spacing: 10
 
         // Texto a la izquierda

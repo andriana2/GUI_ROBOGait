@@ -1,9 +1,9 @@
 import QtQuick 2.15
 
-MenuForm {
+MainMenuForm {
 
-teledirigido_mouse_area.onClicked: {
-applicationFlow.teledirigido_push()
+manualControl_mouse_area.onClicked: {
+applicationFlow.manualControl_push()
 }
 
     // mapa{
@@ -11,7 +11,7 @@ applicationFlow.teledirigido_push()
     //         anchors.fill: parent
     //         onClicked: {
 
-    //             applicationFlow.teledirigido_push()
+    //             applicationFlow.manualControl_push()
     //         }
     //     }
     // }

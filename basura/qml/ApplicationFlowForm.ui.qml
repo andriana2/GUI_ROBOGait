@@ -26,7 +26,7 @@ Rectangle {
     }
     Component {
         id: menu
-        MenuForm {
+        MainMenuForm {
             visible: true
 
         }

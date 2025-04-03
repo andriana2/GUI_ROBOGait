@@ -8,7 +8,7 @@ Rectangle {
     border.color: "#ffffff"
     property alias hacer_mapa_mouse_area: hacer_mapa_mouse_area
     property alias mapa_mouse_area: mapa_mouse_area
-    property alias teledirigido_mouse_area: teledirigido_mouse_area
+    property alias manualControl_mouse_area: manualControl_mouse_area
 
     GridLayout {
         anchors.centerIn: parent // Centra el GridLayout en el contenedor
@@ -17,7 +17,7 @@ Rectangle {
         columnSpacing: 60 // Espacio entre columnas
 
         Rectangle {
-            id: teledirigido_button
+            id: manualControl_button
             width: 150
             height: 150
             color: "#235c87"
@@ -31,7 +31,7 @@ Rectangle {
                 scale: 2
             }
             MouseArea {
-                id: teledirigido_mouse_area
+                id: manualControl_mouse_area
                 anchors.fill: parent
             }
         }

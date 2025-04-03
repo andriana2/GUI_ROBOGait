@@ -13,7 +13,7 @@ Rectangle {
         columnSpacing: 60 // Espacio entre columnas
 
         Rectangle {
-            id: teledirigido
+            id: manualControl
             width: 150
             height: 150
             //color: Colors.rectangle_color

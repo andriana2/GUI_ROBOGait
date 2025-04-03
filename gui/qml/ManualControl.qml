@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import "extras"
 
-TeledirigidoForm {
+ManualControlForm {
     property bool visible_value: visible_value
     // property bool savePageVisible: savePageVisible
     property bool visible_save: visible_save

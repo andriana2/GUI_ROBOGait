@@ -38,9 +38,9 @@ QML_FILES
     qml/Ip.qml
     qml/IpForm.ui.qml
 
-    qml/MenuForm.ui.qml
-    qml/Teledirigido.qml
-    qml/TeledirigidoForm.ui.qml
+    qml/MainMenuForm.ui.qml
+    qml/ManualControl.qml
+    qml/ManualControlForm.ui.qml
 
 
 
@@ -51,7 +51,7 @@ RESOURCES
     images/giro_der.png
     images/giro_izq.png
     images/up.png
-    QML_FILES qml/MenuPrincipal.qml
+    QML_FILES qml/MainMenu.qml
 
 )
 

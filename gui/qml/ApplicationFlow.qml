@@ -20,7 +20,7 @@ ApplicationFlowForm {
         console.log("backButton")
         // console.log(type_save)
         // console.log(visible_save)
-        if (applicationFlow.state === "teledirigido")
+        if (applicationFlow.state === "manualControl")
         {
             if (stringHandler.mapping)
             {
@@ -159,13 +159,13 @@ ApplicationFlowForm {
         mystackview.push(register_page)
         applicationFlow.state = "register_page"
     }
-    function teledirigido_push()
+    function manualControl_push()
     {
         stringHandler.setSaveMap(0)
         visible_image = 1
         console.log("Imagen a visible 0")
-        mystackview.push(teledirigido)
-        applicationFlow.state = "teledirigido"
+        mystackview.push(manualControl)
+        applicationFlow.state = "manualControl"
     }
     function select_map_push()
     {
@@ -358,11 +358,11 @@ ApplicationFlowForm {
             }
         },
         State {
-            name: "teledirigido"
+            name: "manualControl"
             // when: stringHandler.mapping === 1
             StateChangeScript {
                 script: {
-                    console.log("teledirigido_mapping")
+                    console.log("manualControl_mapping")
                 }
             }
             PropertyChanges {

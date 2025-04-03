@@ -11,7 +11,7 @@ Rectangle {
     property alias menu_doctor: menu_doctor
     property alias register_page: register_page
     property alias register_patient: register_patient
-    property alias teledirigido: teledirigido
+    property alias manualControl: manualControl
     property alias selectMap: selectMap
     property alias select_patient: select_patient
     property alias mapPath: mapPath
@@ -107,13 +107,13 @@ Rectangle {
     }
     Component {
         id: menu_app
-        MenuPrincipal {
+        MainMenu {
             visible:true
         }
     }
     Component {
-        id: teledirigido
-        Teledirigido {
+        id: manualControl
+        ManualControl {
             visible_value: applicationFlow.visible_image
             visible: true
             visible_save: applicationFlow.visible_save

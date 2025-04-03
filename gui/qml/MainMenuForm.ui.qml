@@ -8,7 +8,7 @@ Rectangle {
     color: "#518bb7"
     property alias hacer_mapa_mouse_area: hacer_mapa_mouse_area
     property alias mapa_mouse_area: mapa_mouse_area
-    property alias teledirigido_mouse_area: teledirigido_mouse_area
+    property alias manualControl_mouse_area: manualControl_mouse_area
 
     Flow {
         anchors.verticalCenterOffset: -39
@@ -16,7 +16,7 @@ Rectangle {
         spacing: 60 // Espacio entre filas
 
         Rectangle {
-            id: teledirigido_button
+            id: manualControl_button
             width: 150
             height: 150
             color: "#235c87"
@@ -29,7 +29,7 @@ Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
             }
             MouseArea {
-                id: teledirigido_mouse_area
+                id: manualControl_mouse_area
                 anchors.fill: parent
             }
         }

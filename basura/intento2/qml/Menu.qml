@@ -4,7 +4,7 @@ Rectangle{
     color: "red"
     anchors.fill: parent
 }
-// MenuForm {
+// MainMenuForm {
 //     Rectangle{
 //         color: "red"
 //         anchors.fill: parent
@@ -15,7 +15,7 @@ Rectangle{
 //     //         anchors.fill: parent
 //     //         onClicked: {
 
-//     //             applicationFlow.teledirigido_push()
+//     //             applicationFlow.manualControl_push()
 //     //         }
 //     //     }
 //     // }

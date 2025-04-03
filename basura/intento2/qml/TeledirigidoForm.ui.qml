@@ -21,7 +21,7 @@ Rectangle {
         columnSpacing: 60
 
         Rectangle {
-            id: teledirigido
+            id: manualControl
             width: 250
             height: 250
             //color: Colors.rectangle_color

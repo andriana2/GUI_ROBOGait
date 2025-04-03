@@ -54,10 +54,10 @@ qt_add_qml_module(appgui
     qml/Ip.qml
     qml/IpForm.ui.qml
 
-    qml/MenuForm.ui.qml
-    qml/Teledirigido.qml
-    qml/TeledirigidoForm.ui.qml
-    qml/MenuPrincipal.qml
+    qml/MainMenuForm.ui.qml
+    qml/ManualControl.qml
+    qml/ManualControlForm.ui.qml
+    qml/MainMenu.qml
     qml/MapPage.qml
     qml/MapPageForm.ui.qml
     qml/SelectMap.qml
@@ -76,7 +76,6 @@ qt_add_qml_module(appgui
     qml/extras/Joystick.qml
     qml/extras/JoystickForm.ui.qml
     qml/extras/Map.qml
-    qml/extras/MapForm.ui.qml
     qml/extras/SavePage.qml
     qml/extras/SavePageForm.ui.qml
     qml/extras/OrientationCircle.qml
