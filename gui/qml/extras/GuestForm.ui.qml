@@ -10,8 +10,6 @@ Page {
     property alias nameField: nameField
     property alias lastnameField: lastnameField
 
-    // width: 1300
-    // height: 700
     Rectangle {
         id: rectangle
         color: "#518bb7"
@@ -31,7 +29,7 @@ Page {
                 height: 220
             }
 
-            TextArea {
+            TextField {
                 id: nameField
                 width: 400
                 height: 50
@@ -46,7 +44,8 @@ Page {
                 Keys.onTabPressed: lastnameField.focus = true
                 Keys.onReturnPressed: lastnameField.focus = true
             }
-            TextArea {
+
+            TextField {
                 id: lastnameField
                 width: 400
                 height: 50
@@ -60,7 +59,6 @@ Page {
                 }
                 Keys.onTabPressed: gp_guest_button.focus = true
                 Keys.onReturnPressed: gp_guest_button.focus = true
-                
             }
 
             Button {
@@ -77,7 +75,7 @@ Page {
                     color: "#aed2ea"
                     border.color: "#aed2ea"
                 }
-                //                    onClicked: console.log("Registrarse presionado")
+                // onClicked: console.log("Iniciar como invitado presionado")
             }
 
             Row {
@@ -97,7 +95,7 @@ Page {
                         color: "#c2d9e9"
                         border.color: "#c2d9e9"
                     }
-                    //                    onClicked: console.log("Registrarse presionado")
+                    // onClicked: console.log("Iniciar Sesion presionado")
                 }
 
                 Button {
@@ -113,7 +111,7 @@ Page {
                         color: "#c2d9e9"
                         border.color: "#c2d9e9"
                     }
-                    //                    onClicked: console.log("Modo invitado")
+                    // onClicked: console.log("Registrarse presionado")
                 }
             }
         }
