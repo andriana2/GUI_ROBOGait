@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    Cliente cliente(8080);
+    Cliente cliente(5555, 45454);
     StringHandler stringHandler;
     MapInfo mapInfo;
     Database database;

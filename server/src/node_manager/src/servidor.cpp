@@ -2,29 +2,170 @@
 #include <iostream>
 #include <boost/beast/core/detail/base64.hpp>
 
-Servidor::Servidor(int port, rclcpp::Node::SharedPtr node)
-    : acceptor_(io_context_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)), socket_(io_context_), nodeManager(node) {}
+Servidor::Servidor(int port_tcp, int port_udp, rclcpp::Node::SharedPtr node, boost::asio::io_context &io_context)
+    : io_context_(io_context), udp_socket_(io_context, udp::endpoint(udp::v4(), port_udp)),
+      tcp_acceptor_(io_context, tcp::endpoint(tcp::v4(), port_tcp)),
+      nodeManager(node), ip_port_tcp_(port_tcp), ip_port_udp_(port_udp),
+      connection_active_(false), tcp_socket_(io_context)
+{
+    printf("Hola desde el constructor de Servidor\n");
+    tcp_acceptor_.set_option(tcp::acceptor::reuse_address(true));
+}
 
 void Servidor::run()
 {
-    std::cout << "Servidor escuchando en el puerto " << acceptor_.local_endpoint().port() << std::endl;
-    startAccept();
+    std::cout << "Servidor escuchando en el puerto " << tcp_acceptor_.local_endpoint().port() << std::endl;
+    runUdp();
+    // if (!connection_active_)
+    // {
+    //     std::this_thread::sleep_for(std::chrono::seconds(1));
+    //     run();
+    // }
     io_context_.run();
+}
+
+void Servidor::runUdp()
+{
+    // std::cout << "Servidor escuchando por udp en el puerto " << tcp_acceptor_.local_endpoint().port() << std::endl;
+    try
+    {
+        // Poner el socket en modo bloqueante para discovery
+        if (!connection_active_)
+        {
+            udp_discovery();
+            if (!connection_active_)
+            {
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                runUdp();
+            }
+            handle_udp_acks();
+
+            std::cout << "Esperando conexión TCP...\n";
+        }
+        try
+        {
+            if (!connection_active_)
+            {
+                std::cout << "saliendo del codigo \n";
+                // tcp::socket tcp_socket(io_context_);
+                tcp_acceptor_.accept(tcp_socket_);
+            }
+            startAccept();
+
+            // handle_tcp_connection(std::move(tcp_socket));
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error en conexión TCP: " << e.what() << "\n";
+            connection_active_ = false;
+        }
+        // tcp_acceptor_.close();
+        // std::cout << "Reiniciando servidor...\n";
+        // std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        // // Reabrir el acceptor para la próxima ronda
+        // tcp_acceptor_ = tcp::acceptor(io_context_, tcp::endpoint(tcp::v4(), ip_port_tcp_));
+        // tcp_acceptor_.set_option(tcp::acceptor::reuse_address(true));
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error en descubrimiento UDP: " << e.what() << "\n";
+        connection_active_ = false;
+    }
+    // connection_active_ = false;
+    // resetConnection();
+}
+
+void Servidor::udp_discovery()
+{
+    try
+    {
+        udp_socket_.non_blocking(false);
+
+        char buffer[1024] = {0};
+        udp::endpoint client_ep;
+
+        std::cout << "Esperando cliente UDP...\n";
+        size_t len = udp_socket_.receive_from(boost::asio::buffer(buffer), client_ep);
+
+        std::cout << "Cliente UDP encontrado: " << client_ep << "\n";
+        std::cout << "Mensaje recibido: " << std::string(buffer, len) << "\n";
+
+        if (std::string(buffer, len) == "DISCOVER")
+        {
+            udp_socket_.send_to(boost::asio::buffer("SERVER_ACK"), client_ep);
+            client_endpoint_ = client_ep;
+            connection_active_ = true;
+            std::cout << "Cliente confirmado: " << client_ep << "\n";
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error en descubrimiento UDP: " << e.what() << "\n";
+        connection_active_ = false;
+    }
+}
+
+void Servidor::handle_udp_acks()
+{
+    std::thread([this]()
+                {
+        char buffer[1024];
+        int failed_acks = 0;
+        const int max_failed_acks = 3;
+
+        while (connection_active_) {
+            try {
+                udp_socket_.send_to(boost::asio::buffer("ACK"), client_endpoint_);
+            } catch (...) {
+                std::cerr << "Error enviando ACK\n";
+                connection_active_ = false;
+                break;
+            }
+
+            bool ack_received = false;
+            for (int i = 0; i < 5; ++i) {
+                boost::system::error_code ec;
+                udp::endpoint sender;
+                udp_socket_.non_blocking(true);
+                size_t len = udp_socket_.receive_from(boost::asio::buffer(buffer), sender, 0, ec);
+
+                if (!ec && len > 0 && sender == client_endpoint_ &&
+                    std::string(buffer, len) == "ACK") {
+                    ack_received = true;
+                    failed_acks = 0;
+                    break;
+                }
+
+                std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            }
+
+            if (!ack_received && ++failed_acks >= max_failed_acks) {
+                std::cerr << "Conexión UDP perdida\n";
+                connection_active_ = false;
+                break;
+            }
+
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        } })
+        .detach();
 }
 
 void Servidor::startAccept()
 {
     // Acepta una nueva conexión
-    std::cout << "Waiting for a client to connect...\n";
-    acceptor_.async_accept(socket_, [this](boost::system::error_code ec)
-                           {
+    std::cout << "Waiting for a client to connect... estoy en startAccept\n";
+    tcp_acceptor_.async_accept(tcp_socket_, [this](boost::system::error_code ec)
+                               {
             if (!ec) {
                 std::cout << "Client connected.\n";
                 startRead();
             } else {
                 std::cerr << "Error accepting connection: " << ec.message() << "\n";
+                std::this_thread::sleep_for(std::chrono::seconds(1));
                 startAccept(); // Retry accepting a connection
             } });
+    // run();
 }
 
 void Servidor::resetConnection()
@@ -32,10 +173,20 @@ void Servidor::resetConnection()
     try
     {
         std::cout << "Cerrando la conexión con el cliente...\n";
-        socket_.close();
+        tcp_socket_.close();
         buf_.clear(); // Limpia el buffer
         nodeManager.reset();
-        startAccept(); // Espera por un nuevo cliente
+        connection_active_ = false;
+
+        // tcp_acceptor_.close();
+        // std::cout << "Reiniciando servidor...\n";
+        // std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        // // Reabrir el acceptor para la próxima ronda
+        // // tcp_acceptor_.close();
+        // tcp_acceptor_ = tcp::acceptor(io_context_, tcp::endpoint(tcp::v4(), ip_port_tcp_));
+        // tcp_acceptor_.set_option(tcp::acceptor::reuse_address(true));
+        runUdp(); // Espera por un nuevo cliente
     }
     catch (const std::exception &e)
     {
@@ -53,11 +204,11 @@ void Servidor::closeServer()
         io_context_.stop();
 
         // Cerrar el socket
-        if (socket_.is_open())
+        if (tcp_socket_.is_open())
         {
             pri1("Estoy intentando cerrarme");
-            socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-            socket_.close();
+            tcp_socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+            tcp_socket_.close();
         }
 
         std::cout << "Servidor cerrado correctamente.\n";
@@ -70,8 +221,13 @@ void Servidor::closeServer()
 
 void Servidor::startRead()
 {
+    if(connection_active_ == false)
+    {
+        std::cout << "No hay conexión activa. No se puede leer.\n";
+        run();
+    }
     pri1("estoy en StartRead");
-    socket_.async_read_some(
+    tcp_socket_.async_read_some(
         boost::asio::buffer(buffer_array),
         [this](const boost::system::error_code &ec, long unsigned int bytes_transferred)
         {
@@ -137,7 +293,7 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             try
             {
                 std::string path_ = PATH;
-        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+                config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
             }
             catch (const std::exception &e)
             {
@@ -188,7 +344,7 @@ void Servidor::handleRequestMsg(const json &json_msg)
         try
         {
             std::string path_ = PATH;
-        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+            config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
         }
         catch (const std::exception &e)
         {
@@ -204,7 +360,7 @@ void Servidor::handleRequestMsg(const json &json_msg)
         try
         {
             std::string path_ = PATH;
-        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+            config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
         }
         catch (const std::exception &e)
         {
@@ -234,7 +390,7 @@ void Servidor::handleRequestImg(const json &json_msg)
         try
         {
             std::string path_ = PATH;
-        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+            config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
         }
         catch (const std::exception &e)
         {
@@ -276,10 +432,13 @@ void Servidor::handleRequestImg(const json &json_msg)
     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Img_Map_Select))
     {
         YAML::Node config;
-        try {
+        try
+        {
             std::string path_ = PATH;
-        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
-        } catch (const std::exception& e) {
+            config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+        }
+        catch (const std::exception &e)
+        {
             std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
         }
         std::string path = config["PATH2MAP"].as<std::string>();
@@ -296,7 +455,7 @@ void Servidor::sendMsg(const json &json_msg)
 {
     std::string jsonStr = json_msg.dump();
     pri1(jsonStr);
-    boost::asio::write(socket_, boost::asio::buffer(jsonStr));
+    boost::asio::write(tcp_socket_, boost::asio::buffer(jsonStr));
 }
 
 void Servidor::sendImageMap(const std::string &name_map, bool img_map_SLAM)
@@ -353,7 +512,7 @@ void Servidor::sendImageMap(const std::string &name_map, bool img_map_SLAM)
             // Enviar el JSON por el socket
             pri1("IMAGEN ENVIADA size: " + std::to_string(jsonStr.size()));
             // pri1(std::to_string(jsonStr.size()));
-            boost::asio::write(socket_, boost::asio::buffer(jsonStr));
+            boost::asio::write(tcp_socket_, boost::asio::buffer(jsonStr));
             bytesSent += bytesRead;
             numFrame++;
         }

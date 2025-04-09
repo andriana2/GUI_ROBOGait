@@ -6,12 +6,15 @@
 #include <vector>
 #include <string>
 
-Cliente::Cliente(int portNumber) : QObject() //, stringHandler(nullptr)
+Cliente::Cliente(int port_tcp, int port_udp) : QObject(), port_tcp(port_tcp) //, stringHandler(nullptr)
 {
+    connect(&udpSocket, &QUdpSocket::readyRead, this, &Cliente::answerUdp);
+    udpSocket.bind(QHostAddress::AnyIPv4, port_udp);
+
     socket = new QTcpSocket();
     maping = true;
 
-    port = portNumber;
+    port_udp = port_udp;
 
     timeoutTimer = new QTimer();
     timeoutTimer->setSingleShot(true);
@@ -36,6 +39,37 @@ Cliente::~Cliente() {
 
 void Cliente::setStringHandler(StringHandler *sh) { stringHandler = sh; }
 void Cliente::setDatabase(Database *sh) { database = sh; }
+
+void Cliente::answerUdp()
+{
+    while (udpSocket.hasPendingDatagrams()) {
+        QByteArray buffer;
+        buffer.resize(udpSocket.pendingDatagramSize());
+        QHostAddress sender;
+        quint16 port;
+        udpSocket.readDatagram(buffer.data(), buffer.size(), &sender, &port);
+        QString mensaje(buffer);
+        qDebug() << "Recibido:" << mensaje;
+
+        if (mensaje.contains("SERVER_ACK")) {
+            servidor = sender;
+            qDebug() << "Servidor encontrado en" << servidor.toString();
+            connect2host(servidor.toString());
+
+            // tcpSocket.connectToHost(servidor, 5555);
+            // connect(&tcpSocket, &QTcpSocket::readyRead, this, [&]() {
+            //     QByteArray datos = tcpSocket.readAll();
+            //     qDebug() << "Mensaje TCP:" << datos;
+            //     tcpSocket.write("Hola como estas?");
+            // });
+        } else if (mensaje.contains("ACK")) {
+            qDebug() << "ACK recibido";
+            QByteArray buffer2 = {"ACK"};
+            udpSocket.writeDatagram(buffer2, sender, port);
+        }
+    }
+
+}
 
 void Cliente::onReadyRead()
 {
@@ -125,15 +159,23 @@ void Cliente::connect2host(const QString hostAddress)
 {
     host = hostAddress;
     timeoutTimer->start(3000);
-    socket->connectToHost(host, port);
+    socket->connectToHost(host, port_tcp);
     connect(socket, &QTcpSocket::connected, this, &Cliente::connected);
-    qDebug() << "Conectado a ip: " << host << " y al puerto " << port;
+    qDebug() << "Conectado a ip: " << host << " y al puerto " << port_tcp;
 
     if (!socket->waitForConnected())
     {
         qDebug() << "No se pudo conectar al servidor.";
         return;
     }
+}
+
+void Cliente::startSearchUdp()
+{
+    udpSocket.bind(QHostAddress::AnyIPv4, port_udp);
+
+    QByteArray first_word_identify_server = "DISCOVER";
+    udpSocket.writeDatagram(first_word_identify_server, QHostAddress::Broadcast, 45454);
 }
 
 void Cliente::connectionTimeout()

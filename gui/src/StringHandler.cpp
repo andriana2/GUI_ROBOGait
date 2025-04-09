@@ -74,7 +74,7 @@ bool StringHandler::isInSameNetwork(const QString &ip1, const std::string &subne
             return false;
         }
     }
-    cliente->connect2host(ip_borrar_en_cuanto_sea_posible);
+    cliente->startSearchUdp();
     return true;
 }
 
