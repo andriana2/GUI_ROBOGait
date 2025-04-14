@@ -141,6 +141,7 @@ void Servidor::handle_udp_acks()
             }
 
             if (!ack_received && ++failed_acks >= max_failed_acks) {
+                nodeManager.reset();
                 std::cerr << "Conexión UDP perdida\n";
                 connection_active_ = false;
                 break;

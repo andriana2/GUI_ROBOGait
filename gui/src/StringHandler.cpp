@@ -38,7 +38,8 @@ void StringHandler::setMapInfo(MapInfo *mapIn)
 #if EN_CASA
 bool StringHandler::isInSameNetwork(const QString &ip1, const std::string &subnetMask)
 {
-    QString ip_borrar_en_cuanto_sea_posible = "10.0.2.15";
+    QString ip_borrar_en_cuanto_sea_posible = "192.168.1.65";
+    // QString ip_borrar_en_cuanto_sea_posible = "10.0.2.15";
     std::string ip1_ = ip_borrar_en_cuanto_sea_posible.toStdString();
     for (char ch : ip1_)
     {

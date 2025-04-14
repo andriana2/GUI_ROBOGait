@@ -2,7 +2,7 @@
 #define HEADER_H
 
 
-#define EN_CASA 1
+#define EN_CASA 0
 #define ROBOT 0
 enum Header {
     MSG,
@@ -52,7 +52,7 @@ struct RealPositionMeters
 #define PATH "/home/andri/Desktop/gui_nuevo/gui_/" //casa
 
 #else
-#define PATH "/home/robogait/Desktop/gui_andri/gui/" // uni
+#define PATH "/home/robogait/Desktop/gui_andri/GUI_ROBOGait/" // uni
 #endif
 
 

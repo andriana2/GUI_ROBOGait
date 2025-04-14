@@ -156,8 +156,15 @@ ApplicationFlowForm {
         applicationFlow.state = "select_patient"
     }
     function register_page_push(){
-        mystackview.push(register_page)
-        applicationFlow.state = "register_page"
+        
+        // mystackview.push(register_page)
+        // applicationFlow.state = "register_page"
+        ddbb.role =("doctor")
+        ddbb.username = "mariaRosa"
+        // menu_push()
+        mystackview.push(menu_app)
+        console.log("roleChanged cambió a: -" + ddbb.role + "-");
+        applicationFlow.state = "menu_app"
     }
     function manualControl_push()
     {
