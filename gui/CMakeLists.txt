@@ -103,6 +103,7 @@ qt_add_qml_module(appgui
     images/saveButton.png
     images/eraser-solid.svg
     images/logo.png
+    images/icon.png
     images/trash-solid.svg
     images/file-arrow-down-solid.svg
     images/my_map.png
@@ -126,6 +127,7 @@ set_target_properties(appgui PROPERTIES
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
+    QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/android"
 )
 
 target_link_libraries(appgui
