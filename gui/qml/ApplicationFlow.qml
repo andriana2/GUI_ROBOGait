@@ -10,8 +10,8 @@ ApplicationFlowForm {
     property int type_save: type_save = -1
 
     home.buttonStart.onClicked: {
-        mystackview.push(ip)
-        applicationFlow.state = "ip"
+        mystackview.push(robot_connection)
+        applicationFlow.state = "robot_connection"
         // mystackview.push(menu_app)
         // applicationFlow.state = "menu_app"
     }
@@ -215,7 +215,7 @@ ApplicationFlowForm {
             }
         },
         State {
-            name: "ip"
+            name: "robot_connection"
             PropertyChanges {
                 target:applicationFlow
                 previousState: "Home"
@@ -271,7 +271,7 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target:applicationFlow
-                previousState: "ip"
+                previousState: "robot_connection"
             }
             PropertyChanges {
                 target: toolbar

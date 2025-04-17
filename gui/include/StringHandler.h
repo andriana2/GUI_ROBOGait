@@ -35,17 +35,19 @@ class StringHandler : public QObject
     Q_PROPERTY(int typeSaveMap READ typeSaveMap WRITE setTypeSaveMap NOTIFY typeSaveMapChanged FINAL)//Tipo de mapa si se a guardado o no (ManualControl)
     Q_PROPERTY(QString nameMap READ nameMap WRITE setNameMap NOTIFY nameMapChanged FINAL)//Nombre del mapa por si se ha guardado el mapa (ManualControl)
     Q_PROPERTY(QStringListModel* model READ model NOTIFY modelChanged FINAL) // lista que aparece (SelectMap)
-
+    Q_PROPERTY(QString strFindRobot READ strFindRobot WRITE setStrFindRobot NOTIFY strFindRobotChanged FINAL)
 
 public:
     explicit StringHandler(QObject *parent = nullptr);
-    Q_INVOKABLE bool isInSameNetwork(const QString &ip1, const std::string& subnetMask = "255.255.255.0");
+    // Q_INVOKABLE bool isInSameNetwork(const QString &ip1, const std::string& subnetMask = "255.255.255.0");
     Q_INVOKABLE void setImage(const QByteArray &data);
     Q_INVOKABLE QString getImageSource();
     Q_INVOKABLE void sendStateRemoteControlledHandler(bool mapping, bool in);
 
     void setClient(Cliente *cli);
     void setMapInfo(MapInfo *mapIn);
+
+    Q_INVOKABLE void searchRobotIp();
 
     // msg send
     Q_INVOKABLE void setCurrentMove(const QString &lineal,const QString & angular);
@@ -82,6 +84,9 @@ public:
 
     Q_INVOKABLE void closeConnection();
 
+    QString strFindRobot() const;
+    void setStrFindRobot(const QString &newStrFindRobot);
+
 signals:
 
     void imageReceived(const QString &image);
@@ -93,6 +98,8 @@ signals:
     void nameMapChanged();
 
     void modelChanged();
+
+    void strFindRobotChanged();
 
 private:
     bool moveStop = 0;
@@ -116,6 +123,7 @@ private:
     int m_typeSaveMap = -1;
     QString m_nameMap = "";
     QStringListModel *m_model = nullptr;
+    QString m_strFindRobot;
 };
 
 #endif // STRINGHANDLER_H

@@ -93,7 +93,18 @@ void Servidor::udp_discovery()
 
         if (std::string(buffer, len) == "DISCOVER")
         {
-            udp_socket_.send_to(boost::asio::buffer("SERVER_ACK"), client_ep);
+            YAML::Node config;
+            try
+            {
+                std::string path_ = PATH;
+                config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            }
+            std::string str2client = "SERVER_ACK: " + config["ROBOT_NAME"].as<std::string>() + " TYPE: " + config["TYPE"].as<std::string>();
+            udp_socket_.send_to(boost::asio::buffer(str2client), client_ep);
             client_endpoint_ = client_ep;
             connection_active_ = true;
             std::cout << "Cliente confirmado: " << client_ep << "\n";
@@ -222,7 +233,7 @@ void Servidor::closeServer()
 
 void Servidor::startRead()
 {
-    if(connection_active_ == false)
+    if (connection_active_ == false)
     {
         std::cout << "No hay conexión activa. No se puede leer.\n";
         run();

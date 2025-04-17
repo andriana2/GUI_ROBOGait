@@ -4,7 +4,7 @@ import "extras"
 
 Item {
     id: root
-    property alias buttonEnviar: buttonEnviar
+    property alias buttonSearchRobot: buttonSearchRobot
 
     Rectangle {
         id: background
@@ -47,12 +47,14 @@ Item {
 
         // Botón
         Button {
-            id: buttonEnviar
-            width: 160
+            id: buttonSearchRobot
             height: 45
             anchors.top: scrollView.bottom
             anchors.topMargin: parent.height < 600 ? 20 : 40
             anchors.horizontalCenter: parent.horizontalCenter
+
+            // El ancho se ajusta automáticamente al texto + 8 píxeles (4 a cada lado)
+            width: contentItem.implicitWidth + 20
 
             background: Rectangle {
                 color: "#ffffff"
@@ -62,12 +64,23 @@ Item {
             }
 
             contentItem: Label {
+                id: buttonLabel
                 text: qsTr("Buscar Robot")
-                anchors.centerIn: parent
                 color: "#045671"
                 font.pixelSize: 16
                 font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                anchors.fill: parent
+                padding: 0
             }
         }
     }
 }
+
+/*##^##
+Designer {
+    D{i:0;autoSize:true;height:480;width:640}D{i:2}D{i:4}D{i:3}D{i:5}D{i:1}
+}
+##^##*/
+

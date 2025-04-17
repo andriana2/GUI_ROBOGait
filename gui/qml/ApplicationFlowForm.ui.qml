@@ -6,7 +6,7 @@ Rectangle {
     id: root
     color: "#518bb7"
     property alias home: home
-    property alias ip: ip
+    property alias robot_connection: robot_connection
     property alias menu_app: menu_app
     property alias menu_doctor: menu_doctor
     property alias register_page: register_page
@@ -74,8 +74,8 @@ Rectangle {
         }
     }
     Component {
-        id: ip
-        Ip {
+        id: robot_connection
+        RobotConnection {
             visible: true
         }
     }

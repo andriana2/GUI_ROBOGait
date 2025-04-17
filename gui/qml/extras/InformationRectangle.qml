@@ -9,7 +9,9 @@ Popup {
     focus: true  // Asegura que el Popup reciba eventos de teclado
     anchors.centerIn: parent
     background: null
+    property bool __connectedToClick: false
     property alias infoRectangleText: textInfo
+    property alias infoRectangleMouseArea: mouseAreaInfo
 
     // Contenido del Popup
     Rectangle {
@@ -28,8 +30,13 @@ Popup {
         }
 
         MouseArea {
+            id: mouseAreaInfo
             anchors.fill: parent
-            onClicked: root.close()  // Cierra el popup al hacer clic
+            signal clickedFromPopup()
+            onClicked: {
+                clickedFromPopup()
+                root.close()
+            }
         }
     }
 }

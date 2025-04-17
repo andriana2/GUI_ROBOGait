@@ -1,9 +1,7 @@
 #include "../include/StringHandler.h"
 #include "../include/utils.h"
 #include "../include/ToJson.h"
-#include <iostream>
 #include <vector>
-#include <sstream>
 #include <QBuffer>
 #include <QDebug>
 #include <QFile>
@@ -35,102 +33,107 @@ void StringHandler::setMapInfo(MapInfo *mapIn)
     mapInfo = mapIn;
 }
 
-#if EN_CASA
-bool StringHandler::isInSameNetwork(const QString &ip1, const std::string &subnetMask)
+void StringHandler::searchRobotIp()
 {
-    QString ip_borrar_en_cuanto_sea_posible = "192.168.1.65";
-    // QString ip_borrar_en_cuanto_sea_posible = "10.0.2.15";
-    std::string ip1_ = ip_borrar_en_cuanto_sea_posible.toStdString();
-    for (char ch : ip1_)
-    {
-        if (!(std::isdigit(ch) || ch == '.'))
-        {
-            return false;
-        }
-    }
-
-    QString ip2 = obtenerIP();
-    std::string ip2_ = ip2.toStdString();
-    std::cout << ip2_ << std::endl;
-    auto ipToInt = [](const std::string &ip) -> std::vector<int>
-    {
-        std::vector<int> parts;
-        std::stringstream ss(ip);
-        std::string segment;
-        while (std::getline(ss, segment, '.'))
-        {
-            parts.push_back(std::stoi(segment));
-        }
-        return parts;
-    };
-
-    std::vector<int> ip1Parts = ipToInt(ip1_);
-    std::vector<int> ip2Parts = ipToInt(ip2_);
-    std::vector<int> maskParts = ipToInt(subnetMask);
-
-    for (int i = 0; i < 4; ++i)
-    {
-        if ((ip1Parts[i] & maskParts[i]) != (ip2Parts[i] & maskParts[i]))
-        {
-            return false;
-        }
-    }
     cliente->startSearchUdp();
-    return true;
 }
 
-#else
-bool StringHandler::isInSameNetwork(const QString &ip1, const std::string &subnetMask)
-{
-    // qDebug() << "HOLA";
-    if (ip1.isEmpty() || ip1 == "")
-    {
-        return 0;
-    }
-    std::string ip1_ = ip1.toStdString(); // CAAAAAAAMMMMMMMBIAAAAAAR
-    for (char ch : ip1_)
-    {
-        if (!(std::isdigit(ch) || ch == '.'))
-        {
-            return false;
-        }
-    }
+// #if EN_CASA
+// bool StringHandler::isInSameNetwork(const QString &ip1, const std::string &subnetMask)
+// {
+//     QString ip_borrar_en_cuanto_sea_posible = "192.168.1.65";
+//     // QString ip_borrar_en_cuanto_sea_posible = "10.0.2.15";
+//     std::string ip1_ = ip_borrar_en_cuanto_sea_posible.toStdString();
+//     for (char ch : ip1_)
+//     {
+//         if (!(std::isdigit(ch) || ch == '.'))
+//         {
+//             return false;
+//         }
+//     }
 
-    QString ip2 = obtenerIP();
-    std::string ip2_ = ip2.toStdString();
-    std::cout << ip2_ << std::endl;
-    auto ipToInt = [](const std::string &ip) -> std::vector<int>
-    {
-        std::vector<int> parts;
-        std::stringstream ss(ip);
-        std::string segment;
-        while (std::getline(ss, segment, '.'))
-        {
-            parts.push_back(std::stoi(segment));
-        }
-        return parts;
-    };
+//     QString ip2 = obtenerIP();
+//     std::string ip2_ = ip2.toStdString();
+//     std::cout << ip2_ << std::endl;
+//     auto ipToInt = [](const std::string &ip) -> std::vector<int>
+//     {
+//         std::vector<int> parts;
+//         std::stringstream ss(ip);
+//         std::string segment;
+//         while (std::getline(ss, segment, '.'))
+//         {
+//             parts.push_back(std::stoi(segment));
+//         }
+//         return parts;
+//     };
 
-    std::vector<int> ip1Parts = ipToInt(ip1_);
-    std::vector<int> ip2Parts = ipToInt(ip2_);
-    std::vector<int> maskParts = ipToInt(subnetMask);
+//     std::vector<int> ip1Parts = ipToInt(ip1_);
+//     std::vector<int> ip2Parts = ipToInt(ip2_);
+//     std::vector<int> maskParts = ipToInt(subnetMask);
 
-    for (int i = 0; i < 4; ++i)
-    {
-        if ((ip1Parts[i] & maskParts[i]) != (ip2Parts[i] & maskParts[i]))
-        {
-            return false;
-        }
-    }
-    // ip a la que nos conectamos
-    // cliente.connectToServer(ip1, 8080);
-    // cliente.connectToServer("127.0.0.1", 8080);
+//     for (int i = 0; i < 4; ++i)
+//     {
+//         if ((ip1Parts[i] & maskParts[i]) != (ip2Parts[i] & maskParts[i]))
+//         {
+//             return false;
+//         }
+//     }
+//     cliente->startSearchUdp();
+//     return true;
+// }
 
-    cliente->connect2host(ip1);
-    // cliente->connect2host(ip_borrar_en_cuanto_sea_posible);
-    return true;
-}
-#endif
+// #else
+// bool StringHandler::isInSameNetwork(const QString &ip1, const std::string &subnetMask)
+// {
+//     // qDebug() << "HOLA";
+//     if (ip1.isEmpty() || ip1 == "")
+//     {
+//         return 0;
+//     }
+//     std::string ip1_ = ip1.toStdString(); // CAAAAAAAMMMMMMMBIAAAAAAR
+//     for (char ch : ip1_)
+//     {
+//         if (!(std::isdigit(ch) || ch == '.'))
+//         {
+//             return false;
+//         }
+//     }
+
+//     QString ip2 = obtenerIP();
+//     std::string ip2_ = ip2.toStdString();
+//     std::cout << ip2_ << std::endl;
+//     auto ipToInt = [](const std::string &ip) -> std::vector<int>
+//     {
+//         std::vector<int> parts;
+//         std::stringstream ss(ip);
+//         std::string segment;
+//         while (std::getline(ss, segment, '.'))
+//         {
+//             parts.push_back(std::stoi(segment));
+//         }
+//         return parts;
+//     };
+
+//     std::vector<int> ip1Parts = ipToInt(ip1_);
+//     std::vector<int> ip2Parts = ipToInt(ip2_);
+//     std::vector<int> maskParts = ipToInt(subnetMask);
+
+//     for (int i = 0; i < 4; ++i)
+//     {
+//         if ((ip1Parts[i] & maskParts[i]) != (ip2Parts[i] & maskParts[i]))
+//         {
+//             return false;
+//         }
+//     }
+//     // ip a la que nos conectamos
+//     // cliente.connectToServer(ip1, 8080);
+//     // cliente.connectToServer("127.0.0.1", 8080);
+
+//     cliente->connect2host(ip1);
+//     // cliente->connect2host(ip_borrar_en_cuanto_sea_posible);
+//     return true;
+// }
+// #endif
 
 QString StringHandler::getImageSource()
 {
@@ -353,7 +356,6 @@ void StringHandler::getImageMapPath(const QJsonObject &json)
     }
 }
 
-
 void StringHandler::setImageSource(const QString &source)
 {
     if (source.isEmpty())
@@ -469,18 +471,18 @@ QStringListModel *StringHandler::model() const
     return m_model;
 }
 
-void StringHandler::loadData(const std::vector<std::string> &data) {
+void StringHandler::loadData(const std::vector<std::string> &data)
+{
     QStringList list;
-    for (const std::string &str : data) {
+    for (const std::string &str : data)
+    {
         qDebug() << "Loading: " << QString::fromStdString(str);
         list.append(QString::fromStdString(str));
     }
 
     m_model->setStringList(list);
-    emit modelChanged();  // Notifica a QML que los datos han cambiado
+    emit modelChanged(); // Notifica a QML que los datos han cambiado
 }
-
-
 
 void StringHandler::requestMapName()
 {
@@ -489,11 +491,25 @@ void StringHandler::requestMapName()
 
 void StringHandler::menu_page(bool in)
 {
-    mapInfo->setCheckInitInitialPose(false);//OJOOOOOOOOOOOOOOOOOOOOOO
+    mapInfo->setCheckInitInitialPose(false); // OJOOOOOOOOOOOOOOOOOOOOOO
     cliente->sendMessage(ToJson::sendStateMenu(in));
 }
 
 void StringHandler::closeConnection()
 {
     cliente->closeConnection();
+}
+
+QString StringHandler::strFindRobot() const
+{
+    return m_strFindRobot;
+}
+
+void StringHandler::setStrFindRobot(const QString &newStrFindRobot)
+{
+    if (m_strFindRobot == newStrFindRobot)
+        return;
+    m_strFindRobot = newStrFindRobot;
+    qDebug() << m_strFindRobot;
+    emit strFindRobotChanged();
 }

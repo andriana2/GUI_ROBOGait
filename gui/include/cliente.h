@@ -16,7 +16,6 @@
 
 #include <QImage>
 
-
 class StringHandler;
 class MapInfo;
 class Database;
@@ -24,59 +23,66 @@ class Database;
 class Cliente : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString ipRobot READ ipRobot WRITE setIpRobot NOTIFY ipRobotChanged FINAL)
 public:
-    Cliente(int port_tcp, int port_udp); //
+    // Constructor and Destructor
+    Cliente(int port_tcp, int port_udp);
     ~Cliente();
 
-    QTcpSocket *socket;
-    QUdpSocket udpSocket;
-    QHostAddress servidor;
-
-    void setStringHandler(StringHandler *sh);//
+    // Connection different class methods
+    void setStringHandler(StringHandler *sh);
     void setMapInfo(MapInfo *sh);
     void setDatabase(Database *sh);
 
-    void sendMessage(const QJsonDocument &jsone);  //
-    // void receiveImageMap(const QByteArray &link);
-    // void processServerResponse();
+    // Core functionality
+    void sendMessage(const QJsonDocument &jsone); // Sends a JSON message to the server
+    void parseJsonToQList(const QJsonObject &jsonObj); // Parses a QJsonObject into an internal list
+    void answerUdp(); // Send ACK
+    void startSearchUdp(); // Initiates the UDP discovery broadcast
 
-    bool getStatus(); //
-    // void sendRequestImg(const QString &target);
+    // Connection properties
+    QTcpSocket *socket; // TCP socket used for server communication
+    QUdpSocket udpSocket; // UDP socket used for broadcasting and receiving messages
+    QHostAddress servidor; // Stores the discovered server address
 
-    void parseJsonToQList(const QJsonObject &jsonObj);
-    void answerUdp();
-    void startSearchUdp();
+    QString ipRobot() const;
+    void setIpRobot(const QString &newIpRobot);
+
 public slots:
-    void closeConnection(); //
-    void connect2host(const QString hostAddress); //
+    void closeConnection(); // Gracefully closes the TCP connection
+    void connect2host(const QString hostAddress); // Initiates a connection to the specified host
 
 signals:
-    void statusChanged(bool);
+    void statusChanged(bool); // Emitted when connection status changes
+
+    void ipRobotChanged();
 
 private slots:
-    void onReadyRead();//
-    void processJson(const QJsonDocument &json);//
-    void connected(); //
-    void connectionTimeout(); //
-    void onErrorOccurred(QAbstractSocket::SocketError error); //
+    void onReadyRead(); // Handles incoming TCP data
+    void processJson(const QJsonDocument &json); // Processes received JSON messages
+    void connected(); // Called when TCP connection is successfully established
+    void connectionTimeout(); // Handles connection timeout scenario
+    void onErrorOccurred(QAbstractSocket::SocketError error); // Handles socket errors
 
 private:
+    // JSON Handling
+    QJsonDocument jsonDoc; // Holds the most recently received JSON document
 
-    //json
-    QJsonDocument jsonDoc;
-    //map
-    bool maping;
+    // Mapping
+    bool maping; // Status flag related to mapping
 
-    //connection
-    QString host;
-    int port_tcp;
-    int port_udp;
-    bool status;
-    QTimer *timeoutTimer;
+    // Connection Configuration
+    QString host; // Host address to connect to
+    int port_tcp; // TCP port
+    int port_udp; // UDP port
+    bool status; // Connection status
+    QTimer *timeoutTimer; // Timer used for connection timeout
 
-    Database *database;
-    StringHandler *stringHandler;
-    MapInfo *mapInfo;
+    // External Handlers
+    Database *database; // Pointer to Database handler
+    StringHandler *stringHandler; // Pointer to StringHandler
+    MapInfo *mapInfo; // Pointer to MapInfo
+    QString m_ipRobot;
 };
 
 #endif // CLIENTE_H

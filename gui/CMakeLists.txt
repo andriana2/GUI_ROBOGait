@@ -51,8 +51,8 @@ qt_add_qml_module(appgui
     qml/ApplicationFlowForm.ui.qml
     qml/Home.qml
     qml/HomeForm.ui.qml
-    qml/robotConnection.qml
-    qml/robotConnectionForm.ui.qml
+    qml/RobotConnection.qml
+    qml/RobotConnectionForm.ui.qml
 
     qml/MainMenuForm.ui.qml
     qml/ManualControl.qml
