@@ -18,7 +18,6 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
                     i = 0;
                 }
                 else
-
                 {
                     cliente->sendMessage(ToJson::sendJoystickPosition(currentAngular, currentLineal));
                     if (i == 10)

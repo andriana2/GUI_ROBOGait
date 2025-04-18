@@ -8,19 +8,13 @@ Servidor::Servidor(int port_tcp, int port_udp, rclcpp::Node::SharedPtr node, boo
       nodeManager(node), ip_port_tcp_(port_tcp), ip_port_udp_(port_udp),
       connection_active_(false), tcp_socket_(io_context)
 {
-    printf("Hola desde el constructor de Servidor\n");
     tcp_acceptor_.set_option(tcp::acceptor::reuse_address(true));
 }
 
 void Servidor::run()
 {
-    std::cout << "Servidor escuchando en el puerto " << tcp_acceptor_.local_endpoint().port() << std::endl;
+    std::cout << "Servidor listening port " << tcp_acceptor_.local_endpoint().port() << std::endl;
     runUdp();
-    // if (!connection_active_)
-    // {
-    //     std::this_thread::sleep_for(std::chrono::seconds(1));
-    //     run();
-    // }
     io_context_.run();
 }
 
@@ -40,23 +34,21 @@ void Servidor::runUdp()
             }
             handle_udp_acks();
 
-            std::cout << "Esperando conexión TCP...\n";
+            std::cout << "Waiting conexion TCP...\n";
         }
         try
         {
             if (!connection_active_)
             {
-                std::cout << "saliendo del codigo \n";
+                std::cout << "exit the code \n";
                 // tcp::socket tcp_socket(io_context_);
                 tcp_acceptor_.accept(tcp_socket_);
             }
             startAccept();
-
-            // handle_tcp_connection(std::move(tcp_socket));
         }
         catch (const std::exception &e)
         {
-            std::cerr << "Error en conexión TCP: " << e.what() << "\n";
+            std::cerr << "TCP connection error: " << e.what() << "\n";
             connection_active_ = false;
         }
         // tcp_acceptor_.close();
@@ -72,8 +64,6 @@ void Servidor::runUdp()
         std::cerr << "Error en descubrimiento UDP: " << e.what() << "\n";
         connection_active_ = false;
     }
-    // connection_active_ = false;
-    // resetConnection();
 }
 
 void Servidor::udp_discovery()
@@ -85,11 +75,11 @@ void Servidor::udp_discovery()
         char buffer[1024] = {0};
         udp::endpoint client_ep;
 
-        std::cout << "Esperando cliente UDP...\n";
+        std::cout << "Waiting for UPD client...\n";
         size_t len = udp_socket_.receive_from(boost::asio::buffer(buffer), client_ep);
 
-        std::cout << "Cliente UDP encontrado: " << client_ep << "\n";
-        std::cout << "Mensaje recibido: " << std::string(buffer, len) << "\n";
+        std::cout << "UDP client found: " << client_ep << "\n";
+        std::cout << "Message received: " << std::string(buffer, len) << "\n";
 
         if (std::string(buffer, len) == "DISCOVER")
         {
@@ -101,18 +91,18 @@ void Servidor::udp_discovery()
             }
             catch (const std::exception &e)
             {
-                std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+                std::cerr << "Error loading YAML file: " << e.what() << std::endl;
             }
             std::string str2client = "SERVER_ACK: " + config["ROBOT_NAME"].as<std::string>() + " TYPE: " + config["TYPE"].as<std::string>();
             udp_socket_.send_to(boost::asio::buffer(str2client), client_ep);
             client_endpoint_ = client_ep;
             connection_active_ = true;
-            std::cout << "Cliente confirmado: " << client_ep << "\n";
+            std::cout << "Confirmed Client " << client_ep << "\n";
         }
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Error en descubrimiento UDP: " << e.what() << "\n";
+        std::cerr << "UDP discovery error: " << e.what() << "\n";
         connection_active_ = false;
     }
 }
@@ -129,7 +119,7 @@ void Servidor::handle_udp_acks()
             try {
                 udp_socket_.send_to(boost::asio::buffer("ACK"), client_endpoint_);
             } catch (...) {
-                std::cerr << "Error enviando ACK\n";
+                std::cerr << "Error sending ACK\n";
                 connection_active_ = false;
                 break;
             }
@@ -152,8 +142,8 @@ void Servidor::handle_udp_acks()
             }
 
             if (!ack_received && ++failed_acks >= max_failed_acks) {
-                nodeManager.reset();
-                std::cerr << "Conexión UDP perdida\n";
+                // nodeManager.reset(); // This cause a bug because doing at the same time as other .reset()
+                std::cerr << "UDP connection lost\n";
                 connection_active_ = false;
                 break;
             }
@@ -184,7 +174,7 @@ void Servidor::resetConnection()
 {
     try
     {
-        std::cout << "Cerrando la conexión con el cliente...\n";
+        std::cout << "Closing the connection with the client...\n";
         tcp_socket_.close();
         buf_.clear(); // Limpia el buffer
         nodeManager.reset();
@@ -202,13 +192,13 @@ void Servidor::resetConnection()
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Error cerrando el socket: " << e.what() << "\n";
+        std::cerr << "Error closing socket: " << e.what() << "\n";
     }
 }
 
 void Servidor::closeServer()
 {
-    std::cout << "Apagando el servidor...\n";
+    std::cout << "Shutting down the server...\n";
 
     try
     {
@@ -218,16 +208,16 @@ void Servidor::closeServer()
         // Cerrar el socket
         if (tcp_socket_.is_open())
         {
-            pri1("Estoy intentando cerrarme");
+            pri1("I'm trying to shut down");
             tcp_socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
             tcp_socket_.close();
         }
 
-        std::cout << "Servidor cerrado correctamente.\n";
+        std::cout << "Server successfully shut down.\n";
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Error cerrando el servidor: " << e.what() << "\n";
+        std::cerr << "Error closing server: " << e.what() << "\n";
     }
 }
 
@@ -235,10 +225,10 @@ void Servidor::startRead()
 {
     if (connection_active_ == false)
     {
-        std::cout << "No hay conexión activa. No se puede leer.\n";
+        std::cout << "There is no active connection. Cannot read.\n";
         run();
     }
-    pri1("estoy en StartRead");
+    pri1("In StartRead");
     tcp_socket_.async_read_some(
         boost::asio::buffer(buffer_array),
         [this](const boost::system::error_code &ec, long unsigned int bytes_transferred)
@@ -296,7 +286,6 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
 
 #else
             std::vector<RealPositionMeters> path_number = nodeManager.getRealPositionPath();
-
 #endif
 
             std::vector<FinalPosition> path_pixel;
@@ -309,7 +298,7 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             }
             catch (const std::exception &e)
             {
-                std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+                std::cerr << "Error loading YAML file: " << e.what() << std::endl;
             }
             std::string path = config["PATH2MAP"].as<std::string>();
 
@@ -360,7 +349,7 @@ void Servidor::handleRequestMsg(const json &json_msg)
         }
         catch (const std::exception &e)
         {
-            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            std::cerr << "Error loading YAML file: " << e.what() << std::endl;
         }
         std::string path = config["PATH2MAP"].as<std::string>();
 
@@ -376,7 +365,7 @@ void Servidor::handleRequestMsg(const json &json_msg)
         }
         catch (const std::exception &e)
         {
-            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            std::cerr << "Error loading YAML file: " << e.what() << std::endl;
         }
         std::string path = config["PATH2MAP"].as<std::string>();
 
@@ -406,7 +395,7 @@ void Servidor::handleRequestImg(const json &json_msg)
         }
         catch (const std::exception &e)
         {
-            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            std::cerr << "Error loading YAML file: " << e.what() << std::endl;
         }
         std::string path = config["PATH2MAP"].as<std::string>();
 
@@ -451,7 +440,7 @@ void Servidor::handleRequestImg(const json &json_msg)
         }
         catch (const std::exception &e)
         {
-            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            std::cerr << "Error loading YAML file: " << e.what() << std::endl;
         }
         std::string path = config["PATH2MAP"].as<std::string>();
 
@@ -485,7 +474,7 @@ void Servidor::sendImageMap(const std::string &name_map, bool img_map_SLAM)
         cv::Mat image = cv::imread(name_map, cv::IMREAD_GRAYSCALE);
         if (image.empty())
         {
-            throw std::runtime_error("Error al leer la imagen.");
+            throw std::runtime_error("Error reading image in sendImageMap.");
         }
 
         // Comprimir imagen y convertirla a formato PNG
@@ -517,12 +506,12 @@ void Servidor::sendImageMap(const std::string &name_map, bool img_map_SLAM)
             // Verificar que el tamaño total no exceda el límite
             if (jsonStr.size() > maxJsonSize)
             {
-                std::string str = "El JSON generado excede el tamaño máximo permitido " + std::to_string(jsonStr.size());
+                std::string str = "The generated JSON exceeds the maximum allowed size " + std::to_string(jsonStr.size());
                 throw std::runtime_error(str);
             }
 
             // Enviar el JSON por el socket
-            pri1("IMAGEN ENVIADA size: " + std::to_string(jsonStr.size()));
+            pri1("IMAGEN SENDING size: " + std::to_string(jsonStr.size()));
             // pri1(std::to_string(jsonStr.size()));
             boost::asio::write(tcp_socket_, boost::asio::buffer(jsonStr));
             bytesSent += bytesRead;
@@ -531,6 +520,6 @@ void Servidor::sendImageMap(const std::string &name_map, bool img_map_SLAM)
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Error en sendImageMap: " << e.what() << std::endl;
+        std::cerr << "Error In sendImageMap: " << e.what() << std::endl;
     }
 }

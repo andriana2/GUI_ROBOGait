@@ -9,7 +9,7 @@ MapInfo::MapInfo(QObject *parent) {
             {
                 static int i = 0;
                 if (m_checkInitInitialPose && i == 20) {
-                    // cliente->sendMessage(ToJson::sendRequestRobotPosition(mapName()));
+                    cliente->sendMessage(ToJson::sendRequestRobotPosition(mapName()));
                     i = 0;
                 }
                 else

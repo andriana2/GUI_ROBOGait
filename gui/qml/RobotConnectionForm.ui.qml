@@ -5,7 +5,7 @@ import "extras"
 Item {
     id: root
     property alias buttonSearchRobot: buttonSearchRobot
-
+    property alias background: background
     Rectangle {
         id: background
         color: "#518bb7"
@@ -35,15 +35,63 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             clip: true
 
-            Text {
-                id: instructionText
+            Column {
                 width: scrollView.width
-                color: "#ffffff"
-                font.pixelSize: 17
-                wrapMode: Text.WordWrap
-                text: qsTr("1º Asegúrate de que el ordenador del robot móvil esté encendido.\nPara ello, sigue estos pasos:\n\n    1.  Conecta el ordenador (NUC) a la batería portátil (power bank).\n    2.  Enciende la batería portátil y ajusta el voltaje hasta que marque 20V.\n    3.  Comprueba que los dos cables de las antenas WiFi estén bien conectados al ordenador.\n    4.  Enciende el ordenador (NUC).\n    5.  Espera unos segundos hasta que el indicador LED de la conexión WiFi se mantenga en verde fijo (sin parpadear).\n\n2º Conéctate a la red WiFi del robot móvil desde la tablet.\nEnciende la tablet, abre la configuración de WiFi y selecciona la red con el nombre robogait2024.\n\n3º Enciende la base del robot.\nPresiona el botón que se encuentra en la base del robot.\nSabrás que se ha encendido correctamente cuando:\n\n    Se encienda un LED azul.\n    Escuches un pitido agudo.")
+                spacing: 20
+
+                // Título 1
+                Text {
+                    text: qsTr("1º ENCENDER EL ORDENADOR DEL ROBOT MÓVIL")
+                    color: "#00C8FF"
+                    font.pixelSize: 20
+                    font.bold: true
+                }
+
+                Text {
+                    id: step1Text
+                    width: scrollView.width
+                    color: "#ffffff"
+                    font.pixelSize: 17
+                    wrapMode: Text.WordWrap
+                    text: qsTr("Para encenderlo, sigue estos pasos:\n\n    1.  Conecta el ordenador (NUC) a la batería portátil (power bank).\n    2.  Enciende la batería portátil y ajusta el voltaje hasta que marque 20V.\n    3.  Comprueba que los dos cables de las antenas WiFi estén bien conectados al ordenador.\n    4.  Enciende el ordenador (NUC).\n    5.  Espera unos segundos hasta que el indicador LED de la conexión WiFi se mantenga en verde fijo (sin parpadear).")
+                }
+
+                // Título 2
+                Text {
+                    text: qsTr("2º CONEXIÓN A LA RED WIFI")
+                    color: "#00C8FF"
+                    font.pixelSize: 20
+                    font.bold: true
+                }
+
+                Text {
+                    id: step2Text
+                    width: scrollView.width
+                    color: "#ffffff"
+                    font.pixelSize: 17
+                    wrapMode: Text.WordWrap
+                    text: qsTr("Conéctate a la red WiFi del robot móvil desde la tablet.\nEnciende la tablet, abre la configuración de WiFi y selecciona la red con el nombre robogait2024.")
+                }
+
+                // Título 3
+                Text {
+                    text: qsTr("3º ENCENDER LA BASE DEL ROBOT")
+                    color: "#00C8FF"
+                    font.pixelSize: 20
+                    font.bold: true
+                }
+
+                Text {
+                    id: step3Text
+                    width: scrollView.width
+                    color: "#ffffff"
+                    font.pixelSize: 17
+                    wrapMode: Text.WordWrap
+                    text: qsTr("Presiona el botón que se encuentra en la base del robot.\nSabrás que se ha encendido correctamente cuando:\n\n     1.  Se encienda un LED azul.\n     2.  Escuches un pitido agudo.")
+                }
             }
         }
+
 
         // Botón
         Button {
