@@ -70,7 +70,7 @@ MapPageForm {
             mapInfo.sendWaypointFollower()
         }
 
-        if(state === "mp_initialOrientation" || state === "mp_goalPosePosition" || state === "mp_initialPosition" || state === "mp_goalPoseOrientation" || state === "mp_outGoalPose")
+        if(state === "mp_initialOrientation" || state === "mp_goalPosePosition" || state === "mp_initialPosition" || state === "mp_goalPoseOrientation" || state === "mp_outGoalPose" || state === "mp_PathGoalPose")
         {
             mapPage.state = mapPage.mapPageForm_nextState
         }
@@ -333,7 +333,7 @@ MapPageForm {
             PropertyChanges {
                 target: mapPage
                 mapPageForm_previousState: "mp_goalPosePosition"
-                mapPageForm_nextState: "mp_outGoalPose"
+                mapPageForm_nextState: "mp_PathGoalPose"
             }
             PropertyChanges {
                 target: mapPageForm_text
@@ -387,7 +387,7 @@ MapPageForm {
                 enabled: true
                 opacity: 1
             }
-            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Enviar")}
+            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Ver Trayectoria")}
             PropertyChanges {
                 target: mapPageForm_buttonPrevious
                 enabled: true
@@ -401,6 +401,45 @@ MapPageForm {
             PropertyChanges {
                 target: mapPageForm_boxImages
                 state: "bi_draw_path"
+            }
+        },
+        State {
+            name: "mp_PathGoalPose"
+            StateChangeScript {
+                script: mp_map.canvas.requestPaint()
+            }
+            PropertyChanges {
+                target: mapPage
+                mapPageForm_previousState: "mp_goalPoseOrientation"
+                mapPageForm_nextState: "mp_outGoalPose"
+            }
+            PropertyChanges {
+                target: mapPageForm_text
+                text: qsTr("Trayectoria del robot")
+            }
+            PropertyChanges {
+                target: mapPageForm_orientationCircleForm
+                state: "nothing"
+            }
+            PropertyChanges {
+                target: mapPageForm_buttonNext
+                enabled: true
+                opacity: 1
+            }
+            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Iniciar movimiento")}
+            PropertyChanges {
+                target: mapPageForm_buttonPrevious
+                enabled: true
+                opacity: 1
+                text: qsTr("Anterior")
+            }
+            PropertyChanges {
+                target: mp_map
+                map_currentState: "map_PathGoalPose"
+            }
+            PropertyChanges {
+                target: mapPageForm_boxImages
+                state: "bi_nothing"
             }
         },
         State {

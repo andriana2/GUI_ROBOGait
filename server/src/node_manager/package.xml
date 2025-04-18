@@ -14,14 +14,8 @@
   <depend>rclcpp</depend>
   <depend>geometry_msgs</depend>
   <depend>interface_srv</depend>
-  <exec_depend>nav_msgs</exec_depend>
   <depend>nav2_msgs</depend>
   <depend>rclcpp_action</depend>
-
-  <exec_depend>rclpy</exec_depend>
-  <exec_depend>nav2_simple_commander</exec_depend>
-  <exec_depend>launch</exec_depend>
-  <exec_depend>launch_ros</exec_depend>
 
   <!-- Dependencias opcionales para pruebas -->
   <test_depend>ament_lint_auto</test_depend>

@@ -261,11 +261,8 @@ void ProcessController::stopAllProcesses()
             std::cout << "Proceso \"" << name << "\" fue terminado por la señal: " << WTERMSIG(status) << std::endl;
         }
 
-        pri1("Primer valor: "+it->first);
         // Borrar el proceso de la lista después de confirmarlo muerto
         it = processMap.erase(it);
-        
-        pri1("Holaaaa");
         sleep(5);
     }
 

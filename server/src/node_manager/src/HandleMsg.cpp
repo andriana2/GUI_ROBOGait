@@ -27,11 +27,7 @@ void HandleMsg::handleMsgJson(const json &json_msg)
     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Waypoint_Follower))
         WaypointFollower(json_msg);
     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Stop_Process))
-    {
-        static int num = 1;
-        pri1("++++++++++++++++++Estoy en HandleMsg estdo: " + std::to_string(num++));
         nodeManager.reset();
-    }
     else
         std::cerr << "Error: Target no encontrado." << std::endl;
 }

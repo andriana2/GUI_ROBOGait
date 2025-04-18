@@ -277,6 +277,12 @@ Item {
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 drawPointsAndLines(ctx)
                 break;
+            case "map_PathGoalPose":
+                console.log("map_PathGoalPose")
+                ctx.clearRect(0, 0, width, height);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                drawPointsAndLines(ctx)
+                break;
             default:
                 console.log("Estado no reconocido: ", map_currentState);
                 break;

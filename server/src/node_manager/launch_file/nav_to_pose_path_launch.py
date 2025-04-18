@@ -43,10 +43,10 @@ def main() -> None:
         map_file = sys.argv[5] if len(sys.argv) > 5 else None
     else:
         # Valores por defecto (los del ejemplo original)
-        initial_x = 0.0
-        initial_y = 0.0
-        goal_x = 17.86
-        goal_y = -0.77
+        initial_x = 0.41
+        initial_y = -0.19
+        goal_x = 3.81
+        goal_y = 1.04
         map_file = None
     
     navigator = BasicNavigator()
@@ -69,8 +69,8 @@ def main() -> None:
     goal_pose.header.stamp = navigator.get_clock().now().to_msg()
     goal_pose.pose.position.x = goal_x
     goal_pose.pose.position.y = goal_y
-    goal_pose.pose.orientation.w = 1.0
     goal_pose.pose.orientation.z = 0.0
+    goal_pose.pose.orientation.w = 1.0
     
     # Si se proporcionó un mapa, cargarlo
     if map_file:

@@ -99,7 +99,7 @@ public:
 
 
     // bool isBlack(const cv::Mat &image, cv::Point point);
-    bool isBlack(const QImage &image, Pixel point);
+    bool isBlack(const QImage &image, const Pixel& point, int radius);
     // std::vector<cv::Point> getLinePixels(cv::Point p1, cv::Point p2);
     bool linePassesThroughBlack(const QImage &image, Pixel p1, Pixel p2);
 
@@ -107,7 +107,8 @@ public:
     double distancia(const Pixel& p1, const Pixel& p2);
     Pixel puntoIntermedio(const Pixel& p1, const Pixel& p2, double distanciaObjetivo);
     QList<Pixel> suavizarTrayectoria(const QList<Pixel>& puntos, double distanciaSuavizado = 2.0);
-
+    QList<Pixel> rdp(const QList<Pixel>& pts, double eps);
+    double puntoLineaDist(const Pixel& p, const Pixel& a, const Pixel& b);
 
     // cv::Mat base64ToMat(const QString &base64);
     Q_INVOKABLE bool checkPathBlack();
