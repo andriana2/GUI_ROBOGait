@@ -1,9 +1,23 @@
 #include "../include/NodeManager.h"
+
 #include <iostream>
 
 NodeManager::NodeManager(rclcpp::Node::SharedPtr node_ptr) : processController()
 {
     node_manager = node_ptr;
+}
+void NodeManager::create_subscription(Target const &target)
+{
+    if (target == All_Information_Pose)
+    {
+        if (!plan_path_subscriber_)
+        {
+            plan_path_subscriber_ = node_manager->create_subscription<nav_msgs::msg::Path>(
+                "/global_plan", 10, std::bind(&NodeManager::topic_plan_callback, this, std::placeholders::_1));
+                RCLCPP_INFO(node_manager->get_logger(), "Suscriptor global plan created, waiting messages...");
+        }
+
+    }
 }
 
 void NodeManager::create_publisher(Target const &target)
@@ -27,7 +41,7 @@ void NodeManager::create_publisher(Target const &target)
             std::string cmd_vel = config["CMD_VEL_TOPIC"].as<std::string>();
 
             cmd_vel_publisher_ = node_manager->create_publisher<geometry_msgs::msg::Twist>(cmd_vel, 10);
-            RCLCPP_INFO(node_manager->get_logger(), "Publisher /cmd_vel creado.");
+            RCLCPP_INFO(node_manager->get_logger(), "Publisher /cmd_vel created.");
         }
     }
     else if (target == Request_Map_SLAM)
@@ -81,11 +95,11 @@ void NodeManager::create_publisher(Target const &target)
             goal_pose_publisher_ = node_manager->create_publisher<geometry_msgs::msg::PoseStamped>(goal_pose_topic, 10);
             RCLCPP_INFO(node_manager->get_logger(), "Publisher /goal_pose.");
         }
-        if (!plan_path_subscriber_)
-        {
-            plan_path_subscriber_ = node_manager->create_subscription<nav_msgs::msg::Path>(
-                "/plan", 10, std::bind(&NodeManager::topic_plan_callback, this, std::placeholders::_1));
-        }
+        // if (!plan_path_subscriber_)
+        // {
+        //     plan_path_subscriber_ = node_manager->create_subscription<nav_msgs::msg::Path>(
+        //         "/plan", 10, std::bind(&NodeManager::topic_plan_callback, this, std::placeholders::_1));
+        // }
     }
     else if (target == Waypoint_Follower)
     {
@@ -394,6 +408,13 @@ void NodeManager::refresh_map(std::string const &map_name)
     //     std::cout << "El comando se ejecutó correctamente. " << command << std::endl;
     // else
     //     std::cerr << "Hubo un error al ejecutar el comando. " << command << std::endl;
+#endif
+}
+
+void NodeManager::create_global_plan(RealPositionMeters const &initialpose, RealPositionMeters const &goalpose, std::string const &pathMap)
+{
+#if !EN_CASA
+
 #endif
 }
 

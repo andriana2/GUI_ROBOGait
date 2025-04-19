@@ -1,11 +1,11 @@
 ROBOT_NAME: "RobogaitIndoor"
 TYPE: "V3"
 
-PATH2MAP: "/home/robogait/Desktop/gui_andri/gui/server/maps"
+PATH2MAP: "/home/robogait/Desktop/gui_andri/GUI_ROBOGait/server/maps"
 START_ROBOT: "ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py"
 NAME_START_ROBOT: "turtlebot3_gazebo"
 
-MAP_SAVER_CLI: "ros2 run nav2_map_server map_saver_cli -t /map -f /home/robogait/Desktop/gui_andri/gui/server/maps"
+MAP_SAVER_CLI: "ros2 run nav2_map_server map_saver_cli -t /map -f /home/robogait/Desktop/gui_andri/GUI_ROBOGait/server/maps"
 NAME_MAP_SAVER_CLI: "nav2_map_save"
 
 TF_SERVICE: "ros2 run tf_service tf_service_node"

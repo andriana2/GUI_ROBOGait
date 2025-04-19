@@ -152,6 +152,34 @@ QJsonDocument sendInitialPose(QString const &map_name, int const &x_initialpose,
     return QJsonDocument(jsonObj);
 }
 
+QJsonDocument sendAllInformationPose(QString const &map_name, int const &x_initialpose, int const &y_initialpose,
+                                     float const &theta_initialpose, int const &x_goalpose, int const &y_goalpose,
+                                     float const &theta_goalpose, int const &height)
+{
+    QJsonObject jsonObj;
+    jsonObj["opt"] = headerToString(MSG);
+    jsonObj["target"] = targetToString(All_Information_Pose);
+    jsonObj["map_name"] = map_name;
+    jsonObj["x_initialpose"] = x_initialpose;// OOOOJJJJOOOO porque en qt el origen de coordenadas esta invertido
+    jsonObj["y_initialpose"] = height - 1 - y_initialpose;
+    jsonObj["x_goalpose"] = x_goalpose;// OOOOJJJJOOOO porque en qt el origen de coordenadas esta invertido
+    jsonObj["y_goalpose"] = height - 1 - y_goalpose;
+
+    float originalAngle = theta_initialpose;
+    if (originalAngle >= 360) {
+        originalAngle -= 360;
+    }
+    jsonObj["theta_initialpose"] = originalAngle;
+
+    float originalAngleGoalPose = theta_goalpose;
+    if (originalAngleGoalPose >= 360) {
+        originalAngleGoalPose -= 360;
+    }
+    jsonObj["theta_goalpose"] = originalAngleGoalPose;
+
+    return QJsonDocument(jsonObj);
+}
+
 QJsonDocument sendGoalPose(QString const &map_name, int const &x_goalpose, int const &y_goalpose, float const &theta_goalpose, int const &height)
 {
     QJsonObject jsonObj;

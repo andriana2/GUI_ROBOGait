@@ -287,7 +287,7 @@ QList<Pixel> MapInfo::filtrarPuntosCercanos(const QList<Pixel> &puntos, int dist
 
     QList<Pixel> puntosOrdenados = puntos;
     QList<Pixel> filtrados;
-    filtrados.append(m_originalPosition);
+    // filtrados.append(m_originalPosition);
     filtrados.push_back(puntosOrdenados[0]);
 
     for (size_t i = 1; i < puntosOrdenados.size(); ++i)
@@ -512,8 +512,14 @@ void MapInfo::sendInitialPose()
     setCheckInitInitialPose(true);
 }
 
+void MapInfo::sendAllInformationPose()
+{
+    cliente->sendMessage(ToJson::sendAllInformationPose(m_mapName, m_originalPosition.x, m_originalPosition.y, m_orientation, m_finalPathPosition.x, m_finalPathPosition.y, m_finalPathOrientation, m_imageSize.y));
+}
+
 void MapInfo::sendGoalPose()
 {
+    // send periodically the position of the robot (tf_service)
     if (!periodicTimerMapInfo->isActive())
     {
         periodicTimerMapInfo->start(200);
@@ -523,6 +529,7 @@ void MapInfo::sendGoalPose()
 
 void MapInfo::sendWaypointFollower()
 {
+    // send periodically the position of the robot (tf_service)
     if (!periodicTimerMapInfo->isActive())
     {
         periodicTimerMapInfo->start(200);
@@ -629,10 +636,12 @@ void MapInfo::parseJsonToQList(const QJsonObject &jsonObj)
 
     // Imprimir todos los puntos convertidos
     qDebug() << "Lista de puntos convertidos:";
-    for (const Pixel &p : pointsList)
+    QList<Pixel> trayectory_temp = filtrarPuntosCercanos(rdp(pointsList, 3), 30);
+    qDebug() << "^^^^^^^^^^^^ NUM vector despues filtro:" << trayectory_temp.size() <<"  NUM vector antes filtro:" << pointsList.size()  ;
+    setTrajectoryGoalPose(trayectory_temp);
+    for (const Pixel &p : trayectory_temp)
     {
         qDebug().nospace() << "Pixel -> x: " << p.x << ", y: " << p.y;
     }
-
-    setTrajectoryGoalPose(pointsList);
+    // filtrarPuntosCercanos(rdp(pointsList, 1), 5);
 }

@@ -49,7 +49,7 @@ void Cliente::answerUdp()
         quint16 port;
         udpSocket.readDatagram(buffer.data(), buffer.size(), &sender, &port);
         QString mensaje(buffer);
-        qDebug() << "Recibido:" << mensaje;
+        // qDebug() << "Recibido:" << mensaje;
 
         if (mensaje.startsWith("SERVER_ACK")) {
             servidor = sender;
@@ -71,7 +71,7 @@ void Cliente::answerUdp()
                 qDebug() << "Formato inesperado en SERVER_ACK";
             }
         } else if (mensaje.contains("ACK")) {
-            qDebug() << "ACK recibido";
+            // qDebug() << "ACK recibido";
             QByteArray buffer2 = {"ACK"};
             udpSocket.writeDatagram(buffer2, sender, port);
         }
@@ -105,6 +105,8 @@ void Cliente::onReadyRead()
 void Cliente::processJson(const QJsonDocument &json)
 {
     QJsonObject jsonObj = json.object();
+    qDebug() << "Contenido del JSON:";
+    qDebug() << json.toJson(QJsonDocument::Indented);
     if (stringToHeader(jsonObj["opt"].toString()) == IMG)
     {
         if (stringToTarget(jsonObj["target"].toString()) == Img_Map_SLAM)
@@ -112,9 +114,12 @@ void Cliente::processJson(const QJsonDocument &json)
         else if (stringToTarget(jsonObj["target"].toString()) == Img_Map_Path)
             stringHandler->getImageMapPath(jsonObj);
     }
-    else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_IMG)
-    {
-    }
+    // else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_IMG)
+    // {
+    // }
+        // else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_MSG)
+    // {
+    // }
     else if (stringToHeader(jsonObj["opt"].toString()) == MSG)
     {
         if (stringToTarget(jsonObj["target"].toString()) == Robot_Position_Pixel)
@@ -156,9 +161,6 @@ void Cliente::processJson(const QJsonDocument &json)
         }
     }
 
-    else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_MSG)
-    {
-    }
 }
 
 void Cliente::connect2host(const QString hostAddress)

@@ -32,7 +32,8 @@ enum Target {
     Goal_Pose, // Posicion objetivo del robot
     Waypoint_Follower, // Seguir la trayectoria de unos puntos
     Stop_Process,   // Detener el proceso
-    Goal_Pose_Path // Posicion objetivo del robot en la trayectoria
+    Goal_Pose_Path, // Posicion objetivo del robot en la trayectoria
+    All_Information_Pose
 };
 
 struct FinalPosition

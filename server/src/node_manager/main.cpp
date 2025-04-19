@@ -7,18 +7,13 @@
 
 int main(int argc, char *argv[])
 {
-    printf("Hola desde el main0\n");
     rclcpp::init(argc, argv);
-    printf("Hola desde el main1\n");
 
     auto node = rclcpp::Node::make_shared("node_manager");
-    printf("Hola desde el main2\n");
 
     boost::asio::io_context io_context;
-    printf("Hola desde el main3\n");
 
     Servidor servidor(5555,45454, node,io_context);
-    printf("Hola desde el main4\n");
 
     // Al hacer control c que no de error y se cierre de forma segura
     // When doing control c it does not give an error and closes safely

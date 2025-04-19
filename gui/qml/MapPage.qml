@@ -20,6 +20,7 @@ MapPageForm {
     mapPageForm_buttonNext.onClicked: {
         if(state === "mp_initialPosition")
         {
+            // mapInfo.checkInitInitialPose = false;
             if(mapInfo.positionScreen.x === 0 || mapInfo.positionScreen.y === 0)
             {
                 errorPopup.errorRectangleTextError.text = "Error: Has intentado seguir adelante sin poner el robot en el mapa"
@@ -30,6 +31,7 @@ MapPageForm {
         }
         if(state === "mp_goalPosePosition")
         {
+            // mapInfo.checkInitInitialPose = false;
             if(mapInfo.finalPathPosition.x === 0 || mapInfo.finalPathPosition.y === 0)
             {
                 errorPopup.errorRectangleTextError.text = "Error: Has intentado seguir adelante sin poner el robot en el mapa para indicar la poscion final"
@@ -49,7 +51,7 @@ MapPageForm {
             // if(!mapInfo.checkInitInitialPose)
                 mapInfo.sendInitialPose();
         }
-        if(state === "mp_goalPoseOrientation")
+        if(state === "mp_PathGoalPose")
         {
             if(mapInfo.finalPathOrientation === 0.00)
             {
@@ -57,7 +59,19 @@ MapPageForm {
                 errorPopup.open()
                 return;
             }
+            // mapInfo.checkInitInitialPose = true;
             mapInfo.sendGoalPose()
+        }
+        if(state === "mp_goalPoseOrientation")
+        {
+            // if(mapInfo.finalPathOrientation === 0.00)
+            // {
+            //     errorPopup.errorRectangleTextError.text = "Error: Has intentado seguir adelante sin poner la orientacion del robot en la poscion final"
+            //     errorPopup.open()
+            //     return;
+            // }
+            // mapInfo.checkInitInitialPose = true;
+            mapInfo.sendAllInformationPose()
         }
         if(state === "mp_drawPath")
         {
@@ -67,6 +81,7 @@ MapPageForm {
                 errorPopup.open()
                 return;
             }
+            // mapInfo.checkInitInitialPose = true;
             mapInfo.sendWaypointFollower()
         }
 

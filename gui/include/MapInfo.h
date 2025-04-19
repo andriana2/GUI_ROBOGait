@@ -117,6 +117,7 @@ public:
 
     Q_INVOKABLE void initBringUp();
     Q_INVOKABLE void sendInitialPose();
+    Q_INVOKABLE void sendAllInformationPose();
     Q_INVOKABLE void sendGoalPose();
     Q_INVOKABLE void sendWaypointFollower();
     Q_INVOKABLE void sendStopProcesses();

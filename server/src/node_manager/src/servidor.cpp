@@ -260,7 +260,7 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
     for (auto json_ : jsons)
     {
         json json_msg = json::parse(json_);
-        if (json_msg.contains("opt") && json_msg["opt"] == headerToString(MSG))
+        if (json_msg.contains("opt") && json_msg["opt"] == headerToString(MSG) && json_msg["target"] != targetToString(All_Information_Pose))
         {
             HandleMsg handleMsg(nodeManager);
             handleMsg.handleMsgJson(json_msg);
@@ -271,9 +271,30 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             handleRequestMsg(json_msg);
         else
             std::cout << "El campo 'opt' no contiene 'MSG' o 'IMG_REQUEST' o no existe.\n";
-        // pri1("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
-        if (json_msg.contains("opt") && json_msg["opt"] == headerToString(MSG) && json_msg.contains("target") && json_msg["target"] == targetToString(Goal_Pose))
+
+        if (json_msg.contains("opt") && json_msg["opt"] == headerToString(MSG) && json_msg.contains("target") && json_msg["target"] == targetToString(All_Information_Pose))
         {
+            std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
+
+            YAML::Node config;
+            std::string path_python_program;
+            try
+            {
+                std::string path_ = PATH;
+                path_python_program = PATH;
+                config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error loading YAML file: " << e.what() << std::endl;
+            }
+            std::string path_yaml = config["PATH2MAP"].as<std::string>();
+            path_python_program += "server/src/node_manager/launch_file/nav_to_pose_path_launch.py";
+            path_yaml += "/" + map_name_without_spaces + ".yaml";
+            RealPositionMeters initialpose = getRealPosition(path_yaml, json_msg["x_initialpose"], json_msg["y_initialpose"]);
+            RealPositionMeters goalpose = getRealPosition(path_yaml, json_msg["x_goalpose"], json_msg["y_goalpose"]);
+            nodeManager.create_subscription(stringToTarget(json_msg["target"]));
+
 #if EN_CASA
             // std::vector<RealPositionMeters> path_number = {
             //     {0.060000020116567576, 0.21000003948807722},
@@ -285,29 +306,36 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             std::vector<RealPositionMeters> path_number = nodeManager.getRealPositionPath();
 
 #else
+            std::string execute_code = "python3 " + path_python_program + " " + std::to_string(initialpose.x) + " " +
+                                       std::to_string(initialpose.y) + " " +
+                                       std::to_string(goalpose.x) + " " + std::to_string(goalpose.y) + " " + path_yaml;
+            pri1("---------------------------------");
+            pri1(execute_code);
+            pri1("---------------------------------");
+            std::system(execute_code.c_str());
             std::vector<RealPositionMeters> path_number = nodeManager.getRealPositionPath();
 #endif
 
             std::vector<FinalPosition> path_pixel;
 
-            YAML::Node config;
+            YAML::Node config2;
             try
             {
                 std::string path_ = PATH;
-                config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+                config2 = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
             }
             catch (const std::exception &e)
             {
                 std::cerr << "Error loading YAML file: " << e.what() << std::endl;
             }
-            std::string path = config["PATH2MAP"].as<std::string>();
+            std::string path = config2["PATH2MAP"].as<std::string>();
 
             path += "/" + replaceSpaces(json_msg["map_name"]) + ".yaml";
             try
             {
-                YAML::Node config = YAML::LoadFile(path);
-                float resolution = config["resolution"].as<float>();
-                auto origin = config["origin"];
+                YAML::Node config2 = YAML::LoadFile(path);
+                float resolution = config2["resolution"].as<float>();
+                auto origin = config2["origin"];
                 float origin_x = origin[0].as<float>();
                 float origin_y = origin[1].as<float>();
 

@@ -53,7 +53,7 @@ Item {
                     color: "#ffffff"
                     font.pixelSize: 17
                     wrapMode: Text.WordWrap
-                    text: qsTr("Para encenderlo, sigue estos pasos:\n\n    1.  Conecta el ordenador (NUC) a la batería portátil (power bank).\n    2.  Enciende la batería portátil y ajusta el voltaje hasta que marque 20V.\n    3.  Comprueba que los dos cables de las antenas WiFi estén bien conectados al ordenador.\n    4.  Enciende el ordenador (NUC).\n    5.  Espera unos segundos hasta que el indicador LED de la conexión WiFi se mantenga en verde fijo (sin parpadear).")
+                    text: qsTr("Para encenderlo, sigue estos pasos:\n\n    1.  Conecta el ordenador (NUC) a la batería portátil (power bank).\n    2.  Enciende la batería portátil y ajusta el voltaje hasta que marque 20V.\n    3.  Comprueba que los dos cables de las antenas WiFi estén bien conectadas al ordenador.\n    4.  Enciende el ordenador (NUC).\n    5.  Espera unos segundos hasta que el indicador LED de la conexión WiFi se mantenga en verde fijo (sin parpadear).")
                 }
 
                 // Título 2
@@ -87,7 +87,7 @@ Item {
                     color: "#ffffff"
                     font.pixelSize: 17
                     wrapMode: Text.WordWrap
-                    text: qsTr("Presiona el botón que se encuentra en la base del robot.\nSabrás que se ha encendido correctamente cuando:\n\n     1.  Se encienda un LED azul.\n     2.  Escuches un pitido agudo.")
+                    text: qsTr("Presiona el botón que se encuentra en la base del robot.\nSabrás que se ha encendido correctamente cuando:\n\n     1.  Se encienda un luz LED azul.\n     2.  Escuches un pitido agudo.")
                 }
             }
         }
@@ -96,26 +96,35 @@ Item {
         // Botón
         Button {
             id: buttonSearchRobot
-            height: 45
+            height: 52
             anchors.top: scrollView.bottom
             anchors.topMargin: parent.height < 600 ? 20 : 40
             anchors.horizontalCenter: parent.horizontalCenter
-
-            // El ancho se ajusta automáticamente al texto + 8 píxeles (4 a cada lado)
             width: contentItem.implicitWidth + 20
 
+            // Definimos los colores
+            // property color normalColor: "#ffffff"
+            // property color pressedColor: "#00C8FF"  // Color cuando está presionado
+            // property color textColor: "#045671"
+            // property color borderColor: "#045671"
+
             background: Rectangle {
-                color: "#ffffff"
+                color: buttonSearchRobot.down ? "#00C8FF" : "#ffffff"
                 radius: 8
                 border.color: "#045671"
                 border.width: 2
+
+                // Animación solo para el cambio de color
+                Behavior on color {
+                    ColorAnimation { duration: 100 }  // Duración muy corta para respuesta inmediata
+                }
             }
 
             contentItem: Label {
                 id: buttonLabel
                 text: qsTr("Buscar Robot")
                 color: "#045671"
-                font.pixelSize: 16
+                font.pixelSize: 17
                 font.bold: true
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter

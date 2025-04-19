@@ -74,7 +74,7 @@ def main() -> None:
     
     # Si se proporcionó un mapa, cargarlo
     if map_file:
-        print(f"Loanding mapa: {map_file}")
+        print(f"Loanding map name: {map_file}")
         navigator.changeMap(map_file)
     
     # Establecer pose inicial y activar Nav2
