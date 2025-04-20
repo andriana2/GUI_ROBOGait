@@ -121,10 +121,10 @@ qt_add_qml_module(appgui
     images/robot/robot_with_arrow.png
 
     # images main menu
-    images/menu/image_test.jpg
-    images/menu/manual_control.jpg
-    images/menu/select_map.jpg
-    images/menu/select_patient.jpg
+    images/menu/image_test.png
+    images/menu/manual_control.png
+    images/menu/select_map.png
+    images/menu/select_patient.png
 
     # images
 
