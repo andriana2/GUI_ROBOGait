@@ -97,22 +97,41 @@ qt_add_qml_module(appgui
 
 
     RESOURCES
-    images/pen-to-square-regular.svg
-    images/check-solid.svg
-    images/keyboard_left.svg
-    images/saveButton.png
-    images/eraser-solid.svg
+    # icon_app include .svg
+    images/icon_app/check-solid.svg
+    images/icon_app/circle-user-regular.svg
+    images/icon_app/eraser-solid.svg
+    images/icon_app/file-arrow-down-solid.svg
+    images/icon_app/keyboard_left.svg
+    images/icon_app/map-pin-solid.svg
+    images/icon_app/pencil-solid.svg
+    images/icon_app/pen-to-square-regular.svg
+    images/icon_app/saveButton.png
+    images/icon_app/trash-solid.svg
+    images/icon_app/wheel.svg
+
+    # images sponsors
+    images/sponsors/car.png
+    images/sponsors/etsidi.png
+    images/sponsors/ministerio.png
+    images/sponsors/upm.png
+
+    # images robot
+    images/robot/robot.png
+    images/robot/robot_with_arrow.png
+
+    # images main menu
+    images/menu/image_test.jpg
+    images/menu/manual_control.jpg
+    images/menu/select_map.jpg
+    images/menu/select_patient.jpg
+
+    # images
+
+
+    images/my_map.png
     images/logo.png
     images/icon.png
-    images/trash-solid.svg
-    images/file-arrow-down-solid.svg
-    images/my_map.png
-    images/pencil-solid.svg
-    images/robot_with_arrow.png
-    images/map-pin-solid.svg
-    images/robot.png
-    images/wheel.svg
-    images/circle-user-regular.svg
 
 
 

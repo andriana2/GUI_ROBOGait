@@ -37,7 +37,7 @@ Item {
         Image {
             rotation: 90
             id: robotImage
-            source: "../../images/robot_with_arrow.png"
+            source: "../../images/robot/robot_with_arrow.png"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             scale: 0.4

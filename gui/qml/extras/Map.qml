@@ -75,11 +75,11 @@ Item {
         property real scale: 0.2
 
         property var imageRobotWithArrow: Image {
-            source: "../../images/robot_with_arrow.png" // Ruta a tu imagen
+            source: "../../images/robot/robot_with_arrow.png" // Ruta a tu imagen
         }
 
         property var imageRobot: Image {
-            source: "../../images/robot.png" // Ruta a tu imagen
+            source: "../../images/robot/robot.png" // Ruta a tu imagen
         }
 
         Connections {

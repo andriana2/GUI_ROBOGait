@@ -23,7 +23,7 @@ Item {
             id: backButton
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
-            icon.source: "../../images/keyboard_left.svg"
+            icon.source: "../../images/icon_app/keyboard_left.svg"
             icon.color: "white"
             icon.width: 24
             icon.height: 24
@@ -42,7 +42,7 @@ Item {
             id: saveButton
             anchors.left: backButton.right
             anchors.verticalCenter: parent.verticalCenter
-            icon.source: "../../images/saveButton.png"
+            icon.source: "../../images/icon_app/saveButton.png"
             icon.width: 24
             icon.height: 24
             icon.color: "white"

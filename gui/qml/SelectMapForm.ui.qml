@@ -107,7 +107,7 @@ Rectangle {
                     Button {
                         id: mapDelete
                         background: Image {
-                            source: "../images/trash-solid.svg"
+                            source: "../images/icon_app/trash-solid.svg"
                             sourceSize.width: 25
                             sourceSize.height: 25
                             fillMode: Image.PreserveAspectFit

@@ -63,8 +63,8 @@ BoxImagesForm {
                 visible: false
                 enabled: false
             }
-            PropertyChanges { target: boxImages; image_source_edit: "../../images/pencil-solid.svg" }
-            PropertyChanges { target: boxImages; image_source_clear: "../../images/eraser-solid.svg" }
+            PropertyChanges { target: boxImages; image_source_edit: "../../images/icon_app/pencil-solid.svg" }
+            PropertyChanges { target: boxImages; image_source_clear: "../../images/icon_app/eraser-solid.svg" }
         },
         State {
             name: "bi_nothing"
@@ -135,8 +135,8 @@ BoxImagesForm {
                 visible: false
                 enabled: false
             }
-            PropertyChanges { target: boxImages; image_source_check: "../../images/map-pin-solid.svg" }
-            PropertyChanges { target: boxImages; image_source_draw_path: "../../images/wheel.svg" }
+            PropertyChanges { target: boxImages; image_source_check: "../../images/icon_app/map-pin-solid.svg" }
+            PropertyChanges { target: boxImages; image_source_draw_path: "../../images/icon_app/wheel.svg" }
         },
         State {
             name: "bi_draw_path"
@@ -170,10 +170,10 @@ BoxImagesForm {
                 visible: true
                 enabled: true
             }
-            PropertyChanges { target: boxImages; image_source_check: "../../images/check-solid.svg" }
-            PropertyChanges { target: boxImages; image_source_check_black: "../../images/file-arrow-down-solid.svg" }
-            PropertyChanges { target: boxImages; image_source_clear: "../../images/eraser-solid.svg" }
-            PropertyChanges { target: boxImages; image_source_edit: "../../images/pencil-solid.svg" }
+            PropertyChanges { target: boxImages; image_source_check: "../../images/icon_app/check-solid.svg" }
+            PropertyChanges { target: boxImages; image_source_check_black: "../../images/icon_app/file-arrow-down-solid.svg" }
+            PropertyChanges { target: boxImages; image_source_clear: "../../images/icon_app/eraser-solid.svg" }
+            PropertyChanges { target: boxImages; image_source_edit: "../../images/icon_app/pencil-solid.svg" }
         }
     ]
 

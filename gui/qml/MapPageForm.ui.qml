@@ -98,7 +98,7 @@ Rectangle {
                 }
                 Image {
                     id: svgImage
-                    source: "../images/keyboard_left.svg"
+                    source: "../images/icon_app/keyboard_left.svg"
                     anchors.verticalCenterOffset: 3
                     // Ruta a tu imagen
                     rotation: 180
@@ -133,7 +133,7 @@ Rectangle {
 
                 Image {
                     id: svgImage2
-                    source: "../images/keyboard_left.svg"
+                    source: "../images/icon_app/keyboard_left.svg"
                     anchors.verticalCenterOffset: 3
                     width: 40
                     height: 40

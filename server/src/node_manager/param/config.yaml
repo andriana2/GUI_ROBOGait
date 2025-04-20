@@ -1,21 +1,21 @@
 ROBOT_NAME: "RobogaitIndoor"
 TYPE: "V3"
 
-PATH2MAP: "/home/robogait/GUI_ROBOGait/server/maps"
-START_ROBOT: "ros2 launch roverrobotics_driver mini.launch.py"
-NAME_START_ROBOT: "roverrobotics_driver"
+PATH2MAP: "/home/andri/Desktop/gui_nuevo/gui_/server/maps"
+START_ROBOT: ""
+NAME_START_ROBOT: ""
 
-MAP_SAVER_CLI: "ros2 run nav2_map_server map_saver_cli -t /map -f /home/robogait/GUI_ROBOGait/server/maps"
+MAP_SAVER_CLI: "ros2 run nav2_map_server map_saver_cli -t /map -f /home/andri/Desktop/gui_nuevo/gui_/server/maps"
 NAME_MAP_SAVER_CLI: "nav2_map_save"
 
 TF_SERVICE: "ros2 run tf_service tf_service_node"
 NAME_TF_SERVICE: "tf_service"
 
-CARTOGRAPHER_LAUNCH: "ros2 launch roverrobotics_driver slam_launch.py"
-NAME_CARTOGRAPHER_LAUNCH: "roverrobotics_driver_slam"
+CARTOGRAPHER_LAUNCH: "ros2 launch turtlebot3_cartographer cartographer_noRviz.launch.py use_sim_time:=True"
+NAME_CARTOGRAPHER_LAUNCH: "turtlebot3_cartographer"
 
-NAV2_BRINGUP_LAUNCH: "ros2 launch roverrobotics_driver navigation_nuevo.launch.py map:="
-NAME_NAV2_BRINGUP_LAUNCH: "roverrobotics_driver_navigation"
+NAV2_BRINGUP_LAUNCH: "ros2 launch nav2_bringup bringup_launch.py use_sim_time:=True map:="
+NAME_NAV2_BRINGUP_LAUNCH: "nav2_bringup"
 
 TF_TOPIC: "/tf"
 CMD_VEL_TOPIC: "/cmd_vel"

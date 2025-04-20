@@ -2,8 +2,8 @@
 #define HEADER_H
 
 
-#define EN_CASA 0
-#define ROBOT 1
+#define EN_CASA 1
+#define ROBOT 0
 enum Header {
     MSG,
     REQUEST_MSG,
@@ -52,7 +52,7 @@ struct RealPositionMeters
 #if EN_CASA && !ROBOT
 #define PATH "/home/andri/Desktop/gui_nuevo/gui_/" //casa
 
-#elseif !ROBOT
+#elif !ROBOT
 #define PATH "/home/robogait/Desktop/gui_andri/GUI_ROBOGait/" // uni
 #else
 #define PATH "/home/robogait/GUI_ROBOGait/" // robot

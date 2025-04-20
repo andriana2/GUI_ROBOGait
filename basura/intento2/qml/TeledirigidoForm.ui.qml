@@ -48,7 +48,7 @@ Rectangle {
                 width: 40
                 height: 40
                 anchors.verticalCenter: parent.verticalCenter
-                source: "../images/up.png"
+                source: "../images/icon_app/up.png"
                 anchors.verticalCenterOffset: -50
                 anchors.horizontalCenter: parent.horizontalCenter
                 fillMode: Image.PreserveAspectFit
@@ -63,7 +63,7 @@ Rectangle {
                 width: 40
                 height: 40
                 anchors.verticalCenter: parent.verticalCenter
-                source: "../images/down.png"
+                source: "../images/icon_app/down.png"
                 anchors.verticalCenterOffset: 50
                 anchors.horizontalCenter: parent.horizontalCenter
                 fillMode: Image.PreserveAspectFit

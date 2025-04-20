@@ -12,7 +12,7 @@ Rectangle {
 
     // En el futuro, aquí irá la imagen
     Image {
-        source: "../../images/circle-user-regular.svg"
+        source: "../../images/icon_app/circle-user-regular.svg"
         anchors.fill: parent
     }
 
