@@ -35,12 +35,7 @@ LoginForm {
             console.log("⚡ roleChanged cambió a:", ddbb.role);
             usernameField.text = ""
             passwordField.text = ""
-
-            if (ddbb.role === "DOCTOR" || ddbb.role === "doctor") {
-                applicationFlow.menu_doctor_push()
-            } else {
-                applicationFlow.menu_push()
-            }
+            applicationFlow.menu_push()
         }
     }
 

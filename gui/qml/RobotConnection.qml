@@ -2,9 +2,6 @@ import QtQuick 2.15
 import "extras"
 
 RobotConnectionForm {
-    width: parent.width
-    height: parent.height
-
     buttonSearchRobot{
         onClicked:  stringHandler.searchRobotIp()
     }

@@ -4,13 +4,8 @@ import "extras"
 
 Rectangle {
     id: rectangle
-    // width: 1300
-    // height: 700
     color: "#518bb7"
-    // property alias mapButton: mapButton
-    // // property alias mapEdit: mapEdit
-    // // property alias mapDelete: mapDelete
-    // property alias listView: listView
+    property alias addPatient: addPatient
 
     // Título
     Text {
@@ -21,33 +16,87 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: 1
+        anchors.topMargin: 20
     }
 
-    // ScrollView que contiene la lista
-    ScrollView {
-        id: scrollView
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: parent.top
-            bottom: parent.bottom
-            margins: 60
+    Button {
+        id: addPatient
+        width: scrollView.width
+        height: 60
+        anchors.left: parent.left
+        anchors.top: text1.bottom
+        anchors.leftMargin: 20
+        anchors.topMargin: 30
+        background: Rectangle {
+            color: "#ffffff"
+            border.color: "#cccccc"
+            radius: 15
         }
 
-        // ListView para mostrar los elementos
+        Text {
+            id: textMapName
+            text: qsTr("Añadir Paciente")
+            font.pixelSize: 22
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: "#000000"
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        Button {
+            id: mapDelete
+            background: Image {
+                source: "../images/icon_app/plus-solid.svg"
+                sourceSize.width: 25
+                sourceSize.height: 25
+                fillMode: Image.PreserveAspectFit
+            }
+
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            anchors.rightMargin: 20
+        }
+    }
+
+    // ScrollView que contiene la lista, centrado en la pantalla
+    ScrollView {
+        id: scrollView
+        width: parent.width * 0.5
+        anchors.left: parent.left
+        anchors.top: addPatient.bottom
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 40
+        anchors.topMargin: 10
+        anchors.leftMargin: 20
+
         ListView {
             id: listView
-            anchors {
-                left: parent.left
-                right: parent.right
-                top: parent.top
-                bottom: parent.bottom
-                rightMargin: 10
-            }
+            anchors.fill: parent
             clip: true
             model: ddbb.patients
 
+            // model: ListModel {
+            //     ListElement {
+            //         display: "Paciente 1"
+            //     }
+            //     ListElement {
+            //         display: "Paciente 2"
+            //     }
+            //     ListElement {
+            //         display: "Paciente 3"
+            //     }
+            //     ListElement {
+            //         display: "Paciente 4"
+            //     }
+            //     ListElement {
+            //         display: "Paciente 5"
+            //     }
+            //     ListElement {
+            //         display: "Paciente 6"
+            //     }
+            //     ListElement {
+            //         display: "Paciente 7"
+            //     }
+            // }
             delegate: Item {
                 width: listView.width
                 height: 70
@@ -59,15 +108,15 @@ Rectangle {
                     background: Rectangle {
                         color: "#ffffff"
                         border.color: "#cccccc"
-                        radius: 10
+                        radius: 15
                     }
 
-                    onClicked: {
-                        ddbb.getIdFromName(model.display) // Mostrará el texto asociado al botón
-                        applicationFlow.menu_push()
-                    }
+                    //                    onClicked: {
+                    //                        ddbb.getIdFromName(model.display) // Mostrará el texto asociado al botón
+                    //                        applicationFlow.menu_push()
+                    //                    }
                     Text {
-                        id: textMapName
+                        id: textAddPatient
                         text: display
                         font.pixelSize: 22
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -87,7 +136,7 @@ Rectangle {
 
                     // Botón de Borrar
                     Button {
-                        id: mapDelete
+                        id: deletePatient
                         background: Image {
                             source: "../images/icon_app/trash-solid.svg"
                             sourceSize.width: 25
@@ -98,7 +147,6 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
                         anchors.rightMargin: 20
-                        //                                                        onClicked: listView.model.remove(index)
                     }
                 }
             }
@@ -108,7 +156,8 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.75}D{i:1}D{i:3}D{i:2}
+    D{i:0;formeditorZoom:0.5;height:700;width:1300}D{i:1}D{i:4}D{i:5}D{i:2}D{i:8;invisible:true}
+D{i:7}
 }
 ##^##*/
 

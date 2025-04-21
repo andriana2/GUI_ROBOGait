@@ -109,6 +109,7 @@ qt_add_qml_module(appgui
     images/icon_app/saveButton.png
     images/icon_app/trash-solid.svg
     images/icon_app/wheel.svg
+    images/icon_app/plus-solid.svg
 
     # images sponsors
     images/sponsors/car.png

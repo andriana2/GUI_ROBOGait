@@ -12,7 +12,13 @@ MainMenuForm {
     }
     hacer_mapa_mouse_area.onClicked: {
         mapInfo.sendStopProcesses()
-
+    }
+    select_map_mouse_area.onClicked: {
+        applicationFlow.select_map_push()
+    }
+    select_patient_mouse_area.onClicked: {
+        ddbb.selectAllPatient(ddbb.username)
+        applicationFlow.select_patient_push()
     }
 
     // mapa{

@@ -157,14 +157,16 @@ ApplicationFlowForm {
     }
     function register_page_push(){
         
-        // mystackview.push(register_page)
-        // applicationFlow.state = "register_page"
-        ddbb.role =("doctor")
-        ddbb.username = "mariaRosa"
-        // menu_push()
-        mystackview.push(menu_app)
-        console.log("roleChanged cambió a: -" + ddbb.role + "-");
-        applicationFlow.state = "menu_app"
+        mystackview.push(register_page)
+        applicationFlow.state = "register_page"
+
+        // harcodeado
+        // ddbb.role =("doctor")
+        // ddbb.username = "mariaRosa"
+        // // menu_push()
+        // mystackview.push(menu_app)
+        // console.log("roleChanged cambió a: -" + ddbb.role + "-");
+        // applicationFlow.state = "menu_app"
     }
     function manualControl_push()
     {
@@ -296,7 +298,7 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target:applicationFlow
-                previousState: "menu_doctor"
+                previousState: "menu_app"
             }
             PropertyChanges {
                 target: toolbar
@@ -321,7 +323,7 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target:applicationFlow
-                previousState: "menu_doctor"
+                previousState: "select_patient"
             }
             PropertyChanges {
                 target: toolbar
@@ -346,12 +348,12 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target:applicationFlow
-                previousState: ddbb.role === "doctor" ? "select_patient" : "register_page"
+                previousState: ddbb.role === "register_page"
             }
             PropertyChanges {
                 target: toolbar
-                backButton.opacity: ddbb.role === "doctor" ? 1 : 0
-                backButton.enabled: ddbb.role === "doctor" ? true : false
+                backButton.opacity: 0
+                backButton.enabled: false
                 saveButton.opacity: 0
                 saveButton.enabled: false
                 config.opacity: 1
