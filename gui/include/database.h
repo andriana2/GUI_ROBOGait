@@ -43,7 +43,7 @@ public:
     Q_INVOKABLE void signIn(const QString &name, const QString &lastname, const QString &username,const QString &role, const QString &pass);
     Q_INVOKABLE void checkUsername(const QString &user);
     // Q_INVOKABLE void guest(const QString &name, const QString &lastname);
-    Q_INVOKABLE void addPatient(const QString &name, const QString &lastname, int age, double weight, double height, const QString &doctor_username);
+    Q_INVOKABLE void addPatient(const QString &name, const QString &lastname, int age, double weight, double height, const QString &doctor_username, const QString &description);
     Q_INVOKABLE void selectAllPatient(const QString &username_doctor);
 
     QString targetToString(Target target);

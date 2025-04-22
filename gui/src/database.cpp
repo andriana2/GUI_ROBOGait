@@ -59,18 +59,19 @@ void Database::checkUsername(const QString &user)
     networkDDBB->sendSqlCommand(query, targetToString(Target::CheckUsername), args);
 }
 
-void Database::addPatient(const QString &name, const QString &lastname, int age, double weight, double height, const QString &doctor_username) {
+void Database::addPatient(const QString &name, const QString &lastname, int age, double weight, double height, const QString &doctor_username, const QString &description) {
     QString query;
     QJsonArray args;
 
-    query = "INSERT INTO Patient (name, lastname, age, weight, height, id_doctor) "
-            "SELECT ?, ?, ?, ?, ?, id FROM doctor WHERE username = ?;";
+    query = "INSERT INTO Patient (name, lastname, age, weight, height, Description, create_day, id_doctor) "
+            "SELECT ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, id FROM doctor WHERE username = ?;";
 
     args.append(name.toLower());
     args.append(lastname.toLower());
     args.append(age);
     args.append(weight);
     args.append(height);
+    args.append(description);
     args.append(doctor_username.toLower());
 
     networkDDBB->sendSqlCommand(query, targetToString(Target::AddPatient), args);
