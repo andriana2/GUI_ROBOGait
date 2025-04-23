@@ -212,8 +212,13 @@ ApplicationFlowForm {
                 username.enabled: false
             }
             PropertyChanges {
+                target: bottomBar
+                currentState: "NoMapaYnoPaciente"
+            }
+            PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: bottomBar.top
             }
         },
         State {
@@ -239,6 +244,11 @@ ApplicationFlowForm {
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: bottomBar.bottom
+            }
+            PropertyChanges {
+                target: bottomBar
+                currentState: "NoMapaYpaciente"
             }
         },
         State {
@@ -364,6 +374,10 @@ ApplicationFlowForm {
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+            }
+            PropertyChanges {
+                target: bottomBar
+                currentState: "NoMapaYpaciente"
             }
         },
         State {

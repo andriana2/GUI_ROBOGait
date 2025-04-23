@@ -4,8 +4,17 @@ import re
 
 app = Flask(__name__)
 
-DATABASE = "/home/andri/Desktop/ddbb/db_robogait.db"
+EN_CASA = True
+ROBOT = False
 
+if EN_CASA and not ROBOT:
+    DATABASE = "/home/andri/Desktop/gui_nuevo/gui_/server/db_robogait.db"  # casa
+elif not ROBOT:
+    DATABASE = "/home/robogait/Desktop/gui_andri/GUI_ROBOGait/server/db_robogait.db"  # uni
+else:
+    DATABASE = "/home/robogait/GUI_ROBOGait/server/db_robogait.db"  # robot
+
+print(DATABASE)
 
 def is_query_safe(query):
     # Lista de palabras clave peligrosas (expandida)
