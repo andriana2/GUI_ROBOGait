@@ -14,8 +14,12 @@ Item {
     property alias colorPacienteValor: pacienteValor.color
 
     property alias batteryPercentage: battery.percentage
+    property alias batteryItem: batteryItem
+    property alias customBottomBarItem: customBottomBarItem
+
 
     Rectangle {
+        id: customBottomBarItem
         width: parent.width
         height: 40
         color: "#518bb7"
@@ -77,6 +81,7 @@ Item {
 
         // Battery widget a la derecha
         Item {
+            id: batteryItem
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 5
