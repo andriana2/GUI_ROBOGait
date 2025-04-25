@@ -19,7 +19,7 @@ Rectangle {
     property string previousState: ""
     property alias mystackview: mystackview
     property alias toolbar: toolbar
-    property alias bottomBar: bottomBar
+    // property alias bottomBar: bottomBar
 
     CustomToolBar {
         id: toolbar
@@ -29,14 +29,14 @@ Rectangle {
         anchors.top: parent.top
     }
 
-    CustomBottomBar {
-        id: bottomBar
-        width: parent.width
-        height: 50
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
-        // anchors.bottomMargin: parent.height / 120
-    }
+    // CustomBottomBar {
+    //     id: bottomBar
+    //     width: parent.width
+    //     height: 40
+    //     anchors.bottom: parent.bottom
+    //     anchors.bottomMargin: 0
+    //     // anchors.bottomMargin: parent.height / 120
+    // }
 
     StackView {
         id: mystackview
@@ -145,7 +145,8 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.9;height:700;width:1300}D{i:1}D{i:2}D{i:3}D{i:13}
-D{i:15}D{i:17}D{i:19}D{i:21}D{i:23}D{i:25}D{i:27}D{i:29}
+    D{i:0;autoSize:true;height:480;width:640}D{i:1}D{i:2}D{i:3}D{i:13}D{i:15}D{i:17}D{i:19}
+D{i:21}D{i:23}D{i:25}D{i:27}D{i:29}
 }
 ##^##*/
+

@@ -157,16 +157,16 @@ ApplicationFlowForm {
     }
     function register_page_push(){
         
-        mystackview.push(register_page)
-        applicationFlow.state = "register_page"
+        // mystackview.push(register_page)
+        // applicationFlow.state = "register_page"
 
         // harcodeado
-        // ddbb.role =("doctor")
-        // ddbb.username = "mariaRosa"
-        // // menu_push()
-        // mystackview.push(menu_app)
-        // console.log("roleChanged cambió a: -" + ddbb.role + "-");
-        // applicationFlow.state = "menu_app"
+        ddbb.role =("doctor")
+        ddbb.username = "mariaRosa"
+        // menu_push()
+        mystackview.push(menu_app)
+        console.log("roleChanged cambió a: -" + ddbb.role + "-");
+        applicationFlow.state = "menu_app"
     }
     function manualControl_push()
     {
@@ -211,14 +211,14 @@ ApplicationFlowForm {
                 username.opacity: 0
                 username.enabled: false
             }
-            PropertyChanges {
-                target: bottomBar
-                currentState: "NoMapaYnoPaciente"
-            }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     currentState: "nothing_cbb"
+            // }
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
-                anchors.bottom: bottomBar.top
+                anchors.bottom: parent.bottom
             }
         },
         State {
@@ -241,15 +241,21 @@ ApplicationFlowForm {
                 username.opacity: 0
                 username.enabled: false
             }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     currentState: "nothing_cbb"
+            // }
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
-                anchors.bottom: bottomBar.bottom
+                anchors.bottom: parent.bottom
+                // anchors.bottom: parent.bottom
+                // anchors.bottom: bottomBar.bottom
             }
-            PropertyChanges {
-                target: bottomBar
-                currentState: "NoMapaYpaciente"
-            }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     currentState: "NoMapaYpaciente"
+            // }
         },
         State {
             name: "menu_doctor"
@@ -274,6 +280,7 @@ ApplicationFlowForm {
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
             }
         },
         State {
@@ -296,9 +303,14 @@ ApplicationFlowForm {
                 username.opacity: 0
                 username.enabled: false
             }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     currentState: "nothing_cbb"
+            // }
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
             }
         },
         State {
@@ -309,6 +321,7 @@ ApplicationFlowForm {
             PropertyChanges {
                 target:applicationFlow
                 previousState: "menu_app"
+
             }
             PropertyChanges {
                 target: toolbar
@@ -321,10 +334,16 @@ ApplicationFlowForm {
                 username.opacity: 1
                 username.enabled: true
             }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     currentState: "nothing_cbb"
+            // }
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
             }
+
         },
         State {
             name: "register_patient"
@@ -349,6 +368,7 @@ ApplicationFlowForm {
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
             }
         },
         State {
@@ -373,12 +393,18 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target: mystackview
+                // anchors.bottom: bottomBar.bottom
                 anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
             }
-            PropertyChanges {
-                target: bottomBar
-                currentState: "NoMapaYpaciente"
-            }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     currentState: "nothing_cbb"
+            // }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     currentState: "NoMapaYnoPaciente"
+            // }
         },
         State {
             name: "manualControl"
@@ -395,6 +421,7 @@ ApplicationFlowForm {
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
             }
             PropertyChanges {
                 target: toolbar
@@ -407,6 +434,10 @@ ApplicationFlowForm {
                 username.opacity: 1
                 username.enabled: true
             }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     currentState: "nothing_cbb"
+            // }
         },
         State {
             name: "selectMap"
@@ -422,6 +453,7 @@ ApplicationFlowForm {
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
             }
             PropertyChanges {
                 target: toolbar
@@ -434,6 +466,10 @@ ApplicationFlowForm {
                 username.opacity: 1
                 username.enabled: true
             }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     currentState: "nothing_cbb"
+            // }
         },
         State {
             name: "mapPath"
@@ -449,6 +485,7 @@ ApplicationFlowForm {
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
             }
             PropertyChanges {
                 target: toolbar
@@ -461,6 +498,10 @@ ApplicationFlowForm {
                 username.opacity: 1
                 username.enabled: true
             }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     currentState: "nothing_cbb"
+            // }
         }
     ]
 

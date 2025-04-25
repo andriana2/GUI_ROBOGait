@@ -12,6 +12,8 @@ Page {
     property alias heightField: heightField
     property alias descriptionField: descriptionField
 
+    property int keyboardHeight: Qt.inputMethod.visible ? (parent.height - Qt.inputMethod.keyboardRectangle.height) : 0
+
     Rectangle {
         id: rectangle
         color: "#518bb7"
@@ -19,32 +21,25 @@ Page {
 
         ScrollView {
             id: formScroll
-            width: 450 + 50
+            width: 520
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             clip: true
-            ScrollBar.vertical.policy: ScrollBar.AsNeeded
+            // ScrollBar.vertical.policy: ScrollBar.AsNeeded
+            bottomPadding: keyboardHeight > 0 ? keyboardHeight : 0
+            Behavior on bottomPadding { NumberAnimation { duration: 250 } }
 
-            function focusOnItem(item) {
-                // Esperamos un poco a que el teclado aparezca
-                Qt.callLater(() => {
-                                 contentItem.children.forEach((child, index) => {
-                                                                  if (child === item) {
-                                                                      formScroll.contentItem.positionViewAtIndex(index, ListView.Center)
-                                                                  }
-                                                              })
-                             })
-            }
+
             Column {
                 id: column
                 width: 450
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.horizontalCenter
-                anchors.leftMargin: -225
+                anchors.top: parent.top
+                anchors.topMargin: 30
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 15
                 padding: 50
+
 
                 Text {
                     id: text1
@@ -57,145 +52,189 @@ Page {
                     padding: 10
                 }
 
-                TextArea {
+                TextField {
                     id: nameField
                     width: 450
                     height: 40
+                    color: "#000000"
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 15
-                    placeholderText: qsTr("Nombre")
-                    padding: 10
+                    verticalAlignment: TextInput.AlignVCenter
+                    leftPadding: 10
+                    rightPadding: 10
+
+
+
                     background: Rectangle {
                         radius: 10
                         color: "#FFFFFF"
                         border.color: "#CCCCCC"
-                    }
-                    Keys.onTabPressed: lastnameField.focus = true
-                    Keys.onReturnPressed: lastnameField.focus = true
-                    onActiveFocusChanged: {
-                        if (activeFocus && Qt.inputMethod.visible) {
-                            formScroll.focusOnItem(nameField)
+
+                        Text {
+                            text: qsTr("Nombre")
+                            color: "#808080"
+                            anchors {
+                                right: parent.right
+                                rightMargin: 15
+                                verticalCenter: parent.verticalCenter
+                            }
+                            font: nameField.font
                         }
                     }
                 }
 
-                TextArea {
+                TextField {
                     id: lastnameField
                     width: 450
                     height: 40
+                    color: "#000000"
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 15
-                    placeholderText: qsTr("Apellidos")
-                    padding: 10
+                    verticalAlignment: TextInput.AlignVCenter
+                    leftPadding: 10
+                    rightPadding: 10
+
+
+
                     background: Rectangle {
                         radius: 10
                         color: "#FFFFFF"
                         border.color: "#CCCCCC"
-                    }
-                    Keys.onTabPressed: ageField.focus = true
-                    Keys.onReturnPressed: ageField.focus = true
-                    onActiveFocusChanged: {
-                        if (activeFocus && Qt.inputMethod.visible) {
-                            formScroll.focusOnItem(lastnameField)
+
+                        Text {
+                            text: qsTr("Apellidos")
+                            color: "#808080"
+                            anchors {
+                                right: parent.right
+                                rightMargin: 15
+                                verticalCenter: parent.verticalCenter
+                            }
+                            font: lastnameField.font
                         }
                     }
                 }
 
-                TextArea {
+                TextField {
                     id: ageField
                     width: 450
                     height: 40
+                    color: "#000000"
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 15
-                    placeholderText: qsTr("Edad (años)")
-                    padding: 10
+                    verticalAlignment: TextInput.AlignVCenter
+                    leftPadding: 10
+                    rightPadding: 10
+
                     background: Rectangle {
                         radius: 10
                         color: "#FFFFFF"
                         border.color: "#CCCCCC"
-                    }
-                    Keys.onTabPressed: weightField.focus = true
-                    Keys.onReturnPressed: weightField.focus = true
-                    onActiveFocusChanged: {
-                        if (activeFocus && Qt.inputMethod.visible) {
-                            formScroll.focusOnItem(ageField)
+
+                        Text {
+                            text: qsTr("Edad (años)")
+                            color: "#808080"
+                            anchors {
+                                right: parent.right
+                                rightMargin: 15
+                                verticalCenter: parent.verticalCenter
+                            }
+                            font: ageField.font
                         }
                     }
                 }
 
-                TextArea {
+                TextField {
                     id: weightField
                     width: 450
                     height: 40
+                    color: "#000000"
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 15
-                    placeholderText: qsTr("Peso (Kg)")
-                    padding: 10
+                    verticalAlignment: TextInput.AlignVCenter
+                    leftPadding: 10
+                    rightPadding: 10
+
                     background: Rectangle {
                         radius: 10
                         color: "#FFFFFF"
                         border.color: "#CCCCCC"
-                    }
-                    Keys.onTabPressed: heightField.focus = true
-                    Keys.onReturnPressed: heightField.focus = true
-                    onActiveFocusChanged: {
-                        if (activeFocus && Qt.inputMethod.visible) {
-                            formScroll.focusOnItem(weightField)
+
+                        Text {
+                            text: qsTr("Peso (Kg)")
+                            color: "#808080"
+                            anchors {
+                                right: parent.right
+                                rightMargin: 15
+                                verticalCenter: parent.verticalCenter
+                            }
+                            font: lastnameField.font
                         }
                     }
                 }
 
-                TextArea {
+                TextField {
                     id: heightField
                     width: 450
                     height: 40
+                    color: "#000000"
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 15
-                    placeholderText: qsTr("Altura (cm)")
-                    padding: 10
+                    verticalAlignment: TextInput.AlignVCenter
+                    leftPadding: 10
+                    rightPadding: 10
+
                     background: Rectangle {
                         radius: 10
                         color: "#FFFFFF"
                         border.color: "#CCCCCC"
-                    }
-                    Keys.onTabPressed: descriptionField.focus = true
-                    Keys.onReturnPressed: descriptionField.focus = true
 
-                    onActiveFocusChanged: {
-                        if (activeFocus && Qt.inputMethod.visible) {
-                            formScroll.focusOnItem(heightField)
+                        Text {
+                            text: qsTr("Altura (cm)")
+                            color: "#808080"
+                            anchors {
+                                right: parent.right
+                                rightMargin: 15
+                                verticalCenter: parent.verticalCenter
+                            }
+                            font: lastnameField.font
                         }
                     }
                 }
 
-                ScrollView {
+                TextField {
+                    id: descriptionField
                     width: 450
                     height: 150
+                    color: "#000000"
                     anchors.horizontalCenter: parent.horizontalCenter
-                    clip: true
-                    ScrollBar.vertical.policy: ScrollBar.AsNeeded
+                    font.pointSize: 15
+                    topPadding: 15
+                    leftPadding: 15
+                    rightPadding: 15
+                    bottomPadding: 15
+                    verticalAlignment: TextInput.AlignTop
+                    horizontalAlignment: TextInput.AlignLeft
+                    wrapMode: TextField.Wrap
+                    selectByMouse: true
 
-                    TextArea {
-                        id: descriptionField
-                        width: parent.width
-                        height: parent.height
-                        wrapMode: TextEdit.Wrap
-                        font.pointSize: 15
-                        placeholderText: qsTr("Descripción Patología")
-                        padding: 10
-                        selectByMouse: true
 
-                        background: Rectangle {
-                            radius: 10
-                            color: "#FFFFFF"
-                            border.color: "#CCCCCC"
-                            border.width: 1
-                        }
-                        Keys.onTabPressed: addInformation.focus = true
-                    }
-                    onActiveFocusChanged: {
-                        if (activeFocus && Qt.inputMethod.visible) {
-                            formScroll.focusOnItem(descriptionField)
+
+                    background: Rectangle {
+                        radius: 10
+                        color: "#FFFFFF"
+                        border.color: descriptionField.activeFocus ? "#518bb7" : "#CCCCCC"
+
+                        Text {
+                            visible: descriptionField.text === "" && !descriptionField.activeFocus
+                            text: qsTr("Descripción")
+                            color: "#808080"
+                            anchors {
+                                left: parent.left
+                                leftMargin: 15
+                                top: parent.top
+                                topMargin: 15
+                            }
+                            font: lastnameField.font
                         }
                     }
                 }
@@ -242,11 +281,3 @@ Page {
         }
     }
 }
-
-/*##^##
-Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.75;height:700;width:1300}D{i:4}D{i:5}D{i:7}D{i:9}
-D{i:11}D{i:13}D{i:16}D{i:15}D{i:19}D{i:21}D{i:18}D{i:3}D{i:2}D{i:1}
-}
-##^##*/
-
