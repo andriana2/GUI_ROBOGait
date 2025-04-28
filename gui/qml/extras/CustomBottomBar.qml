@@ -2,7 +2,7 @@ import QtQuick 2.15
 
 CustomBottomBarForm {
     id: root
-    property alias currentState: root.state
+    state: "nothing_cbb"
 
     states: [
         State {
@@ -39,8 +39,4 @@ CustomBottomBarForm {
             }
         }
     ]
-
-    Component.onCompleted: root.state = "nothing_cbb"
-
-
 }

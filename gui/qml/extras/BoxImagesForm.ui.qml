@@ -6,122 +6,99 @@ Item {
     width: 300
     height: 200
 
-    property alias bif_check: bif_check
-    property alias bif_draw_path: bif_draw_path
-    property alias bif_clear: bif_clear
-    property alias bif_edit: bif_edit
-    property alias bif_check_black: bif_check_black
+    property alias bif_text_clear: imageText_bif_clear.text_label
+    property alias bif_text_draw_path: imageText_bif_draw_path.text_label
+    property alias bif_text_edit: imageText_bif_edit.text_label
+    property alias bif_text_check: imageText_bif_check.text_label
+    property alias bif_text_check_black: imageText_bif_check_black.text_label
 
-    property string image_source_edit
+    property alias bif_clear: imageText_bif_clear.button_id
+    property alias bif_draw_path: imageText_bif_draw_path.button_id
+    property alias bif_edit: imageText_bif_edit.button_id
+    property alias bif_check: imageText_bif_check.button_id
+    property alias bif_check_black: imageText_bif_check_black.button_id
+
     property string image_source_clear
     property string image_source_draw_path
+    property string image_source_edit
     property string image_source_check
     property string image_source_check_black
 
-    Button {
-        id: bif_clear
-        width: 70
-        height: 70
+    ImageText {
+        id: imageText_bif_clear
+        width: 120
+        height: 100
         anchors.verticalCenter: parent.verticalCenter
+        anchors.left: imageText_bif_edit.right
+        anchors.top: parent.top
+        anchors.topMargin: 0
+        anchors.leftMargin: 0
         anchors.verticalCenterOffset: -50
         anchors.horizontalCenter: parent.horizontalCenter
-        background: Image {
-            source: boxImageForm.image_source_clear
-            fillMode: Image.PreserveAspectFit
-        }
-        Behavior on scale {
-            NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
-        }
-
-        // Change scale when pressed/released
-        onPressed: scale = 1.2
-        onReleased: scale = 1.0
+        // button_id: bif_clear
+        // text_label: bif_text_clear
+        image_source: image_source_clear
     }
 
-    Button {
-        id: bif_edit
-        width: 70
-        height: 70
+    ImageText {
+        id: imageText_bif_edit
         anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.horizontalCenterOffset: -90
+        anchors.topMargin: 0
+        anchors.leftMargin: 0
+        //        anchors.horizontalCenterOffset: -126
+        anchors.verticalCenterOffset: -40
+        anchors.horizontalCenter: parent.horizontalCenter
+        // button_id: bif_edit
+        // text_label: bif_text_edit
+        image_source: image_source_edit
+    }
+
+    ImageText {
+        id: imageText_bif_draw_path
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.leftMargin: 0
+        anchors.topMargin: 0
         anchors.verticalCenterOffset: -50
         anchors.horizontalCenterOffset: -90
         anchors.horizontalCenter: parent.horizontalCenter
-        background: Image {
-            source: boxImageForm.image_source_edit
-            fillMode: Image.PreserveAspectFit
-        }
-        Behavior on scale {
-            NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
-        }
-
-        // Change scale when pressed/released
-        onPressed: scale = 1.2
-        onReleased: scale = 1.0
+        // button_id: bif_draw_path
+        // text_label: bif_text_draw_path
+        image_source: image_source_draw_path
     }
 
-    Button {
-        id: bif_draw_path
-        width: 70
-        height: 70
-        anchors.verticalCenterOffset: -50
-        anchors.horizontalCenter: parent.horizontalCenter
-        background: Image {
-            source: boxImageForm.image_source_draw_path
-            fillMode: Image.PreserveAspectFit
-        }
-        Behavior on scale {
-            NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
-        }
-
-        // Change scale when pressed/released
-        onPressed: scale = 1.2
-        onReleased: scale = 1.0
-    }
-
-    Button {
-        id: bif_check
-        width: 70
-        height: 70
+    ImageText {
+        id: imageText_bif_check
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: 50
+        anchors.left: imageText_bif_check_black.right
+        anchors.top: imageText_bif_clear.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        background: Image {
-            source: boxImageForm.image_source_check
-            fillMode: Image.PreserveAspectFit
-        }
-        Behavior on scale {
-            NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
-        }
-
-        // Change scale when pressed/released
-        onPressed: scale = 1.2
-        onReleased: scale = 1.0
+        anchors.topMargin: 0
+        anchors.leftMargin: 0
+        // button_id: bif_check
+        // text_label: bif_text_check
+        image_source: image_source_check
     }
 
-    Button {
-        id: bif_check_black
-        width: 70
-        height: 70
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: 50
-        anchors.horizontalCenter: parent.horizontalCenter
-        background: Image {
-            source: boxImageForm.image_source_check_black
-            fillMode: Image.PreserveAspectFit
-        }
-        Behavior on scale {
-            NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
-        }
-
-        // Change scale when pressed/released
-        onPressed: scale = 1.2
-        onReleased: scale = 1.0
+    ImageText {
+        id: imageText_bif_check_black
+        anchors.left: parent.left
+        anchors.top: imageText_bif_edit.bottom
+        anchors.leftMargin: 0
+        anchors.topMargin: 0
+        // button_id: bif_check_black
+        // text_label: bif_text_check_black
+        image_source: image_source_check_black
     }
 }
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.5;height:700;width:1300}D{i:1}D{i:2}D{i:3}D{i:4}D{i:5}D{i:6}
+    D{i:0;formeditorZoom:1.25}D{i:1}D{i:2}D{i:3}D{i:4}D{i:5}
 }
 ##^##*/
 

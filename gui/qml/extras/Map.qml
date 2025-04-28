@@ -209,6 +209,7 @@ Item {
         onPaint: {
             var ctx = getContext('2d');
             switch (map_currentState) {
+                // Set iniial pose x and y
             case "map_initialPosition":
                 console.log("map_initialPosition")
                 if(mapInfo.positionScreen.x !== 0 && mapInfo.positionScreen.y !== 0)
@@ -225,6 +226,7 @@ Item {
                     drawAndValidateImage(lastX, lastY, 0.0);
                 }
                 break;
+                // Set initial pose yaw
             case "map_initialOrientation":
                 console.log("map_initialOrientation")
                 ctx.clearRect(0, 0, width, height);
@@ -232,12 +234,13 @@ Item {
                 mp_map.canvas.enablePainting = false
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 break;
+                // Select if you want to draw the path or goal pose
             case "map_selectAction":
                 console.log("map_selectAction")
                 ctx.clearRect(0, 0, width, height);
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 break;
-
+                // Set goal pose x and y
             case "map_goalPosePosition":
                 if(mapInfo.finalPathPosition.x !== 0 && mapInfo.finalPathPosition.y !== 0)
                 {
@@ -257,7 +260,7 @@ Item {
                     drawAndValidateImage(lastX, lastY, 0.0);
                 }
                 break;
-
+                // set goal pose yaw
             case "map_goalPoseOrientation":
                 console.log("map_goalPoseOrientation")
                 ctx.clearRect(0, 0, width, height);
@@ -265,23 +268,33 @@ Item {
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, mapInfo.finalPathOrientation);
                 break;
+                // when you are waiting for the path of goal pose
+            case "map_PathGoalPose":
+                console.log("map_PathGoalPose")
+                ctx.clearRect(0, 0, width, height);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                drawPointsAndLines(ctx)
+                break;
+                // Show the robot moving
+            case "map_GoalPoseMove":
+                console.log("map_GoalPoseMove")
+                ctx.clearRect(0, 0, width, height);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                drawPointsAndLines(ctx)
+                break;
+                // Draw the trayectory
             case "map_drawPath":
                 console.log("map_drawPath")
                 ctx.clearRect(0, 0, width, height);
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 drawPath(ctx);
                 break;
-            case "map_outGoalPose":
-                console.log("map_outGoalPose")
+                // Show the robot moving
+            case "map_drawPathMove":
+                console.log("map_drawPathMove")
                 ctx.clearRect(0, 0, width, height);
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
-                drawPointsAndLines(ctx)
-                break;
-            case "map_PathGoalPose":
-                console.log("map_PathGoalPose")
-                ctx.clearRect(0, 0, width, height);
-                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
-                drawPointsAndLines(ctx)
+                drawPath(ctx);
                 break;
             default:
                 console.log("Estado no reconocido: ", map_currentState);

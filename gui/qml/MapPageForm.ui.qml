@@ -63,6 +63,7 @@ Rectangle {
         BoxImages {
             id: boxImages
             anchors.top: mapPageForm_text.bottom
+            anchors.horizontalCenterOffset: 40
             anchors.horizontalCenter: mapPageForm_text.horizontalCenter
             anchors.topMargin: 70
         }
@@ -83,32 +84,85 @@ Rectangle {
                 border.color: "transparent" // Sin bordes
             }
 
-            contentItem: Row {
+            contentItem: Item {
                 id: row
-                // Contenido del botón
                 anchors.centerIn: parent
-                spacing: 10
 
                 Text {
-                    text: qsTr(mapPageForm_nextState_text)
-                    horizontalAlignment: Text.AlignRight
+                    anchors.right: svgImage.left
+                    anchors.verticalCenter: parent.verticalCenter
                     font.pointSize: 25
-                    color: "white" // Color del texto
-                    verticalAlignment: Text.AlignVCenter
+                    color: "white"
+                    text: qsTr(mapPageForm_nextState_text)
+                    anchors.rightMargin: 10
                 }
                 Image {
                     id: svgImage
                     source: "../images/icon_app/keyboard_left.svg"
-                    anchors.verticalCenterOffset: 3
-                    // Ruta a tu imagen
                     rotation: 180
-                    width: 40 // Ancho de la imagen
+                    width: 40
                     height: 40
                     anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
                     fillMode: Image.PreserveAspectFit
-                    // Alto de la imagen
                 }
             }
+
+
+            // contentItem: Row {
+            //     id: row
+            //     // Contenido del botón
+            //     anchors.centerIn: parent
+            //     spacing: 10
+
+            //     Text {
+            //         anchors.right: svgImage.left
+            //         horizontalAlignment: Text.AlignRight
+            //         font.pointSize: 25
+            //         color: "white"
+            //         text: qsTr(mapPageForm_nextState_text) // Color del texto
+            //         verticalAlignment: Text.AlignVCenter
+            //         anchors.rightMargin: 10
+            //     }
+            //     Image {
+            //         id: svgImage
+            //         source: "../images/icon_app/keyboard_left.svg"
+            //         anchors.rightMargin: -3
+            //         anchors.verticalCenterOffset: 3
+            //         // Ruta a tu imagen
+            //         rotation: 180
+            //         width: 40 // Ancho de la imagen
+            //         height: 40
+            //         anchors.verticalCenter: parent.verticalCenter
+            //         anchors.right: parent.right
+            //         fillMode: Image.PreserveAspectFit
+            //         // Alto de la imagen
+            //     }
+            // }
+
+            // contentItem: Row {
+            //     id: row
+            //     anchors.centerIn: parent
+            //     spacing: 10
+
+            //     Text {
+            //         horizontalAlignment: Text.AlignRight
+            //         verticalAlignment: Text.AlignVCenter
+            //         font.pointSize: 25
+            //         color: "white"
+            //         text: qsTr(mapPageForm_nextState_text)
+            //     }
+            //     Image {
+            //         id: svgImage
+            //         source: "../images/icon_app/keyboard_left.svg"
+            //         rotation: 180
+            //         width: 40
+            //         height: 40
+            //         fillMode: Image.PreserveAspectFit
+            //         anchors.verticalCenter: parent.verticalCenter
+            //     }
+            // }
+
         }
 
         Button {

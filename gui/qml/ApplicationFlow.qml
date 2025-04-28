@@ -211,10 +211,10 @@ ApplicationFlowForm {
                 username.opacity: 0
                 username.enabled: false
             }
-            // PropertyChanges {
-            //     target: bottomBar
-            //     currentState: "nothing_cbb"
-            // }
+            PropertyChanges {
+                target: bottomBar
+                state: "nothing_cbb"
+            }
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
@@ -241,10 +241,10 @@ ApplicationFlowForm {
                 username.opacity: 0
                 username.enabled: false
             }
-            // PropertyChanges {
-            //     target: bottomBar
-            //     currentState: "nothing_cbb"
-            // }
+            PropertyChanges {
+                target: bottomBar
+                state: "nothing_cbb"
+            }
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
@@ -254,7 +254,7 @@ ApplicationFlowForm {
             }
             // PropertyChanges {
             //     target: bottomBar
-            //     currentState: "NoMapaYpaciente"
+            //     state: "NoMapaYpaciente"
             // }
         },
         State {
@@ -303,10 +303,10 @@ ApplicationFlowForm {
                 username.opacity: 0
                 username.enabled: false
             }
-            // PropertyChanges {
-            //     target: bottomBar
-            //     currentState: "nothing_cbb"
-            // }
+            PropertyChanges {
+                target: bottomBar
+                state: "nothing_cbb"
+            }
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
@@ -336,7 +336,7 @@ ApplicationFlowForm {
             }
             // PropertyChanges {
             //     target: bottomBar
-            //     currentState: "nothing_cbb"
+            //     state: "nothing_cbb"
             // }
             PropertyChanges {
                 target: mystackview
@@ -393,18 +393,18 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target: mystackview
-                // anchors.bottom: bottomBar.bottom
+                anchors.bottom: bottomBar.bottom
                 anchors.top: toolbar.bottom
-                anchors.bottom: parent.bottom
+                // anchors.bottom: parent.bottom
             }
             // PropertyChanges {
             //     target: bottomBar
-            //     currentState: "nothing_cbb"
+            //     state: "nothing_cbb"
             // }
-            // PropertyChanges {
-            //     target: bottomBar
-            //     currentState: "NoMapaYnoPaciente"
-            // }
+            PropertyChanges {
+                target: bottomBar
+                state: "NoMapaYnoPaciente"
+            }
         },
         State {
             name: "manualControl"
@@ -436,7 +436,7 @@ ApplicationFlowForm {
             }
             // PropertyChanges {
             //     target: bottomBar
-            //     currentState: "nothing_cbb"
+            //     state: "nothing_cbb"
             // }
         },
         State {
@@ -468,7 +468,7 @@ ApplicationFlowForm {
             }
             // PropertyChanges {
             //     target: bottomBar
-            //     currentState: "nothing_cbb"
+            //     state: "nothing_cbb"
             // }
         },
         State {
@@ -500,7 +500,7 @@ ApplicationFlowForm {
             }
             // PropertyChanges {
             //     target: bottomBar
-            //     currentState: "nothing_cbb"
+            //     state: "nothing_cbb"
             // }
         }
     ]

@@ -211,6 +211,28 @@ void MapInfo::clearInfoImage()
     }
 }
 
+void MapInfo::clearNextPath()
+{
+    // m_mapName = "";
+    // m_orientation = 0.0f;
+    // m_originalPosition = Pixel();
+    // m_positionScreen = Pixel();
+    // m_imageSize = Pixel();
+    // m_screenSize = Pixel();
+    m_pixels.clear();
+    m_imgSource = "";
+    m_finalPathOrientation = 0.0f; // radianes de la posicion final del robot
+    m_finalPathPosition = Pixel();
+    repeated_delegate_list_view = 0;
+    // m_resolution = 0.0;
+    // m_checkInitInitialPose = false;
+    m_trajectoryGoalPose.clear();
+    if (periodicTimerMapInfo->isActive())
+    {
+        periodicTimerMapInfo->stop();
+    }
+}
+
 bool MapInfo::checkPixelBlack(const int &x, const int &y)
 {
     QString base64Data = m_imgSource;
@@ -461,6 +483,11 @@ bool MapInfo::checkPathBlack()
 {
     QList<Pixel> trajectory = m_pixels;
 
+    if(m_pixels.empty())
+    {
+        qWarning() << "No hay puntos en la trayectoria.";
+        return false;
+    }
     QString base64Data = m_imgSource;
     if (base64Data.startsWith("data:image/png;base64,"))
     {

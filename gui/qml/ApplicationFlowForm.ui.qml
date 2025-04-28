@@ -19,7 +19,7 @@ Rectangle {
     property string previousState: ""
     property alias mystackview: mystackview
     property alias toolbar: toolbar
-    // property alias bottomBar: bottomBar
+    property alias bottomBar: bottomBar
 
     CustomToolBar {
         id: toolbar
@@ -29,14 +29,14 @@ Rectangle {
         anchors.top: parent.top
     }
 
-    // CustomBottomBar {
-    //     id: bottomBar
-    //     width: parent.width
-    //     height: 40
-    //     anchors.bottom: parent.bottom
-    //     anchors.bottomMargin: 0
-    //     // anchors.bottomMargin: parent.height / 120
-    // }
+    CustomBottomBar {
+        id: bottomBar
+        width: parent.width
+        height: 40
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        // anchors.bottomMargin: parent.height / 120
+    }
 
     StackView {
         id: mystackview

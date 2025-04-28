@@ -136,6 +136,7 @@ public:
 
     void parseJsonToQList(const QJsonObject &jsonObj);
 
+    Q_INVOKABLE void clearNextPath();
 signals:
     void mapNameChanged();
     void orientationChanged();

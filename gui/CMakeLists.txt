@@ -130,12 +130,17 @@ qt_add_qml_module(appgui
     images/menu/select_map.png
     images/menu/select_patient.png
 
+    # select action in Test
+    images/action/draw_pencil.png
+    images/action/goal.png
+
     # images
 
 
     images/my_map.png
     images/logo.png
     images/icon.png
+    QML_FILES qml/extras/ImageText.qml
 
 
 
