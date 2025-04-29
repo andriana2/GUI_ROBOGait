@@ -213,24 +213,27 @@ void MapInfo::clearInfoImage()
 
 void MapInfo::clearNextPath()
 {
-    // m_mapName = "";
-    // m_orientation = 0.0f;
-    // m_originalPosition = Pixel();
-    // m_positionScreen = Pixel();
-    // m_imageSize = Pixel();
-    // m_screenSize = Pixel();
+    setFinalPathOrientation(0.0f);
+
     m_pixels.clear();
-    m_imgSource = "";
-    m_finalPathOrientation = 0.0f; // radianes de la posicion final del robot
-    m_finalPathPosition = Pixel();
-    repeated_delegate_list_view = 0;
-    // m_resolution = 0.0;
-    // m_checkInitInitialPose = false;
+    emit pixelsChanged();
+
+    m_finalPathPosition = Pixel(0,0);
+    emit finalPathPositionChanged();
+
     m_trajectoryGoalPose.clear();
-    if (periodicTimerMapInfo->isActive())
-    {
+    emit trajectoryGoalPoseChanged();
+
+    repeated_delegate_list_view = 0;
+
+    if (periodicTimerMapInfo->isActive()) {
         periodicTimerMapInfo->stop();
     }
+    qDebug() << "Final Path Orientation:" << m_finalPathOrientation;
+    qDebug() << "Pixels count:" << m_pixels.count();
+    qDebug() << "Final Path Position:" << m_finalPathPosition.x << m_finalPathPosition.y;
+    qDebug() << "Trajectory Goal Pose count:" << m_trajectoryGoalPose.count();
+    qDebug() << "Repeated Delegate List View:" << repeated_delegate_list_view;
 }
 
 bool MapInfo::checkPixelBlack(const int &x, const int &y)

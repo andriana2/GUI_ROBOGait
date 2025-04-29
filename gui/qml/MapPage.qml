@@ -16,6 +16,9 @@ MapPageForm {
         errorRectangleTextError.text: "Error: Has puesto el robot en una posicion donde esta prohibido."
     }
 
+    mapPageForm_buttonStop.onClicked: {
+        mapInfo.sendStopProcesses();
+    }
 
     mapPageForm_buttonNext.onClicked: {
         if(state === "mp_initialPosition")
@@ -49,7 +52,7 @@ MapPageForm {
                 return;
             }
             // if(!mapInfo.checkInitInitialPose)
-                mapInfo.sendInitialPose();
+            mapInfo.sendInitialPose();
         }
         if(state === "mp_goalPoseOrientation")
         {
@@ -87,7 +90,12 @@ MapPageForm {
 
         if(state === "mp_drawPathMove" || state === "mp_GoalPoseMove")
         {
-            mapInfo.clear
+            console.log("_______________________ HE pasado por mp_drawPathMove o mp_GoalPoseMove")
+            mapInfo.clearNextPath()
+            mp_map.canvas.clear_internal()
+            mp_map.canvas.clear()
+            mp_map.checkPath = true
+            mp_map.canvas.updatePath()
         }
 
         if(state === "mp_initialOrientation" || state === "mp_goalPosePosition" || state === "mp_initialPosition" || state === "mp_goalPoseOrientation" || state === "mp_GoalPoseMove" || state === "mp_PathGoalPose" || state === "mp_drawPath" || state === "mp_drawPathMove")
@@ -233,6 +241,7 @@ MapPageForm {
         },
         State {
             name: "mp_goalPoseOrientation"
+            StateChangeScript { script: console.log("estoy en mp_goalPoseOrientation") }
             StateChangeScript { script: mp_map.canvas.requestPaint() }
             PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_goalPosePosition"; mapPageForm_nextState: "mp_PathGoalPose" }
             PropertyChanges { target: mapPageForm_text; text: qsTr("Al girar la rueda situada debajo, se indica la orientación del robot al final") }
@@ -245,6 +254,7 @@ MapPageForm {
         },
         State {
             name: "mp_PathGoalPose"
+            StateChangeScript { script: console.log("estoy en mp_PathGoalPose") }
             StateChangeScript { script: mp_map.canvas.requestPaint() }
             PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_goalPoseOrientation"; mapPageForm_nextState: "mp_GoalPoseMove" }
             PropertyChanges { target: mapPageForm_text; text: qsTr("Trayectoria del robot") }
@@ -257,6 +267,7 @@ MapPageForm {
         },
         State {
             name: "mp_GoalPoseMove"
+            StateChangeScript { script: console.log("estoy en mp_GoalPoseMove") }
             StateChangeScript { script: mp_map.canvas.requestPaint() }
             PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_PathGoalPose"; mapPageForm_nextState: "selectAction" }
             PropertyChanges { target: mapPageForm_text; text: qsTr("Moviendo") }
@@ -269,6 +280,7 @@ MapPageForm {
         },
         State {
             name: "mp_drawPath"
+            StateChangeScript { script: console.log("estoy en mp_drawPath") }
             StateChangeScript { script: mp_map.canvas.requestPaint() }
             PropertyChanges { target: mapPage; mapPageForm_previousState: "selectAction"; mapPageForm_nextState: "mp_drawPathMove" }
             PropertyChanges { target: mapPageForm_text; text: qsTr("Dibuja la trayectoria que quieras realizar") }
@@ -281,6 +293,7 @@ MapPageForm {
         },
         State {
             name: "mp_drawPathMove"
+            StateChangeScript { script: console.log("estoy en mp_drawPathMove") }
             StateChangeScript { script: mp_map.canvas.requestPaint() }
             PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_drawPath"; mapPageForm_nextState: "selectAction" }
             PropertyChanges { target: mapPageForm_text; text: qsTr("Moviendo") }

@@ -92,6 +92,7 @@ Item {
             }
             function onPositionScreenChanged(){
                 canvas.requestPaint();
+
             }
             function onTrajectoryGoalPoseChanged(){
                 canvas.requestPaint();
@@ -228,9 +229,9 @@ Item {
                 break;
                 // Set initial pose yaw
             case "map_initialOrientation":
-                console.log("map_initialOrientation")
+                // console.log("map_initialOrientation")
                 ctx.clearRect(0, 0, width, height);
-                console.log("Orientation: " + mapInfo.orientation);
+                // console.log("Orientation: " + mapInfo.orientation);
                 mp_map.canvas.enablePainting = false
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 break;
@@ -242,9 +243,10 @@ Item {
                 break;
                 // Set goal pose x and y
             case "map_goalPosePosition":
-                if(mapInfo.finalPathPosition.x !== 0 && mapInfo.finalPathPosition.y !== 0)
+                if(mapInfo.finalScreenPosition.x !== 0 && mapInfo.finalScreenPosition.y !== 0 && mapInfo.finalScreenPosition.x !== mapInfo.positionScreen.x && mapInfo.finalScreenPosition.y !== mapInfo.positionScreen.y)
                 {
                     ctx.clearRect(0, 0, width, height);
+                    console.log("finalScreenPosition.x: " + mapInfo.finalScreenPosition.x+ " mapInfo.finalScreenPosition.y " + mapInfo.finalScreenPosition.y + " mapInfo.positionScreen.x " + mapInfo.positionScreen.x  + " mapInfo.positionScreen.y " + mapInfo.positionScreen.y)
                     drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                     drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, 0.0);
                 }
@@ -259,14 +261,15 @@ Item {
                     }
                     drawAndValidateImage(lastX, lastY, 0.0);
                 }
+
                 break;
                 // set goal pose yaw
             case "map_goalPoseOrientation":
-                console.log("map_goalPoseOrientation")
+                // console.log("map_goalPoseOrientation")
                 ctx.clearRect(0, 0, width, height);
                 mp_map.canvas.enablePainting = false
-                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
-                drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, mapInfo.finalPathOrientation);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation); // redibujo el robot inicial
+                drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, mapInfo.finalPathOrientation); // dibujo el robot final y la orientacion
                 break;
                 // when you are waiting for the path of goal pose
             case "map_PathGoalPose":
@@ -284,14 +287,14 @@ Item {
                 break;
                 // Draw the trayectory
             case "map_drawPath":
-                console.log("map_drawPath")
+                // console.log("map_drawPath")
                 ctx.clearRect(0, 0, width, height);
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 drawPath(ctx);
                 break;
                 // Show the robot moving
             case "map_drawPathMove":
-                console.log("map_drawPathMove")
+                // console.log("map_drawPathMove")
                 ctx.clearRect(0, 0, width, height);
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
                 drawPath(ctx);
@@ -351,6 +354,14 @@ Item {
             {
                 mapInfo.setFinalPathPosition(0, 0);
                 drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+            }
+            else if(map_currentState === "map_GoalPoseMove")
+            {
+                mapInfo.setFinalPathPosition(0, 0);
+            }
+            else if(map_currentState === "map_drawPathMove")
+            {
+                canvas.points = []
             }
             canvas.requestPaint();
         }

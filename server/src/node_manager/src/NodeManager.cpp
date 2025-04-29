@@ -614,6 +614,7 @@ void NodeManager::publish_waypoint_follower(const std::vector<geometry_msgs::msg
 
 void NodeManager::reset()
 {
+    pri1("Reset NodeManager");
 #if !EN_CASA
     if (!tf_service_client_)
     {

@@ -5,6 +5,7 @@ Item {
     id: boxImageForm
     width: 300
     height: 200
+    property alias imageText_bif_check_black: imageText_bif_check_black
 
     property alias bif_text_clear: imageText_bif_clear.text_label
     property alias bif_text_draw_path: imageText_bif_draw_path.text_label
@@ -32,7 +33,7 @@ Item {
         anchors.left: imageText_bif_edit.right
         anchors.top: parent.top
         anchors.topMargin: 0
-        anchors.leftMargin: 0
+        anchors.leftMargin: 10
         anchors.verticalCenterOffset: -50
         anchors.horizontalCenter: parent.horizontalCenter
         // button_id: bif_clear
@@ -77,8 +78,8 @@ Item {
         anchors.left: imageText_bif_check_black.right
         anchors.top: imageText_bif_clear.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: 0
-        anchors.leftMargin: 0
+        anchors.topMargin: 10
+        anchors.leftMargin: 10
         // button_id: bif_check
         // text_label: bif_text_check
         image_source: image_source_check
@@ -89,16 +90,12 @@ Item {
         anchors.left: parent.left
         anchors.top: imageText_bif_edit.bottom
         anchors.leftMargin: 0
-        anchors.topMargin: 0
+        anchors.topMargin: 10
         // button_id: bif_check_black
         // text_label: bif_text_check_black
         image_source: image_source_check_black
     }
 }
 
-/*##^##
-Designer {
-    D{i:0;formeditorZoom:1.25}D{i:1}D{i:2}D{i:3}D{i:4}D{i:5}
-}
-##^##*/
+
 

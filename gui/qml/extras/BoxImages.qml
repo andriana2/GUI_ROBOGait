@@ -71,7 +71,7 @@ BoxImagesForm {
             PropertyChanges { target: bif_clear; visible: true; enabled: true; width: 120; height: 120 }
             PropertyChanges { target: bif_draw_path; visible: true; enabled: true; width: 120; height: 120 }
             PropertyChanges { target: bif_text_clear; visible: true; enabled: true; text: qsTr("Posición Final") }
-            PropertyChanges { target: bif_text_draw_path; visible: true; enabled: true; text: qsTr("Dibujar Trayectoria") }
+            PropertyChanges { target: bif_text_draw_path; visible: true; enabled: true; text: qsTr("Dibujar\n Trayectoria") }
             PropertyChanges { target: bif_check; visible: false; enabled: false }
             PropertyChanges { target: bif_edit; visible: false; enabled: false }
             PropertyChanges { target: bif_check_black; visible: false; enabled: false }
@@ -86,14 +86,14 @@ BoxImagesForm {
             StateChangeScript { script: console.log("estoy en bi_draw_path") }
             PropertyChanges { target: bif_check; visible: true; enabled: true; width: 90; height: 90 }
             PropertyChanges { target: bif_check_black; visible: true; enabled: true;}
-            PropertyChanges { target: bif_text_check_black; visible: true; enabled: true; text: qsTr("Verificar Trayectoria") }
+            PropertyChanges { target: bif_text_check_black; visible: true; enabled: true; text: qsTr("Verificar") }
             PropertyChanges { target: bif_text_check; visible: true; enabled: true; text: qsTr("Trayectoria Final") }
             PropertyChanges { target: bif_draw_path; visible: false; enabled: false }
             PropertyChanges { target: bif_text_draw_path; visible: false; enabled: false }
             PropertyChanges { target: bif_clear; visible: true; enabled: true }
             PropertyChanges { target: bif_edit; visible: true; enabled: true }
             PropertyChanges { target: bif_text_clear; visible: true; enabled: true; text: qsTr("Borrar") }
-            PropertyChanges { target: bif_text_edit; visible: true; enabled: true; text: qsTr("Dibujar Trayectoria") }
+            PropertyChanges { target: bif_text_edit; visible: true; enabled: true; text: qsTr("Dibujar") }
             PropertyChanges { target: boxImages; image_source_check: "../../images/icon_app/check-solid.svg" }
             PropertyChanges { target: boxImages; image_source_check_black: "../../images/icon_app/file-arrow-down-solid.svg" }
             PropertyChanges { target: boxImages; image_source_clear: "../../images/icon_app/eraser-solid.svg" }
