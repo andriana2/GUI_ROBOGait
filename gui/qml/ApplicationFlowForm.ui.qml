@@ -31,10 +31,9 @@ Rectangle {
     CustomBottomBar {
         id: bottomBar
         width: parent.width
-        height: 40
+        height: 20
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
-        // anchors.bottomMargin: parent.height / 120
+        anchors.bottomMargin: parent.height / 120
     }
 
     StackView {

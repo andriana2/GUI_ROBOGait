@@ -15,7 +15,7 @@ CustomBottomBarForm {
         State {
             // map active, patient inactive
             name: "nMP_cbb"
-            PropertyChanges { target: root; textoMapaTitulo: "NO HAY MAPA ACTIVO"; textoMapaValor: ""; colorMapaValor: "#953737" }
+            PropertyChanges { target: root; textoMapaTitulo: "<font color='#953737'>NO</font>  <font color='#ffffff'>HAY MAPA ACTIVO</font>"; textoMapaValor: ""}
             PropertyChanges { target: root; textoPacienteTitulo: "HAY PACIENTE ACTIVO:"; textoPacienteValor: "PACIENTE1"; colorPacienteValor: "#cce54d" }
             PropertyChanges { target: batteryItem; enabled: true; opacity: 1 }
         },
@@ -23,14 +23,14 @@ CustomBottomBarForm {
             // map inactive, patient active
             name: "MnP_cbb"
             PropertyChanges { target: root; textoMapaTitulo: "HAY MAPA ACTIVO:"; textoMapaValor: "MAPA1"; colorMapaValor: "#cce54d" }
-            PropertyChanges { target: root; textoPacienteTitulo: "NO HAY PACIENTE ACTIVO"; textoPacienteValor: ""; colorPacienteValor: "#953737" }
+            PropertyChanges { target: root; textoPacienteTitulo: "<font color='#953737'>NO </font> <font color='#ffffff'>HAY PACIENTE ACTIVO</font>"; textoPacienteValor: ""}
             PropertyChanges { target: batteryItem; enabled: true; opacity: 1 }
         },
         State {
             // map and patient inactive
             name: "nMnP_cbb"
-            PropertyChanges { target: root; textoMapaTitulo: "NO HAY MAPA ACTIVO"; textoMapaValor: ""; colorMapaValor: "#953737" }
-            PropertyChanges { target: root; textoPacienteTitulo: "NO HAY PACIENTE ACTIVO"; textoPacienteValor: ""; colorPacienteValor: "#953737" }
+            PropertyChanges { target: root; textoMapaTitulo: "<font color='#953737'>NO </font> <font color='#ffffff'>HAY MAPA ACTIVO</font>"; textoMapaValor: ""}
+            PropertyChanges { target: root; textoPacienteTitulo: "<font color='#953737'>NO </font> <font color='#ffffff'>HAY PACIENTE ACTIVO</font>"; textoPacienteValor: ""}
             PropertyChanges { target: batteryItem; enabled: true; opacity: 1 }
         },
         State {

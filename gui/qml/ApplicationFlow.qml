@@ -259,7 +259,7 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target: bottomBar
-                state: "nothing_cbb"
+                state: "onlyBattery"
             }
             PropertyChanges {
                 target: mystackview
@@ -363,7 +363,7 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target: bottomBar
-                state: stringHandler.stateBottomBar
+                state: "onlyBattery"
             }
             PropertyChanges {
                 target: mystackview
