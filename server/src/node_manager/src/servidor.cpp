@@ -367,7 +367,12 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
 void Servidor::handleRequestMsg(const json &json_msg)
 {
     pri1("Estoy en handleRequestMsg");
-    if (json_msg.contains("target") && json_msg["target"] == targetToString(Map_Name))
+    if (json_msg.contains("target") && json_msg["target"] == targetToString(Stop_Process))
+    {
+        nodeManager.reset();
+        sendMsg(toJson::sendStopProcess());
+    }
+    else if (json_msg.contains("target") && json_msg["target"] == targetToString(Map_Name))
     {
         YAML::Node config;
         try

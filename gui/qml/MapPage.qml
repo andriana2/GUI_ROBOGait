@@ -80,7 +80,16 @@ MapPageForm {
         {
             if(mapInfo.pixels.length === 0)
             {
-                errorPopup.errorRectangleTextError.text = "Error: Has intentado seguir adelante sin dibujar la trayectoria"
+                errorPopup.errorRectangleTextError.text = qsTr("Error: Has intentado seguir adelante sin dibujar la trayectoria")
+                errorPopup.open()
+                return;
+            }
+
+            mp_map.checkPath = true
+            mp_map.canvas.updatePath()
+            if(mapInfo.checkPathBlack())
+            {
+                errorPopup.errorRectangleTextError.text = qsTr("Error: Estas cerca o encima de una zona negra intenta dibujar de nuevo la trayectoria")
                 errorPopup.open()
                 return;
             }
@@ -135,6 +144,7 @@ MapPageForm {
         {
             if(mapInfo.checkPathBlack())
             {
+                errorPopup.errorRectangleTextError.text = qsTr("Error: Has intentado seguir adelante sin dibujar la trayectoria")
                 errorPopup.open()
             }
             else

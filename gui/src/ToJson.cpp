@@ -219,7 +219,7 @@ QJsonDocument sendWaypointFollower(QString const &map_name, QList<Pixel> pixels 
 QJsonDocument stopProcesses()
 {
     QJsonObject jsonObj;
-    jsonObj["opt"] = headerToString(MSG);
+    jsonObj["opt"] = headerToString(REQUEST_MSG);
     jsonObj["target"] = targetToString(Stop_Process);
     jsonObj["stop"] = true;
     return QJsonDocument(jsonObj);

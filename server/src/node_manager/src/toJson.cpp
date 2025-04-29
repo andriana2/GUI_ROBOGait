@@ -105,4 +105,11 @@ namespace toJson
         }
         return j;
     }
+
+    json sendStopProcess()
+    {
+        return {
+            {"opt", headerToString(MSG)},
+            {"target", targetToString(Stop_Process)}};
+    }
 }
