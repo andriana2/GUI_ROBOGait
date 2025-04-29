@@ -90,11 +90,11 @@ ApplicationFlowForm {
     }
 
     function popToHome() {
-        console.log("_________________estoy en el estado: " + applicationFlow.state)
-        while (applicationFlow.state !== "home" && mystackview.depth > 1) {
+        // console.log("_________________estoy en el estado: " + applicationFlow.state)
+        while (applicationFlow.state !== "Home" && mystackview.depth > 1) {
             mystackview.pop();
             applicationFlow.state = applicationFlow.previousState;
-            console.log("_________________estoy en el estado: " + applicationFlow.state)
+            // console.log("_________________estoy en el estado: " + applicationFlow.state)
         }
         stringHandler.errorConnection = false
     }
@@ -167,16 +167,16 @@ ApplicationFlowForm {
     }
     function register_page_push(){
 
-        // mystackview.push(register_page)
-        // applicationFlow.state = "register_page"
+        mystackview.push(register_page)
+        applicationFlow.state = "register_page"
 
-        // harcodeado
-        ddbb.role =("doctor")
-        ddbb.username = "mariaRosa"
-        // menu_push()
-        mystackview.push(menu_app)
-        console.log("roleChanged cambió a: -" + ddbb.role + "-");
-        applicationFlow.state = "menu_app"
+        // // harcodeado
+        // ddbb.role =("doctor")
+        // ddbb.username = "mariaRosa"
+        // // menu_push()
+        // mystackview.push(menu_app)
+        // console.log("roleChanged cambió a: -" + ddbb.role + "-");
+        // applicationFlow.state = "menu_app"
     }
     function manualControl_push()
     {
@@ -206,6 +206,9 @@ ApplicationFlowForm {
     states: [
         State{
             name: "Home"
+            StateChangeScript {
+                script: ddbb.clear()
+            }
             PropertyChanges {
                 target: toolbar
                 backButton.opacity: 0
@@ -238,6 +241,9 @@ ApplicationFlowForm {
                 previousState: "Home"
             }
             StateChangeScript {
+                script: ddbb.clear()
+            }
+            StateChangeScript {
                 script: stringHandler.menu_page(0)
             }
             PropertyChanges {
@@ -258,39 +264,9 @@ ApplicationFlowForm {
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
-                anchors.bottom: parent.bottom
+                anchors.bottom: bottomBar.top
                 // anchors.bottom: parent.bottom
                 // anchors.bottom: bottomBar.bottom
-            }
-            // PropertyChanges {
-            //     target: bottomBar
-            //     state: "NoMapaYpaciente"
-            // }
-        },
-        State {
-            name: "menu_doctor"
-            StateChangeScript {
-                // script: stringHandler.menu_doctor(1)
-            }
-            PropertyChanges {
-                target:applicationFlow
-                previousState: "register_page"
-            }
-            PropertyChanges {
-                target: toolbar
-                backButton.opacity: 0
-                backButton.enabled: false
-                saveButton.opacity: 0
-                saveButton.enabled: false
-                config.opacity: 1
-                config.enabled: true
-                username.opacity: 1
-                username.enabled: true
-            }
-            PropertyChanges {
-                target: mystackview
-                anchors.top: toolbar.bottom
-                anchors.bottom: parent.bottom
             }
         },
         State {
@@ -323,7 +299,76 @@ ApplicationFlowForm {
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
-                anchors.bottom: parent.bottom
+                anchors.bottom: bottomBar.top
+            }
+        },
+        State {
+            name: "menu_app"
+            StateChangeScript {
+                script: stringHandler.menu_page(1)
+            }
+            StateChangeScript {
+                script: mapInfo.clearInfoImage() // this clear the map info container
+            }
+            StateChangeScript { // eliminar cuando este todo el funcionamiento
+                script: stringHandler.strFindRobot = ""
+            }
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "register_page"
+            }
+            PropertyChanges {
+                target: toolbar
+                backButton.opacity: 0
+                backButton.enabled: false
+                saveButton.opacity: 0
+                saveButton.enabled: false
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
+            }
+            PropertyChanges {
+                target: bottomBar
+                state: stringHandler.stateBottomBar
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+                anchors.bottom: bottomBar.top
+            }
+        },
+        State {
+            name: "manualControl"
+            // when: stringHandler.mapping === 1
+            StateChangeScript {
+                script: {
+                    console.log("manualControl_mapping")
+                }
+            }
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "menu_app"
+            }
+            PropertyChanges {
+                target: toolbar
+                saveButton.opacity: 1
+                saveButton.enabled: true
+                backButton.opacity: 1
+                backButton.enabled: true
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
+            }
+            PropertyChanges {
+                target: bottomBar
+                state: stringHandler.stateBottomBar
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+                anchors.bottom: bottomBar.top
             }
         },
         State {
@@ -347,14 +392,11 @@ ApplicationFlowForm {
                 username.opacity: 1
                 username.enabled: true
             }
-            // PropertyChanges {
-            //     target: bottomBar
-            //     state: "nothing_cbb"
-            // }
+            PropertyChanges { target: bottomBar; state: "onlyBattery" }
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
-                anchors.bottom: parent.bottom
+                anchors.bottom: bottomBar.top
             }
 
         },
@@ -379,84 +421,14 @@ ApplicationFlowForm {
                 username.enabled: true
             }
             PropertyChanges {
-                target: mystackview
-                anchors.top: toolbar.bottom
-                anchors.bottom: parent.bottom
-            }
-        },
-        State {
-            name: "menu_app"
-            StateChangeScript {
-                script: stringHandler.menu_page(1)
-            }
-            StateChangeScript {
-                script: mapInfo.clearInfoImage() // this clear the map info container
-            }
-            StateChangeScript { // eliminar cuando este todo el funcionamiento
-                script: stringHandler.strFindRobot = ""
-            }
-            PropertyChanges {
-                target:applicationFlow
-                previousState: ddbb.role === "register_page"
-            }
-            PropertyChanges {
-                target: toolbar
-                backButton.opacity: 0
-                backButton.enabled: false
-                saveButton.opacity: 0
-                saveButton.enabled: false
-                config.opacity: 1
-                config.enabled: true
-                username.opacity: 1
-                username.enabled: true
-            }
-            PropertyChanges {
-                target: mystackview
-                anchors.bottom: bottomBar.bottom
-                anchors.top: toolbar.bottom
-                // anchors.bottom: parent.bottom
-            }
-            // PropertyChanges {
-            //     target: bottomBar
-            //     state: "nothing_cbb"
-            // }
-            PropertyChanges {
                 target: bottomBar
-                state: "NoMapaYnoPaciente"
-            }
-        },
-        State {
-            name: "manualControl"
-            // when: stringHandler.mapping === 1
-            StateChangeScript {
-                script: {
-                    console.log("manualControl_mapping")
-                }
-            }
-            PropertyChanges {
-                target:applicationFlow
-                previousState: "menu_app"
+                state: "onlyBattery"
             }
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
-                anchors.bottom: parent.bottom
+                anchors.bottom: bottomBar.top
             }
-            PropertyChanges {
-                target: toolbar
-                saveButton.opacity: 1
-                saveButton.enabled: true
-                backButton.opacity: 1
-                backButton.enabled: true
-                config.opacity: 1
-                config.enabled: true
-                username.opacity: 1
-                username.enabled: true
-            }
-            // PropertyChanges {
-            //     target: bottomBar
-            //     state: "nothing_cbb"
-            // }
         },
         State {
             name: "selectMap"
@@ -470,11 +442,6 @@ ApplicationFlowForm {
                 previousState: "menu_app"
             }
             PropertyChanges {
-                target: mystackview
-                anchors.top: toolbar.bottom
-                anchors.bottom: parent.bottom
-            }
-            PropertyChanges {
                 target: toolbar
                 saveButton.opacity: 0
                 saveButton.enabled: false
@@ -485,10 +452,15 @@ ApplicationFlowForm {
                 username.opacity: 1
                 username.enabled: true
             }
-            // PropertyChanges {
-            //     target: bottomBar
-            //     state: "nothing_cbb"
-            // }
+            PropertyChanges {
+                target: bottomBar
+                state: "onlyBattery"
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+                anchors.bottom: bottomBar.top
+            }
         },
         State {
             name: "mapPath"
@@ -502,11 +474,6 @@ ApplicationFlowForm {
                 previousState: "selectMap"
             }
             PropertyChanges {
-                target: mystackview
-                anchors.top: toolbar.bottom
-                anchors.bottom: parent.bottom
-            }
-            PropertyChanges {
                 target: toolbar
                 saveButton.opacity: 0
                 saveButton.enabled: false
@@ -517,10 +484,15 @@ ApplicationFlowForm {
                 username.opacity: 1
                 username.enabled: true
             }
-            // PropertyChanges {
-            //     target: bottomBar
-            //     state: "nothing_cbb"
-            // }
+            PropertyChanges {
+                target: bottomBar
+                state: "onlyBattery"
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+                anchors.bottom: bottomBar.top
+            }
         }
     ]
 
@@ -543,6 +515,7 @@ ApplicationFlowForm {
                 errorPopup.mode = "delayed"
                 errorPopup.errorRectangleTextError.text = qsTr("Error: Perdida de conexion con el servidor")
                 errorPopup.visible = true
+                mapInfo.clearInfoImage()
                 popToHome()
             }
         }

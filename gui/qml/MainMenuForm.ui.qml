@@ -132,7 +132,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.top: parent.top
         source: "../images/sponsors/upm.png"
-        anchors.topMargin: -70
+        anchors.topMargin: -60
         anchors.leftMargin: -40
         fillMode: Image.PreserveAspectFit
     }
@@ -144,7 +144,7 @@ Rectangle {
         anchors.left: upm.right
         anchors.top: parent.top
         source: "../images/sponsors/car.png"
-        anchors.topMargin: -40
+        anchors.topMargin: -30
         anchors.leftMargin: -42
 
         fillMode: Image.PreserveAspectFit
@@ -160,7 +160,7 @@ Rectangle {
         anchors.top: parent.top
         source: "../images/sponsors/etsidi.png"
         anchors.rightMargin: 20
-        anchors.topMargin: -66
+        anchors.topMargin: -56
 
         fillMode: Image.PreserveAspectFit
     }

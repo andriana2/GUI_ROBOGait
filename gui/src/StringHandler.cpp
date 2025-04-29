@@ -428,3 +428,21 @@ void StringHandler::setErrorConnection(bool newErrorConnection)
     m_errorConnection = newErrorConnection;
     emit errorConnectionChanged();
 }
+
+QString StringHandler::stateBottomBar() const
+{
+    return m_stateBottomBar;
+}
+
+void StringHandler::setStateBottomBar(const QString &newStateBottomBar)
+{
+    if (m_stateBottomBar == newStateBottomBar)
+        return;
+    if(newStateBottomBar == "MP_cbb" || newStateBottomBar == "nMP_cbb"|| newStateBottomBar == "MnP_cbb"|| newStateBottomBar == "nMnP_cbb"|| newStateBottomBar == "nothing_cbb"|| newStateBottomBar == "onlyBattery")
+    {
+        m_stateBottomBar = newStateBottomBar;
+    }
+    else
+        return;
+    emit stateBottomBarChanged();
+}

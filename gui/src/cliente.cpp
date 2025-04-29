@@ -95,7 +95,7 @@ void Cliente::onReadyRead()
         QByteArray rawData = socket->readAll();
         QString dataString = QString::fromUtf8(rawData);
         QVector<QString> jsonObjects = extractJSONObjects(dataString);
-        for (const QString &jsonStr : jsonObjects)
+        for (auto &jsonStr : jsonObjects)
         {
             this->jsonDoc = QJsonDocument::fromJson(jsonStr.toUtf8());
 
@@ -105,7 +105,7 @@ void Cliente::onReadyRead()
                 continue;
             }
 
-            QJsonObject jsonObj = jsonDoc.object();
+            // QJsonObject jsonObj = jsonDoc.object();
             processJson(jsonDoc);
         }
     }

@@ -16,6 +16,7 @@ Item {
     property alias batteryPercentage: battery.percentage
     property alias batteryItem: batteryItem
     property alias customBottomBarItem: customBottomBarItem
+    property alias content: content
 
 
     Rectangle {

@@ -38,6 +38,8 @@ class StringHandler : public QObject
     Q_PROPERTY(QString strFindRobot READ strFindRobot WRITE setStrFindRobot NOTIFY strFindRobotChanged FINAL)
 
     Q_PROPERTY(bool errorConnection READ errorConnection WRITE setErrorConnection NOTIFY errorConnectionChanged FINAL)
+    Q_PROPERTY(QString stateBottomBar READ stateBottomBar WRITE setStateBottomBar NOTIFY stateBottomBarChanged FINAL)
+
 public:
     explicit StringHandler(QObject *parent = nullptr);
     // Q_INVOKABLE bool isInSameNetwork(const QString &ip1, const std::string& subnetMask = "255.255.255.0");
@@ -91,6 +93,9 @@ public:
     bool errorConnection() const;
     void setErrorConnection(bool newErrorConnection);
 
+    QString stateBottomBar() const;
+    void setStateBottomBar(const QString &newStateBottomBar);
+
 signals:
 
     void imageReceived(const QString &image);
@@ -106,6 +111,8 @@ signals:
     void strFindRobotChanged();
 
     void errorConnectionChanged();
+
+    void stateBottomBarChanged();
 
 private:
     bool moveStop = 0;
@@ -131,6 +138,7 @@ private:
     QStringListModel *m_model = nullptr;
     QString m_strFindRobot;
     bool m_errorConnection = false;
+    QString m_stateBottomBar = "nMnP_cbb";
 };
 
 #endif // STRINGHANDLER_H

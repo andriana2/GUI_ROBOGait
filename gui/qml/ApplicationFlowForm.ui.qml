@@ -8,7 +8,6 @@ Rectangle {
     property alias home: home
     property alias robot_connection: robot_connection
     property alias menu_app: menu_app
-    property alias menu_doctor: menu_doctor
     property alias register_page: register_page
     property alias register_patient: register_patient
     property alias manualControl: manualControl
@@ -40,11 +39,12 @@ Rectangle {
 
     StackView {
         id: mystackview
-        anchors.top: parent.top
-        anchors.bottom: parent.top
+        anchors.top: toolbar.bottom
+        anchors.bottom: bottomBar.top
+        anchors.bottomMargin: 0
+        anchors.topMargin: 20
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.topMargin: parent.height / 20
         initialItem: Home {
             id: home
         }
@@ -86,13 +86,6 @@ Rectangle {
         id: robot_connection
         RobotConnection {
             visible: true
-        }
-    }
-    Component {
-        id: menu_doctor
-        MenuDoctor {
-            visible: true
-            // anchors.fill: parent
         }
     }
     Component {
@@ -145,8 +138,8 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}D{i:1}D{i:2}D{i:3}D{i:13}D{i:15}D{i:17}D{i:19}
-D{i:21}D{i:23}D{i:25}D{i:27}D{i:29}
+    D{i:0;autoSize:true;formeditorZoom:0.5;height:700;width:1300}D{i:1}D{i:2}D{i:3}D{i:13}
+D{i:15}D{i:17}D{i:19}D{i:21}D{i:23}D{i:25}D{i:27}D{i:29}
 }
 ##^##*/
 

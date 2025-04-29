@@ -63,8 +63,6 @@ qt_add_qml_module(appgui
     qml/SelectMap.qml
     qml/SelectMapForm.ui.qml
 
-    qml/MenuDoctorForm.ui.qml
-    qml/MenuDoctor.qml
     qml/SelectPatient.qml
     qml/SelectPatientForm.ui.qml
     qml/RegisterPage.qml
