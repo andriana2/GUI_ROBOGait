@@ -124,6 +124,58 @@ Rectangle {
             }
         }
     }
+    Image {
+        opacity: 0.7
+        id: upm
+        width: 190
+        height: 190
+        anchors.left: parent.left
+        anchors.top: parent.top
+        source: "../images/sponsors/upm.png"
+        anchors.topMargin: -70
+        anchors.leftMargin: -40
+        fillMode: Image.PreserveAspectFit
+    }
+    Image {
+        opacity: 0.7
+        id: car
+        width: 110
+        height: 90
+        anchors.left: upm.right
+        anchors.top: parent.top
+        source: "../images/sponsors/car.png"
+        anchors.topMargin: -40
+        anchors.leftMargin: -42
+
+        fillMode: Image.PreserveAspectFit
+    }
+    Image {
+        opacity: 0.7
+        id: etsidi
+        width: 120
+        height: 140
+        anchors.right: parent.right
+        //            height: parent.height < 500 ? 80 : 130
+        //            width: parent.width < 500 ? 80 : 130
+        anchors.top: parent.top
+        source: "../images/sponsors/etsidi.png"
+        anchors.rightMargin: 20
+        anchors.topMargin: -66
+
+        fillMode: Image.PreserveAspectFit
+    }
+    Image {
+        opacity: 0.7
+        id: ministerio
+        width: 360
+        height: 130
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        source: "../images/sponsors/ministerio.png"
+        anchors.leftMargin: -20
+        anchors.bottomMargin: -20
+        fillMode: Image.PreserveAspectFit
+    }
 }
 
 /*##^##

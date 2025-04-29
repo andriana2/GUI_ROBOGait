@@ -89,6 +89,16 @@ ApplicationFlowForm {
         }
     }
 
+    function popToHome() {
+        console.log("_________________estoy en el estado: " + applicationFlow.state)
+        while (applicationFlow.state !== "home" && mystackview.depth > 1) {
+            mystackview.pop();
+            applicationFlow.state = applicationFlow.previousState;
+            console.log("_________________estoy en el estado: " + applicationFlow.state)
+        }
+        stringHandler.errorConnection = false
+    }
+
     function saveButton()
     {
         if(!stringHandler.saveMap)
@@ -156,7 +166,7 @@ ApplicationFlowForm {
         applicationFlow.state = "select_patient"
     }
     function register_page_push(){
-        
+
         // mystackview.push(register_page)
         // applicationFlow.state = "register_page"
 
@@ -288,6 +298,9 @@ ApplicationFlowForm {
             StateChangeScript {
                 // script: stringHandler.menu_doctor(1)
             }
+            StateChangeScript {
+                script: stringHandler.strFindRobot = ""
+            }
             PropertyChanges {
                 target:applicationFlow
                 previousState: "robot_connection"
@@ -375,6 +388,12 @@ ApplicationFlowForm {
             name: "menu_app"
             StateChangeScript {
                 script: stringHandler.menu_page(1)
+            }
+            StateChangeScript {
+                script: mapInfo.clearInfoImage() // this clear the map info container
+            }
+            StateChangeScript { // eliminar cuando este todo el funcionamiento
+                script: stringHandler.strFindRobot = ""
             }
             PropertyChanges {
                 target:applicationFlow
@@ -504,6 +523,30 @@ ApplicationFlowForm {
             // }
         }
     ]
+
+    ErrorRectangle {
+        id: errorPopup
+        anchors.centerIn: parent
+        errorRectangleTextError.text: qsTr("Error: En la conexión")
+        visible: false
+        mode: "delayed" // Ensure this property exists in your ErrorRectangle component
+    }
+
+    Connections {
+        target: stringHandler
+        // console.log("HE PASADO POR Connections en ApplicationFlow")
+        function onErrorConnectionChanged() {
+            // console.log("HE PASADO POR onErrorConnectionChanged() en ApplicationFlow")
+            if(stringHandler.errorConnection === true)
+            {
+                // console.log("HE PASADO POR onErrorConnectionChanged() en ApplicationFlow")
+                errorPopup.mode = "delayed"
+                errorPopup.errorRectangleTextError.text = qsTr("Error: Perdida de conexion con el servidor")
+                errorPopup.visible = true
+                popToHome()
+            }
+        }
+    }
 
 
 }

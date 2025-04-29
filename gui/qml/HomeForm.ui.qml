@@ -117,28 +117,6 @@ Item {
             anchors.bottomMargin: -20
             fillMode: Image.PreserveAspectFit
         }
-        //        Image {
-        //            id: car
-        //            height: parent.height < 500 ? 80 : 130
-        //            width: parent.width < 500 ? 80 : 130
-        //            anchors.left: upm.right
-        //            anchors.top: parent.top
-        //            source: "../images/sponsors/car.png"
-        //            anchors.leftMargin: -52
-        //            anchors.topMargin: parent.height < 500 ? -30 : -50
-
-        //            fillMode: Image.PreserveAspectFit
-        //        }
-        //        Button {
-        //            id: buttonStart
-        //            text: qsTr("START")
-        //            anchors.verticalCenter: parent.verticalCenter
-        //            anchors.verticalCenterOffset: 110
-        //            anchors.horizontalCenter: parent.horizontalCenter
-        //            focusPolicy: Qt.StrongFocus
-        //            z: 0
-        //            scale: 4.036
-        //        }
     }
 }
 

@@ -238,11 +238,11 @@ void NodeManager::close_publisher(Target const &target)
             plan_path_subscriber_.reset();
             RCLCPP_INFO(node_manager->get_logger(), "Close Subscriber /plan.");
         }
-        // if (!tf_service_client_)
-        // {
-        //     tf_service_client_.reset();
-        //     RCLCPP_INFO(node_manager->get_logger(), "Close Robot Pose Client destroy.");
-        // }
+        if (!tf_service_client_)
+        {
+            tf_service_client_.reset();
+            RCLCPP_INFO(node_manager->get_logger(), "Close Robot Pose Client destroy.");
+        }
     }
     else if (target == Waypoint_Follower)
     {
@@ -273,15 +273,20 @@ void NodeManager::close_publisher(Target const &target)
             waypoint_follower_client_.reset();
             RCLCPP_INFO(node_manager->get_logger(), "Close Cliente /waypoint_follower.");
         }
-        // if (!tf_service_client_)
-        // {
-        //     tf_service_client_.reset();
-        //     RCLCPP_INFO(node_manager->get_logger(), "Close Robot Pose Client destroy.");
-        // }
+        if (!tf_service_client_)
+        {
+            tf_service_client_.reset();
+            RCLCPP_INFO(node_manager->get_logger(), "Close Robot Pose Client destroy.");
+        }
     }
 #else
     if (target == Goal_Pose)
     {
+        if (!tf_service_client_)
+        {
+            tf_service_client_.reset();
+            RCLCPP_INFO(node_manager->get_logger(), "Close Robot Pose Client destroy.");
+        }
         if (!plan_path_subscriber_)
         {
             plan_path_subscriber_.reset();

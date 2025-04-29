@@ -5,18 +5,43 @@ Popup {
     id: root
     width: parent.width * 0.8
     height: 100
-    modal: true  // Bloquea la interacción con el contenido de fondo
-    focus: true  // Asegura que el Popup reciba eventos de teclado
+    modal: true
+    focus: true
     anchors.centerIn: parent
     background: null
+
+    // Permite controlar el comportamiento del cierre
+    property string mode: "instant" // "instant" o "delayed"
     property alias errorRectangleTextError: textError
 
+    // Temporizador para habilitar el cierre
+    property bool allowClose: true
+    closePolicy: mode === "instant" ? Popup.CloseOnPressOutside : Popup.NoAutoClose
+    Timer {
+        id: delayTimer
+        interval: 5000 // 5 segundos
+        running: false
+        repeat: false
+        onTriggered: {
+            allowClose = true
+        }
+    }
 
-    // Contenido del Popup
+    // Cuando se abre el popup
+    onOpened: {
+        if (mode === "delayed") {
+            console.log("IAM INSIDE DELAY")
+            allowClose = false
+            delayTimer.start()
+        } else {
+            allowClose = true
+        }
+    }
+
     Rectangle {
         width: parent.width
         height: parent.height
-        color: "#f8d7da"  // Color rojo claro para indicar error
+        color: "#f8d7da"
         border.color: "#f5c6cb"
         radius: 10
 
@@ -30,7 +55,10 @@ Popup {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: root.close()  // Cierra el popup al hacer clic
+            onClicked: {
+                if (allowClose)
+                    root.close()
+            }
         }
     }
 }

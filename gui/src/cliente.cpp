@@ -25,10 +25,13 @@ Cliente::Cliente(int port_tcp, int port_udp) : QObject(), port_tcp(port_tcp) //,
     connect(socket, &QTcpSocket::errorOccurred, this, &Cliente::onErrorOccurred);
 }
 
-Cliente::~Cliente() {
-    if (socket->isOpen()) {
+Cliente::~Cliente()
+{
+    if (socket->isOpen())
+    {
         socket->disconnectFromHost();
-        if (socket->state() != QAbstractSocket::UnconnectedState) {
+        if (socket->state() != QAbstractSocket::UnconnectedState)
+        {
             socket->waitForDisconnected(3000);
         }
     }
@@ -42,7 +45,8 @@ void Cliente::setDatabase(Database *sh) { database = sh; }
 
 void Cliente::answerUdp()
 {
-    while (udpSocket.hasPendingDatagrams()) {
+    while (udpSocket.hasPendingDatagrams())
+    {
         QByteArray buffer;
         buffer.resize(udpSocket.pendingDatagramSize());
         QHostAddress sender;
@@ -51,13 +55,15 @@ void Cliente::answerUdp()
         QString mensaje(buffer);
         // qDebug() << "Recibido:" << mensaje;
 
-        if (mensaje.startsWith("SERVER_ACK")) {
+        if (mensaje.startsWith("SERVER_ACK"))
+        {
             servidor = sender;
 
             QRegularExpression regex("SERVER_ACK:\\s*(\\w+)\\s+TYPE:\\s*(\\w+)");
             QRegularExpressionMatch match = regex.match(mensaje);
 
-            if (match.hasMatch()) {
+            if (match.hasMatch())
+            {
                 QString serverName = match.captured(1);
                 QString serverType = match.captured(2);
 
@@ -67,16 +73,19 @@ void Cliente::answerUdp()
 
                 connect2host(servidor.toString());
                 stringHandler->setStrFindRobot("Robot " + serverName + " " + serverType + " encontrado");
-            } else {
+            }
+            else
+            {
                 qDebug() << "Formato inesperado en SERVER_ACK";
             }
-        } else if (mensaje.contains("ACK")) {
+        }
+        else if (mensaje.contains("ACK"))
+        {
             // qDebug() << "ACK recibido";
             QByteArray buffer2 = {"ACK"};
             udpSocket.writeDatagram(buffer2, sender, port);
         }
     }
-
 }
 
 void Cliente::onReadyRead()
@@ -117,11 +126,24 @@ void Cliente::processJson(const QJsonDocument &json)
     // else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_IMG)
     // {
     // }
-        // else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_MSG)
+    // else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_MSG)
     // {
     // }
     else if (stringToHeader(jsonObj["opt"].toString()) == MSG)
     {
+        if (stringToTarget(jsonObj["target"].toString()) == Stop_Process)
+        {
+            // TODO stop_process with client
+            // &
+            // &
+            // &
+            // &
+            // &
+            // &
+            // &
+            // &
+            // &
+        }
         if (stringToTarget(jsonObj["target"].toString()) == Robot_Position_Pixel)
             stringHandler->getRobotPositionPixel(jsonObj);
         if (stringToTarget(jsonObj["target"].toString()) == Robot_Position_Pixel_Initialpose)
@@ -152,15 +174,14 @@ void Cliente::processJson(const QJsonDocument &json)
         }
         if (stringToTarget(jsonObj["target"].toString()) == Goal_Pose_Path)
         {
-            qDebug()<< "************************************";
             QString jsonString = json.toJson(QJsonDocument::Indented);
 
             // Imprimirlo en la consola con qDebug()
-            qDebug().noquote() << "JSON recibido:\n" << jsonString;
+            // qDebug().noquote() << "JSON recibido:\n"
+            //                    << jsonString;
             mapInfo->parseJsonToQList(jsonObj);
         }
     }
-
 }
 
 void Cliente::connect2host(const QString hostAddress)
@@ -218,15 +239,17 @@ void Cliente::sendMessage(const QJsonDocument &json)
     }
 }
 
-void Cliente::closeConnection() {
-    qDebug() << "Estoy en CLOSE CONNECTION!!!";
+void Cliente::closeConnection()
+{
+    qDebug() << "I am in CLOSE CONNECTION!!!";
     timeoutTimer->stop();
 
     disconnect(socket, &QTcpSocket::readyRead, 0, 0);
 
     bool shouldEmit = false;
 
-    switch (socket->state()) {
+    switch (socket->state())
+    {
     case QAbstractSocket::UnconnectedState:
         socket->disconnectFromHost();
         shouldEmit = true;
@@ -239,7 +262,8 @@ void Cliente::closeConnection() {
         socket->abort();
     }
 
-    if (shouldEmit) {
+    if (shouldEmit)
+    {
         status = false;
         emit statusChanged(status);
     }
@@ -248,9 +272,8 @@ void Cliente::closeConnection() {
 void Cliente::onErrorOccurred(QAbstractSocket::SocketError error)
 {
     qDebug() << "Socket error:" << error;
+    stringHandler->setErrorConnection(true);
 }
-
-
 
 QString Cliente::ipRobot() const
 {

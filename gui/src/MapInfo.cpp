@@ -218,7 +218,7 @@ void MapInfo::clearNextPath()
     m_pixels.clear();
     emit pixelsChanged();
 
-    m_finalPathPosition = Pixel(0,0);
+    m_finalPathPosition = Pixel(0, 0);
     emit finalPathPositionChanged();
 
     m_trajectoryGoalPose.clear();
@@ -226,7 +226,8 @@ void MapInfo::clearNextPath()
 
     repeated_delegate_list_view = 0;
 
-    if (periodicTimerMapInfo->isActive()) {
+    if (periodicTimerMapInfo->isActive())
+    {
         periodicTimerMapInfo->stop();
     }
     qDebug() << "Final Path Orientation:" << m_finalPathOrientation;
@@ -382,26 +383,32 @@ QList<Pixel> MapInfo::rdp(const QList<Pixel> &pts, double eps)
     return left;
 }
 
-double MapInfo::distancia(const Pixel& p1, const Pixel& p2) {
+double MapInfo::distancia(const Pixel &p1, const Pixel &p2)
+{
     return std::sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }
 
 // Función para crear un punto intermedio a una distancia específica
-Pixel MapInfo::puntoIntermedio(const Pixel& p1, const Pixel& p2, double distanciaObjetivo) {
+Pixel MapInfo::puntoIntermedio(const Pixel &p1, const Pixel &p2, double distanciaObjetivo)
+{
     double distTotal = distancia(p1, p2);
-    if (distTotal < 1e-6) return p1; // Evitar divisiones por cero
+    if (distTotal < 1e-6)
+        return p1; // Evitar divisiones por cero
     double t = distanciaObjetivo / distTotal;
     return {static_cast<int>(p1.x + t * (p2.x - p1.x)), static_cast<int>(p1.y + t * (p2.y - p1.y))};
 }
 
 // Función para suavizar giros de 90° eliminando la esquina y agregando puntos intermedios
-QList<Pixel> MapInfo::suavizarTrayectoria(const QList<Pixel>& puntos, double distanciaSuavizado) {
-    if (puntos.size() < 3) return puntos; // No hay giros que suavizar con menos de 3 puntos
+QList<Pixel> MapInfo::suavizarTrayectoria(const QList<Pixel> &puntos, double distanciaSuavizado)
+{
+    if (puntos.size() < 3)
+        return puntos; // No hay giros que suavizar con menos de 3 puntos
 
     QList<Pixel> resultado;
     resultado.push_back(puntos[0]); // Primer punto siempre se mantiene
 
-    for (size_t i = 1; i < puntos.size() - 1; ++i) {
+    for (size_t i = 1; i < puntos.size() - 1; ++i)
+    {
         Pixel A = puntos[i - 1];
         Pixel B = puntos[i];
         Pixel C = puntos[i + 1];
@@ -419,7 +426,7 @@ QList<Pixel> MapInfo::suavizarTrayectoria(const QList<Pixel>& puntos, double dis
     return resultado;
 }
 
-bool MapInfo::isBlack(const QImage &image, const Pixel& point, int radius)
+bool MapInfo::isBlack(const QImage &image, const Pixel &point, int radius)
 {
     for (int dx = -radius; dx <= radius; ++dx)
     {
@@ -486,7 +493,7 @@ bool MapInfo::checkPathBlack()
 {
     QList<Pixel> trajectory = m_pixels;
 
-    if(m_pixels.empty())
+    if (m_pixels.empty())
     {
         qWarning() << "No hay puntos en la trayectoria.";
         return false;
@@ -667,7 +674,7 @@ void MapInfo::parseJsonToQList(const QJsonObject &jsonObj)
     // Imprimir todos los puntos convertidos
     qDebug() << "Lista de puntos convertidos:";
     QList<Pixel> trayectory_temp = filtrarPuntosCercanos(rdp(pointsList, 3), 30);
-    qDebug() << "^^^^^^^^^^^^ NUM vector despues filtro:" << trayectory_temp.size() <<"  NUM vector antes filtro:" << pointsList.size()  ;
+    qDebug() << "^^^^^^^^^^^^ NUM vector despues filtro:" << trayectory_temp.size() << "  NUM vector antes filtro:" << pointsList.size();
     setTrajectoryGoalPose(trayectory_temp);
     for (const Pixel &p : trayectory_temp)
     {

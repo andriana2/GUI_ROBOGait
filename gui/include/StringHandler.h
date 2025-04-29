@@ -37,6 +37,7 @@ class StringHandler : public QObject
     Q_PROPERTY(QStringListModel* model READ model NOTIFY modelChanged FINAL) // lista que aparece (SelectMap)
     Q_PROPERTY(QString strFindRobot READ strFindRobot WRITE setStrFindRobot NOTIFY strFindRobotChanged FINAL)
 
+    Q_PROPERTY(bool errorConnection READ errorConnection WRITE setErrorConnection NOTIFY errorConnectionChanged FINAL)
 public:
     explicit StringHandler(QObject *parent = nullptr);
     // Q_INVOKABLE bool isInSameNetwork(const QString &ip1, const std::string& subnetMask = "255.255.255.0");
@@ -87,6 +88,9 @@ public:
     QString strFindRobot() const;
     void setStrFindRobot(const QString &newStrFindRobot);
 
+    bool errorConnection() const;
+    void setErrorConnection(bool newErrorConnection);
+
 signals:
 
     void imageReceived(const QString &image);
@@ -100,6 +104,8 @@ signals:
     void modelChanged();
 
     void strFindRobotChanged();
+
+    void errorConnectionChanged();
 
 private:
     bool moveStop = 0;
@@ -124,6 +130,7 @@ private:
     QString m_nameMap = "";
     QStringListModel *m_model = nullptr;
     QString m_strFindRobot;
+    bool m_errorConnection = false;
 };
 
 #endif // STRINGHANDLER_H
