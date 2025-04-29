@@ -21,7 +21,7 @@ Rectangle {
         columnSpacing: 60
 
         Rectangle {
-            id: teledirigido
+            id: manualControl
             width: 250
             height: 250
             //color: Colors.rectangle_color
@@ -48,7 +48,7 @@ Rectangle {
                 width: 40
                 height: 40
                 anchors.verticalCenter: parent.verticalCenter
-                source: "../images/up.png"
+                source: "../images/icon_app/up.png"
                 anchors.verticalCenterOffset: -50
                 anchors.horizontalCenter: parent.horizontalCenter
                 fillMode: Image.PreserveAspectFit
@@ -63,7 +63,7 @@ Rectangle {
                 width: 40
                 height: 40
                 anchors.verticalCenter: parent.verticalCenter
-                source: "../images/down.png"
+                source: "../images/icon_app/down.png"
                 anchors.verticalCenterOffset: 50
                 anchors.horizontalCenter: parent.horizontalCenter
                 fillMode: Image.PreserveAspectFit

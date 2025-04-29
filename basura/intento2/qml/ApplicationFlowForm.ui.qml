@@ -6,7 +6,7 @@ Rectangle {
     property alias home: home
     property alias ip: ip
     property alias menu_app: menu_app
-    property alias teledirigido: teledirigido
+    property alias manualControl: manualControl
 
     property string previousState: ""
     property alias mystackview: mystackview
@@ -26,13 +26,13 @@ Rectangle {
     }
     Component {
         id: menu_app
-        MenuPrincipal {
+        MainMenu {
             visible:true
         }
     }
     Component {
-        id: teledirigido
-        Teledirigido {
+        id: manualControl
+        ManualControl {
             visible: true
         }
     }

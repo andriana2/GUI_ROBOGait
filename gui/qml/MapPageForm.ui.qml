@@ -4,9 +4,9 @@ import "extras"
 
 Rectangle {
     id: root
-    // width: 13/*00
-    // height: 70*/0
     color: "#518bb7"
+    property alias mapPageForm_buttonStop: buttonStop
+
     property alias mapPageForm_mystackview: mapPageForm_mystackview
     property alias mapPageForm_buttonNext: mapPageForm_buttonNext
     property alias mapPageForm_buttonPrevious: mapPageForm_buttonPrevious
@@ -22,10 +22,6 @@ Rectangle {
 
     property alias mp_map: map
 
-    // property alias mp_initialOrientation: initialOrientation
-    // property alias mp_selectAction: selectAction
-    // property alias mp_goalPosePosition: goalPosePosition
-    // property alias mp_goalPoseOrientation: goalPoseOrientation
     Item {
         id: rectagle_conteiner
         width: parent.width / 3
@@ -63,6 +59,7 @@ Rectangle {
         BoxImages {
             id: boxImages
             anchors.top: mapPageForm_text.bottom
+            anchors.horizontalCenterOffset: 40
             anchors.horizontalCenter: mapPageForm_text.horizontalCenter
             anchors.topMargin: 70
         }
@@ -83,30 +80,27 @@ Rectangle {
                 border.color: "transparent" // Sin bordes
             }
 
-            contentItem: Row {
+            contentItem: Item {
                 id: row
-                // Contenido del botón
                 anchors.centerIn: parent
-                spacing: 10
 
                 Text {
-                    text: qsTr(mapPageForm_nextState_text)
-                    horizontalAlignment: Text.AlignRight
+                    anchors.right: svgImage.left
+                    anchors.verticalCenter: parent.verticalCenter
                     font.pointSize: 25
-                    color: "white" // Color del texto
-                    verticalAlignment: Text.AlignVCenter
+                    color: "white"
+                    text: qsTr(mapPageForm_nextState_text)
+                    anchors.rightMargin: 10
                 }
                 Image {
                     id: svgImage
-                    source: "../images/keyboard_left.svg"
-                    anchors.verticalCenterOffset: 3
-                    // Ruta a tu imagen
+                    source: "../images/icon_app/keyboard_left.svg"
                     rotation: 180
-                    width: 40 // Ancho de la imagen
+                    width: 40
                     height: 40
                     anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
                     fillMode: Image.PreserveAspectFit
-                    // Alto de la imagen
                 }
             }
         }
@@ -133,7 +127,7 @@ Rectangle {
 
                 Image {
                     id: svgImage2
-                    source: "../images/keyboard_left.svg"
+                    source: "../images/icon_app/keyboard_left.svg"
                     anchors.verticalCenterOffset: 3
                     width: 40
                     height: 40
@@ -166,12 +160,41 @@ Rectangle {
         popEnter: null
         popExit: null
     }
+    Button {
+        id: buttonStop
+        height: 50
+        anchors.top: parent.top
+        anchors.topMargin: 5
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: 100
+
+        background: Rectangle {
+            color: buttonStop.down ? "#f8d7da" : "#f5c6cb"
+            radius: 15
+            border.color: "#721c24"
+            border.width: 2
+        }
+
+        contentItem: Label {
+            id: buttonLabel
+            text: qsTr("STOP")
+            color: "#721c24"
+            font.pixelSize: 30
+            font.bold: true
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            font.styleName: "Regular"
+            font.weight: Font.Light
+            anchors.fill: parent
+            padding: 0
+        }
+    }
 }
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.66;height:700;width:1300}D{i:2}D{i:3}D{i:4}D{i:5}
-D{i:10}D{i:1}D{i:15}
+    D{i:0;autoSize:true;height:480;width:640}D{i:2}D{i:3}D{i:4}D{i:5}D{i:10}D{i:1}D{i:15}
+D{i:17}
 }
 ##^##*/
 

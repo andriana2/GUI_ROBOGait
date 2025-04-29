@@ -6,12 +6,14 @@
 #include <vector>
 #include <string>
 
-Cliente::Cliente(int portNumber) : QObject() //, stringHandler(nullptr)
+Cliente::Cliente(int port_tcp, int port_udp) : QObject(), port_tcp(port_tcp) //, stringHandler(nullptr)
 {
+    connect(&udpSocket, &QUdpSocket::readyRead, this, &Cliente::answerUdp);
+
     socket = new QTcpSocket();
     maping = true;
 
-    port = portNumber;
+    port_udp = port_udp;
 
     timeoutTimer = new QTimer();
     timeoutTimer->setSingleShot(true);
@@ -23,10 +25,13 @@ Cliente::Cliente(int portNumber) : QObject() //, stringHandler(nullptr)
     connect(socket, &QTcpSocket::errorOccurred, this, &Cliente::onErrorOccurred);
 }
 
-Cliente::~Cliente() {
-    if (socket->isOpen()) {
+Cliente::~Cliente()
+{
+    if (socket->isOpen())
+    {
         socket->disconnectFromHost();
-        if (socket->state() != QAbstractSocket::UnconnectedState) {
+        if (socket->state() != QAbstractSocket::UnconnectedState)
+        {
             socket->waitForDisconnected(3000);
         }
     }
@@ -35,6 +40,53 @@ Cliente::~Cliente() {
 }
 
 void Cliente::setStringHandler(StringHandler *sh) { stringHandler = sh; }
+void Cliente::setMapInfo(MapInfo *sh) { mapInfo = sh; }
+void Cliente::setDatabase(Database *sh) { database = sh; }
+
+void Cliente::answerUdp()
+{
+    while (udpSocket.hasPendingDatagrams())
+    {
+        QByteArray buffer;
+        buffer.resize(udpSocket.pendingDatagramSize());
+        QHostAddress sender;
+        quint16 port;
+        udpSocket.readDatagram(buffer.data(), buffer.size(), &sender, &port);
+        QString mensaje(buffer);
+        // qDebug() << "Recibido:" << mensaje;
+
+        if (mensaje.startsWith("SERVER_ACK"))
+        {
+            servidor = sender;
+
+            QRegularExpression regex("SERVER_ACK:\\s*(\\w+)\\s+TYPE:\\s*(\\w+)");
+            QRegularExpressionMatch match = regex.match(mensaje);
+
+            if (match.hasMatch())
+            {
+                QString serverName = match.captured(1);
+                QString serverType = match.captured(2);
+
+                qDebug() << "Servidor encontrado en" << servidor.toString();
+                qDebug() << "Nombre del servidor:" << serverName;
+                qDebug() << "Tipo de servidor:" << serverType;
+
+                connect2host(servidor.toString());
+                stringHandler->setStrFindRobot("Robot " + serverName + " " + serverType + " encontrado");
+            }
+            else
+            {
+                qDebug() << "Formato inesperado en SERVER_ACK";
+            }
+        }
+        else if (mensaje.contains("ACK"))
+        {
+            // qDebug() << "ACK recibido";
+            QByteArray buffer2 = {"ACK"};
+            udpSocket.writeDatagram(buffer2, sender, port);
+        }
+    }
+}
 
 void Cliente::onReadyRead()
 {
@@ -42,8 +94,6 @@ void Cliente::onReadyRead()
     {
         QByteArray rawData = socket->readAll();
         QString dataString = QString::fromUtf8(rawData);
-        // qDebug() << dataString;
-        // qDebug() << "su tamaño es de --------------->" << dataString.size();
         QVector<QString> jsonObjects = extractJSONObjects(dataString);
         for (const QString &jsonStr : jsonObjects)
         {
@@ -64,6 +114,8 @@ void Cliente::onReadyRead()
 void Cliente::processJson(const QJsonDocument &json)
 {
     QJsonObject jsonObj = json.object();
+    qDebug() << "Contenido del JSON:";
+    qDebug() << json.toJson(QJsonDocument::Indented);
     if (stringToHeader(jsonObj["opt"].toString()) == IMG)
     {
         if (stringToTarget(jsonObj["target"].toString()) == Img_Map_SLAM)
@@ -71,11 +123,27 @@ void Cliente::processJson(const QJsonDocument &json)
         else if (stringToTarget(jsonObj["target"].toString()) == Img_Map_Path)
             stringHandler->getImageMapPath(jsonObj);
     }
-    else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_IMG)
-    {
-    }
+    // else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_IMG)
+    // {
+    // }
+    // else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_MSG)
+    // {
+    // }
     else if (stringToHeader(jsonObj["opt"].toString()) == MSG)
     {
+        if (stringToTarget(jsonObj["target"].toString()) == Stop_Process)
+        {
+            // TODO stop_process with client
+            // &
+            // &
+            // &
+            // &
+            // &
+            // &
+            // &
+            // &
+            // &
+        }
         if (stringToTarget(jsonObj["target"].toString()) == Robot_Position_Pixel)
             stringHandler->getRobotPositionPixel(jsonObj);
         if (stringToTarget(jsonObj["target"].toString()) == Robot_Position_Pixel_Initialpose)
@@ -106,17 +174,13 @@ void Cliente::processJson(const QJsonDocument &json)
         }
         if (stringToTarget(jsonObj["target"].toString()) == Goal_Pose_Path)
         {
-            qDebug()<< "************************************";
             QString jsonString = json.toJson(QJsonDocument::Indented);
 
             // Imprimirlo en la consola con qDebug()
-            qDebug().noquote() << "JSON recibido:\n" << jsonString;
+            // qDebug().noquote() << "JSON recibido:\n"
+            //                    << jsonString;
             mapInfo->parseJsonToQList(jsonObj);
         }
-    }
-
-    else if (stringToHeader(jsonObj["opt"].toString()) == REQUEST_MSG)
-    {
     }
 }
 
@@ -124,15 +188,24 @@ void Cliente::connect2host(const QString hostAddress)
 {
     host = hostAddress;
     timeoutTimer->start(3000);
-    socket->connectToHost(host, port);
+    socket->connectToHost(host, port_tcp);
     connect(socket, &QTcpSocket::connected, this, &Cliente::connected);
-    qDebug() << "Conectado a ip: " << host << " y al puerto " << port;
+    qDebug() << "Conectado a ip: " << host << " y al puerto " << port_tcp;
+    setIpRobot(host);
 
     if (!socket->waitForConnected())
     {
         qDebug() << "No se pudo conectar al servidor.";
         return;
     }
+}
+
+void Cliente::startSearchUdp()
+{
+    udpSocket.bind(QHostAddress::AnyIPv4, port_udp);
+
+    QByteArray first_word_identify_server = "DISCOVER";
+    udpSocket.writeDatagram(first_word_identify_server, QHostAddress::Broadcast, 45454);
 }
 
 void Cliente::connectionTimeout()
@@ -151,8 +224,6 @@ void Cliente::connected()
     emit statusChanged(status);
 }
 
-bool Cliente::getStatus() { return status; }
-
 void Cliente::sendMessage(const QJsonDocument &json)
 {
     if (socket->state() == QTcpSocket::ConnectedState)
@@ -168,65 +239,17 @@ void Cliente::sendMessage(const QJsonDocument &json)
     }
 }
 
-// void Cliente::sendRequestImg(const QString &target)
-// {
-//     if (target == "map_scan")
-//     {
-//         QString start = "REQUEST_IMG:0:" + target + "\n";
-//         QByteArray full = start.toUtf8();
-//         socket->write(full);
-//         socket->flush();
-//         qDebug() << "Full send request img " << full;
-//     }
-// }
-
-// void Cliente::receiveImageMap(const QByteArray &data)
-// {
-//     QImage image;
-//     if (image.loadFromData(data)) {
-//         //stringHandler->setImage(data);  // Emitir la señal con la imagen
-//     }
-
-// }
-
-// void Cliente::sendMessage(const QString &message)
-// {
-//     QTcpSocket socket;
-//     socket.connectToHost(ip, puerto);
-//     qDebug() << "Conectado a ip: " << ip << " y al puerto " << puerto;
-
-//     if (!socket.waitForConnected()) {
-//         qDebug() << "No se pudo conectar al servidor.";
-//         return;
-//     }
-
-//     QByteArray data = message.toUtf8() + "\n";
-
-//     if (socket.write(data) == -1) {
-//         qDebug() << "Error al enviar el mensaje.";
-//     } else {
-//         socket.waitForBytesWritten();  // Espera a que se haya enviado el mensaje
-//         qDebug() << message + ": Mensaje enviado correctamente.";
-//     }
-//     socket.disconnectFromHost();
-//     // if (socket->state() == QTcpSocket::ConnectedState) {
-//     //     qDebug() << "MENSAGE " + message;
-//     //     socket->write(message.toUtf8());  // Convertir el string a bytes y enviarlo
-//     //     socket->flush();  // Asegurarse de que el mensaje se envíe inmediatamente
-//     // }
-//     // else
-//     //     qDebug() << "NO ME HE CONECTADO";
-// }
-
-void Cliente::closeConnection() {
-    qDebug() << "Estoy en CLOSE CONNECTION!!!";
+void Cliente::closeConnection()
+{
+    qDebug() << "I am in CLOSE CONNECTION!!!";
     timeoutTimer->stop();
 
     disconnect(socket, &QTcpSocket::readyRead, 0, 0);
 
     bool shouldEmit = false;
 
-    switch (socket->state()) {
+    switch (socket->state())
+    {
     case QAbstractSocket::UnconnectedState:
         socket->disconnectFromHost();
         shouldEmit = true;
@@ -239,7 +262,8 @@ void Cliente::closeConnection() {
         socket->abort();
     }
 
-    if (shouldEmit) {
+    if (shouldEmit)
+    {
         status = false;
         emit statusChanged(status);
     }
@@ -248,11 +272,18 @@ void Cliente::closeConnection() {
 void Cliente::onErrorOccurred(QAbstractSocket::SocketError error)
 {
     qDebug() << "Socket error:" << error;
+    stringHandler->setErrorConnection(true);
 }
 
-void Cliente::setMapInfo(MapInfo *sh)
+QString Cliente::ipRobot() const
 {
-    if (mapInfo == sh)
+    return m_ipRobot;
+}
+
+void Cliente::setIpRobot(const QString &newIpRobot)
+{
+    if (m_ipRobot == newIpRobot)
         return;
-    mapInfo = sh;
+    m_ipRobot = newIpRobot;
+    emit ipRobotChanged();
 }

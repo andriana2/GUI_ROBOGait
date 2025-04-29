@@ -1,7 +1,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <tf2_msgs/msg/tf_message.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
-#include "interface_srv/srv/get_robot_position.hpp"  // Interfaz personalizada
+#include "interface_srv/srv/get_robot_position.hpp" // Interfaz personalizada
 #include <unordered_map>
 #include <string>
 #include <vector>
@@ -79,10 +79,11 @@ private:
     }
 
     // Combinar dos transformaciones
-    void combineTransforms(const geometry_msgs::msg::Transform& t1, const geometry_msgs::msg::Transform& t2, geometry_msgs::msg::Transform& result) {
+    void combineTransforms(const geometry_msgs::msg::Transform &t1, const geometry_msgs::msg::Transform &t2, geometry_msgs::msg::Transform &result)
+    {
         // Combinar traslaciones
         // std::cout << "transformando" << std::endl;
-        
+
         result.translation.x = t1.translation.x + t2.translation.x;
         result.translation.y = t1.translation.y + t2.translation.y;
         result.translation.z = t1.translation.z + t2.translation.z;
@@ -97,7 +98,7 @@ private:
     void transform2GetPosition(const geometry_msgs::msg::Transform &result, struct GetPosition &result_struct)
     {
         // std::cout << "En las transformaciones" << std::endl;
-        
+
         result_struct.x = result.translation.x;
         result_struct.y = result.translation.y;
 
@@ -106,7 +107,7 @@ private:
         result_struct.yaw = std::atan2(siny_cosp, cosy_cosp);
     }
 
-    #if I_AM_ROBOT
+#if I_AM_ROBOT
     // Manejar solicitudes del servicio
     void handleServiceRequest(
         [[maybe_unused]] const std::shared_ptr<interface_srv::srv::GetRobotPosition::Request> request,
@@ -131,7 +132,7 @@ private:
             RCLCPP_WARN(this->get_logger(), "Transform not found: map -> base_link");
         }
     }
-    #else
+#else
 
     void handleServiceRequest(
         [[maybe_unused]] const std::shared_ptr<interface_srv::srv::GetRobotPosition::Request> request,
@@ -149,6 +150,7 @@ private:
             response->yaw = gp.yaw;
             response->success = true;
             RCLCPP_INFO(this->get_logger(), "Transform found: map -> base_footprint");
+            RCLCPP_INFO(this->get_logger(), "map -> base_footprint: x=%.2f, y=%.2f, yaw=%.2f", gp.x, gp.y, gp.yaw);
         }
         else
         {
@@ -156,7 +158,7 @@ private:
             RCLCPP_WARN(this->get_logger(), "Transform not found: map -> base_footprint");
         }
     }
-    #endif
+#endif
 
     rclcpp::Subscription<tf2_msgs::msg::TFMessage>::SharedPtr subscription_;
     rclcpp::Service<interface_srv::srv::GetRobotPosition>::SharedPtr service_;

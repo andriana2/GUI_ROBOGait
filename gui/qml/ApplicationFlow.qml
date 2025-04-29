@@ -10,8 +10,8 @@ ApplicationFlowForm {
     property int type_save: type_save = -1
 
     home.buttonStart.onClicked: {
-        mystackview.push(ip)
-        applicationFlow.state = "ip"
+        mystackview.push(robot_connection)
+        applicationFlow.state = "robot_connection"
         // mystackview.push(menu_app)
         // applicationFlow.state = "menu_app"
     }
@@ -20,7 +20,7 @@ ApplicationFlowForm {
         console.log("backButton")
         // console.log(type_save)
         // console.log(visible_save)
-        if (applicationFlow.state === "teledirigido")
+        if (applicationFlow.state === "manualControl")
         {
             if (stringHandler.mapping)
             {
@@ -75,6 +75,30 @@ ApplicationFlowForm {
         }
 
     }
+    function popFunction()
+    {
+        mystackview.pop()
+        applicationFlow.state = applicationFlow.previousState
+    }
+    function popToLogin() {
+        console.log("_________________estoy en el estado: " + applicationFlow.state)
+        while (applicationFlow.state !== "register_page" && mystackview.depth > 1) {
+            mystackview.pop();
+            applicationFlow.state = applicationFlow.previousState;
+            console.log("_________________estoy en el estado: " + applicationFlow.state)
+        }
+    }
+
+    function popToHome() {
+        console.log("_________________estoy en el estado: " + applicationFlow.state)
+        while (applicationFlow.state !== "home" && mystackview.depth > 1) {
+            mystackview.pop();
+            applicationFlow.state = applicationFlow.previousState;
+            console.log("_________________estoy en el estado: " + applicationFlow.state)
+        }
+        stringHandler.errorConnection = false
+    }
+
     function saveButton()
     {
         if(!stringHandler.saveMap)
@@ -121,17 +145,46 @@ ApplicationFlowForm {
         applicationFlow.state = "Insert"
     }
     function menu_push(){
+        // if (applicationFlow.state === "select_patient")
+        //     popFunction()
+        // if (applicationFlow.state === "register_patient")
+        //     popFunction()
         mystackview.push(menu_app)
+        console.log("roleChanged cambió a: -" + ddbb.role + "-");
         applicationFlow.state = "menu_app"
-
     }
-    function teledirigido_push()
+    function menu_doctor_push(){
+        mystackview.push(menu_doctor)
+        applicationFlow.state = "menu_doctor"
+    }
+    function register_patient_push(){
+        mystackview.push(register_patient)
+        applicationFlow.state = "register_patient"
+    }
+    function select_patient_push(){
+        mystackview.push(select_patient)
+        applicationFlow.state = "select_patient"
+    }
+    function register_page_push(){
+
+        // mystackview.push(register_page)
+        // applicationFlow.state = "register_page"
+
+        // harcodeado
+        ddbb.role =("doctor")
+        ddbb.username = "mariaRosa"
+        // menu_push()
+        mystackview.push(menu_app)
+        console.log("roleChanged cambió a: -" + ddbb.role + "-");
+        applicationFlow.state = "menu_app"
+    }
+    function manualControl_push()
     {
         stringHandler.setSaveMap(0)
         visible_image = 1
         console.log("Imagen a visible 0")
-        mystackview.push(teledirigido)
-        applicationFlow.state = "teledirigido"
+        mystackview.push(manualControl)
+        applicationFlow.state = "manualControl"
     }
     function select_map_push()
     {
@@ -163,14 +216,23 @@ ApplicationFlowForm {
                 logo.enabled: false
                 title.opacity: 0
                 title.enabled: false
+                config.opacity: 0
+                config.enabled: false
+                username.opacity: 0
+                username.enabled: false
+            }
+            PropertyChanges {
+                target: bottomBar
+                state: "nothing_cbb"
             }
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
             }
         },
         State {
-            name: "ip"
+            name: "robot_connection"
             PropertyChanges {
                 target:applicationFlow
                 previousState: "Home"
@@ -184,20 +246,35 @@ ApplicationFlowForm {
                 backButton.enabled: false
                 saveButton.opacity: 0
                 saveButton.enabled: false
+                config.opacity: 0
+                config.enabled: false
+                username.opacity: 0
+                username.enabled: false
+            }
+            PropertyChanges {
+                target: bottomBar
+                state: "nothing_cbb"
             }
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
+                // anchors.bottom: parent.bottom
+                // anchors.bottom: bottomBar.bottom
             }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     state: "NoMapaYpaciente"
+            // }
         },
         State {
-            name: "menu_app"
+            name: "menu_doctor"
             StateChangeScript {
-                script: stringHandler.menu_page(1)
+                // script: stringHandler.menu_doctor(1)
             }
             PropertyChanges {
                 target:applicationFlow
-                previousState: "ip"
+                previousState: "register_page"
             }
             PropertyChanges {
                 target: toolbar
@@ -205,18 +282,155 @@ ApplicationFlowForm {
                 backButton.enabled: false
                 saveButton.opacity: 0
                 saveButton.enabled: false
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
             }
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
             }
         },
         State {
-            name: "teledirigido"
+            name: "register_page"
+            StateChangeScript {
+                // script: stringHandler.menu_doctor(1)
+            }
+            StateChangeScript {
+                script: stringHandler.strFindRobot = ""
+            }
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "robot_connection"
+            }
+            PropertyChanges {
+                target: toolbar
+                backButton.opacity: 0
+                backButton.enabled: false
+                saveButton.opacity: 0
+                saveButton.enabled: false
+                config.opacity: 0
+                config.enabled: false
+                username.opacity: 0
+                username.enabled: false
+            }
+            PropertyChanges {
+                target: bottomBar
+                state: "nothing_cbb"
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
+            }
+        },
+        State {
+            name: "select_patient"
+            StateChangeScript {
+                // script: stringHandler.menu_page(1)
+            }
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "menu_app"
+
+            }
+            PropertyChanges {
+                target: toolbar
+                backButton.opacity: 1
+                backButton.enabled: true
+                saveButton.opacity: 0
+                saveButton.enabled: false
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
+            }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     state: "nothing_cbb"
+            // }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
+            }
+
+        },
+        State {
+            name: "register_patient"
+            StateChangeScript {
+                // script: stringHandler.menu_page(1)
+            }
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "select_patient"
+            }
+            PropertyChanges {
+                target: toolbar
+                backButton.opacity: 1
+                backButton.enabled: true
+                saveButton.opacity: 0
+                saveButton.enabled: false
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
+            }
+        },
+        State {
+            name: "menu_app"
+            StateChangeScript {
+                script: stringHandler.menu_page(1)
+            }
+            StateChangeScript {
+                script: mapInfo.clearInfoImage() // this clear the map info container
+            }
+            StateChangeScript { // eliminar cuando este todo el funcionamiento
+                script: stringHandler.strFindRobot = ""
+            }
+            PropertyChanges {
+                target:applicationFlow
+                previousState: ddbb.role === "register_page"
+            }
+            PropertyChanges {
+                target: toolbar
+                backButton.opacity: 0
+                backButton.enabled: false
+                saveButton.opacity: 0
+                saveButton.enabled: false
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.bottom: bottomBar.bottom
+                anchors.top: toolbar.bottom
+                // anchors.bottom: parent.bottom
+            }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     state: "nothing_cbb"
+            // }
+            PropertyChanges {
+                target: bottomBar
+                state: "NoMapaYnoPaciente"
+            }
+        },
+        State {
+            name: "manualControl"
             // when: stringHandler.mapping === 1
             StateChangeScript {
                 script: {
-                    console.log("teledirigido_mapping")
+                    console.log("manualControl_mapping")
                 }
             }
             PropertyChanges {
@@ -226,6 +440,7 @@ ApplicationFlowForm {
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
             }
             PropertyChanges {
                 target: toolbar
@@ -233,7 +448,15 @@ ApplicationFlowForm {
                 saveButton.enabled: true
                 backButton.opacity: 1
                 backButton.enabled: true
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
             }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     state: "nothing_cbb"
+            // }
         },
         State {
             name: "selectMap"
@@ -249,6 +472,7 @@ ApplicationFlowForm {
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
             }
             PropertyChanges {
                 target: toolbar
@@ -256,7 +480,15 @@ ApplicationFlowForm {
                 saveButton.enabled: false
                 backButton.opacity: 1
                 backButton.enabled: true
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
             }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     state: "nothing_cbb"
+            // }
         },
         State {
             name: "mapPath"
@@ -272,6 +504,7 @@ ApplicationFlowForm {
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
+                anchors.bottom: parent.bottom
             }
             PropertyChanges {
                 target: toolbar
@@ -279,9 +512,41 @@ ApplicationFlowForm {
                 saveButton.enabled: false
                 backButton.opacity: 1
                 backButton.enabled: true
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
             }
+            // PropertyChanges {
+            //     target: bottomBar
+            //     state: "nothing_cbb"
+            // }
         }
     ]
+
+    ErrorRectangle {
+        id: errorPopup
+        anchors.centerIn: parent
+        errorRectangleTextError.text: qsTr("Error: En la conexión")
+        visible: false
+        mode: "delayed" // Ensure this property exists in your ErrorRectangle component
+    }
+
+    Connections {
+        target: stringHandler
+        // console.log("HE PASADO POR Connections en ApplicationFlow")
+        function onErrorConnectionChanged() {
+            // console.log("HE PASADO POR onErrorConnectionChanged() en ApplicationFlow")
+            if(stringHandler.errorConnection === true)
+            {
+                // console.log("HE PASADO POR onErrorConnectionChanged() en ApplicationFlow")
+                errorPopup.mode = "delayed"
+                errorPopup.errorRectangleTextError.text = qsTr("Error: Perdida de conexion con el servidor")
+                errorPopup.visible = true
+                popToHome()
+            }
+        }
+    }
 
 
 }

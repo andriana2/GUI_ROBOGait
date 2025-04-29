@@ -15,6 +15,8 @@ BoxImagesForm {
         anchors.centerIn: parent
         errorRectangleTextError.text: "Error: Has puesto el robot en una posicion donde esta prohibido."
     }
+    // bif_clear.onClicked: boxImages.bif_clear_pressed()
+    // bif_draw_path.onClicked: boxImages.bif_draw_path_pressed()
 
     bif_clear.onClicked: {
         boxImages.bif_clear_pressed()
@@ -35,145 +37,67 @@ BoxImagesForm {
     states: [
         State {
             name: "bi_draw_robot"
-            StateChangeScript {
-                script: console.log("estoy en bi_draw_robot")
-            }
-            PropertyChanges {
-                target: bif_check
-                visible: false
-                enabled: false
-            }
-            PropertyChanges {
-                target: bif_draw_path
-                visible: false
-                enabled: false
-            }
-            PropertyChanges {
-                target: bif_clear
-                visible: true
-                enabled: true
-            }
-            PropertyChanges {
-                target: bif_edit
-                visible: true
-                enabled: true
-            }
-            PropertyChanges {
-                target: bif_check_black
-                visible: false
-                enabled: false
-            }
-            PropertyChanges { target: boxImages; image_source_edit: "../../images/pencil-solid.svg" }
-            PropertyChanges { target: boxImages; image_source_clear: "../../images/eraser-solid.svg" }
+            StateChangeScript { script: console.log("estoy en bi_draw_robot") }
+            PropertyChanges { target: bif_check; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_check; visible: false; enabled: false }
+            PropertyChanges { target: bif_draw_path; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_draw_path; visible: false; enabled: false }
+            PropertyChanges { target: bif_clear; visible: true; enabled: true }
+            PropertyChanges { target: bif_edit; visible: true; enabled: true }
+            PropertyChanges { target: bif_text_clear; visible: true; enabled: true; text: qsTr("Borrar") }
+            PropertyChanges { target: bif_text_edit; visible: true; enabled: true; text: qsTr("Insertar Imagen")}
+            PropertyChanges { target: bif_check_black; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_check_black; visible: false; enabled: false }
+            PropertyChanges { target: boxImages; image_source_edit: "../../images/icon_app/pencil-solid.svg" }
+            PropertyChanges { target: boxImages; image_source_clear: "../../images/icon_app/eraser-solid.svg" }
         },
         State {
             name: "bi_nothing"
-            StateChangeScript {
-                script: console.log("estoy en bi_nothing")
-            }
-            PropertyChanges {
-                target: bif_check
-                visible: false
-                enabled: false
-            }
-            PropertyChanges {
-                target: bif_draw_path
-                visible: false
-                enabled: false
-            }
-            PropertyChanges {
-                target: bif_clear
-                visible: false
-                enabled: false
-            }
-            PropertyChanges {
-                target: bif_edit
-                visible: false
-                enabled: false
-            }
-            PropertyChanges {
-                target: bif_check_black
-                visible: false
-                enabled: false
-            }
+            StateChangeScript { script: console.log("estoy en bi_nothing") }
+            PropertyChanges { target: bif_check; visible: false; enabled: false }
+            PropertyChanges { target: bif_draw_path; visible: false; enabled: false }
+            PropertyChanges { target: bif_clear; visible: false; enabled: false }
+            PropertyChanges { target: bif_edit; visible: false; enabled: false }
+            PropertyChanges { target: bif_check_black; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_check; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_draw_path; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_clear; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_edit; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_check_black; visible: false; enabled: false }
         },
         State {
             name: "bi_select_action"
-            StateChangeScript {
-                script: console.log("estoy en bi_select_action")
-            }
-            PropertyChanges {
-                target: bif_check
-                visible: true
-                enabled: true
-                width: 120
-                height: 120
-                anchors.verticalCenterOffset: -50
-                anchors.horizontalCenterOffset: -90
-            }
-            PropertyChanges {
-                target: bif_draw_path
-                visible: true
-                enabled: true
-                width: 120
-                height: 120
-                anchors.verticalCenterOffset: -50
-                anchors.horizontalCenterOffset: 40
-            }
-            PropertyChanges {
-                target: bif_clear
-                visible: false
-                enabled: false
-            }
-            PropertyChanges {
-                target: bif_edit
-                visible: false
-                enabled: false
-            }
-            PropertyChanges {
-                target: bif_check_black
-                visible: false
-                enabled: false
-            }
-            PropertyChanges { target: boxImages; image_source_check: "../../images/map-pin-solid.svg" }
-            PropertyChanges { target: boxImages; image_source_draw_path: "../../images/wheel.svg" }
+            StateChangeScript { script: console.log("estoy en bi_select_action") }
+            PropertyChanges { target: bif_clear; visible: true; enabled: true; width: 120; height: 120 }
+            PropertyChanges { target: bif_draw_path; visible: true; enabled: true; width: 120; height: 120 }
+            PropertyChanges { target: bif_text_clear; visible: true; enabled: true; text: qsTr("Posición Final") }
+            PropertyChanges { target: bif_text_draw_path; visible: true; enabled: true; text: qsTr("Dibujar\n Trayectoria") }
+            PropertyChanges { target: bif_check; visible: false; enabled: false }
+            PropertyChanges { target: bif_edit; visible: false; enabled: false }
+            PropertyChanges { target: bif_check_black; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_check; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_edit; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_check_black; visible: false; enabled: false }
+            PropertyChanges { target: boxImages; image_source_clear: "../../images/action/goal.png" }
+            PropertyChanges { target: boxImages; image_source_draw_path: "../../images/action/draw_pencil.png" }
         },
         State {
             name: "bi_draw_path"
-            StateChangeScript {
-                script: console.log("estoy en bi_draw_path")
-            }
-            PropertyChanges {
-                target: bif_check
-                visible: true
-                enabled: true
-            }
-            PropertyChanges {
-                target: bif_check_black
-                visible: true
-                enabled: true
-                anchors.verticalCenterOffset: 50
-                anchors.horizontalCenterOffset: -100
-            }
-            PropertyChanges {
-                target: bif_draw_path
-                visible: false
-                enabled: false
-            }
-            PropertyChanges {
-                target: bif_clear
-                visible: true
-                enabled: true
-            }
-            PropertyChanges {
-                target: bif_edit
-                visible: true
-                enabled: true
-            }
-            PropertyChanges { target: boxImages; image_source_check: "../../images/check-solid.svg" }
-            PropertyChanges { target: boxImages; image_source_check_black: "../../images/file-arrow-down-solid.svg" }
-            PropertyChanges { target: boxImages; image_source_clear: "../../images/eraser-solid.svg" }
-            PropertyChanges { target: boxImages; image_source_edit: "../../images/pencil-solid.svg" }
+            StateChangeScript { script: console.log("estoy en bi_draw_path") }
+            PropertyChanges { target: bif_check; visible: true; enabled: true; width: 90; height: 90 }
+            PropertyChanges { target: bif_check_black; visible: true; enabled: true;}
+            PropertyChanges { target: bif_text_check_black; visible: true; enabled: true; text: qsTr("Verificar") }
+            PropertyChanges { target: bif_text_check; visible: true; enabled: true; text: qsTr("Trayectoria Final") }
+            PropertyChanges { target: bif_draw_path; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_draw_path; visible: false; enabled: false }
+            PropertyChanges { target: bif_clear; visible: true; enabled: true }
+            PropertyChanges { target: bif_edit; visible: true; enabled: true }
+            PropertyChanges { target: bif_text_clear; visible: true; enabled: true; text: qsTr("Borrar") }
+            PropertyChanges { target: bif_text_edit; visible: true; enabled: true; text: qsTr("Dibujar") }
+            PropertyChanges { target: boxImages; image_source_check: "../../images/icon_app/check-solid.svg" }
+            PropertyChanges { target: boxImages; image_source_check_black: "../../images/icon_app/file-arrow-down-solid.svg" }
+            PropertyChanges { target: boxImages; image_source_clear: "../../images/icon_app/eraser-solid.svg" }
+            PropertyChanges { target: boxImages; image_source_edit: "../../images/icon_app/pencil-solid.svg" }
         }
     ]
 

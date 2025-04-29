@@ -2,14 +2,15 @@
 #include "include/ToJson.h"
 #include <qjsonarray.h>
 
-MapInfo::MapInfo(QObject *parent) {
+MapInfo::MapInfo(QObject *parent)
+{
     periodicTimerMapInfo = new QTimer(this);
     clearInfoImage();
     connect(periodicTimerMapInfo, &QTimer::timeout, this, [this]()
             {
                 static int i = 0;
                 if (m_checkInitInitialPose && i == 20) {
-                    // cliente->sendMessage(ToJson::sendRequestRobotPosition(mapName()));
+                    cliente->sendMessage(ToJson::sendRequestRobotPosition(mapName()));
                     i = 0;
                 }
                 else
@@ -210,6 +211,32 @@ void MapInfo::clearInfoImage()
     }
 }
 
+void MapInfo::clearNextPath()
+{
+    setFinalPathOrientation(0.0f);
+
+    m_pixels.clear();
+    emit pixelsChanged();
+
+    m_finalPathPosition = Pixel(0, 0);
+    emit finalPathPositionChanged();
+
+    m_trajectoryGoalPose.clear();
+    emit trajectoryGoalPoseChanged();
+
+    repeated_delegate_list_view = 0;
+
+    if (periodicTimerMapInfo->isActive())
+    {
+        periodicTimerMapInfo->stop();
+    }
+    qDebug() << "Final Path Orientation:" << m_finalPathOrientation;
+    qDebug() << "Pixels count:" << m_pixels.count();
+    qDebug() << "Final Path Position:" << m_finalPathPosition.x << m_finalPathPosition.y;
+    qDebug() << "Trajectory Goal Pose count:" << m_trajectoryGoalPose.count();
+    qDebug() << "Repeated Delegate List View:" << repeated_delegate_list_view;
+}
+
 bool MapInfo::checkPixelBlack(const int &x, const int &y)
 {
     QString base64Data = m_imgSource;
@@ -260,8 +287,9 @@ QVariantList MapInfo::getPixels()
 {
     if (m_pixels.empty())
         return QVariantList();
-
-    QList<Pixel> pixelList = filtrarPuntosCercanos(suavizarTrayectoria(filtrarPuntosCercanos(m_pixels, 6), 3), 4);
+    m_pixels.prepend(m_originalPosition);
+    QList<Pixel> pixelList = filtrarPuntosCercanos(rdp(m_pixels, 1), 5);
+    // QList<Pixel> pixelList = filtrarPuntosCercanos(suavizarTrayectoria(filtrarPuntosCercanos(m_pixels, 6), 3), 3);
     m_pixels = pixelList;
     QVariantList points;
 
@@ -278,21 +306,24 @@ QVariantList MapInfo::getPixels()
     return points;
 }
 
-
-QList<Pixel> MapInfo::filtrarPuntosCercanos(const QList<Pixel>& puntos, int distancia) {
-    if (puntos.empty()) return {};
+QList<Pixel> MapInfo::filtrarPuntosCercanos(const QList<Pixel> &puntos, int distancia)
+{
+    if (puntos.empty())
+        return {};
 
     QList<Pixel> puntosOrdenados = puntos;
     QList<Pixel> filtrados;
-    filtrados.append(m_originalPosition);
+    // filtrados.append(m_originalPosition);
     filtrados.push_back(puntosOrdenados[0]);
 
-    for (size_t i = 1; i < puntosOrdenados.size(); ++i) {
-        const Pixel& ultimo = filtrados.back();
-        const Pixel& actual = puntosOrdenados[i];
+    for (size_t i = 1; i < puntosOrdenados.size(); ++i)
+    {
+        const Pixel &ultimo = filtrados.back();
+        const Pixel &actual = puntosOrdenados[i];
 
         // Si la diferencia en x e y es mayor a la distancia, se agrega el punto
-        if (std::abs(actual.x - ultimo.x) >= distancia || std::abs(actual.y - ultimo.y) >= distancia) {
+        if (std::abs(actual.x - ultimo.x) >= distancia || std::abs(actual.y - ultimo.y) >= distancia)
+        {
             filtrados.push_back(actual);
         }
     }
@@ -301,26 +332,83 @@ QList<Pixel> MapInfo::filtrarPuntosCercanos(const QList<Pixel>& puntos, int dist
     return filtrados;
 }
 
-double MapInfo::distancia(const Pixel& p1, const Pixel& p2) {
+double MapInfo::puntoLineaDist(const Pixel &p, const Pixel &a, const Pixel &b)
+{
+    double ux = b.x - a.x, uy = b.y - a.y;
+    double vx = p.x - a.x, vy = p.y - a.y;
+    double area = std::abs(ux * vy - uy * vx);
+    double len = std::hypot(ux, uy);
+    return area / len;
+}
+
+// Algoritmo RDP con QList<Pixel>
+QList<Pixel> MapInfo::rdp(const QList<Pixel> &pts, double eps)
+{
+    if (pts.size() < 3)
+        return pts;
+
+    int idx = -1;
+    double dmax = 0.0;
+
+    for (int i = 1; i < pts.size() - 1; ++i)
+    {
+        double d = puntoLineaDist(pts[i], pts.first(), pts.last());
+        if (d > dmax)
+        {
+            idx = i;
+            dmax = d;
+        }
+    }
+
+    if (dmax < eps || idx == -1)
+    {
+        return {pts.first(), pts.last()};
+    }
+
+    // Dividir en dos sublistas
+    QList<Pixel> leftInput, rightInput;
+    for (int i = 0; i <= idx; ++i)
+        leftInput.append(pts[i]);
+    for (int i = idx; i < pts.size(); ++i)
+        rightInput.append(pts[i]);
+
+    // Recursión
+    QList<Pixel> left = rdp(leftInput, eps);
+    QList<Pixel> right = rdp(rightInput, eps);
+
+    // Fusionar quitando duplicado
+    left.removeLast(); // evita duplicar el punto en común
+    left.append(right);
+
+    return left;
+}
+
+double MapInfo::distancia(const Pixel &p1, const Pixel &p2)
+{
     return std::sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }
 
 // Función para crear un punto intermedio a una distancia específica
-Pixel MapInfo::puntoIntermedio(const Pixel& p1, const Pixel& p2, double distanciaObjetivo) {
+Pixel MapInfo::puntoIntermedio(const Pixel &p1, const Pixel &p2, double distanciaObjetivo)
+{
     double distTotal = distancia(p1, p2);
-    if (distTotal < 1e-6) return p1; // Evitar divisiones por cero
+    if (distTotal < 1e-6)
+        return p1; // Evitar divisiones por cero
     double t = distanciaObjetivo / distTotal;
     return {static_cast<int>(p1.x + t * (p2.x - p1.x)), static_cast<int>(p1.y + t * (p2.y - p1.y))};
 }
 
 // Función para suavizar giros de 90° eliminando la esquina y agregando puntos intermedios
-QList<Pixel> MapInfo::suavizarTrayectoria(const QList<Pixel>& puntos, double distanciaSuavizado) {
-    if (puntos.size() < 3) return puntos; // No hay giros que suavizar con menos de 3 puntos
+QList<Pixel> MapInfo::suavizarTrayectoria(const QList<Pixel> &puntos, double distanciaSuavizado)
+{
+    if (puntos.size() < 3)
+        return puntos; // No hay giros que suavizar con menos de 3 puntos
 
     QList<Pixel> resultado;
     resultado.push_back(puntos[0]); // Primer punto siempre se mantiene
 
-    for (size_t i = 1; i < puntos.size() - 1; ++i) {
+    for (size_t i = 1; i < puntos.size() - 1; ++i)
+    {
         Pixel A = puntos[i - 1];
         Pixel B = puntos[i];
         Pixel C = puntos[i + 1];
@@ -338,16 +426,27 @@ QList<Pixel> MapInfo::suavizarTrayectoria(const QList<Pixel>& puntos, double dis
     return resultado;
 }
 
-bool MapInfo::isBlack(const QImage &image, Pixel point)
+bool MapInfo::isBlack(const QImage &image, const Pixel &point, int radius)
 {
-    if (point.x >= 0 && point.x < m_imageSize.x && point.y >= 0 && point.y < m_imageSize.y)
+    for (int dx = -radius; dx <= radius; ++dx)
     {
-        QColor pixelColor = image.pixelColor(point.x, point.y);
+        for (int dy = -radius; dy <= radius; ++dy)
+        {
+            int x = point.x + dx;
+            int y = point.y + dy;
 
-        int intensity = pixelColor.red(); // Black in a binary image is 0
-        return intensity == 0;
+            // Validar que no esté fuera de los bordes de la imagen
+            if (x >= 0 && x < m_imageSize.x && y >= 0 && y < m_imageSize.y)
+            {
+                QColor color = image.pixelColor(x, y);
+                int intensity = color.red();
+
+                if (intensity == 0) // negro
+                    return true;
+            }
+        }
     }
-    return false;
+    return false; // Ningún píxel negro en el área
 }
 
 std::vector<Pixel> MapInfo::getLinePixels(Pixel p1, Pixel p2)
@@ -382,7 +481,7 @@ bool MapInfo::linePassesThroughBlack(const QImage &image, Pixel p1, Pixel p2)
     std::vector<Pixel> pixels = getLinePixels(p1, p2);
     for (const Pixel &p : pixels)
     {
-        if (isBlack(image, p))
+        if (isBlack(image, p, 3))
         {
             return true;
         }
@@ -394,6 +493,11 @@ bool MapInfo::checkPathBlack()
 {
     QList<Pixel> trajectory = m_pixels;
 
+    if (m_pixels.empty())
+    {
+        qWarning() << "No hay puntos en la trayectoria.";
+        return false;
+    }
     QString base64Data = m_imgSource;
     if (base64Data.startsWith("data:image/png;base64,"))
     {
@@ -412,7 +516,7 @@ bool MapInfo::checkPathBlack()
 
     for (const Pixel &p : trajectory)
     {
-        if (isBlack(image, p))
+        if (isBlack(image, p, 3))
         {
             foundBlack = true;
         }
@@ -445,8 +549,14 @@ void MapInfo::sendInitialPose()
     setCheckInitInitialPose(true);
 }
 
+void MapInfo::sendAllInformationPose()
+{
+    cliente->sendMessage(ToJson::sendAllInformationPose(m_mapName, m_originalPosition.x, m_originalPosition.y, m_orientation, m_finalPathPosition.x, m_finalPathPosition.y, m_finalPathOrientation, m_imageSize.y));
+}
+
 void MapInfo::sendGoalPose()
 {
+    // send periodically the position of the robot (tf_service)
     if (!periodicTimerMapInfo->isActive())
     {
         periodicTimerMapInfo->start(200);
@@ -456,6 +566,7 @@ void MapInfo::sendGoalPose()
 
 void MapInfo::sendWaypointFollower()
 {
+    // send periodically the position of the robot (tf_service)
     if (!periodicTimerMapInfo->isActive())
     {
         periodicTimerMapInfo->start(200);
@@ -465,7 +576,7 @@ void MapInfo::sendWaypointFollower()
 
 void MapInfo::sendStopProcesses()
 {
-    if(checkInitInitialPose() == true)
+    if (checkInitInitialPose() == true)
         setCheckInitInitialPose(false);
 
     cliente->sendMessage(ToJson::stopProcesses());
@@ -522,8 +633,10 @@ void MapInfo::clearTrajectoryGoalPose()
     m_trajectoryGoalPose.clear();
 }
 
-void MapInfo::parseJsonToQList(const QJsonObject &jsonObj) {
-    if (!jsonObj.contains("points") || !jsonObj["points"].isArray()) {
+void MapInfo::parseJsonToQList(const QJsonObject &jsonObj)
+{
+    if (!jsonObj.contains("points") || !jsonObj["points"].isArray())
+    {
         qWarning() << "No se encontró el array 'points' en el JSON";
         return;
     }
@@ -532,10 +645,13 @@ void MapInfo::parseJsonToQList(const QJsonObject &jsonObj) {
     QList<Pixel> pointsList;
 
     // Iterar sobre el array y convertir cada objeto en un QPointF
-    for (const QJsonValue &value : jsonArray) {
-        if (value.isObject()) {
+    for (const QJsonValue &value : jsonArray)
+    {
+        if (value.isObject())
+        {
             QJsonObject pointObj = value.toObject();
-            if (pointObj.contains("x") && pointObj.contains("y")) {
+            if (pointObj.contains("x") && pointObj.contains("y"))
+            {
                 double x = pointObj["x"].toDouble();
                 double y = m_imageSize.y - pointObj["y"].toDouble();
 
@@ -557,9 +673,12 @@ void MapInfo::parseJsonToQList(const QJsonObject &jsonObj) {
 
     // Imprimir todos los puntos convertidos
     qDebug() << "Lista de puntos convertidos:";
-    for (const Pixel &p : pointsList) {
+    QList<Pixel> trayectory_temp = filtrarPuntosCercanos(rdp(pointsList, 3), 30);
+    qDebug() << "^^^^^^^^^^^^ NUM vector despues filtro:" << trayectory_temp.size() << "  NUM vector antes filtro:" << pointsList.size();
+    setTrajectoryGoalPose(trayectory_temp);
+    for (const Pixel &p : trayectory_temp)
+    {
         qDebug().nospace() << "Pixel -> x: " << p.x << ", y: " << p.y;
     }
-
-    setTrajectoryGoalPose(pointsList);
+    // filtrarPuntosCercanos(rdp(pointsList, 1), 5);
 }

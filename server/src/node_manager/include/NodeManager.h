@@ -21,6 +21,7 @@ class NodeManager
 {
 public:
     NodeManager(rclcpp::Node::SharedPtr node_ptr);
+    void create_subscription(Target const &target);
     void create_publisher(Target const &target);
     void close_publisher(Target const &target);
 
@@ -29,6 +30,7 @@ public:
     void execute_position(float const &linear, float const &angular);
     void execute_command(std::string const &command);
     void refresh_map(std::string const &map_name = "temporal_map");
+    void create_global_plan(RealPositionMeters const &initialpose,RealPositionMeters const & goalpose, std::string const &pathMap);
 
     struct FinalPosition getPositionRobotPixel(std::string const &path_yaml);
 

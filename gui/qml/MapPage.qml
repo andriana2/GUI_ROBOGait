@@ -16,10 +16,14 @@ MapPageForm {
         errorRectangleTextError.text: "Error: Has puesto el robot en una posicion donde esta prohibido."
     }
 
+    mapPageForm_buttonStop.onClicked: {
+        mapInfo.sendStopProcesses();
+    }
 
     mapPageForm_buttonNext.onClicked: {
         if(state === "mp_initialPosition")
         {
+            // mapInfo.checkInitInitialPose = false;
             if(mapInfo.positionScreen.x === 0 || mapInfo.positionScreen.y === 0)
             {
                 errorPopup.errorRectangleTextError.text = "Error: Has intentado seguir adelante sin poner el robot en el mapa"
@@ -30,6 +34,7 @@ MapPageForm {
         }
         if(state === "mp_goalPosePosition")
         {
+            // mapInfo.checkInitInitialPose = false;
             if(mapInfo.finalPathPosition.x === 0 || mapInfo.finalPathPosition.y === 0)
             {
                 errorPopup.errorRectangleTextError.text = "Error: Has intentado seguir adelante sin poner el robot en el mapa para indicar la poscion final"
@@ -47,7 +52,7 @@ MapPageForm {
                 return;
             }
             // if(!mapInfo.checkInitInitialPose)
-                mapInfo.sendInitialPose();
+            mapInfo.sendInitialPose();
         }
         if(state === "mp_goalPoseOrientation")
         {
@@ -57,20 +62,52 @@ MapPageForm {
                 errorPopup.open()
                 return;
             }
+            // mapInfo.checkInitInitialPose = true;
             mapInfo.sendGoalPose()
+        }
+        if(state === "mp_PathGoalPose")
+        {
+            // if(mapInfo.finalPathOrientation === 0.00)
+            // {
+            //     errorPopup.errorRectangleTextError.text = "Error: Has intentado seguir adelante sin poner la orientacion del robot en la poscion final"
+            //     errorPopup.open()
+            //     return;
+            // }
+            // mapInfo.checkInitInitialPose = true;
+            mapInfo.sendAllInformationPose()
         }
         if(state === "mp_drawPath")
         {
             if(mapInfo.pixels.length === 0)
             {
-                errorPopup.errorRectangleTextError.text = "Error: Has intentado seguir adelante sin dibujar la trayectoria"
+                errorPopup.errorRectangleTextError.text = qsTr("Error: Has intentado seguir adelante sin dibujar la trayectoria")
                 errorPopup.open()
                 return;
             }
+
+            mp_map.checkPath = true
+            mp_map.canvas.updatePath()
+            if(mapInfo.checkPathBlack())
+            {
+                errorPopup.errorRectangleTextError.text = qsTr("Error: Estas cerca o encima de una zona negra intenta dibujar de nuevo la trayectoria")
+                errorPopup.open()
+                return;
+            }
+            // mapInfo.checkInitInitialPose = true;
             mapInfo.sendWaypointFollower()
         }
 
-        if(state === "mp_initialOrientation" || state === "mp_goalPosePosition" || state === "mp_initialPosition" || state === "mp_goalPoseOrientation" || state === "mp_outGoalPose")
+        if(state === "mp_drawPathMove" || state === "mp_GoalPoseMove")
+        {
+            console.log("_______________________ HE pasado por mp_drawPathMove o mp_GoalPoseMove")
+            mapInfo.clearNextPath()
+            mp_map.canvas.clear_internal()
+            mp_map.canvas.clear()
+            mp_map.checkPath = true
+            mp_map.canvas.updatePath()
+        }
+
+        if(state === "mp_initialOrientation" || state === "mp_goalPosePosition" || state === "mp_initialPosition" || state === "mp_goalPoseOrientation" || state === "mp_GoalPoseMove" || state === "mp_PathGoalPose" || state === "mp_drawPath" || state === "mp_drawPathMove")
         {
             mapPage.state = mapPage.mapPageForm_nextState
         }
@@ -81,8 +118,19 @@ MapPageForm {
     }
 
     mapPageForm_boxImages.onBif_check_pressed: {
-        if (state === "selectAction")
-            mapPage.state = "mp_goalPosePosition"
+        if (state === "mp_drawPath")
+        {
+            console.log("Le he dado a check pressed")
+            mp_map.checkPath = true
+            mp_map.canvas.updatePath()
+        }
+    }
+    
+    mapPageForm_boxImages.onBif_draw_path_pressed: {
+        if (state === "selectAction"){
+            mapPage.state = "mp_drawPath"
+            mapInfo.sendInitialPose();}
+
         else if (state === "mp_drawPath")
         {
             console.log("Le he dado a check pressed")
@@ -91,19 +139,12 @@ MapPageForm {
         }
     }
 
-    mapPageForm_boxImages.onBif_draw_path_pressed: {
-        if (state === "selectAction")
-            mapPage.state = "mp_drawPath"
-        // if(!mapInfo.checkInitInitialPose)
-            mapInfo.sendInitialPose();
-
-    }
-
     mapPageForm_boxImages.onBif_check_black_pressed: {
         if (state === "mp_drawPath")
         {
             if(mapInfo.checkPathBlack())
             {
+                errorPopup.errorRectangleTextError.text = qsTr("Error: Has intentado seguir adelante sin dibujar la trayectoria")
                 errorPopup.open()
             }
             else
@@ -132,6 +173,9 @@ MapPageForm {
             mp_map.canvas.enablePainting = true
             mp_map.checkPath = false
         }
+        else if (state === "selectAction")
+            mapPage.state = "mp_goalPosePosition"
+
     }
 
     mapPageForm_boxImages.onBif_edit_pressed: {
@@ -156,290 +200,119 @@ MapPageForm {
 
 
     states: [
-        State{
+        State {
             name: "mp_initialPosition"
-            StateChangeScript {
-                script: console.log("estoy en mp_initialPosition")
-            }
-            StateChangeScript {
-                script: mp_map.canvas.requestPaint()
-            }
-            PropertyChanges {
-                target: mapPage
-                mapPageForm_previousState: ""
-                mapPageForm_nextState: "mp_initialOrientation"
-            }
-            PropertyChanges {
-                target: mapPageForm_text
-                text: qsTr("Al hacer clic en el mapa, se coloca el robot sobre él")
-            }
-            PropertyChanges {
-                target: mapPageForm_orientationCircleForm
-                state: "nothing"
-            }
-            PropertyChanges {
-                target: mapPageForm_buttonNext
-                enabled: true
-                opacity: 1
-                text: qsTr("Siguiente")
-            }
-            PropertyChanges {
-                target: mapPageForm_buttonPrevious
-                enabled: false
-                opacity: 0
-            }
-            PropertyChanges {
-                target: mp_map
-                map_currentState: "map_initialPosition"
-            }
-            PropertyChanges {
-                target: mapPageForm_boxImages
-                state: "bi_draw_robot"
-            }
+            StateChangeScript { script: console.log("estoy en mp_initialPosition") }
+            StateChangeScript { script: mp_map.canvas.requestPaint() }
+            PropertyChanges { target: mapPage; mapPageForm_previousState: ""; mapPageForm_nextState: "mp_initialOrientation" }
+            PropertyChanges { target: mapPageForm_text; text: qsTr("Al hacer clic en el mapa, se coloca el robot sobre él") }
+            PropertyChanges { target: mapPageForm_orientationCircleForm; state: "nothing" }
+            PropertyChanges { target: mapPageForm_buttonNext; enabled: true; opacity: 1; text: qsTr("Siguiente") }
+            PropertyChanges { target: mapPageForm_buttonPrevious; enabled: false; opacity: 0 }
+            PropertyChanges { target: mp_map; map_currentState: "map_initialPosition" }
+            PropertyChanges { target: mapPageForm_boxImages; state: "bi_draw_robot" }
         },
         State {
             name: "mp_initialOrientation"
-            StateChangeScript {
-                script: console.log("estoy en mp_initialOrientation")
-            }
-            StateChangeScript {
-                script: mp_map.canvas.requestPaint()
-            }
-            PropertyChanges {
-                target: mapPage
-                mapPageForm_previousState: "mp_initialPosition"
-                mapPageForm_nextState: "selectAction"
-            }
-            PropertyChanges {
-                target: mapPageForm_text
-                text: qsTr("Al girar la rueda situada debajo, se indica la orientación del robot")
-            }
-            PropertyChanges {
-                target: mapPageForm_orientationCircleForm
-                state: "orientacion_inicial"
-            }
-            PropertyChanges {
-                target: mapPageForm_buttonNext
-                enabled: true
-                opacity: 1
-                text: qsTr("Siguiente")
-            }
-            PropertyChanges {
-                target: mapPageForm_buttonPrevious
-                enabled: true
-                opacity: 1
-                text: qsTr("Anterior")
-            }
-            PropertyChanges {
-                target: mp_map
-                map_currentState: "map_initialOrientation"
-            }
-            PropertyChanges {
-                target: mapPageForm_boxImages
-                state: "bi_nothing"
-            }
+            StateChangeScript { script: console.log("estoy en mp_initialOrientation") }
+            StateChangeScript { script: mp_map.canvas.requestPaint() }
+            PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_initialPosition"; mapPageForm_nextState: "selectAction" }
+            PropertyChanges { target: mapPageForm_text; text: qsTr("Al girar la rueda situada debajo, se indica la orientación del robot") }
+            PropertyChanges { target: mapPageForm_orientationCircleForm; state: "orientacion_inicial" }
+            PropertyChanges { target: mapPageForm_buttonNext; enabled: true; opacity: 1; text: qsTr("Siguiente") }
+            PropertyChanges { target: mapPageForm_buttonPrevious; enabled: true; opacity: 1; text: qsTr("Anterior") }
+            PropertyChanges { target: mp_map; map_currentState: "map_initialOrientation" }
+            PropertyChanges { target: mapPageForm_boxImages; state: "bi_nothing" }
         },
         State {
             name: "selectAction"
-            StateChangeScript {
-                script: console.log("estoy en selectAction")
-            }
-            StateChangeScript {
-                script: mp_map.canvas.requestPaint()
-            }
-            PropertyChanges {
-                target: mapPage
-                mapPageForm_previousState: "mp_initialOrientation"
-                mapPageForm_nextState: ""
-            }
-            PropertyChanges {
-                target: mapPageForm_text
-                text: qsTr("Seleccione la acción que quiere realizar a continuación:")
-            }
-            PropertyChanges {
-                target: mapPageForm_orientationCircleForm
-                state: "nothing"
-            }
-            PropertyChanges {
-                target: mapPageForm_buttonNext
-                enabled: false
-                opacity: 0
-            }
-            PropertyChanges {
-                target: mapPageForm_buttonPrevious
-                enabled: true
-                opacity: 1
-                text: qsTr("Anterior")
-            }
-            PropertyChanges {
-                target: mp_map
-                map_currentState: "map_selectAction"
-            }
-            PropertyChanges {
-                target: mapPageForm_boxImages
-                state: "bi_select_action"
-            }
+            StateChangeScript { script: console.log("estoy en selectAction") }
+            StateChangeScript { script: mp_map.canvas.requestPaint() }
+            PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_initialOrientation"; mapPageForm_nextState: "" }
+            PropertyChanges { target: mapPageForm_text; text: qsTr("Seleccione la acción que quiere realizar a continuación:") }
+            PropertyChanges { target: mapPageForm_orientationCircleForm; state: "nothing" }
+            PropertyChanges { target: mapPageForm_buttonNext; enabled: false; opacity: 0 }
+            PropertyChanges { target: mapPageForm_buttonPrevious; enabled: true; opacity: 1; text: qsTr("Anterior") }
+            PropertyChanges { target: mp_map; map_currentState: "map_selectAction" }
+            PropertyChanges { target: mapPageForm_boxImages; state: "bi_select_action" }
         },
         State {
             name: "mp_goalPosePosition"
-            StateChangeScript {
-                script: console.log("estoy en mp_goalPosePosition")
-            }
-            StateChangeScript {
-                script: mp_map.canvas.requestPaint()
-            }
-            StateChangeScript {
-                script: mp_map.canvas.clear_internal()
-            }
-            PropertyChanges {
-                target: mapPage
-                mapPageForm_previousState: "selectAction"
-                mapPageForm_nextState: "mp_goalPoseOrientation"
-            }
-            PropertyChanges {
-                target: mapPageForm_text
-                text: qsTr("Al hacer clic en el mapa, se coloca una pin para indicar la posición final")
-            }
-            PropertyChanges {
-                target: mapPageForm_orientationCircleForm
-                state: "nothing"
-            }
-            PropertyChanges {
-                target: mapPageForm_buttonNext
-                enabled: true
-                opacity: 1
-                text: qsTr("Siguiente")
-            }
-            PropertyChanges {
-                target: mapPageForm_buttonPrevious
-                enabled: true
-                opacity: 1
-                text: qsTr("Anterior")
-            }
-            PropertyChanges {
-                target: mp_map
-                map_currentState: "map_goalPosePosition"
-            }
-            PropertyChanges {
-                target: mapPageForm_boxImages
-                state: "bi_draw_robot"
-            }
+            StateChangeScript { script: console.log("estoy en mp_goalPosePosition") }
+            StateChangeScript { script: mp_map.canvas.requestPaint() }
+            StateChangeScript { script: mp_map.canvas.clear_internal() }
+            PropertyChanges { target: mapPage; mapPageForm_previousState: "selectAction"; mapPageForm_nextState: "mp_goalPoseOrientation" }
+            PropertyChanges { target: mapPageForm_text; text: qsTr("Al hacer clic en el mapa, se coloca una pin para indicar la posición final") }
+            PropertyChanges { target: mapPageForm_orientationCircleForm; state: "nothing" }
+            PropertyChanges { target: mapPageForm_buttonNext; enabled: true; opacity: 1; text: qsTr("Siguiente") }
+            PropertyChanges { target: mapPageForm_buttonPrevious; enabled: true; opacity: 1; text: qsTr("Anterior") }
+            PropertyChanges { target: mp_map; map_currentState: "map_goalPosePosition" }
+            PropertyChanges { target: mapPageForm_boxImages; state: "bi_draw_robot" }
         },
         State {
             name: "mp_goalPoseOrientation"
-            StateChangeScript {
-                script: mp_map.canvas.requestPaint()
-            }
-            PropertyChanges {
-                target: mapPage
-                mapPageForm_previousState: "mp_goalPosePosition"
-                mapPageForm_nextState: "mp_outGoalPose"
-            }
-            PropertyChanges {
-                target: mapPageForm_text
-                text: qsTr("Al girar la rueda situada debajo, se indica la orientación del robot al final")
-            }
-            PropertyChanges {
-                target: mapPageForm_orientationCircleForm
-                state: "orientacion_final"
-            }
-            PropertyChanges {
-                target: mapPageForm_buttonNext
-                enabled: true
-                opacity: 1
-            }
-            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Enviar")}
-            PropertyChanges {
-                target: mapPageForm_buttonPrevious
-                enabled: true
-                opacity: 1
-                text: qsTr("Anterior")
-            }
-            PropertyChanges {
-                target: mp_map
-                map_currentState: "map_goalPoseOrientation"
-            }
-            PropertyChanges {
-                target: mapPageForm_boxImages
-                state: "bi_nothing"
-            }
+            StateChangeScript { script: console.log("estoy en mp_goalPoseOrientation") }
+            StateChangeScript { script: mp_map.canvas.requestPaint() }
+            PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_goalPosePosition"; mapPageForm_nextState: "mp_PathGoalPose" }
+            PropertyChanges { target: mapPageForm_text; text: qsTr("Al girar la rueda situada debajo, se indica la orientación del robot al final") }
+            PropertyChanges { target: mapPageForm_orientationCircleForm; state: "orientacion_final" }
+            PropertyChanges { target: mapPageForm_buttonNext; enabled: true; opacity: 1 }
+            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Enviar") }
+            PropertyChanges { target: mapPageForm_buttonPrevious; enabled: true; opacity: 1; text: qsTr("Anterior") }
+            PropertyChanges { target: mp_map; map_currentState: "map_goalPoseOrientation" }
+            PropertyChanges { target: mapPageForm_boxImages; state: "bi_nothing" }
+        },
+        State {
+            name: "mp_PathGoalPose"
+            StateChangeScript { script: console.log("estoy en mp_PathGoalPose") }
+            StateChangeScript { script: mp_map.canvas.requestPaint() }
+            PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_goalPoseOrientation"; mapPageForm_nextState: "mp_GoalPoseMove" }
+            PropertyChanges { target: mapPageForm_text; text: qsTr("Trayectoria del robot") }
+            PropertyChanges { target: mapPageForm_orientationCircleForm; state: "nothing" }
+            PropertyChanges { target: mapPageForm_buttonNext; enabled: true; opacity: 1 }
+            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Start") }
+            PropertyChanges { target: mapPageForm_buttonPrevious; enabled: true; opacity: 1; text: qsTr("Anterior") }
+            PropertyChanges { target: mp_map; map_currentState: "map_PathGoalPose" }
+            PropertyChanges { target: mapPageForm_boxImages; state: "bi_nothing" }
+        },
+        State {
+            name: "mp_GoalPoseMove"
+            StateChangeScript { script: console.log("estoy en mp_GoalPoseMove") }
+            StateChangeScript { script: mp_map.canvas.requestPaint() }
+            PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_PathGoalPose"; mapPageForm_nextState: "selectAction" }
+            PropertyChanges { target: mapPageForm_text; text: qsTr("Moviendo") }
+            PropertyChanges { target: mapPageForm_orientationCircleForm; state: "nothing" }
+            PropertyChanges { target: mapPageForm_buttonNext; enabled: true; opacity: 1 }
+            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Nuevo Camino") }
+            PropertyChanges { target: mapPageForm_buttonPrevious; enabled: false; opacity: 0 }
+            PropertyChanges { target: mp_map; map_currentState: "map_GoalPoseMove" }
+            PropertyChanges { target: mapPageForm_boxImages; state: "bi_nothing" }
         },
         State {
             name: "mp_drawPath"
-            StateChangeScript {
-                script: mp_map.canvas.requestPaint()
-            }
-            PropertyChanges {
-                target: mapPage
-                mapPageForm_previousState: "selectAction"
-                mapPageForm_nextState: ""
-            }
-            PropertyChanges {
-                target: mapPageForm_text
-                text: qsTr("Dibuja la trayectoria que quieras realizar")
-            }
-            PropertyChanges {
-                target: mapPageForm_orientationCircleForm
-                state: "nothing"
-            }
-            PropertyChanges {
-                target: mapPageForm_buttonNext
-                enabled: true
-                opacity: 1
-            }
-            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Enviar")}
-            PropertyChanges {
-                target: mapPageForm_buttonPrevious
-                enabled: true
-                opacity: 1
-                text: qsTr("Anterior")
-            }
-            PropertyChanges {
-                target: mp_map
-                map_currentState: "map_drawPath"
-            }
-            PropertyChanges {
-                target: mapPageForm_boxImages
-                state: "bi_draw_path"
-            }
+            StateChangeScript { script: console.log("estoy en mp_drawPath") }
+            StateChangeScript { script: mp_map.canvas.requestPaint() }
+            PropertyChanges { target: mapPage; mapPageForm_previousState: "selectAction"; mapPageForm_nextState: "mp_drawPathMove" }
+            PropertyChanges { target: mapPageForm_text; text: qsTr("Dibuja la trayectoria que quieras realizar") }
+            PropertyChanges { target: mapPageForm_orientationCircleForm; state: "nothing" }
+            PropertyChanges { target: mapPageForm_buttonNext; enabled: true; opacity: 1 }
+            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Start") }
+            PropertyChanges { target: mapPageForm_buttonPrevious; enabled: true; opacity: 1; text: qsTr("Anterior") }
+            PropertyChanges { target: mp_map; map_currentState: "map_drawPath" }
+            PropertyChanges { target: mapPageForm_boxImages; state: "bi_draw_path" }
         },
         State {
-            name: "mp_outGoalPose"
-            StateChangeScript {
-                script: mp_map.canvas.requestPaint()
-            }
-            PropertyChanges {
-                target: mapPage
-                mapPageForm_previousState: "mp_goalPosePosition"
-                mapPageForm_nextState: "selectAction"
-            }
-            PropertyChanges {
-                target: mapPageForm_text
-                text: qsTr("Moviendo")
-            }
-            PropertyChanges {
-                target: mapPageForm_orientationCircleForm
-                state: "nothing"
-            }
-            PropertyChanges {
-                target: mapPageForm_buttonNext
-                enabled: true
-                opacity: 1
-            }
-            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Nuevo Camino")}
-            PropertyChanges {
-                target: mapPageForm_buttonPrevious
-                enabled: false
-                opacity: 0
-            }
-            PropertyChanges {
-                target: mp_map
-                map_currentState: "map_outGoalPose"
-            }
-            PropertyChanges {
-                target: mapPageForm_boxImages
-                state: "bi_nothing"
-            }
+            name: "mp_drawPathMove"
+            StateChangeScript { script: console.log("estoy en mp_drawPathMove") }
+            StateChangeScript { script: mp_map.canvas.requestPaint() }
+            PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_drawPath"; mapPageForm_nextState: "selectAction" }
+            PropertyChanges { target: mapPageForm_text; text: qsTr("Moviendo") }
+            PropertyChanges { target: mapPageForm_orientationCircleForm; state: "nothing" }
+            PropertyChanges { target: mapPageForm_buttonNext; enabled: true; opacity: 1 }
+            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Nuevo Camino") }
+            PropertyChanges { target: mapPageForm_buttonPrevious; enabled: false; opacity: 0}
+            PropertyChanges { target: mp_map; map_currentState: "map_drawPathMove" }
+            PropertyChanges { target: mapPageForm_boxImages; state: "bi_nothing" }
         }
     ]
 }

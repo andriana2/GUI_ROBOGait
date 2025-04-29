@@ -8,6 +8,10 @@
 #include <sys/types.h>
 #include <QNetworkInterface>
 #include <QRegularExpression>
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include <QRegularExpression>
+#include <QDebug>
 
 QVector<QString> extractJSONObjects(const QString &input)
 {
@@ -16,24 +20,37 @@ QVector<QString> extractJSONObjects(const QString &input)
 
     // Combina el fragmento incompleto con la nueva entrada
     QString combinedInput = incompleteFragment + input;
+    qDebug() << "Combined input:" << combinedInput;
 
-    QRegularExpression jsonRegex(R"(\{(?:[^{}]|(?R))*\})");
+    QRegularExpression jsonRegex(R"(\{(?:[^{}]|\[(?:[^\[\]]|\[.*?\])*\])*\})");
     QRegularExpressionMatchIterator matchIterator = jsonRegex.globalMatch(combinedInput);
 
-    int lastValidEnd = 0; // Para rastrear hasta dónde se procesó exitosamente
+    int lastValidEnd = 0;
 
     while (matchIterator.hasNext())
     {
         QRegularExpressionMatch match = matchIterator.next();
-        jsonObjects.append(match.captured(0));
-        lastValidEnd = match.capturedEnd(0); // Registra el final del último JSON válido
+        QString jsonCandidate = match.captured(0);
+
+        // Verificamos si contiene las claves necesarias
+        if (jsonCandidate.contains(R"("opt")") && jsonCandidate.contains(R"("target")"))
+        {
+            jsonObjects.append(jsonCandidate);
+            lastValidEnd = match.capturedEnd(0); // Solo se actualiza si fue válido
+        }
+        else
+        {
+            // Si no contiene las claves necesarias, lo dejamos en el fragmento
+            break;
+        }
     }
 
-    // Guarda cualquier fragmento después del último JSON válido
+    // Guardamos el resto del input como posible fragmento incompleto
     incompleteFragment = combinedInput.mid(lastValidEnd);
 
     return jsonObjects;
 }
+
 
 QByteArray fromHex(const QString &hex)
 {
@@ -88,6 +105,7 @@ Header stringToHeader(const QString &str)
     }
     else
     {
+        qDebug()<< "Error in stringToHeader with string: " << str;
         Q_ASSERT(false);
         return MSG;
     }
@@ -158,6 +176,8 @@ Target stringToTarget(const QString &str)
         return Stop_Process;
     else if (str == "Goal_Pose_Path")
         return Goal_Pose_Path;
+    else if (str == "All_Information_Pose")
+        return All_Information_Pose;
     else
     {
         Q_ASSERT(false);
@@ -211,6 +231,8 @@ QString targetToString(Target target)
         return "Stop_Process";
     case Goal_Pose_Path:
         return "Goal_Pose_Path";
+    case All_Information_Pose:
+        return "All_Information_Pose";
     default:
         Q_ASSERT(false);
         return "Joystick_Position";

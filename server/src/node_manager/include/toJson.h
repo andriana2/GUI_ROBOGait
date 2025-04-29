@@ -22,6 +22,8 @@ namespace toJson
     json sendInfoMap(std::string const &map_name, int const &width, int const &height, float const &resolution);
 
     json sendGoalPosePath(std::vector<struct FinalPosition> const &path);
+    
+    json sendStopProcess();
 
 }
 #endif // TOJSON_H

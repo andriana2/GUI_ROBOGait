@@ -79,7 +79,10 @@ std::string targetToString(Target target)
         return "Stop_Process";
     case Goal_Pose_Path:
         return "Goal_Pose_Path";
+    case All_Information_Pose:
+        return "All_Information_Pose";
     default:
+        std::cerr << "-Not found target num: "<< target;
         return "UNKNOWN";
     }
 }
@@ -128,6 +131,8 @@ Target stringToTarget(const std::string &str)
         return Stop_Process;
     if (str == "Goal_Pose_Path")
         return Goal_Pose_Path;
+    if (str == "All_Information_Pose")
+        return All_Information_Pose;
 
     throw std::invalid_argument("Invalid Target string: " + str);
 }

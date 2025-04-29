@@ -26,8 +26,8 @@ void HandleMsg::handleMsgJson(const json &json_msg)
         StateMenu(json_msg);
     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Waypoint_Follower))
         WaypointFollower(json_msg);
-    else if (json_msg.contains("target") && json_msg["target"] == targetToString(Stop_Process))
-        nodeManager.reset();
+    // else if (json_msg.contains("target") && json_msg["target"] == targetToString(Stop_Process))
+    //     nodeManager.reset();
     else
         std::cerr << "Error: Target no encontrado." << std::endl;
 }
@@ -62,11 +62,14 @@ void HandleMsg::StateRemoteControlled(const json &json_msg)
 void HandleMsg::DeleteMap(const json &json_msg)
 {
     YAML::Node config;
-    try {
+    try
+    {
         std::string path_ = PATH;
         config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
-    } catch (const std::exception& e) {
-        std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error loading YAML file: " << e.what() << std::endl;
     }
     std::string path = config["PATH2MAP"].as<std::string>();
     path += "/" + replaceSpaces(json_msg["map_name"]);
@@ -104,11 +107,14 @@ void HandleMsg::ChangeMapName(const json &json_msg)
 void HandleMsg::SaveMap(const json &json_msg)
 {
     YAML::Node config;
-    try {
+    try
+    {
         std::string path_ = PATH;
         config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
-    } catch (const std::exception& e) {
-        std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error loading YAML file: " << e.what() << std::endl;
     }
     std::string path = config["PATH2MAP"].as<std::string>();
     path += "/" + replaceSpaces(json_msg["map_name"]);
@@ -128,11 +134,14 @@ void HandleMsg::InitialPose(const json &json_msg)
     nodeManager.create_publisher(Initial_Pose);
 
     YAML::Node config;
-    try {
+    try
+    {
         std::string path_ = PATH;
         config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
-    } catch (const std::exception& e) {
-        std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error loading YAML file: " << e.what() << std::endl;
     }
     std::string path_yaml = config["PATH2MAP"].as<std::string>();
 
@@ -146,20 +155,22 @@ void HandleMsg::GoalPose(const json &json_msg)
     std::string map_name_without_spaces = replaceSpaces(json_msg["map_name"].get<std::string>());
 
     nodeManager.create_publisher(Goal_Pose);
-    
+
     YAML::Node config;
-    try {
+    try
+    {
         std::string path_ = PATH;
         config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
-    } catch (const std::exception& e) {
-        std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error loading YAML file: " << e.what() << std::endl;
     }
     std::string path_yaml = config["PATH2MAP"].as<std::string>();
 
     path_yaml += "/" + map_name_without_spaces + ".yaml";
     RealPositionMeters goalpose = getRealPosition(path_yaml, json_msg["x_goalpose"], json_msg["y_goalpose"]);
     nodeManager.publish_goal_pose(goalpose.x, goalpose.y, json_msg["theta_goalpose"]);
-    
 }
 
 void HandleMsg::WaypointFollower(const json &json_msg)
@@ -169,11 +180,14 @@ void HandleMsg::WaypointFollower(const json &json_msg)
     nodeManager.create_publisher(Waypoint_Follower);
 
     YAML::Node config;
-    try {
+    try
+    {
         std::string path_ = PATH;
         config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
-    } catch (const std::exception& e) {
-        std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error loading YAML file: " << e.what() << std::endl;
     }
     std::string path_yaml = config["PATH2MAP"].as<std::string>();
 

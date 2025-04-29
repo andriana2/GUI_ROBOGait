@@ -71,7 +71,7 @@ void ProcessController::startProcess(const std::string &name, const std::string 
             std::string path_ = PATH;
         config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
         } catch (const std::exception& e) {
-            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            std::cerr << "Error loading YAML file: " << e.what() << std::endl;
         }
         std::string name_map_saver_cli = config["NAME_MAP_SAVER_CLI"].as<std::string>();
 
@@ -213,7 +213,7 @@ void ProcessController::stopAllProcesses()
             std::string path_ = PATH;
         config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
         } catch (const std::exception& e) {
-            std::cerr << "Error cargando el archivo YAML: " << e.what() << std::endl;
+            std::cerr << "Error loading YAML file: " << e.what() << std::endl;
         }
         std::string name_robot = config["NAME_START_ROBOT"].as<std::string>();
 
@@ -263,6 +263,7 @@ void ProcessController::stopAllProcesses()
 
         // Borrar el proceso de la lista después de confirmarlo muerto
         it = processMap.erase(it);
+        sleep(5);
     }
 
     std::cout << "Todos los procesos han sido detenidos." << std::endl;

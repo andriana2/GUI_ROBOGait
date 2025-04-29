@@ -21,9 +21,9 @@ ApplicationFlowForm {
         mystackview.push(menu_app)
 
     }
-    function teledirigido_push()
+    function manualControl_push()
     {
-        mystackview.push(teledirigido)
+        mystackview.push(manualControl)
     }
 
     //! [State]
