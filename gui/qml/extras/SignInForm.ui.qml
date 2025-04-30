@@ -80,7 +80,7 @@ Page {
                 height: 50
                 font.pointSize: 20
                 font.family: "Ubuntu"
-                model: ["Selecciona un rol", "DOCTOR", "MANAGER"]
+                model: ["Selecciona un rol", "DOCTOR", "ADMIN"]
                 currentIndex: 0
 
                 background: Rectangle {

@@ -92,6 +92,7 @@ qt_add_qml_module(appgui
     qml/extras/CustomBottomBar.qml
     qml/extras/CustomBottomBarForm.ui.qml
     qml/extras/Battery.qml
+    qml/extras/DescriptionPatientForm.ui.qml
 
 
     ${qml_singletons}

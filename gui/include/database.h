@@ -18,7 +18,7 @@ class Database : public QObject
     Q_OBJECT
     Q_PROPERTY(bool passLogin READ passLogin WRITE setPassLogin NOTIFY passLoginChanged FINAL)
     Q_PROPERTY(bool passCheckUsername READ passCheckUsername WRITE setPassCheckUsername NOTIFY passCheckUsernameChanged FINAL)
-    // role is manager and doctor
+    // role is admin and doctor
     Q_PROPERTY(QString role READ role WRITE setRole NOTIFY roleChanged FINAL)
     Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged FINAL)
     Q_PROPERTY(QStringListModel* patients READ patients NOTIFY patientsChanged FINAL)
@@ -43,8 +43,8 @@ public:
     Q_INVOKABLE void signIn(const QString &name, const QString &lastname, const QString &username,const QString &role, const QString &pass);
     Q_INVOKABLE void checkUsername(const QString &user);
     // Q_INVOKABLE void guest(const QString &name, const QString &lastname);
-    Q_INVOKABLE void addPatient(const QString &name, const QString &lastname, int age, double weight, double height, const QString &doctor_username, const QString &description);
-    Q_INVOKABLE void selectAllPatient(const QString &username_doctor);
+    Q_INVOKABLE void addPatient(const QString &name, const QString &lastname, int age, double weight, double height, const QString &username, const QString &description);
+    Q_INVOKABLE void selectAllPatient(const QString &username);
 
     QString targetToString(Target target);
     Target stringToTarget(const QString& str);

@@ -41,7 +41,6 @@ SigninUserForm {
                 console.log("Añadir información presionado")
                 // Add user information logic here
                 ddbb.addPatient(nameField.text, lastnameField.text, age, weight, height, ddbb.username, descriptionField.text)
-                ddbb.selectAllPatient(ddbb.username)
                 applicationFlow.popFunction()
             }
         }

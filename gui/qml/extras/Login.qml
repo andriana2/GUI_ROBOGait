@@ -11,10 +11,15 @@ LoginForm {
     }
 
     lp_singin_button.onClicked: {
+        // this is to clean the .text
+        usernameField.text = ""
+        passwordField.text = ""
         register_page.sign_in_push()
     }
 
     lp_guest_button.onClicked: {
+        usernameField.text = ""
+        passwordField.text = ""
         register_page.guest_push()
     }
 

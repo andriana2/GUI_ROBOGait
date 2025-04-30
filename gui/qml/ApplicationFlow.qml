@@ -144,62 +144,65 @@ ApplicationFlowForm {
     function confirmButton() {
         applicationFlow.state = "Insert"
     }
-    function menu_push(){
-        // if (applicationFlow.state === "select_patient")
-        //     popFunction()
-        // if (applicationFlow.state === "register_patient")
-        //     popFunction()
-        mystackview.push(menu_app)
-        console.log("roleChanged cambió a: -" + ddbb.role + "-");
-        applicationFlow.state = "menu_app"
-    }
-    function menu_doctor_push(){
-        mystackview.push(menu_doctor)
-        applicationFlow.state = "menu_doctor"
-    }
-    function register_patient_push(){
-        mystackview.push(register_patient)
-        applicationFlow.state = "register_patient"
-    }
-    function select_patient_push(){
-        mystackview.push(select_patient)
-        applicationFlow.state = "select_patient"
-    }
-    function register_page_push(){
 
-        mystackview.push(register_page)
-        applicationFlow.state = "register_page"
+    function menu_push() {
+        if (applicationFlow.state !== "menu_app") {
+            mystackview.push(menu_app)
+            applicationFlow.state = "menu_app"
+        }
+    }
 
-        // // harcodeado
-        // ddbb.role =("doctor")
-        // ddbb.username = "mariaRosa"
-        // // menu_push()
-        // mystackview.push(menu_app)
-        // console.log("roleChanged cambió a: -" + ddbb.role + "-");
-        // applicationFlow.state = "menu_app"
+    function register_patient_push() {
+        if (applicationFlow.state !== "register_patient") {
+            mystackview.push(register_patient)
+            applicationFlow.state = "register_patient"
+        }
     }
-    function manualControl_push()
-    {
-        stringHandler.setSaveMap(0)
-        visible_image = 1
-        console.log("Imagen a visible 0")
-        mystackview.push(manualControl)
-        applicationFlow.state = "manualControl"
+
+    function select_patient_push() {
+        if (applicationFlow.state !== "select_patient") {
+            mystackview.push(select_patient)
+            applicationFlow.state = "select_patient"
+        }
     }
-    function select_map_push()
-    {
-        console.log("UUUUUUUUUUUUUUUUUUUUUUUUUUU")
-        stringHandler.requestMapName()
-        //stringHandler.loadData(["Mapa 1", "Mapa 2", "Mapa 3"])
-        mystackview.push(selectMap)
-        applicationFlow.state = "selectMap"
+
+    function register_page_push() {
+        if (applicationFlow.state !== "register_page") {
+            mystackview.push(register_page)
+            applicationFlow.state = "register_page"
+            // // harcodeado
+            // ddbb.role =("doctor")
+            // ddbb.username = "mariaRosa"
+            // // menu_push()
+            // mystackview.push(menu_app)
+            // console.log("roleChanged cambió a: -" + ddbb.role + "-");
+            // applicationFlow.state = "menu_app"
+        }
     }
-    function map_path_push()
-    {
-        //stringHandler.requestMapName()
-        //stringHandler.loadData(["Mapa 1", "Mapa 2", "Mapa 3"])
-        mystackview.push(mapPath)
-        applicationFlow.state = "mapPath"
+
+    function manualControl_push() {
+        if (applicationFlow.state !== "manualControl") {
+            stringHandler.setSaveMap(0)
+            // visible_image = 1
+            // console.log("Imagen a visible 0")
+            mystackview.push(manualControl)
+            applicationFlow.state = "manualControl"
+        }
+    }
+
+    function select_map_push() {
+        if (applicationFlow.state !== "selectMap") {
+            stringHandler.requestMapName()
+            mystackview.push(selectMap)
+            applicationFlow.state = "selectMap"
+        }
+    }
+
+    function map_path_push() {
+        if (applicationFlow.state !== "mapPath") {
+            mystackview.push(mapPath)
+            applicationFlow.state = "mapPath"
+        }
     }
 
     // ! [State]
@@ -374,7 +377,7 @@ ApplicationFlowForm {
         State {
             name: "select_patient"
             StateChangeScript {
-                // script: stringHandler.menu_page(1)
+                script: ddbb.selectAllPatient(ddbb.username)
             }
             PropertyChanges {
                 target:applicationFlow
@@ -501,17 +504,14 @@ ApplicationFlowForm {
         anchors.centerIn: parent
         errorRectangleTextError.text: qsTr("Error: En la conexión")
         visible: false
-        mode: "delayed" // Ensure this property exists in your ErrorRectangle component
+        mode: "delayed"
     }
 
     Connections {
         target: stringHandler
-        // console.log("HE PASADO POR Connections en ApplicationFlow")
         function onErrorConnectionChanged() {
-            // console.log("HE PASADO POR onErrorConnectionChanged() en ApplicationFlow")
             if(stringHandler.errorConnection === true)
             {
-                // console.log("HE PASADO POR onErrorConnectionChanged() en ApplicationFlow")
                 errorPopup.mode = "delayed"
                 errorPopup.errorRectangleTextError.text = qsTr("Error: Perdida de conexion con el servidor")
                 errorPopup.visible = true

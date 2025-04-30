@@ -11,10 +11,15 @@ GuestForm {
     }
 
     gp_login.onClicked: {
+        // this is to clean the .text
+        nameField.text = ""
+        lastnameField.text = ""
         register_page.login_push()
     }
 
     gp_singin.onClicked: {
+        nameField.text = ""
+        lastnameField.text = ""
         register_page.sign_in_push()
     }
 
@@ -31,6 +36,11 @@ GuestForm {
         } else {
             errorPopup.visible = false
             console.log("Iniciar como invitado presionado")
+            ddbb.role =("doctor")
+            ddbb.username = nameField.text
+            nameField.text = ""
+            lastnameField.text = ""
+
             // Proceed with guest login
         }
     }
