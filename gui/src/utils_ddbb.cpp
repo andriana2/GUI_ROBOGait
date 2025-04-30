@@ -50,13 +50,17 @@ QString capitalizeWords(const QString &str)
 
 std::pair<QString, QString> splitNameSurname(const QString &fullName)
 {
-    int spaceIndex = fullName.indexOf(' ');
-    if (spaceIndex == -1)
+    QStringList parts = fullName.split(',');
+
+    if (parts.size() != 2)
     {
-        // If there is no space, consider everything as the first name, with no surname
-        return {fullName, ""};
+        // Formato inesperado
+        return {fullName.trimmed().toLower(), ""};
     }
-    QString firstName = fullName.left(spaceIndex).toLower();
-    QString lastName = fullName.mid(spaceIndex + 1).toLower();
+
+    QString firstName = parts[0].trimmed().toLower();
+    QString lastName = parts[1].trimmed().toLower();
+
     return {firstName, lastName};
 }
+

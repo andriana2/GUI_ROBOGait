@@ -5,6 +5,7 @@ import "extras"
 Rectangle {
     id: rectangle
     color: "#518bb7"
+    property alias descriptionPatient: descriptionPatient
     property alias addPatient: addPatient
 
     // Título
@@ -106,15 +107,19 @@ Rectangle {
                     width: parent.width
                     height: 60
                     background: Rectangle {
-                        color: "#ffffff"
+                        color: index === listView.currentIndex ? "#aed2ea" : "#ffffff"
                         border.color: "#cccccc"
                         radius: 15
                     }
 
-                    //                    onClicked: {
-                    //                        ddbb.getIdFromName(model.display) // Mostrará el texto asociado al botón
-                    //                        applicationFlow.menu_push()
-                    //                    }
+                    onClicked: {
+                        listView.currentIndex = index
+                        // console.log("Presionado un item " + index)
+                        ddbb.getIdFromName(model.display) // Mostrará el texto asociado al botón
+                        descriptionPatient.visible = true
+                        // applicationFlow.menu_push()
+                    }
+
                     Text {
                         id: textAddPatient
                         text: display
@@ -152,12 +157,24 @@ Rectangle {
             }
         }
     }
+    DescriptionPatientForm {
+        id: descriptionPatient
+        visible: false
+        anchors.left: scrollView.right
+        anchors.right: parent.right
+        anchors.top: text1.bottom
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 140
+        anchors.topMargin: 30
+        anchors.rightMargin: 40
+        anchors.leftMargin: 40
+    }
 }
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.5;height:700;width:1300}D{i:1}D{i:4}D{i:5}D{i:2}D{i:8;invisible:true}
-D{i:7}
+    D{i:0;formeditorZoom:0.66;height:700;width:1300}D{i:1}D{i:4}D{i:5}D{i:2}D{i:8}D{i:7}
+D{i:15}
 }
 ##^##*/
 

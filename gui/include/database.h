@@ -24,6 +24,8 @@ class Database : public QObject
     Q_PROPERTY(QStringListModel* patients READ patients NOTIFY patientsChanged FINAL)
     Q_PROPERTY(int idPatient READ idPatient WRITE setIdPatient NOTIFY idPatientChanged FINAL)
 
+    Q_PROPERTY(QVariantMap patient READ patient WRITE setPatient NOTIFY patientChanged)
+
 
 public:
     enum class Target{
@@ -68,6 +70,9 @@ public:
     void setIdPatient(int newIdPatient);
     Q_INVOKABLE void getIdFromName(QString const &complete_name);
 
+    QVariantMap patient() const;
+    void setPatient(const QVariantMap &newPatient);
+
 private slots:
     void handleQueryResponse(const QJsonObject& response);
 
@@ -83,6 +88,8 @@ signals:
     void patientsChanged();
 
     void idPatientChanged();
+
+    void patientChanged();
 
 private:
     void handleLoginResponse(const QJsonObject& response);
@@ -101,6 +108,7 @@ private:
     bool m_passCheckUsername = false;
     QStringListModel *m_patients = new QStringListModel(this);
     int m_idPatient;
+    QVariantMap m_patient;
 };
 
 #endif // DATABASE_H
