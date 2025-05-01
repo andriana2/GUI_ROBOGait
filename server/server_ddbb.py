@@ -1,18 +1,25 @@
 from flask import Flask, request, jsonify
 import sqlite3
-import re
+import sys
 
 app = Flask(__name__)
 
 EN_CASA = True
 ROBOT = False
 
-if EN_CASA and not ROBOT:
-    DATABASE = "/home/andri/Desktop/gui_nuevo/gui_/server/db_robogait.db"  # casa
-elif not ROBOT:
-    DATABASE = "/home/robogait/Desktop/gui_andri/GUI_ROBOGait/server/db_robogait.db"  # uni
-else:
-    DATABASE = "/home/robogait/GUI_ROBOGait/server/db_robogait.db"  # robot
+if len(sys.argv) != 2:
+    print("Uso: python3 server_ddbb.py <ruta_a_base_de_datos>")
+    sys.exit(1)
+
+DATABASE = sys.argv[1]
+print("Usando base de datos:", DATABASE)
+
+# if EN_CASA and not ROBOT:
+#     DATABASE = "/home/andri/Desktop/gui_nuevo/gui_/server/db_robogait.db"  # casa
+# elif not ROBOT:
+#     DATABASE = "/home/robogait/Desktop/gui_andri/GUI_ROBOGait/server/db_robogait.db"  # uni
+# else:
+#     DATABASE = "/home/robogait/GUI_ROBOGait/server/db_robogait.db"  # robot
 
 print(DATABASE)
 

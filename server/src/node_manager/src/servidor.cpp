@@ -84,6 +84,8 @@ void Servidor::udp_discovery()
 
         if (std::string(buffer, len) == "DISCOVER")
         {
+            // start ddbb server
+            nodeManager.open_server_database();
             YAML::Node config;
             try
             {

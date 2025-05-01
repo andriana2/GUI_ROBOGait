@@ -22,6 +22,8 @@ class NodeManager
 public:
     NodeManager(rclcpp::Node::SharedPtr node_ptr);
     void create_subscription(Target const &target);
+    void open_server_database();
+    void close_server_database();
     void create_publisher(Target const &target);
     void close_publisher(Target const &target);
 
@@ -55,6 +57,7 @@ private:
     rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_pose_publisher_;
     rclcpp_action::Client<nav2_msgs::action::FollowWaypoints>::SharedPtr waypoint_follower_client_;
     rclcpp::Subscription<nav_msgs::msg::Path>::SharedPtr plan_path_subscriber_;
+    bool server_database_active = false;
 
     rclcpp::Node::SharedPtr node_manager;
     ProcessController processController;

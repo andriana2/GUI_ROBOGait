@@ -1,6 +1,10 @@
 ROBOT_NAME: "RobogaitIndoor"
 TYPE: "V3"
 
+DATABASE: "/home/andri/Desktop/gui_nuevo/gui_/server/db_robogait.db"
+PATH2DATABASE: "/home/andri/Desktop/gui_nuevo/gui_/server/server_ddbb.py"
+NAME_DATABASE: "database"
+
 PATH2MAP: "/home/andri/Desktop/gui_nuevo/gui_/server/maps"
 START_ROBOT: ""
 NAME_START_ROBOT: ""

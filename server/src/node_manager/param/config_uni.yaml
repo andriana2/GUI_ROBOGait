@@ -1,6 +1,10 @@
 ROBOT_NAME: "RobogaitIndoor"
 TYPE: "V3"
 
+DATABASE: "/home/robogait/Desktop/gui_andri/GUI_ROBOGait/server/db_robogait.db"
+PATH2DATABASE: "/home/robogait/Desktop/gui_andri/GUI_ROBOGait/server/server_ddbb.py"
+NAME_DATABASE: "database"
+
 PATH2MAP: "/home/robogait/Desktop/gui_andri/GUI_ROBOGait/server/maps"
 START_ROBOT: "ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py"
 NAME_START_ROBOT: "turtlebot3_gazebo"

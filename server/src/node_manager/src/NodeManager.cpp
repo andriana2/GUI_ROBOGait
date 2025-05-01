@@ -14,9 +14,51 @@ void NodeManager::create_subscription(Target const &target)
         {
             plan_path_subscriber_ = node_manager->create_subscription<nav_msgs::msg::Path>(
                 "/global_plan", 10, std::bind(&NodeManager::topic_plan_callback, this, std::placeholders::_1));
-                RCLCPP_INFO(node_manager->get_logger(), "Suscriptor global plan created, waiting messages...");
+            RCLCPP_INFO(node_manager->get_logger(), "Suscriptor global plan created, waiting messages...");
         }
+    }
+}
 
+void NodeManager::open_server_database()
+{
+    if (!server_database_active)
+    {
+        YAML::Node config;
+        try
+        {
+            std::string path_ = PATH;
+            config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error loading YAML file: " << e.what() << std::endl;
+        }
+        std::string name_server_database = config["NAME_DATABASE"].as<std::string>();
+        std::string path_server_database = config["DATABASE"].as<std::string>();
+        std::string path2comand = config["PATH2DATABASE"].as<std::string>();
+        std::string command = "python3 " + path2comand + " " + path_server_database;
+        processController.startProcess(name_server_database, command);
+        server_database_active = true;
+    }
+}
+
+void NodeManager::close_server_database()
+{
+    if (server_database_active)
+    {
+        YAML::Node config;
+        try
+        {
+            std::string path_ = PATH;
+            config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error loading YAML file: " << e.what() << std::endl;
+        }
+        std::string name_server_database = config["NAME_DATABASE"].as<std::string>();
+        processController.stopProcess(name_server_database);
+        server_database_active = false;
     }
 }
 
