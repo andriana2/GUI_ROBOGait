@@ -35,6 +35,7 @@ Page {
                 height: 50
                 font.pointSize: 20
                 placeholderText: "Nombre"
+                color: "#000000"
                 padding: 10
                 background: Rectangle {
                     radius: 10
@@ -51,6 +52,7 @@ Page {
                 height: 50
                 font.pointSize: 20
                 placeholderText: "Apellidos"
+                color: "#000000"
                 padding: 10
                 background: Rectangle {
                     radius: 10

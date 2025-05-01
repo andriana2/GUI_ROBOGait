@@ -29,53 +29,74 @@ Page {
                 height: 220
             }
 
-            TextArea {
+            TextField {
                 id: usernameField
                 width: 400
                 height: 50
+                color: "#000000"
+                anchors.horizontalCenter: parent.horizontalCenter
                 font.pointSize: 20
-                placeholderText: "Usuario"
-                padding: 10
+                verticalAlignment: TextInput.AlignVCenter
+                leftPadding: 10
+                rightPadding: 10
                 background: Rectangle {
                     radius: 10
                     color: "#FFFFFF"
-                    border.color: "#CCCCCC"
+                    border.color: usernameField.activeFocus ? "#518bb7" : "#CCCCCC"
+
+                    Text {
+                        visible: usernameField.text === "" && !usernameField.activeFocus
+                        text: qsTr("Usuario")
+                        color: "#808080"
+                        anchors {
+                            left: parent.left
+                            leftMargin: 15
+                            top: parent.top
+                            topMargin: 15
+                        }
+                        font: usernameField.font
+                    }
                 }
                 Keys.onTabPressed: passwordField.focus = true
                 Keys.onReturnPressed: passwordField.focus = true
             }
 
-            Rectangle {
+            TextField {
+                id: passwordField
                 width: 400
                 height: 50
-                radius: 10
-                color: "#FFFFFF"
-                border.color: "#CCCCCC"
+                color: "#000000"
+                anchors.horizontalCenter: parent.horizontalCenter
+                font.pointSize: 20
+                verticalAlignment: TextInput.AlignVCenter
+                leftPadding: 10
+                rightPadding: 10
+                echoMode: TextInput.Password // Ensure this is set to mask the input
 
-                TextArea {
-                    id: backgroundTextArea
-                    width: 400
-                    height: 50
-                    font.pointSize: 22
-                    placeholderText: "Contraseña"
-                    color: "transparent" // Fondo transparente
-                    background: Rectangle {
-                        color: "transparent" // Fondo completamente transparente
+                background: Rectangle {
+                    radius: 10
+                    color: "#FFFFFF"
+                    border.color: passwordField.activeFocus ? "#518bb7" : "#CCCCCC"
+
+                    Text {
+                        visible: passwordField.text === "" && !passwordField.activeFocus
+                        text: qsTr("Contraseña")
+                        color: "#808080"
+                        anchors {
+                            left: parent.left
+                            leftMargin: 15
+                            top: parent.top
+                            topMargin: 15
+                        }
+                        font: passwordField.font
                     }
-                    anchors.centerIn: parent // Para centrarlo si es necesario
-                    focus: false // Deshabilita la interacción con el campo, no se puede escribir en él
-                    visible: passwordField.text.length === 0
-                    // z: -1  // Coloca el TextArea detrás de otros elementos
                 }
-                TextInput {
-                    id: passwordField
-                    anchors.fill: parent
-                    font.pointSize: 20
-                    padding: 15
-                    echoMode: TextInput.Password // Esto oculta el texto ingresado con asteriscos
 
-                }
+                // Ensure focus behavior is correct
+                Keys.onTabPressed: usernameField.focus = true
+                Keys.onReturnPressed: usernameField.focus = true
             }
+
             Button {
                 id: lp_login_button
                 width: 400

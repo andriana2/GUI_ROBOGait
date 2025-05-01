@@ -28,51 +28,160 @@ Page {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: 20
 
-            TextArea {
+            TextField {
                 id: nameField
                 width: 400
                 height: 50
+                color: "#000000"
+                anchors.horizontalCenter: parent.horizontalCenter
                 font.pointSize: 20
-                placeholderText: "Nombre"
-                padding: 10
+                verticalAlignment: TextInput.AlignVCenter
+                leftPadding: 10
+                rightPadding: 10
+
+
+
                 background: Rectangle {
                     radius: 10
                     color: "#FFFFFF"
-                    border.color: "#CCCCCC"
+                    border.color: nameField.activeFocus ? "#518bb7" : "#CCCCCC"
+
+                    Text {
+                        visible: nameField.text === "" && !nameField.activeFocus
+                        text: qsTr("Nombre")
+                        color: "#808080"
+                        anchors {
+                            left: parent.left
+                            leftMargin: 15
+                            top: parent.top
+                            topMargin: 15
+                        }
+                        font: usernameField.font
+                    }
                 }
                 Keys.onTabPressed: lastnameField.focus = true
                 Keys.onReturnPressed: lastnameField.focus = true
             }
-            TextArea {
+
+            // TextArea {
+            //     id: nameField
+            //     width: 400
+            //     height: 50
+            //     color: "#000000"
+            //     font.pointSize: 20
+            //     placeholderText: "Nombre"
+            //     padding: 10
+            //     background: Rectangle {
+            //         radius: 10
+            //         color: "#FFFFFF"
+            //         border.color: "#CCCCCC"
+            //     }
+            //     Keys.onTabPressed: lastnameField.focus = true
+            //     Keys.onReturnPressed: lastnameField.focus = true
+            // }
+
+            TextField {
                 id: lastnameField
                 width: 400
                 height: 50
+                color: "#000000"
+                anchors.horizontalCenter: parent.horizontalCenter
                 font.pointSize: 20
-                placeholderText: "Apellidos"
-                padding: 10
+                verticalAlignment: TextInput.AlignVCenter
+                leftPadding: 10
+                rightPadding: 10
+
+
+
                 background: Rectangle {
                     radius: 10
                     color: "#FFFFFF"
-                    border.color: "#CCCCCC"
+                    border.color: lastnameField.activeFocus ? "#518bb7" : "#CCCCCC"
+
+                    Text {
+                        visible: lastnameField.text === "" && !lastnameField.activeFocus
+                        text: qsTr("Apellidos")
+                        color: "#808080"
+                        anchors {
+                            left: parent.left
+                            leftMargin: 15
+                            top: parent.top
+                            topMargin: 15
+                        }
+                        font: usernameField.font
+                    }
                 }
                 Keys.onTabPressed: usernameField.focus = true
                 Keys.onReturnPressed: usernameField.focus = true
             }
-            TextArea {
+            // TextArea {
+            //     id: lastnameField
+            //     width: 400
+            //     height: 50
+            //     color: "#000000"
+            //     font.pointSize: 20
+            //     placeholderText: "Apellidos"
+            //     padding: 10
+            //     background: Rectangle {
+            //         radius: 10
+            //         color: "#FFFFFF"
+            //         border.color: "#CCCCCC"
+            //     }
+            //     Keys.onTabPressed: usernameField.focus = true
+            //     Keys.onReturnPressed: usernameField.focus = true
+            // }
+
+            TextField {
                 id: usernameField
                 width: 400
                 height: 50
+                color: "#000000"
+                anchors.horizontalCenter: parent.horizontalCenter
                 font.pointSize: 20
-                placeholderText: "Nombre de usuario"
-                padding: 10
+                verticalAlignment: TextInput.AlignVCenter
+                leftPadding: 10
+                rightPadding: 10
+
+
+
                 background: Rectangle {
                     radius: 10
                     color: "#FFFFFF"
-                    border.color: "#CCCCCC"
+                    border.color: usernameField.activeFocus ? "#518bb7" : "#CCCCCC"
+
+                    Text {
+                        visible: usernameField.text === "" && !usernameField.activeFocus
+                        text: qsTr("Nombre de usuario")
+                        color: "#808080"
+                        anchors {
+                            left: parent.left
+                            leftMargin: 15
+                            top: parent.top
+                            topMargin: 15
+                        }
+                        font: usernameField.font
+                    }
                 }
                 Keys.onTabPressed: passwordField.focus = true
                 Keys.onReturnPressed: passwordField.focus = true
             }
+
+            // TextArea {
+            //     id: usernameField
+            //     width: 400
+            //     height: 50
+            //     color: "#000000"
+            //     font.pointSize: 20
+            //     placeholderText: "Nombre de usuario"
+            //     padding: 10
+            //     background: Rectangle {
+            //         radius: 10
+            //         color: "#FFFFFF"
+            //         border.color: "#CCCCCC"
+            //     }
+            //     Keys.onTabPressed: passwordField.focus = true
+            //     Keys.onReturnPressed: passwordField.focus = true
+            // }
 
             ComboBox {
                 id: roleSelector
@@ -118,70 +227,142 @@ Page {
                 }
             }
 
-
-            Rectangle {
+            TextField {
+                id: passwordField
                 width: 400
                 height: 50
-                radius: 10
-                color: "#FFFFFF"
-                border.color: "#CCCCCC"
+                color: "#000000"
+                anchors.horizontalCenter: parent.horizontalCenter
+                font.pointSize: 20
+                verticalAlignment: TextInput.AlignVCenter
+                leftPadding: 10
+                rightPadding: 10
+                echoMode: TextInput.Password
 
-                TextArea {
-                    id: backgroundTextArea
-                    width: 400
-                    height: 50
-                    font.pointSize: 22
-                    placeholderText: "Contraseña"
-                    color: "transparent" // Fondo transparente
-                    background: Rectangle {
-                        color: "transparent" // Fondo completamente transparente
+
+                background: Rectangle {
+                    radius: 10
+                    color: "#FFFFFF"
+                    border.color: passwordField.activeFocus ? "#518bb7" : "#CCCCCC"
+
+                    Text {
+                        visible: passwordField.text === "" && !passwordField.activeFocus
+                        text: qsTr("Contraseña")
+                        color: "#808080"
+                        anchors {
+                            left: parent.left
+                            leftMargin: 15
+                            top: parent.top
+                            topMargin: 15
+                        }
+                        font: passwordField.font
                     }
-                    anchors.centerIn: parent // Para centrarlo si es necesario
-                    focus: false // Deshabilita la interacción con el campo, no se puede escribir en él
-                    visible: passwordField.text.length === 0
-                    // z: -1  // Coloca el TextArea detrás de otros elementos
                 }
-                TextInput {
-                    id: passwordField
-                    anchors.fill: parent
-                    font.pointSize: 20
-                    padding: 15
-                    echoMode: TextInput.Password // Esto oculta el texto ingresado con asteriscos
-                                    Keys.onTabPressed: repeatpasswordField.focus = true
+                Keys.onTabPressed: repeatpasswordField.focus = true
                 Keys.onReturnPressed: repeatpasswordField.focus = true
-                }
             }
 
-            Rectangle {
+
+
+            // Rectangle {
+            //     width: 400
+            //     height: 50
+            //     radius: 10
+            //     color: "#FFFFFF"
+            //     border.color: "#CCCCCC"
+
+            //     TextArea {
+            //         id: backgroundTextArea
+            //         width: 400
+            //         height: 50
+            //         font.pointSize: 22
+            //         placeholderText: "Contraseña"
+            //         color: "transparent" // Fondo transparente
+            //         background: Rectangle {
+            //             color: "transparent" // Fondo completamente transparente
+            //         }
+            //         anchors.centerIn: parent // Para centrarlo si es necesario
+            //         focus: false // Deshabilita la interacción con el campo, no se puede escribir en él
+            //         visible: passwordField.text.length === 0
+            //         // z: -1  // Coloca el TextArea detrás de otros elementos
+            //     }
+            //     TextInput {
+            //         id: passwordField
+            //         anchors.fill: parent
+            //         font.pointSize: 20
+            //         padding: 15
+            //         echoMode: TextInput.Password // Esto oculta el texto ingresado con asteriscos
+            //                         Keys.onTabPressed: repeatpasswordField.focus = true
+            //     Keys.onReturnPressed: repeatpasswordField.focus = true
+            //     }
+            // }
+
+            TextField {
+                id: repeatpasswordField
                 width: 400
                 height: 50
-                radius: 10
-                color: "#FFFFFF"
-                border.color: "#CCCCCC"
+                color: "#000000"
+                anchors.horizontalCenter: parent.horizontalCenter
+                font.pointSize: 20
+                verticalAlignment: TextInput.AlignVCenter
+                leftPadding: 10
+                rightPadding: 10
+                echoMode: TextInput.Password
 
-                TextArea {
-                    id: repeatpsswTextArea
-                    width: 400
-                    height: 50
-                    font.pointSize: 22
-                    placeholderText: "Repetir Contraseña"
-                    color: "transparent" // Fondo transparente
-                    background: Rectangle {
-                        color: "transparent" // Fondo completamente transparente
+
+                background: Rectangle {
+                    radius: 10
+                    color: "#FFFFFF"
+                    border.color: repeatpasswordField.activeFocus ? "#518bb7" : "#CCCCCC"
+
+                    Text {
+                        visible: repeatpasswordField.text === "" && !repeatpasswordField.activeFocus
+                        text: qsTr("Repetir Contraseña")
+                        color: "#808080"
+                        anchors {
+                            left: parent.left
+                            leftMargin: 15
+                            top: parent.top
+                            topMargin: 15
+                        }
+                        font: repeatpasswordField.font
                     }
-                    anchors.centerIn: parent // Para centrarlo si es necesario
-                    focus: false // Deshabilita la interacción con el campo, no se puede escribir en él
-                    visible: repeatpasswordField.text.length === 0
-                    // z: -1  // Coloca el TextArea detrás de otros elementos
                 }
-                TextInput {
-                    id: repeatpasswordField
-                    anchors.fill: parent
-                    font.pointSize: 20
-                    padding: 15
-                    echoMode: TextInput.Password // Esto oculta el texto ingresado con asteriscos
-                }
+                Keys.onTabPressed: usernameField.focus = true
+                Keys.onReturnPressed: usernameField.focus = true
             }
+
+
+            // Rectangle {
+            //     width: 400
+            //     height: 50
+            //     radius: 10
+            //     color: "#FFFFFF"
+            //     border.color: "#CCCCCC"
+
+            //     TextArea {
+            //         id: repeatpsswTextArea
+            //         width: 400
+            //         height: 50
+            //         font.pointSize: 22
+            //         placeholderText: "Repetir Contraseña"
+            //         color: "transparent" // Fondo transparente
+            //         background: Rectangle {
+            //             color: "transparent" // Fondo completamente transparente
+            //         }
+            //         anchors.centerIn: parent // Para centrarlo si es necesario
+            //         focus: false // Deshabilita la interacción con el campo, no se puede escribir en él
+            //         visible: repeatpasswordField.text.length === 0
+            //         // z: -1  // Coloca el TextArea detrás de otros elementos
+            //     }
+            //     TextInput {
+            //         id: repeatpasswordField
+            //         anchors.fill: parent
+            //         font.pointSize: 20
+            //         padding: 15
+            //         echoMode: TextInput.Password // Esto oculta el texto ingresado con asteriscos
+            //     }
+            // }
 
             Button {
                 id: singInButton
