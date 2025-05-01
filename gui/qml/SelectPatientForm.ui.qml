@@ -5,6 +5,10 @@ import "extras"
 Rectangle {
     id: rectangle
     color: "#518bb7"
+    property alias buttonAccept: buttonAccept
+    property alias listView: listView
+    property alias buttonRow: buttonRow
+    property alias buttonCancel: buttonCancel
     property alias descriptionPatient: descriptionPatient
     property alias addPatient: addPatient
 
@@ -117,9 +121,9 @@ Rectangle {
                         // console.log("Presionado un item " + index)
                         ddbb.getIdFromName(model.display) // Mostrará el texto asociado al botón
                         descriptionPatient.visible = true
+                        buttonRow.visible = true
                         // applicationFlow.menu_push()
                     }
-
                     Text {
                         id: textAddPatient
                         text: display
@@ -169,12 +173,73 @@ Rectangle {
         anchors.rightMargin: 40
         anchors.leftMargin: 40
     }
+
+    Row {
+        id: buttonRow
+        visible: false
+        spacing: parent.width > 500 ? 40 : 20
+        anchors.horizontalCenter: descriptionPatient.horizontalCenter
+        anchors.top: descriptionPatient.bottom
+        anchors.topMargin: 20
+        anchors.bottomMargin: 40
+
+        Button {
+            id: buttonCancel
+            width: 140
+            height: 40
+
+            background: Rectangle {
+                color: buttonCancel.down ? "#e9e9e9" : "#aed2ea"
+                radius: 15
+                border.color: "#e9e9e9"
+                border.width: 2
+            }
+
+            contentItem: Label {
+                id: buttonLabelCancel
+                text: qsTr("CANCELAR")
+                color: "#518bb7"
+                font.pixelSize: 20
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+            // onClicked: {
+            //     listView.currentIndex = -1
+            //     descriptionPatient.visible = false
+            //     buttonRow.visible = false
+            // }
+        }
+
+        Button {
+            id: buttonAccept
+            width: 140
+            height: 40
+
+            background: Rectangle {
+                color: buttonAccept.down ? "#e9e9e9" : "#aed2ea"
+                radius: 15
+                border.color: "#e9e9e9"
+                border.width: 2
+            }
+
+            contentItem: Label {
+                id: buttonLabelAccept
+                text: qsTr("ACEPTAR")
+                color: "#518bb7"
+                font.pixelSize: 20
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+        }
+    }
 }
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.66;height:700;width:1300}D{i:1}D{i:4}D{i:5}D{i:2}D{i:8}D{i:7}
-D{i:15}
+    D{i:0;autoSize:true;height:480;width:640}D{i:1}D{i:4}D{i:5}D{i:2}D{i:8}D{i:7}D{i:15}
+D{i:17}D{i:20}D{i:16}
 }
 ##^##*/
 
