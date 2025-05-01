@@ -6,14 +6,12 @@
 #include <vector>
 #include <string>
 
-Cliente::Cliente(int port_tcp, int port_udp) : QObject(), port_tcp(port_tcp) //, stringHandler(nullptr)
+Cliente::Cliente(int port_) : QObject(), port_udp_tcp(port_) //, stringHandler(nullptr)
 {
     connect(&udpSocket, &QUdpSocket::readyRead, this, &Cliente::answerUdp);
 
     socket = new QTcpSocket();
     maping = true;
-
-    port_udp = port_udp;
 
     timeoutTimer = new QTimer();
     timeoutTimer->setSingleShot(true);
@@ -68,6 +66,7 @@ void Cliente::answerUdp()
                 QString serverType = match.captured(2);
 
                 qDebug() << "Servidor encontrado en" << servidor.toString();
+                database->setIpServerDDBB(servidor.toString());
                 qDebug() << "Nombre del servidor:" << serverName;
                 qDebug() << "Tipo de servidor:" << serverType;
 
@@ -188,9 +187,9 @@ void Cliente::connect2host(const QString hostAddress)
 {
     host = hostAddress;
     timeoutTimer->start(3000);
-    socket->connectToHost(host, port_tcp);
+    socket->connectToHost(host, port_udp_tcp);
     connect(socket, &QTcpSocket::connected, this, &Cliente::connected);
-    qDebug() << "Conectado a ip: " << host << " y al puerto " << port_tcp;
+    qDebug() << "Conectado a ip: " << host << " y al puerto " << port_udp_tcp;
     setIpRobot(host);
 
     if (!socket->waitForConnected())
@@ -202,10 +201,11 @@ void Cliente::connect2host(const QString hostAddress)
 
 void Cliente::startSearchUdp()
 {
-    udpSocket.bind(QHostAddress::AnyIPv4, port_udp);
+    qDebug() << "Buscando el servidor UDP... en el puerto " << port_udp_tcp;
+    udpSocket.bind(QHostAddress::AnyIPv4, port_udp_tcp);
 
     QByteArray first_word_identify_server = "DISCOVER";
-    udpSocket.writeDatagram(first_word_identify_server, QHostAddress::Broadcast, 45454);
+    udpSocket.writeDatagram(first_word_identify_server, QHostAddress::Broadcast, port_udp_tcp);
 }
 
 void Cliente::connectionTimeout()

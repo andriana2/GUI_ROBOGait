@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 
     boost::asio::io_context io_context;
 
-    Servidor servidor(5555,45454, node,io_context);
+    Servidor servidor(45454, node, io_context);
 
     // Al hacer control c que no de error y se cierre de forma segura
     // When doing control c it does not give an error and closes safely

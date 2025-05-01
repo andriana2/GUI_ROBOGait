@@ -11,6 +11,10 @@ Database::Database(QObject *parent) : QObject(parent)
 }
 
 void Database::setClient(Cliente *cli) { cliente = cli; }
+void Database::setIpServerDDBB(const QString &ip)
+{
+    networkDDBB->setServerIp(ip);
+}
 
 void Database::login(const QString &user, const QString &pass)
 {

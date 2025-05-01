@@ -40,6 +40,7 @@ public:
     };
     explicit Database(QObject *parent = nullptr);
     void setClient(Cliente *cli);
+    void setIpServerDDBB(const QString &ip);
 
     Q_INVOKABLE void login(const QString &user, const QString &pass);
     Q_INVOKABLE void signIn(const QString &name, const QString &lastname, const QString &username,const QString &role, const QString &pass);

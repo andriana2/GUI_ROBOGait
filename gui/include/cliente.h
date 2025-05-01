@@ -26,7 +26,7 @@ class Cliente : public QObject
     Q_PROPERTY(QString ipRobot READ ipRobot WRITE setIpRobot NOTIFY ipRobotChanged FINAL)
 public:
     // Constructor and Destructor
-    Cliente(int port_tcp, int port_udp);
+    Cliente(int port_);
     ~Cliente();
 
     // Connection different class methods
@@ -73,8 +73,7 @@ private:
 
     // Connection Configuration
     QString host; // Host address to connect to
-    int port_tcp; // TCP port
-    int port_udp; // UDP port
+    int port_udp_tcp; // TCP and UDP port
     bool status; // Connection status
     QTimer *timeoutTimer; // Timer used for connection timeout
 

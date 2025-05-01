@@ -2,13 +2,14 @@
 #include <iostream>
 #include <boost/beast/core/detail/base64.hpp>
 
-Servidor::Servidor(int port_tcp, int port_udp, rclcpp::Node::SharedPtr node, boost::asio::io_context &io_context)
-    : io_context_(io_context), udp_socket_(io_context, udp::endpoint(udp::v4(), port_udp)),
-      tcp_acceptor_(io_context, tcp::endpoint(tcp::v4(), port_tcp)),
-      nodeManager(node), ip_port_tcp_(port_tcp), ip_port_udp_(port_udp),
+Servidor::Servidor(int port_tcp_udp, rclcpp::Node::SharedPtr node, boost::asio::io_context &io_context)
+    : io_context_(io_context), udp_socket_(io_context, udp::endpoint(udp::v4(), port_tcp_udp)),
+      tcp_acceptor_(io_context, tcp::endpoint(tcp::v4(), port_tcp_udp)),
+      nodeManager(node), port_tcp_udp_(port_tcp_udp),
       connection_active_(false), tcp_socket_(io_context)
 {
     tcp_acceptor_.set_option(tcp::acceptor::reuse_address(true));
+    std::cout << "Servidor creado en el puerto " << port_tcp_udp_ << std::endl;
 }
 
 void Servidor::run()

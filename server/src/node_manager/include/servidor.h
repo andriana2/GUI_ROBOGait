@@ -38,7 +38,7 @@ class Servidor
 public:
     using CommandCallback = std::function<void(const std::string &)>;
 
-    Servidor(int port_tcp, int port_udp, rclcpp::Node::SharedPtr node,
+    Servidor(int port_tcp_udp, rclcpp::Node::SharedPtr node,
              boost::asio::io_context &io_context);
     void run();
     void closeServer();
@@ -77,8 +77,7 @@ private:
     udp::endpoint client_endpoint_;
     std::atomic<bool> connection_active_;
 
-    int ip_port_tcp_;
-    int ip_port_udp_;
+    int port_tcp_udp_;
 
     NodeManager nodeManager;
 };

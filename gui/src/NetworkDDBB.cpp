@@ -1,5 +1,4 @@
 #include "../include/NetworkDDBB.h"
-// #include <QtConcurrent>
 
 NetworkDDBB::NetworkDDBB(QObject *parent) : QObject(parent) {
     manager = new QNetworkAccessManager(this);
@@ -7,7 +6,7 @@ NetworkDDBB::NetworkDDBB(QObject *parent) : QObject(parent) {
 }
 
 void NetworkDDBB::sendSqlCommand(const QString& sqlQuery, const QString& target, const QJsonArray& args) {
-    QUrl url("http://127.0.0.1:5000/execute");  // URL del servidor Flask
+    QUrl url("http://" + serverIp + ":5000/execute");  // Use the serverIp variable
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
@@ -21,6 +20,11 @@ void NetworkDDBB::sendSqlCommand(const QString& sqlQuery, const QString& target,
     // Enviar petición POST con JSON
     QNetworkReply* reply = manager->post(request, QJsonDocument(json).toJson());
     connect(reply, &QNetworkReply::errorOccurred, this, &NetworkDDBB::onError);
+}
+
+void NetworkDDBB::setServerIp(const QString& ip) {
+    serverIp = ip;
+    qDebug() << "Server IP updated to:" << serverIp;
 }
 
 void NetworkDDBB::onReplyFinished(QNetworkReply* reply) {

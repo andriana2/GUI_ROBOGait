@@ -109,8 +109,8 @@ void udp_discovery(udp::socket& socket) {
 int main() {
     try {
         // Configuración UDP
-        udp::socket udp_socket(io_context, udp::endpoint(udp::v4(), 45454));
-        std::cout << "Servidor UDP iniciado en 45454\n";
+        udp::socket udp_socket(io_context, udp::endpoint(udp::v4(), 5555));
+        std::cout << "Servidor UDP iniciado en 5555\n";
 
         while (true) {
             // 1. Fase de descubrimiento UDP (bloqueante)
