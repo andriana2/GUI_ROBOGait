@@ -63,7 +63,8 @@ MapPageForm {
                 return;
             }
             // mapInfo.checkInitInitialPose = true;
-            mapInfo.sendGoalPose()
+            mapInfo.sendAllInformationPose()
+
         }
         if(state === "mp_PathGoalPose")
         {
@@ -74,7 +75,7 @@ MapPageForm {
             //     return;
             // }
             // mapInfo.checkInitInitialPose = true;
-            mapInfo.sendAllInformationPose()
+            mapInfo.sendGoalPose()
         }
         if(state === "mp_drawPath")
         {

@@ -296,6 +296,8 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             path_yaml += "/" + map_name_without_spaces + ".yaml";
             RealPositionMeters initialpose = getRealPosition(path_yaml, json_msg["x_initialpose"], json_msg["y_initialpose"]);
             RealPositionMeters goalpose = getRealPosition(path_yaml, json_msg["x_goalpose"], json_msg["y_goalpose"]);
+            float theta_initialpose = json_msg["theta_initialpose"];
+            float theta_goalpose = json_msg["theta_goalpose"];
             nodeManager.create_subscription(stringToTarget(json_msg["target"]));
 
 #if EN_CASA
@@ -310,8 +312,8 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
 
 #else
             std::string execute_code = "python3 " + path_python_program + " " + std::to_string(initialpose.x) + " " +
-                                       std::to_string(initialpose.y) + " " +
-                                       std::to_string(goalpose.x) + " " + std::to_string(goalpose.y) + " " + path_yaml;
+                                       std::to_string(initialpose.y) + " " + std::to_string(theta_initialpose) + " " +
+                                       std::to_string(goalpose.x) + " " + std::to_string(goalpose.y) + " " + std::to_string(theta_goalpose) + " " + path_yaml;
             pri1("---------------------------------");
             pri1(execute_code);
             pri1("---------------------------------");

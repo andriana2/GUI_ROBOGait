@@ -285,3 +285,23 @@ void ProcessController::listProcesses() const
         }
     }
 }
+
+std::string ProcessController::listProcessesString() const
+{
+    if (processMap.empty())
+    {
+        std::cout << "ProcessController: No hay procesos en ejecución.\n";
+    }
+    else
+    {
+        std::string result;
+        std::cout << "ProcessController: Procesos en ejecución:\n";
+        for (const auto &[name, pid] : processMap)
+        {
+            result += name + " ";
+            std::cout << "  - " << name << " (PID: " << pid << ")\n";
+        }
+        return result;
+    }
+    return "";
+}

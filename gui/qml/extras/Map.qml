@@ -243,7 +243,8 @@ Item {
                 break;
                 // Set goal pose x and y
             case "map_goalPosePosition":
-                if(mapInfo.finalScreenPosition.x !== 0 && mapInfo.finalScreenPosition.y !== 0 && mapInfo.finalScreenPosition.x !== mapInfo.positionScreen.x && mapInfo.finalScreenPosition.y !== mapInfo.positionScreen.y)
+                //if(mapInfo.finalScreenPosition.x !== 0 && mapInfo.finalScreenPosition.y !== 0 && mapInfo.finalScreenPosition.x !== mapInfo.positionScreen.x && mapInfo.finalScreenPosition.y !== mapInfo.positionScreen.y)
+                if(mapInfo.finalScreenPosition.x !== 0 && mapInfo.finalScreenPosition.y !== 0)
                 {
                     ctx.clearRect(0, 0, width, height);
                     console.log("finalScreenPosition.x: " + mapInfo.finalScreenPosition.x+ " mapInfo.finalScreenPosition.y " + mapInfo.finalScreenPosition.y + " mapInfo.positionScreen.x " + mapInfo.positionScreen.x  + " mapInfo.positionScreen.y " + mapInfo.positionScreen.y)
@@ -352,12 +353,12 @@ Item {
                 mapInfo.setPositionScreen(0, 0);
             else if (map_currentState === "map_goalPosePosition")
             {
-                mapInfo.setFinalPathPosition(0, 0);
-                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                mapInfo.setFinalScreenPosition(0, 0);
+                // drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
             }
             else if(map_currentState === "map_GoalPoseMove")
             {
-                mapInfo.setFinalPathPosition(0, 0);
+                mapInfo.setFinalScreenPosition(0, 0);
             }
             else if(map_currentState === "map_drawPathMove")
             {

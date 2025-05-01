@@ -21,18 +21,19 @@ void NodeManager::create_subscription(Target const &target)
 
 void NodeManager::open_server_database()
 {
-    if (!server_database_active)
+    YAML::Node config;
+    try
     {
-        YAML::Node config;
-        try
-        {
-            std::string path_ = PATH;
-            config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
-        }
-        catch (const std::exception &e)
-        {
-            std::cerr << "Error loading YAML file: " << e.what() << std::endl;
-        }
+        std::string path_ = PATH;
+        config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error loading YAML file: " << e.what() << std::endl;
+    }
+
+    if (processController.listProcessesString().find(config["NAME_DATABASE"].as<std::string>()) == std::string::npos)
+    {
         std::string name_server_database = config["NAME_DATABASE"].as<std::string>();
         std::string path_server_database = config["DATABASE"].as<std::string>();
         std::string path2comand = config["PATH2DATABASE"].as<std::string>();

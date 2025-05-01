@@ -6,6 +6,7 @@ from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
 import rclpy
 from rclpy.duration import Duration
 import sys
+import math
 
 def print_path_info(path: Path) -> None:
     """Prints information about the planned path"""
@@ -35,14 +36,18 @@ def main() -> None:
     rclpy.init()
     
     # Obtener poses de los argumentos si se proporcionan
-    if len(sys.argv) > 5:
+    if len(sys.argv) > 7:
         initial_x = float(sys.argv[1])
         initial_y = float(sys.argv[2])
-        goal_x = float(sys.argv[3])
-        goal_y = float(sys.argv[4])
-        map_file = sys.argv[5] if len(sys.argv) > 5 else None
+        intial_yaw = float(sys.argv[3]) * math.pi / 180.0 # change to radians
+        goal_x = float(sys.argv[4])
+        goal_y = float(sys.argv[5])
+        goal_yaw = float(sys.argv[6]) * math.pi / 180.0 # change to radians
+        map_file = sys.argv[7] if len(sys.argv) > 7 else None
+
     else:
         # Valores por defecto (los del ejemplo original)
+        print("No se han proporcionado argumentos. Usando valores por defecto.")
         initial_x = 0.41
         initial_y = -0.19
         goal_x = 3.81
@@ -60,8 +65,9 @@ def main() -> None:
     initial_pose.header.stamp = navigator.get_clock().now().to_msg()
     initial_pose.pose.position.x = initial_x
     initial_pose.pose.position.y = initial_y
-    initial_pose.pose.orientation.z = 0.0
-    initial_pose.pose.orientation.w = 1.0
+
+    initial_pose.pose.orientation.z = math.sin(intial_yaw / 2.0)
+    initial_pose.pose.orientation.w = math.cos(intial_yaw / 2.0)
     
     # Configurar pose objetivo
     goal_pose = PoseStamped()
@@ -69,8 +75,8 @@ def main() -> None:
     goal_pose.header.stamp = navigator.get_clock().now().to_msg()
     goal_pose.pose.position.x = goal_x
     goal_pose.pose.position.y = goal_y
-    goal_pose.pose.orientation.z = 0.0
-    goal_pose.pose.orientation.w = 1.0
+    goal_pose.pose.orientation.z = math.sin(goal_yaw / 2.0)
+    goal_pose.pose.orientation.w = math.cos(goal_yaw / 2.0)
     
     # Si se proporcionó un mapa, cargarlo
     if map_file:

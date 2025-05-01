@@ -24,6 +24,8 @@ public:
     void stopAllProcesses();
     void listProcesses() const;
 
+    std::string listProcessesString() const;
+
 private:
      std::unordered_map<std::string, pid_t> processMap;
 };
