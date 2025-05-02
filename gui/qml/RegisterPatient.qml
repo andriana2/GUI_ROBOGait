@@ -2,8 +2,8 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import "extras"
 
-SigninUserForm {
-    id: signinUserForm
+RegisterPatientForm {
+    id: registerPatientForm
 
     ErrorRectangle {
         id: errorPopup

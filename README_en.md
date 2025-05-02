@@ -1,42 +1,99 @@
-# GUI ROBOGait
+# 🧠 ROBOGait Project – Client (GUI) and ROS2 Server
 
-This project is divided into two parts: **GUI**, which refers to the client and graphical interface, and **Server**, which includes various servers, ROS2 nodes, and the robot.
+This project includes the graphical user interface developed with Qt and the server infrastructure using ROS2 and Flask to control the ROBOGait robot.
 
-## GUI
-This section contains everything needed to compile the project in Qt Creator.
+---
 
-### Steps to Install Qt Creator:
-+ Download it from the official website using a student license and your UPM email. [Link](https://www.qt.io/qt-educational-license#application)
-+ If you want to use it for Android development, follow these [steps](https://doc.qt.io/qt-6/android-getting-started.html).
-+ _Note_: You must enable the developer option on your mobile/tablet to compile the code on your device. [Video](https://youtu.be/f91wxQdP8Ak?si=0kSbNOwmc2m3rqNe)
+## Prerequisites
+- Ubuntu 22.04  
+- Internet connection  
+- UPM student account for Qt license
+
+--- 
+
+## Graphical User Interface (GUI)
+This project includes everything needed to build it in Qt Creator.
+
+### Steps to install Qt Creator:
+1. Download Qt Creator from the official website using your UPM student email and license: [link](https://www.qt.io/qt-educational-license#application).
+2. If you want to develop for Android, follow these [steps](https://doc.qt.io/qt-6/android-getting-started.html).
+3. **Note**: You must enable developer mode on your phone/tablet to compile the code on your device. Here is a [video](https://youtu.be/f91wxQdP8Ak?si=0kSbNOwmc2m3rqNe) explaining how to do it.
+
+---
 
 ## Server
-This section provides the necessary information to set up the server and communicate with the client (tablet/mobile). However, it must be complemented with the **RoboGait Indoor V3** code (as of **March 31, 2025**).
+This section includes the necessary information to set up the server and communicate with the client (tablet/mobile). This server must be complemented with the code from RoboGait Indoor v3 (as of 24/05/2025).
 
-### Steps to Install the Required Dependencies:
-+ Install ROS2 Humble [Link](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
-+ Dependencias con el robot:
-  ```bash
-  sudo apt install build-essential cmake libboost-system-dev libyaml-cpp-dev nlohmann-json3-dev libopencv-dev
-  ```
-+ Dependencias con la base de datos:
-````bash
-sudo apt install sqlite3 libsqlite3-dev
-````
+### Steps to install dependencies:
+1. Install ROS 2 Humble: [Link](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
+2. Install system dependencies:
+    ```bash
+    sudo apt install build-essential cmake libboost-system-dev libyaml-cpp-dev nlohmann-json3-dev libopencv-dev
+    ```
+3. Install Python dependencies on Linux:
+    ```bash
+    sudo apt update
+    sudo apt install python3 python3-pip
+    pip install Flask
+    ```
 
-## ERRORS AND SOLUTIONS
-If you encounter issues with **QtQuick**, run:
+---
+
+## Ports
+This project uses ports, so if you are on Linux, don’t forget to enable them:
+
+```bash
+sudo ufw enable
+sudo ufw allow 5000
+sudo ufw allow 45454
+```
+
+| Port   | Protocol | Purpose                                |
+|--------|----------|----------------------------------------|
+| 5000   | TCP      | Communication with SQLite database     |
+| 45454  | TCP/UDP  | Connection between client and server   |
+
+---
+
+## Troubleshooting
+
+If you encounter errors related to QtQuick, run:
 ```bash
 sudo apt install qml-module-qtquick-layouts
 ```
-If you experience issues with **Gazebo**, run:
+
+If Gazebo fails to run, try:
 ```bash
 source /usr/share/gazebo/setup.sh
 ```
 
-Use rviz with turtlebot3
+To launch RViz2 with Turtlebot3 navigation:
 ```bash
- ros2 run rviz2 rviz2 -d $(ros2 pkg prefix nav2_bringup)/share/nav2_bringup/rviz/nav2_default_view.rviz 
+ros2 run rviz2 rviz2 -d $(ros2 pkg prefix nav2_bringup)/share/nav2_bringup/rviz/nav2_default_view.rviz
 ```
 
-allow port 
+<!-- ## Getting Started
+
+To get started with this project, follow the steps below:
+
+1. **Clone the repository**  
+   Clone the repository to your local machine using the following command:
+   ```bash
+   git clone <REPOSITORY_URL>
+   cd GUI_ROBOGAIT/server
+   ```
+
+2. **Build the project**  
+   Make sure you have ROS 2 and its dependencies installed. Then, run the following command to build the project, ensuring you are in the `GUI_ROBOGAIT/server` directory:
+   ```bash
+   colcon build
+   source install/setup.bash
+   ```
+
+3. **Run the main node**  
+   Once the build is complete, you can run the main node of the project with the following command:
+   ```bash
+   ros2 run node_manager node_manager
+   ```
+
+With these steps, you'll have the server set up and ready for use. -->

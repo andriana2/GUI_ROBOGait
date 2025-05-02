@@ -95,7 +95,7 @@ Rectangle {
     }
     Component {
         id: register_patient
-        SigninUser {
+        RegisterPatient {
             visible: true
         }
     }

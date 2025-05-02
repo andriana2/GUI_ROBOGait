@@ -66,8 +66,8 @@ qt_add_qml_module(appgui
     qml/SelectPatient.qml
     qml/SelectPatientForm.ui.qml
     qml/RegisterPage.qml
-    qml/SigninUser.qml
-    qml/SigninUserForm.ui.qml
+    qml/RegisterPatient.qml
+    qml/RegisterPatientForm.ui.qml
 
     qml/extras/CustomToolBarForm.ui.qml
     qml/extras/CustomToolBar.qml
