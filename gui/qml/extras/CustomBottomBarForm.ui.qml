@@ -18,7 +18,6 @@ Item {
     property alias customBottomBarItem: customBottomBarItem
     property alias content: content
 
-
     Rectangle {
         id: customBottomBarItem
         width: parent.width
@@ -37,6 +36,7 @@ Item {
 
             // Contenedor de textos
             Row {
+                anchors.horizontalCenterOffset: 40
                 anchors.centerIn: parent
                 spacing: 10
 
@@ -113,8 +113,8 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorColor:"#808080"}D{i:4}D{i:5}D{i:6}D{i:7}D{i:8}D{i:3}
-D{i:2}D{i:9}D{i:1}
+    D{i:0;autoSize:true;formeditorColor:"#808080";formeditorZoom:1.33}D{i:4}D{i:5}D{i:6}
+D{i:7}D{i:8}D{i:3}D{i:2}D{i:10}D{i:11}D{i:9}D{i:1}
 }
 ##^##*/
 
