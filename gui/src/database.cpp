@@ -126,13 +126,13 @@ void Database::handleLoginResponse(const QJsonObject &response)
         if (!result.isEmpty() && result[0].isArray())
         {
             qDebug() << "Login successful!";
-            setPassLogin(true);
             QJsonArray innerArray = result[0].toArray();
 
             if (!innerArray.isEmpty() && innerArray[0].isString())
             {
                 setRole(innerArray[0].toString());
                 setUsername(innerArray[1].toString());
+                setPassLogin(true);
             }
         }
         else

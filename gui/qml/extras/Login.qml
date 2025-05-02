@@ -6,7 +6,7 @@ LoginForm {
     ErrorRectangle {
         id: errorPopup
         anchors.centerIn: parent
-        errorRectangleTextError.text: "Error: Has dejado campos vacíos"
+        errorRectangleTextError.text: qsTr("Error: Has dejado campos vacíos")
         visible: false
     }
 
@@ -25,24 +25,36 @@ LoginForm {
 
     lp_login_button.onClicked: {
         if (usernameField.text === "" || passwordField.text === "") {
-            errorPopup.errorRectangleTextError.text = "Error: Has dejado campos vacíos"
+            errorPopup.errorRectangleTextError.text = qsTr("Error: Has dejado campos vacíos")
             errorPopup.visible = true
-        }else {
+        } else {
             errorPopup.visible = false
-            console.log("Iniciar sesión presionado")
+            console.log(qsTr("Iniciar sesión presionado"))
             ddbb.login(usernameField.text, passwordField.text)
         }
     }
 
     Connections {
         target: ddbb
-        function onRoleChanged() {
-            console.log("⚡ roleChanged cambió a:", ddbb.role);
-            usernameField.text = ""
-            passwordField.text = ""
-            applicationFlow.menu_push()
+        function onPassLoginChanged(){
+            console.log("Role changed maybe true maybe false")
+            if (ddbb.passLogin)
+            {
+                usernameField.text = ""
+                passwordField.text = ""
+                applicationFlow.menu_push()
+            }
+            else
+            {
+                errorPopup.errorRectangleTextError.text = qsTr("Nombre de usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.")
+                errorPopup.visible = true
+            }
         }
+
+        // function onRoleChanged() {
+        //     console.log("⚡ roleChanged cambió a:", ddbb.role);
+        //     usernameField.text = ""
+        //     passwordField.text = ""
+        // }
     }
-
-
 }

@@ -187,8 +187,13 @@ void Cliente::connect2host(const QString hostAddress)
 {
     host = hostAddress;
     timeoutTimer->start(3000);
+
+    // Reconnect signals if they were disconnected
+    
     socket->connectToHost(host, port_udp_tcp);
     connect(socket, &QTcpSocket::connected, this, &Cliente::connected);
+    connect(socket, &QTcpSocket::readyRead, this, &Cliente::onReadyRead);
+    connect(socket, &QTcpSocket::errorOccurred, this, &Cliente::onErrorOccurred);
     qDebug() << "Conectado a ip: " << host << " y al puerto " << port_udp_tcp;
     setIpRobot(host);
 
@@ -244,29 +249,19 @@ void Cliente::closeConnection()
     qDebug() << "I am in CLOSE CONNECTION!!!";
     timeoutTimer->stop();
 
-    disconnect(socket, &QTcpSocket::readyRead, 0, 0);
+    // Disconnect signals
+    disconnect(socket, &QTcpSocket::readyRead, this, &Cliente::onReadyRead);
+    disconnect(socket, &QTcpSocket::connected, this, &Cliente::connected);
+    disconnect(socket, &QTcpSocket::errorOccurred, this, &Cliente::onErrorOccurred);
 
-    bool shouldEmit = false;
+    // Reset the socket
+    socket->abort();
+    delete socket;
+    socket = new QTcpSocket();
 
-    switch (socket->state())
-    {
-    case QAbstractSocket::UnconnectedState:
-        socket->disconnectFromHost();
-        shouldEmit = true;
-        break;
-    case QAbstractSocket::ConnectedState:
-        socket->abort();
-        shouldEmit = true;
-        break;
-    default:
-        socket->abort();
-    }
-
-    if (shouldEmit)
-    {
-        status = false;
-        emit statusChanged(status);
-    }
+    // Emit status change
+    status = false;
+    emit statusChanged(status);
 }
 
 void Cliente::onErrorOccurred(QAbstractSocket::SocketError error)
