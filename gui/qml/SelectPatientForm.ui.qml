@@ -75,6 +75,7 @@ Rectangle {
 
         ListView {
             id: listView
+            currentIndex: -1
             anchors.fill: parent
             clip: true
             model: ddbb.patients

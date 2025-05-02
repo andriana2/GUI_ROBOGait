@@ -39,6 +39,7 @@ class StringHandler : public QObject
 
     Q_PROPERTY(bool errorConnection READ errorConnection WRITE setErrorConnection NOTIFY errorConnectionChanged FINAL)
     Q_PROPERTY(QString stateBottomBar READ stateBottomBar WRITE setStateBottomBar NOTIFY stateBottomBarChanged FINAL)
+    Q_PROPERTY(int batteryPercentage READ batteryPercentage WRITE setBatteryPercentage NOTIFY batteryPercentageChanged FINAL)
 
 public:
     explicit StringHandler(QObject *parent = nullptr);
@@ -96,6 +97,11 @@ public:
     QString stateBottomBar() const;
     void setStateBottomBar(const QString &newStateBottomBar);
 
+    int batteryPercentage() const;
+    void setBatteryPercentage(int newBatteryPercentage);
+
+    void clear_all();
+
 signals:
 
     void imageReceived(const QString &image);
@@ -114,11 +120,15 @@ signals:
 
     void stateBottomBarChanged();
 
+    void batteryPercentageChanged();
+
 private:
     bool moveStop = 0;
     bool SLAM_ON = 1;
+
     Cliente *cliente;
     MapInfo *mapInfo;
+
     float currentAngular;
     float currentLineal;
 
@@ -139,6 +149,7 @@ private:
     QString m_strFindRobot;
     bool m_errorConnection = false;
     QString m_stateBottomBar = "nMnP_cbb";
+    int m_batteryPercentage = -1;
 };
 
 #endif // STRINGHANDLER_H

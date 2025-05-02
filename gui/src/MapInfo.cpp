@@ -191,6 +191,8 @@ void MapInfo::setFinalPathPosition(const int &x, const int &y)
 
 void MapInfo::clearInfoImage()
 {
+    repeated_delegate_list_view = 0;
+    
     m_mapName = "";
     m_orientation = 0.0f;
     m_originalPosition = Pixel();
@@ -201,9 +203,11 @@ void MapInfo::clearInfoImage()
     m_imgSource = "";
     m_finalPathOrientation = 0.0f; // radianes de la posicion final del robot
     m_finalPathPosition = Pixel();
-    repeated_delegate_list_view = 0;
+    
+    m_finalScreenPosition = Pixel();
     m_resolution = 0.0;
     m_checkInitInitialPose = false;
+    
     m_trajectoryGoalPose.clear();
     if (periodicTimerMapInfo->isActive())
     {

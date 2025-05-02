@@ -10,9 +10,9 @@ MainMenuForm {
         // applicationFlow.map_path_push()
         applicationFlow.select_map_push()
     }
-    hacer_mapa_mouse_area.onClicked: {
-        mapInfo.sendStopProcesses()
-    }
+    // hacer_mapa_mouse_area.onClicked: {
+    //     mapInfo.sendStopProcesses()
+    // }
     select_map_mouse_area.onClicked: {
         applicationFlow.select_map_push()
     }

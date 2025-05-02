@@ -342,7 +342,11 @@ void Database::clear()
     m_passLogin = {false};
     m_role = ("");
     m_username = ("");
+
     m_passCheckUsername = false;
+    m_patients->setStringList(QStringList());
+    m_idPatient = -1;
+    m_patient.clear();
 }
 
 bool Database::passCheckUsername() const

@@ -84,6 +84,26 @@ void Cliente::answerUdp()
             QByteArray buffer2 = {"ACK"};
             udpSocket.writeDatagram(buffer2, sender, port);
         }
+        // else if (mensaje.contains("battery"))
+        // {
+        //     QRegularExpression regex("battery:\\s*(\\d+)"); // example: "battery: 75"
+        //     QRegularExpressionMatch match = regex.match(mensaje);
+
+        //     if (match.hasMatch())
+        //     {
+        //         QString batteryValue = match.captured(1);
+
+        //         // Optionally, convert the battery value to an integer
+        //         int batteryLevel = batteryValue.toInt();
+        //         qDebug() << "Battery level as integer:" << batteryLevel;
+
+        //         stringHandler->setBatteryPercentage(batteryLevel);
+        //     }
+        //     else
+        //     {
+        //         qDebug() << "Unexpected format for battery message.";
+        //     }
+        // }
     }
 }
 
@@ -268,6 +288,7 @@ void Cliente::onErrorOccurred(QAbstractSocket::SocketError error)
 {
     qDebug() << "Socket error:" << error;
     stringHandler->setErrorConnection(true);
+    clear();
 }
 
 QString Cliente::ipRobot() const
@@ -281,4 +302,11 @@ void Cliente::setIpRobot(const QString &newIpRobot)
         return;
     m_ipRobot = newIpRobot;
     emit ipRobotChanged();
+}
+
+void Cliente::clear()
+{
+    stringHandler->clear_all();
+    mapInfo->clearInfoImage();
+    database->clear();
 }

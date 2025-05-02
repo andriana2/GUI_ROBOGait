@@ -8,7 +8,7 @@ Rectangle {
     color: "#518bb7"
     property alias select_patient_mouse_area: select_patient_mouse_area
     property alias select_map_mouse_area: select_map_mouse_area
-    property alias hacer_mapa_mouse_area: hacer_mapa_mouse_area
+    // property alias hacer_mapa_mouse_area: hacer_mapa_mouse_area
     property alias mapa_mouse_area: mapa_mouse_area
     property alias manualControl_mouse_area: manualControl_mouse_area
 
@@ -103,25 +103,25 @@ Rectangle {
                 }
             }
 
-            Rectangle {
-                id: hacer_mapa
-                width: 150
-                height: 150
-                color: "#235c87"
+            // Rectangle {
+            //     id: hacer_mapa
+            //     width: 150
+            //     height: 150
+            //     color: "#235c87"
 
-                Text {
-                    id: text3
-                    color: "#ffffff"
-                    text: qsTr("HACER MAPA")
-                    anchors.centerIn: parent
-                    font.pixelSize: 24
-                }
+            //     Text {
+            //         id: text3
+            //         color: "#ffffff"
+            //         text: qsTr("HACER MAPA")
+            //         anchors.centerIn: parent
+            //         font.pixelSize: 24
+            //     }
 
-                MouseArea {
-                    id: hacer_mapa_mouse_area
-                    anchors.fill: parent
-                }
-            }
+            //     MouseArea {
+            //         id: hacer_mapa_mouse_area
+            //         anchors.fill: parent
+            //     }
+            // }
         }
     }
     Image {

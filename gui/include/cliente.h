@@ -48,6 +48,8 @@ public:
     QString ipRobot() const;
     void setIpRobot(const QString &newIpRobot);
 
+    void clear();
+
 public slots:
     void closeConnection(); // Gracefully closes the TCP connection
     void connect2host(const QString hostAddress); // Initiates a connection to the specified host

@@ -71,7 +71,11 @@ Rectangle {
             background: Rectangle {
                 color: close.hovered ? "#B0BEC5" : "transparent" // Light gray on hover
             }
-            onTriggered: console.log("Apagar")
+            onTriggered: {
+                console.log("Apagar")
+                mapInfo.sendStopProcesses()
+            }
+
         }
         MenuItem {
             id: logout

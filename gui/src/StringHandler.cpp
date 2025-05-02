@@ -446,3 +446,45 @@ void StringHandler::setStateBottomBar(const QString &newStateBottomBar)
         return;
     emit stateBottomBarChanged();
 }
+
+int StringHandler::batteryPercentage() const
+{
+    return m_batteryPercentage;
+}
+
+void StringHandler::setBatteryPercentage(int newBatteryPercentage)
+{
+    if (m_batteryPercentage == newBatteryPercentage)
+        return;
+    m_batteryPercentage = newBatteryPercentage;
+    emit batteryPercentageChanged();
+}
+
+void StringHandler::clear_all(){
+    moveStop = 0;
+    SLAM_ON = 1;
+
+    currentAngular = 0;
+    currentLineal = 0;
+
+    imageBuffer.clear();
+    receivedFrames = 1;
+    totalFrames = 0;
+    totalSize = 0;
+    finalPosition.x_pixel = 0;
+    finalPosition.y_pixel = 0;
+    finalPosition.yaw = 0;
+    finalPosition.active = false;
+
+    m_imageSource = "";
+    m_mapping = false;
+    m_saveMap = false;
+    m_typeSaveMap = -1;
+    m_nameMap = "";
+    m_model->setStringList(QStringList());
+    
+    m_strFindRobot = "";
+    m_errorConnection = false;
+    m_stateBottomBar = "nMnP_cbb";
+    m_batteryPercentage = -1;
+}
