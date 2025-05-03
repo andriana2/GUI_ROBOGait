@@ -204,16 +204,16 @@ Rectangle {
             source: "../images/icon_app/circle-info-solid.svg"
             fillMode: Image.PreserveAspectFit
         }
-        //        Behavior on scale {
-        //            NumberAnimation {
-        //                duration: 150
-        //                easing.type: Easing.OutQuad
-        //            }
-        //        }
+               Behavior on scale {
+                   NumberAnimation {
+                       duration: 150
+                       easing.type: Easing.OutQuad
+                   }
+               }
 
-        //        // Change scale when pressed/released
-        //        onPressed: scale = 1.2
-        //        onReleased: scale = 1.0
+               // Change scale when pressed/released
+               onPressed: scale = 1.2
+               onReleased: scale = 1.0
     }
 }
 
