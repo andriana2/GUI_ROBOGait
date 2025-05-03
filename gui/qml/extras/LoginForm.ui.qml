@@ -8,146 +8,157 @@ Page {
     property alias lp_login_button: lp_login_button
     property alias usernameField: usernameField
     property alias passwordField: passwordField
-    // width: 1300
-    // height: 700
+
+    // Calcula la altura del teclado y ajusta el padding inferior dinámicamente
+    property int keyboardHeight: Qt.inputMethod.visible ? (parent.height - Qt.inputMethod.keyboardRectangle.height + 20) : 0
+
     Rectangle {
         id: rectangle
         color: "#518bb7"
         anchors.fill: parent
 
-        Column {
-            id: column
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: -60
+        ScrollView {
+            id: scroll
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.topMargin: 20
+            anchors.bottomMargin: 70
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 20
+            clip: true
+            bottomPadding: keyboardHeight > 0 ? keyboardHeight : 0
 
-            Image {
-                source: "../../images/logo.png"
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: 220
-                height: 220
-            }
-
-            TextField {
-                id: usernameField
-                width: 400
-                height: 50
-                color: "#000000"
-                anchors.horizontalCenter: parent.horizontalCenter
-                font.pointSize: 20
-                verticalAlignment: TextInput.AlignVCenter
-                leftPadding: 10
-                rightPadding: 10
-                background: Rectangle {
-                    radius: 10
-                    color: "#FFFFFF"
-                    border.color: usernameField.activeFocus ? "#518bb7" : "#CCCCCC"
-
-                    Text {
-                        visible: usernameField.text === "" && !usernameField.activeFocus
-                        text: qsTr("Usuario")
-                        color: "#808080"
-                        anchors {
-                            left: parent.left
-                            leftMargin: 15
-                            top: parent.top
-                            topMargin: 15
-                        }
-                        font: usernameField.font
-                    }
+            Behavior on bottomPadding {
+                NumberAnimation {
+                    duration: 250
                 }
-                Keys.onTabPressed: passwordField.focus = true
-                Keys.onReturnPressed: passwordField.focus = true
             }
-
-            TextField {
-                id: passwordField
-                width: 400
-                height: 50
-                color: "#000000"
+            Column {
+                id: column
                 anchors.horizontalCenter: parent.horizontalCenter
-                font.pointSize: 20
-                verticalAlignment: TextInput.AlignVCenter
-                leftPadding: 10
-                rightPadding: 10
-                echoMode: TextInput.Password // Ensure this is set to mask the input
-
-                background: Rectangle {
-                    radius: 10
-                    color: "#FFFFFF"
-                    border.color: passwordField.activeFocus ? "#518bb7" : "#CCCCCC"
-
-                    Text {
-                        visible: passwordField.text === "" && !passwordField.activeFocus
-                        text: qsTr("Contraseña")
-                        color: "#808080"
-                        anchors {
-                            left: parent.left
-                            leftMargin: 15
-                            top: parent.top
-                            topMargin: 15
-                        }
-                        font: passwordField.font
-                    }
-                }
-
-                // Ensure focus behavior is correct
-                Keys.onTabPressed: usernameField.focus = true
-                Keys.onReturnPressed: usernameField.focus = true
-            }
-
-            Button {
-                id: lp_login_button
-                width: 400
-                text: "Iniciar Sesion"
-                font.capitalization: Font.AllUppercase
-                font.weight: Font.Medium
-                font.bold: true
-                font.pointSize: 28
-                height: 50
-                background: Rectangle {
-                    radius: 10
-                    color: "#aed2ea"
-                    border.color: "#aed2ea"
-                }
-                //                    onClicked: console.log("Registrarse presionado")
-            }
-
-            Row {
-                anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width
                 spacing: 20
+                padding: 50
 
-                Button {
-                    id: lp_singin_button
-                    text: "Registrarse"
-                    font.weight: Font.Light
-                    font.capitalization: Font.AllUppercase
-                    width: 190
+                Image {
+                    source: "../../images/logo.png"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: 220
+                    height: 220
+                }
+
+                TextField {
+                    id: usernameField
+                    width: 400
                     height: 50
-                    font.pointSize: 22
+                    color: "#000000"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    font.pointSize: 20
+                    verticalAlignment: TextInput.AlignVCenter
+                    leftPadding: 10
+                    rightPadding: 10
+
                     background: Rectangle {
                         radius: 10
-                        color: "#c2d9e9"
-                        border.color: "#c2d9e9"
+                        color: "#FFFFFF"
+                        border.color: usernameField.activeFocus ? "#518bb7" : "#CCCCCC"
+
+                        Text {
+                            visible: usernameField.text === ""
+                                     && !usernameField.activeFocus
+                            text: qsTr("Usuario")
+                            color: "#808080"
+                            anchors.left: parent.left
+                            anchors.leftMargin: 15
+                            anchors.top: parent.top
+                            anchors.topMargin: 15
+                            font: usernameField.font
+                        }
                     }
-                    //                    onClicked: console.log("Registrarse presionado")
+
+                    Keys.onTabPressed: passwordField.focus = true
+                    Keys.onReturnPressed: passwordField.focus = true
+                }
+
+                TextField {
+                    id: passwordField
+                    width: 400
+                    height: 50
+                    color: "#000000"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    font.pointSize: 20
+                    verticalAlignment: TextInput.AlignVCenter
+                    leftPadding: 10
+                    rightPadding: 10
+                    echoMode: TextInput.Password
+
+                    background: Rectangle {
+                        radius: 10
+                        color: "#FFFFFF"
+                        border.color: passwordField.activeFocus ? "#518bb7" : "#CCCCCC"
+
+                        Text {
+                            visible: passwordField.text === ""
+                                     && !passwordField.activeFocus
+                            text: qsTr("Contraseña")
+                            color: "#808080"
+                            anchors.left: parent.left
+                            anchors.leftMargin: 15
+                            anchors.top: parent.top
+                            anchors.topMargin: 15
+                            font: passwordField.font
+                        }
+                    }
                 }
 
                 Button {
-                    id: lp_guest_button
-                    text: "Invitado"
-                    font.weight: Font.Light
-                    font.capitalization: Font.AllUppercase
-                    width: 190
+                    id: lp_login_button
+                    width: 400
                     height: 50
-                    font.pointSize: 22
+                    text: "Iniciar Sesion"
+                    font.capitalization: Font.AllUppercase
+                    font.weight: Font.Medium
+                    font.bold: true
+                    font.pointSize: 28
                     background: Rectangle {
                         radius: 10
-                        color: "#c2d9e9"
-                        border.color: "#c2d9e9"
+                        color: "#aed2ea"
+                        border.color: "#aed2ea"
                     }
-                    //                    onClicked: console.log("Modo invitado")
+                }
+
+                Row {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: 20
+
+                    Button {
+                        id: lp_singin_button
+                        text: "Registrarse"
+                        font.weight: Font.Light
+                        font.capitalization: Font.AllUppercase
+                        width: 190
+                        height: 50
+                        font.pointSize: 22
+                        background: Rectangle {
+                            radius: 10
+                            color: "#c2d9e9"
+                            border.color: "#c2d9e9"
+                        }
+                    }
+
+                    Button {
+                        id: lp_guest_button
+                        text: "Invitado"
+                        font.weight: Font.Light
+                        font.capitalization: Font.AllUppercase
+                        width: 190
+                        height: 50
+                        font.pointSize: 22
+                        background: Rectangle {
+                            radius: 10
+                            color: "#c2d9e9"
+                            border.color: "#c2d9e9"
+                        }
+                    }
                 }
             }
         }
@@ -156,8 +167,8 @@ Page {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.75;height:480;width:640}D{i:3}D{i:4}D{i:7}D{i:9}
-D{i:6}D{i:10}D{i:13}D{i:15}D{i:12}D{i:2}D{i:1}
+    D{i:0;autoSize:true;height:480;width:640}D{i:4}D{i:5}D{i:8}D{i:11}D{i:13}D{i:3}D{i:2}
+D{i:1}
 }
 ##^##*/
 

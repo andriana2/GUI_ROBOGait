@@ -11,10 +11,12 @@ SignInForm {
     }
 
     sip_login_button.onClicked: {
+        clear()
         register_page.login_push()
     }
 
     sip_guest_button.onClicked: {
+        clear()
         register_page.guest_push()
     }
 

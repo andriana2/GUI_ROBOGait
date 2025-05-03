@@ -38,6 +38,7 @@ GuestForm {
             console.log("Iniciar como invitado presionado")
             ddbb.role =("doctor")
             ddbb.username = nameField.text
+            applicationFlow.menu_push()
             nameField.text = ""
             lastnameField.text = ""
 
