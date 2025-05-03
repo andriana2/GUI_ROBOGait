@@ -13,8 +13,9 @@ Rectangle {
     property alias manualControl_mouse_area: manualControl_mouse_area
 
     Column {
+        id: column
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -20
+        anchors.verticalCenterOffset: -60
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 40
 
@@ -176,11 +177,51 @@ Rectangle {
         anchors.bottomMargin: -20
         fillMode: Image.PreserveAspectFit
     }
+
+    Text {
+        id: explain
+        y: 547
+        width: 862
+        height: 39
+        color: "#ffffff"
+        text: qsTr("Bienvenido a la aplicación de ROBOGait. Para comenzar, seleccione un mapa y un paciente. Puede acceder al control manual desde esta pantalla. Para más detalles, presione el botón de información.")
+        anchors.bottom: parent.bottom
+        wrapMode: Text.Wrap
+        anchors.bottomMargin: 81
+        font.pixelSize: 16
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignTop
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
+    Button {
+        id: infoButton
+        width: 37
+        height: 37
+        anchors.verticalCenter: explain.verticalCenter
+        anchors.left: explain.right
+        anchors.leftMargin: 10
+        background: Image {
+            source: "../images/icon_app/circle-info-solid.svg"
+            fillMode: Image.PreserveAspectFit
+        }
+        //        Behavior on scale {
+        //            NumberAnimation {
+        //                duration: 150
+        //                easing.type: Easing.OutQuad
+        //            }
+        //        }
+
+        //        // Change scale when pressed/released
+        //        onPressed: scale = 1.2
+        //        onReleased: scale = 1.0
+    }
 }
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}D{i:2}D{i:9}D{i:1}D{i:19}D{i:20}D{i:21}D{i:22}
+    D{i:0;autoSize:true;formeditorZoom:0.75;height:700;width:1300}D{i:4}D{i:5}D{i:3}D{i:7}
+D{i:8}D{i:6}D{i:2}D{i:11}D{i:12}D{i:10}D{i:14}D{i:15}D{i:13}D{i:9}D{i:1}D{i:16}D{i:17}
+D{i:18}D{i:19}D{i:20}D{i:21}
 }
 ##^##*/
 

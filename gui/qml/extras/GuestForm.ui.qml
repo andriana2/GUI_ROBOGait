@@ -22,7 +22,7 @@ Page {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.topMargin: 20
-            anchors.bottomMargin: 70
+            anchors.bottomMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
             clip: true
             bottomPadding: keyboardHeight > 0 ? keyboardHeight : 0

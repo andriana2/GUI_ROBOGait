@@ -25,7 +25,7 @@ Page {
             id: scroll
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            anchors.topMargin: 20
+            anchors.topMargin: 5
             anchors.bottomMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
             clip: true
