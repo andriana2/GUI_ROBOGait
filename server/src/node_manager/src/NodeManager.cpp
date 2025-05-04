@@ -17,8 +17,29 @@ void NodeManager::create_subscription(Target const &target)
             RCLCPP_INFO(node_manager->get_logger(), "Suscriptor global plan created, waiting messages...");
         }
     }
+
+    if (target == Battery_Level)
+    {
+        if (!battert_subscription_)
+        {
+            battert_subscription_ = node_manager->create_subscription<sensor_msgs::msg::BatteryState>(
+                "/rover_mini/battery_status", 10, std::bind(&NodeManager::battery_callback, this, std::placeholders::_1));
+            RCLCPP_INFO(node_manager->get_logger(), "Suscriptor /rover_mini/battery_status created, waiting messages...");
+        }
+    }
 }
 
+void NodeManager::close_subscription(Target const &target)
+{
+        if (target == Battery_Level)
+    {
+        if (!battert_subscription_)
+        {
+            battert_subscription_.reset();
+            RCLCPP_INFO(node_manager->get_logger(), "Close Publisher /rover_mini/battery_status destroy.");
+        }
+    }
+}
 void NodeManager::open_server_database()
 {
     YAML::Node config;
@@ -506,6 +527,11 @@ void NodeManager::start_robot()
         processController.startProcess(start_robot_name, start_robot);
         processController.startProcess(name_tf_service, tf_service);
         start_robot_launch_file = true;
+
+#if ROBOT
+        create_subscription(Battery_Level);
+#endif
+
     }
 #endif
 }
@@ -520,6 +546,9 @@ void NodeManager::stop_robot()
 
     if (start_robot_launch_file)
     {
+#if ROBOT
+        close_subscription(Battery_Level);
+#endif
         YAML::Node config;
         try
         {
@@ -687,6 +716,17 @@ void NodeManager::topic_plan_callback(const nav_msgs::msg::Path::SharedPtr msg)
     }
 
     RCLCPP_INFO(node_manager->get_logger(), "Received plan with %zu poses", path_.size());
+}
+
+void NodeManager::battery_callback(const sensor_msgs::msg::BatteryState::SharedPtr msg)
+{
+    // RCLCPP_INFO(node_manager->get_logger(),
+    //             "Voltaje: %.2f V, Carga: %.2f%%, Presente: %s",
+    //             msg->voltage,
+    //             msg->percentage,
+    //             msg->present ? "Sí" : "No");
+
+    battery_level = msg->percentage;
 }
 
 std::vector<RealPositionMeters> NodeManager::getRealPositionPath()

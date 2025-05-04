@@ -81,6 +81,8 @@ std::string targetToString(Target target)
         return "Goal_Pose_Path";
     case All_Information_Pose:
         return "All_Information_Pose";
+    case Battery_Level:
+        return "Battery_Level";
     default:
         std::cerr << "-Not found target num: "<< target;
         return "UNKNOWN";
@@ -133,7 +135,8 @@ Target stringToTarget(const std::string &str)
         return Goal_Pose_Path;
     if (str == "All_Information_Pose")
         return All_Information_Pose;
-
+    if (str == "Battery_Level")
+        return Battery_Level;
     throw std::invalid_argument("Invalid Target string: " + str);
 }
 

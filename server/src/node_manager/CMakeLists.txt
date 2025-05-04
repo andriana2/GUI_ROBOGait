@@ -3,6 +3,7 @@ project(node_manager)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(nav2_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
@@ -22,7 +23,7 @@ add_executable(node_manager
     src/ProcessController.cpp
 )
 
-ament_target_dependencies(node_manager rclcpp geometry_msgs interface_srv nav2_msgs rclcpp_action)
+ament_target_dependencies(node_manager rclcpp geometry_msgs interface_srv nav2_msgs rclcpp_action sensor_msgs)
 
 target_link_libraries(node_manager yaml-cpp nlohmann_json::nlohmann_json Boost::system ${OpenCV_LIBS})
 
