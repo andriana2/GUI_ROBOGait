@@ -94,8 +94,12 @@ public:
     bool errorConnection() const;
     void setErrorConnection(bool newErrorConnection);
 
+    void stopTimerBattery();
+
     QString stateBottomBar() const;
     void setStateBottomBar(const QString &newStateBottomBar);
+
+    void batteryLevel(const QJsonObject &json);
 
     int batteryPercentage() const;
     void setBatteryPercentage(int newBatteryPercentage);
@@ -133,6 +137,7 @@ private:
     float currentLineal;
 
     QTimer *periodicTimer;
+    QTimer *periodicTimerBattery;
 
     QByteArray imageBuffer;
     size_t totalSize = 0;

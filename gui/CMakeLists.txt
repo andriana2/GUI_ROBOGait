@@ -105,12 +105,10 @@ qt_add_qml_module(appgui
     images/icon_app/eraser-solid.svg
     images/icon_app/file-arrow-down-solid.svg
     images/icon_app/keyboard_left.svg
-    images/icon_app/map-pin-solid.svg
     images/icon_app/pencil-solid.svg
     images/icon_app/pen-to-square-regular.svg
     images/icon_app/saveButton.png
     images/icon_app/trash-solid.svg
-    images/icon_app/wheel.svg
     images/icon_app/plus-solid.svg
     images/icon_app/circle-info-solid.svg
 

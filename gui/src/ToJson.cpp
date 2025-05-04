@@ -225,6 +225,14 @@ QJsonDocument stopProcesses()
     return QJsonDocument(jsonObj);
 }
 
+QJsonDocument sendRequestBattery()
+{
+    QJsonObject jsonObj;
+    jsonObj["opt"] = headerToString(REQUEST_MSG);
+    jsonObj["target"] = targetToString(Battery_Level);
+    return QJsonDocument(jsonObj);
+}
+
 QJsonDocument sendRequestRobotPosition(QString const &map_name)
 {
     QJsonObject jsonObj;

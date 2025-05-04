@@ -103,7 +103,7 @@ Item {
                 id: battery
                 width: 30
                 height: 15
-                percentage: 27
+                percentage: 0
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
             }

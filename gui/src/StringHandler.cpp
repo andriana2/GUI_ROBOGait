@@ -24,6 +24,19 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
                         i = 0;
                 }
                 i++; });
+
+    periodicTimerBattery = new QTimer(this);
+    connect(periodicTimerBattery, &QTimer::timeout, this, [this]()
+            {
+                static int i = 0;
+                if (i == 10)
+                {
+                    cliente->sendMessage(ToJson::sendRequestBattery());
+                    i = 0;
+                }
+                if (i == 10)
+                    i = 0;
+                i++; });
 }
 void StringHandler::setClient(Cliente *cli) { cliente = cli; }
 
@@ -393,6 +406,13 @@ void StringHandler::requestMapName()
 
 void StringHandler::menu_page(bool in)
 {
+    if (in)
+    {
+        if (!periodicTimerBattery->isActive())
+        {
+            periodicTimerBattery->start(200);
+        }
+    }
     mapInfo->setCheckInitInitialPose(false); // OJOOOOOOOOOOOOOOOOOOOOOO
     cliente->sendMessage(ToJson::sendStateMenu(in));
 }
@@ -429,6 +449,14 @@ void StringHandler::setErrorConnection(bool newErrorConnection)
     emit errorConnectionChanged();
 }
 
+void StringHandler::stopTimerBattery()
+{
+    if (periodicTimerBattery->isActive())
+    {
+        periodicTimerBattery->stop();
+    }
+}
+
 QString StringHandler::stateBottomBar() const
 {
     return m_stateBottomBar;
@@ -438,7 +466,7 @@ void StringHandler::setStateBottomBar(const QString &newStateBottomBar)
 {
     if (m_stateBottomBar == newStateBottomBar)
         return;
-    if(newStateBottomBar == "MP_cbb" || newStateBottomBar == "nMP_cbb"|| newStateBottomBar == "MnP_cbb"|| newStateBottomBar == "nMnP_cbb"|| newStateBottomBar == "nothing_cbb"|| newStateBottomBar == "onlyBattery")
+    if (newStateBottomBar == "MP_cbb" || newStateBottomBar == "nMP_cbb" || newStateBottomBar == "MnP_cbb" || newStateBottomBar == "nMnP_cbb" || newStateBottomBar == "nothing_cbb" || newStateBottomBar == "onlyBattery")
     {
         m_stateBottomBar = newStateBottomBar;
     }
@@ -446,6 +474,35 @@ void StringHandler::setStateBottomBar(const QString &newStateBottomBar)
         return;
     emit stateBottomBarChanged();
 }
+
+void StringHandler::batteryLevel(const QJsonObject &json)
+{
+    const QJsonValue value = json.value("battery_level");
+
+    if (!value.isDouble())
+    {
+        qWarning() << "Invalid or missing 'battery_level' in JSON.";
+        return;
+    }
+
+    double batteryLevel = value.toDouble();
+    qDebug() << batteryLevel << "batteryLevel++++++++++++++++++++++++++++++++++++++++++++++";
+    if (batteryLevel == -1.0 )
+    {
+        qDebug() << "Paso a -1";
+        setBatteryPercentage(static_cast<int>(batteryLevel));
+        return;
+    }
+    if (batteryLevel < 0.0 || batteryLevel > 100.0)
+    {
+        qWarning() << "Battery level out of expected range (0–100):" << batteryLevel;
+        return;
+    }
+
+
+    setBatteryPercentage(static_cast<int>(batteryLevel));
+}
+
 
 int StringHandler::batteryPercentage() const
 {
@@ -460,7 +517,8 @@ void StringHandler::setBatteryPercentage(int newBatteryPercentage)
     emit batteryPercentageChanged();
 }
 
-void StringHandler::clear_all(){
+void StringHandler::clear_all()
+{
     moveStop = 0;
     SLAM_ON = 1;
 
@@ -482,9 +540,9 @@ void StringHandler::clear_all(){
     m_typeSaveMap = -1;
     m_nameMap = "";
     m_model->setStringList(QStringList());
-    
+
     m_strFindRobot = "";
     m_errorConnection = false;
     m_stateBottomBar = "nMnP_cbb";
-    m_batteryPercentage = -1;
+    m_batteryPercentage = -10;
 }

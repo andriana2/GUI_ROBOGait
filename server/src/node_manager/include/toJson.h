@@ -25,5 +25,6 @@ namespace toJson
     
     json sendStopProcess();
 
+    json sendBatteryLevel(float battery_level);
 }
 #endif // TOJSON_H

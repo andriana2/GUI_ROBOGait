@@ -178,6 +178,8 @@ Target stringToTarget(const QString &str)
         return Goal_Pose_Path;
     else if (str == "All_Information_Pose")
         return All_Information_Pose;
+    else if (str == "Battery_Level")    
+        return Battery_Level;
     else
     {
         Q_ASSERT(false);
@@ -233,6 +235,8 @@ QString targetToString(Target target)
         return "Goal_Pose_Path";
     case All_Information_Pose:
         return "All_Information_Pose";
+    case Battery_Level:
+        return "Battery_Level";
     default:
         Q_ASSERT(false);
         return "Joystick_Position";

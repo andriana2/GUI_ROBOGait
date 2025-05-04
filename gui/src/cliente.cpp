@@ -163,6 +163,8 @@ void Cliente::processJson(const QJsonDocument &json)
             // &
             // &
         }
+        if(stringToTarget(jsonObj["target"].toString()) == Battery_Level)
+            stringHandler->batteryLevel(jsonObj);
         if (stringToTarget(jsonObj["target"].toString()) == Robot_Position_Pixel)
             stringHandler->getRobotPositionPixel(jsonObj);
         if (stringToTarget(jsonObj["target"].toString()) == Robot_Position_Pixel_Initialpose)
@@ -251,6 +253,10 @@ void Cliente::connected()
 
 void Cliente::sendMessage(const QJsonDocument &json)
 {
+    if (json.isObject() && json.object().contains("Stop_Process"))
+    {
+        stringHandler->stopTimerBattery();
+    }
     if (socket->state() == QTcpSocket::ConnectedState)
     {
         QByteArray byteArray = json.toJson(QJsonDocument::Compact);

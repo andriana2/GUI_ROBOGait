@@ -297,12 +297,12 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target: bottomBar
-                state: "onlyBattery"
+                state: "nothing_cbb"
             }
             PropertyChanges {
                 target: mystackview
                 anchors.top: toolbar.bottom
-                anchors.bottom: bottomBar.top
+                anchors.bottom: parent.bottom
             }
         },
         State {

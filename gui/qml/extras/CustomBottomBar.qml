@@ -4,6 +4,26 @@ CustomBottomBarForm {
     id: root
     state: "nothing_cbb"
 
+
+    Connections {
+        target: stringHandler
+        function onBatteryPercentageChanged() {
+            console.log("HOLAAAA")
+            if (stringHandler.batteryPercentage < 0) {
+                console.log("Battery percentage is negative")
+                batteryItem.enabled = false
+                batteryItem.opacity = 0
+            }
+            else {
+                if (state !== "nothing_cbb"){
+                    batteryPercentage = stringHandler.batteryPercentage
+                    batteryItem.enabled = true
+                    batteryItem.opacity = 1
+                }
+            }
+        }
+    }
+
     states: [
         State {
             // map and patient active
@@ -47,4 +67,5 @@ CustomBottomBarForm {
         }
 
     ]
+
 }

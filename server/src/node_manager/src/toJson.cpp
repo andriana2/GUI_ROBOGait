@@ -112,4 +112,12 @@ namespace toJson
             {"opt", headerToString(MSG)},
             {"target", targetToString(Stop_Process)}};
     }
+
+    json sendBatteryLevel(float battery_level)
+    {
+        return {
+            {"opt", headerToString(MSG)},
+            {"target", targetToString(Battery_Level)},
+            {"battery_level", battery_level}};
+    }
 }

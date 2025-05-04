@@ -40,6 +40,8 @@ namespace ToJson
     QJsonDocument sendWaypointFollower(QString const &map_name, QList<Pixel> pixels , int const &height);
 
     QJsonDocument stopProcesses();
+
+    QJsonDocument sendRequestBattery();
 }
 
 #endif // TOJSON_H

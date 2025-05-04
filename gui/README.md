@@ -8,18 +8,14 @@ La estructura del directorio `gui` es la siguiente:
 
 ```
 gui/
-├── android/            # Archivos de encabezado para las funcionalidades principales del gestor de nodos
+├── android/            # Carpeta donde se crea el icono de la aplicacion en android
 ├── images/        # Images e iconos del proyecto
 ├── include/              # Parámetros de configuración
 ├── qml/              # Archivos del front-end
 ├── src/                # Código fuente de la implementación del gestor de nodos
 ├── test/                # Donde se ejecutan los test del proyecto
-├── CMakeLists.txt      # Configuración del sistema de construcción
-└── README.md           # Documentación del gestor de nodos
+└── CMakeLists.txt      # Configuración del sistema de construcción
 ```
-
-## Uso
-
 
 ## Uso
 

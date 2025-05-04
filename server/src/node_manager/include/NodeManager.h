@@ -54,6 +54,8 @@ public:
     void topic_plan_callback(const nav_msgs::msg::Path::SharedPtr msg);
     void battery_callback(const sensor_msgs::msg::BatteryState::SharedPtr msg);
 
+    float battery_level = -1;
+
 private:
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_publisher_;
     rclcpp::Client<interface_srv::srv::GetRobotPosition>::SharedPtr tf_service_client_;
@@ -70,7 +72,7 @@ private:
     bool slam_launch_file = false;
     bool bringup_launch_file = false;
     bool start_robot_launch_file = false;
-    float battery_level;
+    // float battery_level;
 
     std::vector<RealPositionMeters> path_;
 };

@@ -418,6 +418,10 @@ void Servidor::handleRequestMsg(const json &json_msg)
             sendMsg(toJson::sendRobotPositionInitialpose(fp.x_pixel, fp.y_pixel, fp.yaw));
         }
     }
+    else if (json_msg.contains("target") && json_msg["target"] == targetToString(Battery_Level))
+    {
+        sendMsg(toJson::sendBatteryLevel(nodeManager.battery_level));
+    }
 }
 
 void Servidor::handleRequestImg(const json &json_msg)
