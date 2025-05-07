@@ -50,6 +50,8 @@ class MapInfo : public QObject
     Q_PROPERTY(bool checkInitInitialPose READ checkInitInitialPose WRITE setCheckInitInitialPose NOTIFY checkInitInitialPoseChanged FINAL)
     Q_PROPERTY(QList<Pixel> trajectoryGoalPose READ trajectoryGoalPose NOTIFY trajectoryGoalPoseChanged FINAL)
 
+    // Q_PROPERTY(QVariantMap mapInformation READ mapInformation WRITE setMapInformation NOTIFY mapInformationChanged)
+
 
 public:
     explicit MapInfo(QObject *parent = nullptr);

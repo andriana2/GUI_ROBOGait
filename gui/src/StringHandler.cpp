@@ -61,7 +61,6 @@ void StringHandler::sendStateRemoteControlledHandler(bool mapping, bool in)
     cliente->sendMessage(ToJson::sendStateRemoteControlled(mapping, in));
 }
 
-
 QString StringHandler::updateMapPaintPoint(QImage &mapa, int columna, int fila, float yaw)
 {
     fila = mapa.height() - 1 - fila; // OOOOJJJJOOOO porque en qt el origen de coordenadas esta invertido
@@ -444,7 +443,7 @@ void StringHandler::batteryLevel(const QJsonObject &json)
 
     double batteryLevel = value.toDouble();
     qDebug() << batteryLevel << "batteryLevel++++++++++++++++++++++++++++++++++++++++++++++";
-    if (batteryLevel == -1.0 )
+    if (batteryLevel == -1.0)
     {
         qDebug() << "Paso a -1";
         setBatteryPercentage(static_cast<int>(batteryLevel));
@@ -456,10 +455,8 @@ void StringHandler::batteryLevel(const QJsonObject &json)
         return;
     }
 
-
     setBatteryPercentage(static_cast<int>(batteryLevel));
 }
-
 
 int StringHandler::batteryPercentage() const
 {
@@ -534,18 +531,25 @@ void StringHandler::setMapNameTest(const QString &newMapNameTest)
 }
 // void StringHandler::setStateBottomBar(const QString &newStateBottomBar)
 
-
-void StringHandler::updateBottomBarState() {
+void StringHandler::updateBottomBarState()
+{
     QString state;
 
     // Determinar estado según si hay mapa (M) o no (nM), y paciente (P) o no (nP)
-    if (!m_mapNameTest.isEmpty() && !m_patientName.isEmpty()) {
+    if (!m_mapNameTest.isEmpty() && !m_patientName.isEmpty())
+    {
         state = "MP_cbb";
-    } else if (m_mapNameTest.isEmpty() && !m_patientName.isEmpty()) {
+    }
+    else if (m_mapNameTest.isEmpty() && !m_patientName.isEmpty())
+    {
         state = "nMP_cbb";
-    } else if (!m_mapNameTest.isEmpty() && m_patientName.isEmpty()) {
+    }
+    else if (!m_mapNameTest.isEmpty() && m_patientName.isEmpty())
+    {
         state = "MnP_cbb";
-    } else if (m_mapNameTest.isEmpty() && m_patientName.isEmpty()) {
+    }
+    else if (m_mapNameTest.isEmpty() && m_patientName.isEmpty())
+    {
         state = "nMnP_cbb";
     }
 
@@ -553,26 +557,18 @@ void StringHandler::updateBottomBarState() {
     setStateBottomBar(state);
 }
 
-float StringHandler::angularVelocity() const
+void StringHandler::setCurrentVelocity(const float &newAngularVelocity, const float &newLinealVelocity)
 {
-    return m_angularVelocity;
-}
-
-void StringHandler::setAngularVelocity(const float &newAngularVelocity)
-{
-    if (m_angularVelocity == newAngularVelocity)
-        return;
     bool ok;
     bool moveStopLocal;
 
-    // Convertir angular a float y redondear
+    // Convertir lineal a float y redondear
     float angular_f = std::round(newAngularVelocity * 10000.0f) / 10000.0f;
+    float lineal_f = std::round(newLinealVelocity * 10000.0f) / 10000.0f;
 
     // Determinar si el robot está detenido
     float margin = 0.0001;
-    moveStopLocal = std::abs(angular_f) <= margin;
-
-    // moveStopLocal = (std::abs(lineal_f) <= margin && std::abs(angular_f) <= margin);
+    moveStopLocal = (std::abs(lineal_f) <= margin && std::abs(angular_f) <= margin);
     if (moveStopLocal && moveStop)
     {
         // Si ya está detenido y no hay cambios, no hacemos nada
@@ -582,15 +578,32 @@ void StringHandler::setAngularVelocity(const float &newAngularVelocity)
     {
         // El robot se detuvo: enviar posición cero y detener mensajes periódicos
         cliente->sendMessage(ToJson::sendJoystickPosition(0.0f, 0.0f));
+        periodicTimer->stop();
         moveStop = true;
+        m_angularVelocity = 0.0;
+        m_linealVelocity = 0.0;
+        emit angularVelocityChanged();
+        emit linealVelocityChanged();
     }
     else
     {
         // El robot está en movimiento: actualizar valores y activar el temporizador
-        m_angularVelocity = newAngularVelocity;
+        m_angularVelocity = angular_f;
+        m_linealVelocity = lineal_f;
+
+        if (!periodicTimer->isActive())
+        {
+            periodicTimer->start(200);
+        }
         moveStop = false;
+        emit angularVelocityChanged();
+        emit linealVelocityChanged();
     }
-    emit angularVelocityChanged();
+}
+
+float StringHandler::angularVelocity() const
+{
+    return m_angularVelocity;
 }
 
 float StringHandler::linealVelocity() const
@@ -598,38 +611,4 @@ float StringHandler::linealVelocity() const
     return m_linealVelocity;
 }
 
-void StringHandler::setLinealVelocity(const float &newLinealVelocity)
-{
-    if (m_linealVelocity == newLinealVelocity)
-        return;
 
-    bool ok;
-    bool moveStopLocal;
-
-    // Convertir linear a float y redondear
-    float linear_f = std::round(newLinealVelocity * 10000.0f) / 10000.0f;
-
-    // Determinar si el robot está detenido
-    float margin = 0.0001;
-    moveStopLocal = std::abs(linear_f) <= margin;
-
-    // moveStopLocal = (std::abs(lineal_f) <= margin && std::abs(linear_f) <= margin);
-    if (moveStopLocal && moveStop)
-    {
-        // Si ya está detenido y no hay cambios, no hacemos nada
-        return;
-    }
-    else if (moveStopLocal && !moveStop)
-    {
-        // El robot se detuvo: enviar posición cero y detener mensajes periódicos
-        cliente->sendMessage(ToJson::sendJoystickPosition(0.0f, 0.0f));
-        moveStop = true;
-    }
-    else
-    {
-        // El robot está en movimiento: actualizar valores y activar el temporizador
-        m_linealVelocity = newLinealVelocity;
-        moveStop = false;
-    }
-    emit linealVelocityChanged();
-}

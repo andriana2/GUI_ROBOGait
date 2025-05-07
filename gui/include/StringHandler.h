@@ -43,8 +43,8 @@ class StringHandler : public QObject
     Q_PROPERTY(QString patientName READ patientName WRITE setPatientName NOTIFY patientNameChanged FINAL)
     Q_PROPERTY(QString mapNameTest READ mapNameTest WRITE setMapNameTest NOTIFY mapNameTestChanged FINAL)
 
-    Q_PROPERTY(float angularVelocity READ angularVelocity WRITE setAngularVelocity NOTIFY angularVelocityChanged FINAL)
-    Q_PROPERTY(float linealVelocity READ linealVelocity WRITE setLinealVelocity NOTIFY linealVelocityChanged FINAL)
+    Q_PROPERTY(float angularVelocity READ angularVelocity NOTIFY angularVelocityChanged FINAL)
+    Q_PROPERTY(float linealVelocity READ linealVelocity NOTIFY linealVelocityChanged FINAL)
 
 
 public:
@@ -120,6 +120,7 @@ public:
     void setMapNameTest(const QString &newMapNameTest);
 
     Q_INVOKABLE void updateBottomBarState();
+    Q_INVOKABLE void setCurrentVelocity(const float & newAngularVelocity, const float & newLinealVelocity);
     float angularVelocity() const;
     void setAngularVelocity(const float &newAngularVelocity);
 

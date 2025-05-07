@@ -21,8 +21,9 @@ ManualControlForm {
         target: joystick
 
         function onDirChanged(linear, angular) {
-            stringHandler.linealVelocity = linear;
-            stringHandler.angularVelocity = angular;
+            stringHandler.setCurrentVelocity(angular, linear)
+            // stringHandler.linealVelocity = linear;
+            // stringHandler.angularVelocity = angular;
         }
     }
 
@@ -34,9 +35,7 @@ ManualControlForm {
     // Conectando el signal released al manejador de liberado
     joystick.onReleased: {
         // stringHandler.setCurrentMove("0.0", "0.0")
-        stringHandler.linealVelocity = 0.0
-        stringHandler.angularVelocity = 0.0
-        // stringHandler.setSaveMap(0)
+        stringHandler.setCurrentVelocity(0.0, 0.0)
         console.log("Joystick liberado");
     }
 
