@@ -20,50 +20,50 @@ ApplicationFlowForm {
         console.log("backButton")
         // console.log(type_save)
         // console.log(visible_save)
-        if (applicationFlow.state === "manualControl")
-        {
-            if (stringHandler.mapping)
-            {
-                // console.log("estoy en backButton mapping")
+        // if (applicationFlow.state === "manualControl")
+        // {
+        //     if (stringHandler.mapping)
+        //     {
+        //         // console.log("estoy en backButton mapping")
 
-                if(stringHandler.saveMap)
-                {
-                    // console.log("estoy en backButton stringHandler.saveMap")
-                    mystackview.pop()
-                    applicationFlow.state = applicationFlow.previousState
-                    stringHandler.sendStateRemoteControlledHandler(1,0)
-                    stringHandler.setNameMap("")
-                    visible_image = 0
-                    stringHandler.setTypeSaveMap(-1)
-                    type_save = -1
-                    stringHandler.setSaveMap(0)
-                    stringHandler.setMapping(0)
-                }
-                else
-                {
-                    // console.log("estoy en backButton !stringHandler.saveMap")
-                    if(stringHandler.typeSaveMap === -1)
-                    {
-                        stringHandler.setTypeSaveMap(1)
-                        type_save = 1
-                    }
-                    else
-                    {
-                        stringHandler.setTypeSaveMap(3)
-                        type_save = 3
-                    }
-                }
-            }
-            else
-            {
-                // console.log("estoy en backButton !mapping")
-                mystackview.pop()
-                applicationFlow.state = applicationFlow.previousState
-                stringHandler.sendStateRemoteControlledHandler(1,0)
+        //         if(stringHandler.saveMap)
+        //         {
+        //             // console.log("estoy en backButton stringHandler.saveMap")
+        //             mystackview.pop()
+        //             applicationFlow.state = applicationFlow.previousState
+        //             stringHandler.sendStateRemoteControlledHandler(1,0)
+        //             stringHandler.setNameMap("")
+        //             visible_image = 0
+        //             stringHandler.setTypeSaveMap(-1)
+        //             type_save = -1
+        //             stringHandler.setSaveMap(0)
+        //             stringHandler.setMapping(0)
+        //         }
+        //         else
+        //         {
+        //             // console.log("estoy en backButton !stringHandler.saveMap")
+        //             if(stringHandler.typeSaveMap === -1)
+        //             {
+        //                 stringHandler.setTypeSaveMap(1)
+        //                 type_save = 1
+        //             }
+        //             else
+        //             {
+        //                 stringHandler.setTypeSaveMap(3)
+        //                 type_save = 3
+        //             }
+        //         }
+        //     }
+        //     else
+        //     {
+        //         // console.log("estoy en backButton !mapping")
+        //         mystackview.pop()
+        //         applicationFlow.state = applicationFlow.previousState
+        //         stringHandler.sendStateRemoteControlledHandler(1,0)
 
-            }
-        }
-        else if (applicationFlow.state === "mapPath")
+        //     }
+        // }
+        if (applicationFlow.state === "map_path")
         {
             // mapInfo.clearInfoImage()
             mystackview.pop()
@@ -191,17 +191,17 @@ ApplicationFlowForm {
     }
 
     function select_map_push() {
-        if (applicationFlow.state !== "selectMap") {
+        if (applicationFlow.state !== "select_map") {
             stringHandler.requestMapName()
-            mystackview.push(selectMap)
-            applicationFlow.state = "selectMap"
+            mystackview.push(select_map)
+            applicationFlow.state = "select_map"
         }
     }
 
     function map_path_push() {
-        if (applicationFlow.state !== "mapPath") {
-            mystackview.push(mapPath)
-            applicationFlow.state = "mapPath"
+        if (applicationFlow.state !== "map_path") {
+            mystackview.push(map_path)
+            applicationFlow.state = "map_path"
         }
     }
 
@@ -358,8 +358,8 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target: toolbar
-                saveButton.opacity: 1
-                saveButton.enabled: true
+                saveButton.opacity: 0
+                saveButton.enabled: false
                 backButton.opacity: 1
                 backButton.enabled: true
                 config.opacity: 1
@@ -437,10 +437,10 @@ ApplicationFlowForm {
             }
         },
         State {
-            name: "selectMap"
+            name: "select_map"
             StateChangeScript {
                 script: {
-                    console.log("selectMap")
+                    console.log("select_map")
                 }
             }
             PropertyChanges {
@@ -469,15 +469,79 @@ ApplicationFlowForm {
             }
         },
         State {
-            name: "mapPath"
+            name: "register_map"
             StateChangeScript {
                 script: {
-                    console.log("mapPath")
+                    console.log("register_map")
                 }
             }
             PropertyChanges {
                 target:applicationFlow
-                previousState: "selectMap"
+                previousState: "select_map"
+            }
+            PropertyChanges {
+                target: toolbar
+                saveButton.opacity: 0
+                saveButton.enabled: false
+                backButton.opacity: 1
+                backButton.enabled: true
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
+            }
+            PropertyChanges {
+                target: bottomBar
+                state: "onlyBattery"
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+                anchors.bottom: bottomBar.top
+            }
+        },
+        State {
+            name: "create_map"
+            StateChangeScript {
+                script: {
+                    console.log("create_map")
+                }
+            }
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "register_map"
+            }
+            PropertyChanges {
+                target: toolbar
+                saveButton.opacity: 1
+                saveButton.enabled: true
+                backButton.opacity: 1
+                backButton.enabled: true
+                config.opacity: 1
+                config.enabled: true
+                username.opacity: 1
+                username.enabled: true
+            }
+            PropertyChanges {
+                target: bottomBar
+                state: "onlyBattery"
+            }
+            PropertyChanges {
+                target: mystackview
+                anchors.top: toolbar.bottom
+                anchors.bottom: bottomBar.top
+            }
+        },
+        State {
+            name: "map_path"
+            StateChangeScript {
+                script: {
+                    console.log("map_path")
+                }
+            }
+            PropertyChanges {
+                target:applicationFlow
+                previousState: "menu_app"
             }
             PropertyChanges {
                 target: toolbar

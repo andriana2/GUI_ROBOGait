@@ -301,14 +301,16 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             nodeManager.create_subscription(stringToTarget(json_msg["target"]));
 
 #if EN_CASA
-            // std::vector<RealPositionMeters> path_number = {
-            //     {0.060000020116567576, 0.21000003948807722},
-            //     {0.05966976269587487, 0.32496261902097734},
-            //     {0.05899427516749878, 0.3999589961761081},
-            //     {0.05571277716327838, 0.47487640909666373},
-            //     {0.06928928493394348, 0.5670454091883506},
-            //     {0.07326448564625476, 0.5917274545390518}};
-            std::vector<RealPositionMeters> path_number = nodeManager.getRealPositionPath();
+            std::vector<RealPositionMeters> path_number = {
+                {0.060000020116567576, 0.21000003948807722},
+                {0.05966976269587487, 0.32496261902097734},
+                {0.05899427516749878, 0.3999589961761081},
+                {0.05571277716327838, 0.47487640909666373},
+                {0.06928928493394348, 0.5670454091883506},
+                {0.46928928493394348, 0.5670454091883506},
+                {0.96928928493394348, 0.7670454091883506},
+                {0.26928928493394348, 1.0670454091883506}};
+            // std::vector<RealPositionMeters> path_number = nodeManager.getRealPositionPath();
 
 #else
             std::string execute_code = "python3 " + path_python_program + " " + std::to_string(initialpose.x) + " " +

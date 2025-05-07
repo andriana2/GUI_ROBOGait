@@ -71,6 +71,8 @@ qt_add_qml_module(appgui
     qml/ManualControlForm.ui.qml
     qml/CreateMap.qml
     qml/CreateMapForm.ui.qml
+    qml/RegisterMap.qml
+    qml/RegisterMapForm.ui.qml
 
     qml/extras/CustomToolBarForm.ui.qml
     qml/extras/CustomToolBar.qml
