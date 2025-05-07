@@ -308,7 +308,10 @@ ApplicationFlowForm {
         State {
             name: "menu_app"
             StateChangeScript {
-                script: stringHandler.menu_page(1)
+                script: {
+                    stringHandler.updateBottomBarState()
+                    stringHandler.menu_page(1)
+                }
             }
             StateChangeScript {
                 script: mapInfo.clearInfoImage() // this clear the map info container

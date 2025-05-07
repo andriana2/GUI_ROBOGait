@@ -6,35 +6,72 @@ import "extras"
 Rectangle {
     id: rectangle
     color: "#518bb7"
-    property alias imageDisplay: imageDisplay
     property alias joystick: joystick
-    property alias switchRow: switchRow
-    property alias customSwitch: customSwitch
-
-    property alias save_page: save_page
-    property bool save_page_visible: save_page_visible
+    property real linear_value
+    property real angular_value
 
     Rectangle {
-        id: mapa
-        width: 2 * parent.width / 3
-        height: parent.height
-        anchors.bottom: parent.bottom
-        anchors.top: parent.top
-        anchors.left: parent.left
+        id: information
+        width: 2 * parent.width / 3 - 40
         color: "#518bb7"
-
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 30
+        anchors.bottomMargin: 30
+        anchors.topMargin: 30
         Image {
-            id: imageDisplay
-            width: Math.min(parent.width,
-                            parent.height * imageDisplay.sourceSize.width
-                            / imageDisplay.sourceSize.height)
-            height: Math.min(parent.height,
-                             parent.width * imageDisplay.sourceSize.height
-                             / imageDisplay.sourceSize.width)
-            anchors.centerIn: parent
-            visible: stringHandler.imageSource !== "" // Solo visible si hay una fuente válida
-            fillMode: Image.PreserveAspectCrop
-            source: stringHandler.imageSource // Vinculación directa al valor de stringHandler.imageSource
+            id: svgImage
+            source: "../images/logo.png"
+            anchors.topMargin: 20
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: 240
+            height: 240
+            anchors.top: parent.top
+            fillMode: Image.PreserveAspectFit
+        }
+
+        Column {
+            width: information.width - 40
+            anchors.top: svgImage.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.topMargin: 0
+            spacing: 20
+
+            // Título 1
+            Text {
+                text: qsTr("Movimiento del joystick")
+                color: "#00C8FF"
+                font.pixelSize: 26
+                styleColor: "#e9e9e9"
+                font.bold: true
+            }
+
+            Text {
+                id: step1Text
+                width: parent.width
+                color: "#ffffff"
+                font.pixelSize: 21
+                wrapMode: Text.WordWrap
+                text: qsTr("Desplace el círculo pequeño para comenzar a moverse. La velocidad de movimiento aumentará cuanto más se aleje del centro. Para más detalles presione el botón de información.")
+            }
+
+            // Título 2
+            Text {
+                text: qsTr("¡¡ADVERTENCIA!!")
+                color: "#ff0000"
+                font.pixelSize: 26
+                font.bold: true
+            }
+
+            Text {
+                id: step2Text
+                width: parent.width
+                color: "#ffffff"
+                font.pixelSize: 21
+                wrapMode: Text.WordWrap
+                text: qsTr("Este robot no cuenta con un sistema de gestión de colisiones. Asegúrese de evitar obstáculos y supervisar su desplazamiento en todo momento.")
+            }
         }
     }
 
@@ -43,7 +80,7 @@ Rectangle {
         width: Math.min(275, Math.max(175, parent.width / 4))
         height: width
         anchors.verticalCenter: parent.verticalCenter
-        anchors.horizontalCenterOffset: mapa.width / 2
+        anchors.horizontalCenterOffset: information.width / 2
         anchors.horizontalCenter: parent.horizontalCenter
 
         Joystick {
@@ -54,77 +91,51 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
         }
     }
-
-    Row {
-        id: switchRow
-        anchors.horizontalCenter: manualControl.horizontalCenter
-        anchors.verticalCenter: manualControl.top
-        anchors.horizontalCenterOffset: -text_mapear.minimumPixelSize
-        anchors.verticalCenterOffset: -manualControl.height / 3
-        spacing: 10
-
-        // Texto a la izquierda
-        Text {
-            id: text_mapear
-            text: qsTr("Mapear")
-            anchors.verticalCenter: parent.verticalCenter
-            color: "white"
-            font.pixelSize: 16
-            verticalAlignment: Text.AlignVCenter
+    Button {
+        id: infoButton
+        width: 33
+        height: 33
+        anchors.left: information.right
+        anchors.bottom: information.bottom
+        background: Image {
+            source: "../images/icon_app/circle-info-solid.svg"
+            fillMode: Image.PreserveAspectFit
         }
-
-        // Switch redondo personalizado
-        Rectangle {
-            id: customSwitch
-            width: 50
-            height: 30
-            radius: height / 2
-            color: checked ? "#D02833" : "#B0BEC5"
-            border.color: "gray"
-
-            // Declaramos la propiedad `checked`
-            property bool checked: false
-
-            // Círculo que se mueve
-            Rectangle {
-                id: handle
-                width: 24
-                height: 24
-                radius: width / 2
-                color: "white"
-                border.color: "gray"
-                anchors.verticalCenter: parent.verticalCenter
-                x: customSwitch.checked ? parent.width - width - 3 : 3
-
-                // Animación suave
-                Behavior on x {
-                    NumberAnimation {
-                        duration: 200
-                        easing.type: Easing.InOutQuad
-                    }
-                }
-            }
-
-            // Área de interacción
-            MouseArea {
-                anchors.fill: parent
-                onClicked: customSwitch.checked = !customSwitch.checked
+        Behavior on scale {
+            NumberAnimation {
+                duration: 150
+                easing.type: Easing.OutQuad
             }
         }
+
+        onPressed: scale = 1.2
+        onReleased: scale = 1.0
     }
-    SavePage {
-        id: save_page
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -60
-        anchors.horizontalCenter: parent.horizontalCenter
-        // state_save_page: state_save_page
+
+
+    Text {
+        id: text1
+        x: 1018
+        y: 174
+        width: 182
+        height: 32
+        color: "#ffffff"
+
+
+        text: qsTr("%1 m/s  %2 rad/s").arg(linear_value.toFixed(3)).arg(
+                  angular_value.toFixed(3))
+        anchors.right: manualControl.right
+        anchors.bottom: manualControl.top
+        font.pixelSize: 20
+        anchors.rightMargin: 0
+        anchors.bottomMargin: 0
     }
 }
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:700;width:1300}D{i:2}D{i:1}D{i:4}D{i:3}D{i:6}D{i:7}D{i:5}
-D{i:10}
+    D{i:0;autoSize:true;formeditorZoom:0.75;height:700;width:1300}D{i:2}D{i:4}D{i:5}D{i:6}
+D{i:7}D{i:3}D{i:1}D{i:9}D{i:8}D{i:10}D{i:12}
 }
 ##^##*/
 

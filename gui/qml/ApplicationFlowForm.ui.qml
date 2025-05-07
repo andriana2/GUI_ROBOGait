@@ -115,10 +115,10 @@ Rectangle {
     Component {
         id: manualControl
         ManualControl {
-            visible_value: applicationFlow.visible_image
-            visible: true
-            visible_save: applicationFlow.visible_save
-            type_save: applicationFlow.type_save
+            // visible_value: applicationFlow.visible_image
+            // visible: true
+            // visible_save: applicationFlow.visible_save
+            // type_save: applicationFlow.type_save
         }
     }
     Component {

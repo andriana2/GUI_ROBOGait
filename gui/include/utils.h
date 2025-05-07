@@ -42,7 +42,8 @@ enum Target
     Waypoint_Follower,
     Stop_Process,
     Goal_Pose_Path,
-    All_Information_Pose
+    All_Information_Pose,
+    Battery_Level
 };
 
 struct FinalPosition

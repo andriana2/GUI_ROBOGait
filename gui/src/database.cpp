@@ -90,6 +90,20 @@ void Database::selectAllPatient(const QString &username)
     networkDDBB->sendSqlCommand(query, targetToString(Target::SelectPatient), args);
 }
 
+void Database::getIdFromName(const QString &complete_name)
+{
+    QString query;
+    QJsonArray args;
+    auto [firstName_, lastName_] = splitNameSurname(complete_name);
+
+    query = "SELECT Patient.name, Patient.lastname, Patient.id, Patient.age, Patient.weight, Patient.height, Patient.description, Patient.create_day, User.id AS user_id, User.name AS user_name, User.lastname AS user_lastname "
+            "FROM Patient JOIN User ON Patient.id_user = User.id WHERE Patient.name = ? AND Patient.lastname = ?";
+    args.append(firstName_);
+    args.append(lastName_);
+
+    networkDDBB->sendSqlCommand(query, targetToString(Target::GetIdPatient), args);
+}
+
 void Database::handleQueryResponse(const QJsonObject &response)
 {
     qDebug() << "Respuesta de la consulta recibida:" << response;
@@ -181,18 +195,22 @@ void Database::handleIdPatient(const QJsonObject &response)
             QJsonArray innerArray = result[0].toArray();
             if (innerArray.size() >= 7) // Ensure all expected fields are present
             {
-                int id = innerArray[0].toInt();
-                int age = innerArray[1].toInt();
-                double weight = innerArray[2].toDouble();
-                double height = innerArray[3].toDouble();
-                QString description = innerArray[4].toString();
-                QString createDay = innerArray[5].toString();
-                int userId = innerArray[6].toInt();
-                QString name = innerArray[7].toString();
-                QString lastname = innerArray[8].toString();
+                QString firstName = (innerArray[0].toString());
+                QString lastName = (innerArray[1].toString());
+                int id = innerArray[2].toInt();
+                int age = innerArray[3].toInt();
+                double weight = innerArray[4].toDouble();
+                double height = innerArray[5].toDouble();
+                QString description = innerArray[6].toString();
+                QString createDay = innerArray[7].toString();
+                int userId = innerArray[8].toInt();
+                QString name = innerArray[9].toString();
+                QString lastname = innerArray[10].toString();
 
                 if (id > 0)
                 {
+                    qDebug() << "First Name:" << firstName;
+                    qDebug() << "Last Name:" << lastName;
                     qDebug() << "Patient ID:" << id;
                     qDebug() << "Age:" << age;
                     qDebug() << "Weight:" << weight;
@@ -200,12 +218,12 @@ void Database::handleIdPatient(const QJsonObject &response)
                     qDebug() << "Description:" << description;
                     qDebug() << "Create Day:" << createDay;
                     qDebug() << "User ID:" << userId;
-                    qDebug() << "Name:" << name;
-                    qDebug() << "Lastname:" << lastname;
+                    qDebug() << "Name Doctor:" << name;
+                    qDebug() << "Lastname Doctor:" << lastname;
 
                     // Store the values in appropriate member variables or emit signals
                     setIdPatient(id);
-                    setPatient({{"id", id}, {"age", age}, {"weight", weight}, {"height", height}, {"description", description}, {"create_day", createDay}, {"id_user", userId}, {"user_name", name}, {"user_lastname", lastname}});
+                    setPatient({{"first_name", firstName}, {"last_name", lastName}, {"id", id}, {"age", age}, {"weight", weight}, {"height", height}, {"description", description}, {"create_day", createDay}, {"id_user", userId}, {"user_name", name}, {"user_lastname", lastname}});
                     // setPatientDetails(age, weight, height, description, createDay, userId);
                 }
                 else
@@ -381,20 +399,6 @@ void Database::setIdPatient(int newIdPatient)
         return;
     m_idPatient = newIdPatient;
     emit idPatientChanged();
-}
-
-void Database::getIdFromName(const QString &complete_name)
-{
-    QString query;
-    QJsonArray args;
-    auto [firstName_, lastName_] = splitNameSurname(complete_name);
-
-    query = "SELECT Patient.id, Patient.age, Patient.weight, Patient.height, Patient.description, Patient.create_day, User.id AS user_id, User.name AS user_name, User.lastname AS user_lastname "
-            "FROM Patient JOIN User ON Patient.id_user = User.id WHERE Patient.name = ? AND Patient.lastname = ?";
-    args.append(firstName_);
-    args.append(lastName_);
-
-    networkDDBB->sendSqlCommand(query, targetToString(Target::GetIdPatient), args);
 }
 
 QVariantMap Database::patient() const

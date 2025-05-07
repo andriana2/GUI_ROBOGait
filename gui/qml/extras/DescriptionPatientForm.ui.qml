@@ -10,6 +10,8 @@ Rectangle {
 
 
     property var patientData: {
+        "first_name": "Desconocido",
+        "last_name": "Desconocido",
         "user_name": "Desconocido",
         "user_lastname": "Desconocido",
         "create_day": "No disponible",
@@ -40,7 +42,7 @@ Rectangle {
         }
         Text {
             id: fullNameText
-            text: qsTr("Nombre completo: ") + (patientData.user_name || "") + " " + (patientData.user_lastname || "")
+            text: qsTr("Nombre completo: ") + (patientData.first_name || "") + " " + (patientData.last_name || "")
             font.pixelSize: 16
         }
         Text {

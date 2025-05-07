@@ -40,6 +40,12 @@ class StringHandler : public QObject
     Q_PROPERTY(bool errorConnection READ errorConnection WRITE setErrorConnection NOTIFY errorConnectionChanged FINAL)
     Q_PROPERTY(QString stateBottomBar READ stateBottomBar WRITE setStateBottomBar NOTIFY stateBottomBarChanged FINAL)
     Q_PROPERTY(int batteryPercentage READ batteryPercentage WRITE setBatteryPercentage NOTIFY batteryPercentageChanged FINAL)
+    Q_PROPERTY(QString patientName READ patientName WRITE setPatientName NOTIFY patientNameChanged FINAL)
+    Q_PROPERTY(QString mapNameTest READ mapNameTest WRITE setMapNameTest NOTIFY mapNameTestChanged FINAL)
+
+    Q_PROPERTY(float angularVelocity READ angularVelocity WRITE setAngularVelocity NOTIFY angularVelocityChanged FINAL)
+    Q_PROPERTY(float linealVelocity READ linealVelocity WRITE setLinealVelocity NOTIFY linealVelocityChanged FINAL)
+
 
 public:
     explicit StringHandler(QObject *parent = nullptr);
@@ -54,7 +60,8 @@ public:
     Q_INVOKABLE void searchRobotIp();
 
     // msg send
-    Q_INVOKABLE void setCurrentMove(const QString &lineal,const QString & angular);
+    // Q_INVOKABLE void setCurrentMove(const QString &lineal,const QString & angular);
+
     void setImageMap(const QByteArray &data);
 
     // msg recived
@@ -106,6 +113,19 @@ public:
 
     void clear_all();
 
+    QString patientName() const;
+    void setPatientName(const QString &newPatientName);
+
+    QString mapNameTest() const;
+    void setMapNameTest(const QString &newMapNameTest);
+
+    Q_INVOKABLE void updateBottomBarState();
+    float angularVelocity() const;
+    void setAngularVelocity(const float &newAngularVelocity);
+
+    float linealVelocity() const;
+    void setLinealVelocity(const float &newLinealVelocity);
+
 signals:
 
     void imageReceived(const QString &image);
@@ -126,6 +146,14 @@ signals:
 
     void batteryPercentageChanged();
 
+    void patientNameChanged();
+
+    void mapNameTestChanged();
+
+    void angularVelocityChanged();
+
+    void linealVelocityChanged();
+
 private:
     bool moveStop = 0;
     bool SLAM_ON = 1;
@@ -133,8 +161,8 @@ private:
     Cliente *cliente;
     MapInfo *mapInfo;
 
-    float currentAngular;
-    float currentLineal;
+    // float currentAngular;
+    // float currentLineal;
 
     QTimer *periodicTimer;
     QTimer *periodicTimerBattery;
@@ -155,6 +183,11 @@ private:
     bool m_errorConnection = false;
     QString m_stateBottomBar = "nMnP_cbb";
     int m_batteryPercentage = -1;
+    QString m_patientName;
+    QString m_mapNameTest;
+
+    float m_angularVelocity = 0.0;
+    float m_linealVelocity = 0.0;
 };
 
 #endif // STRINGHANDLER_H

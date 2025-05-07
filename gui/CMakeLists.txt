@@ -55,8 +55,6 @@ qt_add_qml_module(appgui
     qml/RobotConnectionForm.ui.qml
 
     qml/MainMenuForm.ui.qml
-    qml/ManualControl.qml
-    qml/ManualControlForm.ui.qml
     qml/MainMenu.qml
     qml/MapPage.qml
     qml/MapPageForm.ui.qml
@@ -68,6 +66,11 @@ qt_add_qml_module(appgui
     qml/RegisterPage.qml
     qml/RegisterPatient.qml
     qml/RegisterPatientForm.ui.qml
+
+    qml/ManualControl.qml
+    qml/ManualControlForm.ui.qml
+    qml/CreateMap.qml
+    qml/CreateMapForm.ui.qml
 
     qml/extras/CustomToolBarForm.ui.qml
     qml/extras/CustomToolBar.qml
@@ -93,6 +96,7 @@ qt_add_qml_module(appgui
     qml/extras/CustomBottomBarForm.ui.qml
     qml/extras/Battery.qml
     qml/extras/DescriptionPatientForm.ui.qml
+    qml/extras/ImageText.qml
 
 
     ${qml_singletons}
@@ -138,7 +142,7 @@ qt_add_qml_module(appgui
     images/my_map.png
     images/logo.png
     images/icon.png
-    QML_FILES qml/extras/ImageText.qml
+
 
 
 
