@@ -98,6 +98,7 @@ qt_add_qml_module(appgui
     qml/extras/CustomBottomBarForm.ui.qml
     qml/extras/Battery.qml
     qml/extras/DescriptionPatientForm.ui.qml
+    qml/extras/DescriptionMapForm.ui.qml
     qml/extras/ImageText.qml
 
 

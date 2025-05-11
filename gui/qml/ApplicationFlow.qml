@@ -166,6 +166,13 @@ ApplicationFlowForm {
         }
     }
 
+    function register_map_push() {
+        if (applicationFlow.state !== "register_map") {
+            mystackview.push(register_map)
+            applicationFlow.state = "register_map"
+        }
+    }
+
     function register_page_push() {
         if (applicationFlow.state !== "register_page") {
             mystackview.push(register_page)

@@ -39,12 +39,6 @@ SignInForm {
         } else if (!passwordField.text.match(/[a-z]/)) {
             errorPopup.errorRectangleTextError.text = "Error: La contraseña debe contener al menos una letra minúscula"
             errorPopup.visible = true
-        } else if (!passwordField.text.match(/[0-9]/)) {
-            errorPopup.errorRectangleTextError.text = "Error: La contraseña debe contener al menos un número"
-            errorPopup.visible = true
-        } else if (!passwordField.text.match(/[\W_]/)) {
-            errorPopup.errorRectangleTextError.text = "Error: La contraseña debe contener al menos un carácter especial"
-            errorPopup.visible = true
         } else if (passwordField.text !== repeatpasswordField.text) {
             errorPopup.errorRectangleTextError.text = "Error: Las contraseñas no coinciden"
             errorPopup.visible = true

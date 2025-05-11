@@ -119,9 +119,8 @@ Rectangle {
 
                     onClicked: {
                         listView.currentIndex = index
-                        // console.log("Presionado un item " + index)
-                        // TODO crear en la base de datos un getIdfromMapName
-                        // ddbb.getIdFromName(model.display) // Mostrará el texto asociado al botón
+                        ddbb.getMapInformation(model.display)
+                        mapInfo.setMapName(model.display);
                         descriptionMap.visible = true
                         buttonRow.visible = true
                         // applicationFlow.menu_push()
@@ -163,7 +162,7 @@ Rectangle {
             }
         }
     }
-    DescriptionPatientForm {
+    DescriptionMapForm {
         id: descriptionMap
         visible: false
         anchors.left: scrollView.right
@@ -180,8 +179,8 @@ Rectangle {
         id: buttonRow
         visible: false
         spacing: parent.width > 500 ? 40 : 20
-        anchors.horizontalCenter: descriptionPatient.horizontalCenter
-        anchors.top: descriptionPatient.bottom
+        anchors.horizontalCenter: descriptionMap.horizontalCenter
+        anchors.top: descriptionMap.bottom
         anchors.topMargin: 20
         anchors.bottomMargin: 40
 

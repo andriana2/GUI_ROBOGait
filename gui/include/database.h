@@ -25,6 +25,7 @@ class Database : public QObject
     Q_PROPERTY(int idPatient READ idPatient WRITE setIdPatient NOTIFY idPatientChanged FINAL)
 
     Q_PROPERTY(QVariantMap patient READ patient WRITE setPatient NOTIFY patientChanged)
+    Q_PROPERTY(QVariantMap mapDescription READ mapDescription WRITE setMapDescription NOTIFY mapDescriptionChanged FINAL)
 
 
 public:
@@ -36,6 +37,7 @@ public:
         AddPatient,
         SelectPatient,
         GetIdPatient,
+        GetMapInformation,
         Unknow
     };
     explicit Database(QObject *parent = nullptr);
@@ -45,9 +47,10 @@ public:
     Q_INVOKABLE void login(const QString &user, const QString &pass);
     Q_INVOKABLE void signIn(const QString &name, const QString &lastname, const QString &username,const QString &role, const QString &pass);
     Q_INVOKABLE void checkUsername(const QString &user);
-    // Q_INVOKABLE void guest(const QString &name, const QString &lastname);
     Q_INVOKABLE void addPatient(const QString &name, const QString &lastname, int age, double weight, double height, const QString &username, const QString &description);
     Q_INVOKABLE void selectAllPatient(const QString &username);
+    Q_INVOKABLE void getIdFromName(QString const &complete_name);
+    Q_INVOKABLE void getMapInformation(const QString &map_name);
 
     QString targetToString(Target target);
     Target stringToTarget(const QString& str);
@@ -69,14 +72,18 @@ public:
 
     int idPatient() const;
     void setIdPatient(int newIdPatient);
-    Q_INVOKABLE void getIdFromName(QString const &complete_name);
 
     QVariantMap patient() const;
     void setPatient(const QVariantMap &newPatient);
 
+    QVariantMap mapDescription() const;
+    void setMapDescription(const QVariantMap &newMapDescription);
+
 private slots:
     void handleQueryResponse(const QJsonObject& response);
-
+    // query = "SELECT name, location, details, create_day, create_by_name, create_by_lastname "
+    //         "FROM map WHERE name = ?";
+    // args.append(map_name);
 
 signals:
 
@@ -92,12 +99,15 @@ signals:
 
     void patientChanged();
 
+    void mapDescriptionChanged();
+
 private:
     void handleLoginResponse(const QJsonObject& response);
     void handleChechUsernameResponse(const QJsonObject& response);
     void handleAllPatient(const QJsonObject &response);
     void updatePatients(const QJsonArray &result);
     void handleIdPatient(const QJsonObject &response);
+    void handleMapInfo(const QJsonObject &response);
 
     Cliente* cliente;
     NetworkDDBB* networkDDBB;
@@ -110,6 +120,7 @@ private:
     QStringListModel *m_patients = new QStringListModel(this);
     int m_idPatient;
     QVariantMap m_patient;
+    QVariantMap m_mapDescription;
 };
 
 #endif // DATABASE_H

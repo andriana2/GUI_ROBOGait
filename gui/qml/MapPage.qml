@@ -276,7 +276,7 @@ MapPageForm {
             PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_goalPoseOrientation"; mapPageForm_nextState: "mp_GoalPoseMove" }
             PropertyChanges { target: mapPageForm_text; text: qsTr("Trayectoria del robot") }
             PropertyChanges { target: mapPageForm_orientationCircleForm; state: "nothing" }
-            PropertyChanges { target: mapPageForm_buttonNext; enabled: mapInfo.trajectoryGoalPose.length === 0 ? 0 : 1; opacity: 1 }
+            PropertyChanges { target: mapPageForm_buttonNext; enabled: mapInfo.trajectoryGoalPose.length === 0 ? 0 : 1; opacity: mapInfo.trajectoryGoalPose.length === 0 ? 0 : 1 }
             PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Start") }
             PropertyChanges { target: mapPageForm_buttonPrevious; enabled: true; opacity: 1; text: qsTr("Anterior") }
             PropertyChanges { target: mp_map; map_currentState: "map_PathGoalPose" }

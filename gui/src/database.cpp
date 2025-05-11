@@ -104,6 +104,19 @@ void Database::getIdFromName(const QString &complete_name)
     networkDDBB->sendSqlCommand(query, targetToString(Target::GetIdPatient), args);
 }
 
+void Database::getMapInformation(const QString &map_name)
+{
+    QString query;
+    QJsonArray args;
+
+    query = "SELECT name, location, details, create_day, create_by_name, create_by_lastname "
+            "FROM map WHERE name = ?";
+    args.append(map_name);
+
+    networkDDBB->sendSqlCommand(query, targetToString(Target::GetMapInformation), args);
+
+}
+
 void Database::handleQueryResponse(const QJsonObject &response)
 {
     qDebug() << "Respuesta de la consulta recibida:" << response;
@@ -123,6 +136,9 @@ void Database::handleQueryResponse(const QJsonObject &response)
         break;
     case Target::GetIdPatient:
         handleIdPatient(response);
+        break;
+    case Target::GetMapInformation:
+        handleMapInfo(response);
         break;
     default:
         if (response["status"].toString() != "success")
@@ -237,14 +253,44 @@ void Database::handleIdPatient(const QJsonObject &response)
             }
         }
         else
-        {
             qWarning() << "No valid data found in the response";
-        }
     }
     else
-    {
         qDebug() << "Error in query:" << response["message"].toString();
+}
+
+
+void Database::handleMapInfo(const QJsonObject &response)
+{
+    if (response["status"].toString() == "success")
+    {
+        QJsonArray result = response["result"].toArray();
+        if (!result.isEmpty() && result[0].isArray())
+        {
+            QJsonArray innerArray = result[0].toArray();
+            if (innerArray.size() >= 6) // Ensure all expected fields are present
+            {
+                QString map_name = (innerArray[0].toString());
+                QString location = (innerArray[1].toString());
+                QString details = (innerArray[2].toString());
+                QString createDay = innerArray[3].toString();
+                QString createByName = innerArray[4].toString() + " " +innerArray[5].toString() ;
+
+                qDebug() << "Map Name:" << map_name;
+                qDebug() << "Localización:" << location;
+                qDebug() << "Description:" << details;
+                qDebug() << "Create Day:" << createDay;
+                qDebug() << "create By Name:" << createByName;
+                setMapDescription({{"map_name", map_name}, {"location", location}, {"details", details}, {"create_day", createDay}, {"create_by_name", createByName}});
+            }
+            else
+                qWarning() << "Unexpected response structure: insufficient fields";
+        }
+        else
+            qWarning() << "No valid data found in the response";
     }
+    else
+        qDebug() << "Error in query:" << response["message"].toString();
 }
 
 void Database::handleAllPatient(const QJsonObject &response)
@@ -286,14 +332,15 @@ void Database::updatePatients(const QJsonArray &result)
 QString Database::targetToString(Database::Target target)
 {
     static const QMap<Target, QString> targetMap = {
-        {Target::Login, "Login"},
-        {Target::SignIn, "SignIn"},
-        {Target::Guest, "Guest"},
-        {Target::CheckUsername, "CheckUsername"},
-        {Target::AddPatient, "AddPatient"},
-        {Target::SelectPatient, "SelectPatient"},
-        {Target::GetIdPatient, "GetIdPatient"},
-        {Target::Unknow, "Unknow"}};
+                                                    {Target::Login, "Login"},
+                                                    {Target::SignIn, "SignIn"},
+                                                    {Target::Guest, "Guest"},
+                                                    {Target::CheckUsername, "CheckUsername"},
+                                                    {Target::AddPatient, "AddPatient"},
+                                                    {Target::SelectPatient, "SelectPatient"},
+                                                    {Target::GetIdPatient, "GetIdPatient"},
+                                                    {Target::GetMapInformation, "GetMapInformation"},
+                                                    {Target::Unknow, "Unknow"}};
 
     return targetMap.value(target, "Unknow");
 }
@@ -301,14 +348,15 @@ QString Database::targetToString(Database::Target target)
 Database::Target Database::stringToTarget(const QString &str)
 {
     static const QMap<QString, Target> stringMap = {
-        {"Login", Target::Login},
-        {"SignIn", Target::SignIn},
-        {"Guest", Target::Guest},
-        {"CheckUsername", Target::CheckUsername},
-        {"AddPatient", Target::AddPatient},
-        {"SelectPatient", Target::SelectPatient},
-        {"GetIdPatient", Target::GetIdPatient},
-        {"Unknow", Target::Unknow}};
+                                                    {"Login", Target::Login},
+                                                    {"SignIn", Target::SignIn},
+                                                    {"Guest", Target::Guest},
+                                                    {"CheckUsername", Target::CheckUsername},
+                                                    {"AddPatient", Target::AddPatient},
+                                                    {"SelectPatient", Target::SelectPatient},
+                                                    {"GetIdPatient", Target::GetIdPatient},
+                                                    {"GetMapInformation", Target::GetMapInformation},
+                                                    {"Unknow", Target::Unknow}};
 
     return stringMap.value(str, Target::Unknow);
 }
@@ -412,4 +460,17 @@ void Database::setPatient(const QVariantMap &newPatient)
         return;
     m_patient = newPatient;
     emit patientChanged();
+}
+
+QVariantMap Database::mapDescription() const
+{
+    return m_mapDescription;
+}
+
+void Database::setMapDescription(const QVariantMap &newMapDescription)
+{
+    if (m_mapDescription == newMapDescription)
+        return;
+    m_mapDescription = newMapDescription;
+    emit mapDescriptionChanged();
 }
