@@ -90,6 +90,16 @@ void Database::selectAllPatient(const QString &username)
     networkDDBB->sendSqlCommand(query, targetToString(Target::SelectPatient), args);
 }
 
+void Database::selectAllMap()
+{
+    QString query;
+    QJsonArray args;
+
+    query = "SELECT name FROM map;";
+
+    networkDDBB->sendSqlCommand(query, targetToString(Target::SelectMaps), args);
+}
+
 void Database::getIdFromName(const QString &complete_name)
 {
     QString query;
@@ -109,12 +119,28 @@ void Database::getMapInformation(const QString &map_name)
     QString query;
     QJsonArray args;
 
-    query = "SELECT name, location, details, create_day, create_by_name, create_by_lastname "
-            "FROM map WHERE name = ?";
+    query = "SELECT map.name, map.location, map.details, map.create_day, User.name AS user_name, User.lastname AS user_lastname "
+            "FROM map JOIN user WHERE map.id_user = user.id AND map.name = ?;";
+
     args.append(map_name);
 
     networkDDBB->sendSqlCommand(query, targetToString(Target::GetMapInformation), args);
+}
 
+void Database::setMapInformation(const QString &username,const QString &map_name,  const QString &location, const QString &details)
+{
+    QString query;
+    QJsonArray args;
+
+    query = "INSERT INTO map (name, location, details, create_day, id_user) "
+            "SELECT ?, ?, ?, CURRENT_TIMESTAMP, id FROM user WHERE username = ?;";
+
+    args.append(map_name.toLower());
+    args.append(location);
+    args.append(details);
+    args.append(username.toLower());
+
+    networkDDBB->sendSqlCommand(query, targetToString(Target::SetMapInformation), args);
 }
 
 void Database::handleQueryResponse(const QJsonObject &response)
@@ -133,6 +159,9 @@ void Database::handleQueryResponse(const QJsonObject &response)
         break;
     case Target::SelectPatient:
         handleAllPatient(response);
+        break;
+    case Target::SelectMaps:
+        handleAllMaps(response);
         break;
     case Target::GetIdPatient:
         handleIdPatient(response);
@@ -308,6 +337,21 @@ void Database::handleAllPatient(const QJsonObject &response)
     }
 }
 
+void Database::handleAllMaps(const QJsonObject &response)
+{
+    if (response["status"].toString() == "success")
+    {
+        qDebug() << "handle all map";
+        qDebug() << response;
+        QJsonArray result = response["result"].toArray();
+        updateMaps(result);
+    }
+    else
+    {
+        qDebug() << "Error in query:" << response["message"].toString();
+    }
+}
+
 void Database::updatePatients(const QJsonArray &result)
 {
     QStringList patientList;
@@ -329,6 +373,25 @@ void Database::updatePatients(const QJsonArray &result)
     emit patientsChanged();
 }
 
+void Database::updateMaps(const QJsonArray &result)
+{
+    QStringList mapsList;
+    for (const QJsonValue &value : result)
+    {
+        if (value.isArray())
+        {
+            QJsonArray patientArray = value.toArray();
+            if (patientArray.size() == 1)
+            {
+                QString map_name = (patientArray[0].toString());
+                mapsList.append(map_name);
+            }
+        }
+    }
+    m_maps->setStringList(mapsList);
+    emit mapsChanged();
+}
+
 QString Database::targetToString(Database::Target target)
 {
     static const QMap<Target, QString> targetMap = {
@@ -337,9 +400,11 @@ QString Database::targetToString(Database::Target target)
                                                     {Target::Guest, "Guest"},
                                                     {Target::CheckUsername, "CheckUsername"},
                                                     {Target::AddPatient, "AddPatient"},
+                                                    {Target::SelectMaps, "SelectMaps"},
                                                     {Target::SelectPatient, "SelectPatient"},
                                                     {Target::GetIdPatient, "GetIdPatient"},
                                                     {Target::GetMapInformation, "GetMapInformation"},
+                                                    {Target::SetMapInformation, "SetMapInformation"},
                                                     {Target::Unknow, "Unknow"}};
 
     return targetMap.value(target, "Unknow");
@@ -354,8 +419,10 @@ Database::Target Database::stringToTarget(const QString &str)
                                                     {"CheckUsername", Target::CheckUsername},
                                                     {"AddPatient", Target::AddPatient},
                                                     {"SelectPatient", Target::SelectPatient},
+                                                    {"SelectMaps", Target::SelectMaps},
                                                     {"GetIdPatient", Target::GetIdPatient},
                                                     {"GetMapInformation", Target::GetMapInformation},
+                                                    {"SetMapInformation", Target::SetMapInformation},
                                                     {"Unknow", Target::Unknow}};
 
     return stringMap.value(str, Target::Unknow);
@@ -473,4 +540,9 @@ void Database::setMapDescription(const QVariantMap &newMapDescription)
         return;
     m_mapDescription = newMapDescription;
     emit mapDescriptionChanged();
+}
+
+QStringListModel *Database::maps() const
+{
+    return m_maps;
 }

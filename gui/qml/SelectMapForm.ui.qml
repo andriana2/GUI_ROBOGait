@@ -78,7 +78,7 @@ Rectangle {
             currentIndex: -1
             anchors.fill: parent
             clip: true
-            model: stringHandler.model
+            model: ddbb.maps
 
             // model: ListModel {
             //     ListElement {

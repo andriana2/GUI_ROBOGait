@@ -13,12 +13,13 @@ RegisterMapForm {
     }
 
     rm_add_map.onClicked: {
-        if (mapNameField.text === "" || descriptionField.text === "") {
+        if (mapNameField.text === "" || descriptionField.text === "" || locationField.text === "") {
             errorPopup.errorRectangleTextError.text = qsTr("Error: Has dejado campos vacíos")
             errorPopup.visible = true
         } else {
             errorPopup.visible = false
             console.log("Añadir información del mapa presionado")
+            ddbb.setMapInformation(ddbb.username, mapNameField.text, locationField.text, descriptionField.text)
             // Add user information logic here
 // TODO crear un addMapInformation en mapInfo o database tiene pinta que la info del mapa ira alli
             // ddbb.addPatient(nameField.text, lastnameField.text, age, weight, height, ddbb.username, descriptionField.text)

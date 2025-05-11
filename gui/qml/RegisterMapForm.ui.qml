@@ -7,6 +7,7 @@ Page {
     property alias rm_cancel_test: cancelRegisterPatient
     property alias mapNameField: mapNameField
     property alias descriptionField: descriptionField
+    property alias locationField: locationField
 
     property int keyboardHeight: Qt.inputMethod.visible ? (parent.height - Qt.inputMethod.keyboardRectangle.height + 20) : 0
 
@@ -76,7 +77,38 @@ Page {
                                 rightMargin: 15
                                 verticalCenter: parent.verticalCenter
                             }
-                            font: nameField.font
+                            font: mapNameField.font
+                        }
+                    }
+                    Keys.onTabPressed: locationField.focus = true
+                    Keys.onReturnPressed: locationField.focus = true
+                }
+
+                TextField {
+                    id: locationField
+                    width: 450
+                    height: 40
+                    color: "#000000"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    font.pointSize: 15
+                    verticalAlignment: TextInput.AlignVCenter
+                    leftPadding: 10
+                    rightPadding: 10
+
+                    background: Rectangle {
+                        radius: 10
+                        color: "#FFFFFF"
+                        border.color: "#CCCCCC"
+
+                        Text {
+                            text: qsTr("Localización del mapa")
+                            color: "#808080"
+                            anchors {
+                                right: parent.right
+                                rightMargin: 15
+                                verticalCenter: parent.verticalCenter
+                            }
+                            font: locationField.font
                         }
                     }
                     Keys.onTabPressed: descriptionField.focus = true
@@ -115,7 +147,7 @@ Page {
                                 top: parent.top
                                 topMargin: 15
                             }
-                            font: lastnameField.font
+                            font: descriptionField.font
                         }
                     }
                     Keys.onTabPressed: addInformation.focus = true
