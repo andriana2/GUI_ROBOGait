@@ -94,6 +94,8 @@ Rectangle {
                 Image {
                     id: testImage
                     anchors.fill: parent
+                    opacity: stringHandler.stateBottomBar === "MP_cbb" ? 1 : 0.5
+
                     source: "../images/menu/image_test.png"
                     fillMode: Image.PreserveAspectCrop
                 }

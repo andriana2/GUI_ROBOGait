@@ -7,8 +7,13 @@ MainMenuForm {
         applicationFlow.manualControl_push()
     }
     mapa_mouse_area.onClicked: {
+        if (stringHandler.stateBottomBar === "MP_cbb")
+        {
+            mapInfo.setMapName(stringHandler.mapNameTest)
+            applicationFlow.map_path_push()
+        }
+
         // applicationFlow.map_path_push()
-        applicationFlow.select_map_push()
     }
     // hacer_mapa_mouse_area.onClicked: {
     //     mapInfo.sendStopProcesses()
