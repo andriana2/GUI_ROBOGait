@@ -16,9 +16,8 @@ MainMenuForm {
     }
     
     select_map_mouse_area.onClicked: {
-        ddbb.selectAllMap()
-        console.log("HOLLLAAAA")
         applicationFlow.select_map_push()
+        ddbb.selectAllMap()
     }
 
     select_patient_mouse_area.onClicked: {

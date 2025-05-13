@@ -1,6 +1,7 @@
 #include "../include/servidor.h"
 #include <iostream>
 #include <boost/beast/core/detail/base64.hpp>
+#include <filesystem> // For std::filesystem::exists
 
 Servidor::Servidor(int port_tcp_udp, rclcpp::Node::SharedPtr node, boost::asio::io_context &io_context)
     : io_context_(io_context), udp_socket_(io_context, udp::endpoint(udp::v4(), port_tcp_udp)),
@@ -507,56 +508,56 @@ void Servidor::sendImageMap(const std::string &name_map, bool img_map_SLAM)
 {
     try
     {
-        // bool img_map_SLAM;
-        // if (name_map.find("temporal") != std::string::npos)
-        //     img_map_SLAM = true;
-        // else
-        //     img_map_SLAM = false;
-        const std::size_t maxJsonSize = 2048; // Tamaño máximo por paquete
+        // Check if the file exists
+        if (!std::filesystem::exists(name_map))
+        {
+            throw std::runtime_error("Error: The file path does not exist: " + name_map);
+        }
 
-        // Leer imagen PGM usando OpenCV
+        const std::size_t maxJsonSize = 2048; // Maximum size per JSON packet
+
+        // Read the image using OpenCV
         cv::Mat image = cv::imread(name_map, cv::IMREAD_GRAYSCALE);
         if (image.empty())
         {
-            throw std::runtime_error("Error reading image in sendImageMap.");
+            throw std::runtime_error("Error reading image in sendImageMap: " + name_map);
         }
 
-        // Comprimir imagen y convertirla a formato PNG
-        std::vector<int> compression_params = {cv::IMWRITE_PNG_COMPRESSION, 9}; // Nivel de compresión (0-9)
+        // Compress the image and convert it to PNG format
+        std::vector<int> compression_params = {cv::IMWRITE_PNG_COMPRESSION, 9}; // Compression level (0-9)
         std::vector<uchar> compressed_image;
         cv::imencode(".png", image, compressed_image, compression_params);
 
-        // Leer los datos comprimidos directamente desde la memoria
+        // Read the compressed data directly from memory
         std::size_t totalSize = compressed_image.size();
-        const std::size_t maxDataSize = 1300; // Espacio reservado para los datos de la imagen
+        const std::size_t maxDataSize = 1300; // Reserved space for image data
         std::size_t bytesSent = 0;
         std::size_t numFrame = 0;
-        std::size_t totalFrames = (totalSize + maxDataSize - 1) / maxDataSize; // Calcular total de frames
+        std::size_t totalFrames = (totalSize + maxDataSize - 1) / maxDataSize; // Calculate total frames
 
         while (bytesSent < totalSize)
         {
             std::size_t bytesRead = std::min(maxDataSize, totalSize - bytesSent);
             std::vector<char> buffer(compressed_image.begin() + bytesSent, compressed_image.begin() + bytesSent + bytesRead);
 
-            // Convertir datos a base64
+            // Convert data to base64
             std::string hexData = toBase64(buffer.data(), bytesRead);
 
-            // Crear el JSON
+            // Create the JSON
             nlohmann::json jsonMessage = toJson::sendImgMap(hexData, bytesRead, totalSize, numFrame, totalFrames, img_map_SLAM);
 
-            // Serializar el JSON
+            // Serialize the JSON
             std::string jsonStr = jsonMessage.dump();
 
-            // Verificar que el tamaño total no exceda el límite
+            // Verify that the total size does not exceed the limit
             if (jsonStr.size() > maxJsonSize)
             {
-                std::string str = "The generated JSON exceeds the maximum allowed size " + std::to_string(jsonStr.size());
+                std::string str = "The generated JSON exceeds the maximum allowed size: " + std::to_string(jsonStr.size());
                 throw std::runtime_error(str);
             }
 
-            // Enviar el JSON por el socket
+            // Send the JSON over the socket
             pri1("IMAGEN SENDING size: " + std::to_string(jsonStr.size()));
-            // pri1(std::to_string(jsonStr.size()));
             boost::asio::write(tcp_socket_, boost::asio::buffer(jsonStr));
             bytesSent += bytesRead;
             numFrame++;
@@ -564,6 +565,6 @@ void Servidor::sendImageMap(const std::string &name_map, bool img_map_SLAM)
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Error In sendImageMap: " << e.what() << std::endl;
+        std::cerr << "Error in sendImageMap: " << e.what() << std::endl;
     }
 }

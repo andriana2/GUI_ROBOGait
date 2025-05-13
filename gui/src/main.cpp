@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
     mapInfo.setClient(&cliente);
     mapInfo.setStringHandler(&stringHandler);
     database.setClient(&cliente);
+    database.setStringHandler(&stringHandler);
 
 
 

@@ -1,5 +1,6 @@
 #include "../include/database.h"
 #include "../include/cliente.h"
+#include "../include/StringHandler.h"
 #include "../include/utils_ddbb.h"
 #include "../include/NetworkDDBB.h"
 #include <qjsonarray.h>
@@ -14,6 +15,12 @@ void Database::setClient(Cliente *cli) { cliente = cli; }
 void Database::setIpServerDDBB(const QString &ip)
 {
     networkDDBB->setServerIp(ip);
+}
+void Database::setStringHandler(StringHandler *sh)
+{
+    if (stringHandler == sh)
+        return;
+    stringHandler = sh;
 }
 
 void Database::login(const QString &user, const QString &pass)
@@ -373,22 +380,47 @@ void Database::updatePatients(const QJsonArray &result)
     emit patientsChanged();
 }
 
-void Database::updateMaps(const QJsonArray &result)
-{
+void extracted(QStringList &modelList) {
+    for (const QString &item : modelList) {
+        qDebug() << " - " << item;
+    }
+}
+void Database::updateMaps(const QJsonArray &result) {
+    if (!stringHandler->model()) {
+        qWarning() << "Model is null!";
+        return;
+    }
+
+    QStringList modelList =
+        stringHandler->model()
+                                ->stringList(); // Get the list of strings from the model
     QStringList mapsList;
-    for (const QJsonValue &value : result)
-    {
-        if (value.isArray())
-        {
+
+    qDebug() << "Model List:";
+    extracted(modelList);
+
+    for (const QJsonValue &value : result) {
+        if (value.isArray()) {
             QJsonArray patientArray = value.toArray();
-            if (patientArray.size() == 1)
-            {
-                QString map_name = (patientArray[0].toString());
-                mapsList.append(map_name);
+            if (patientArray.size() == 1) {
+                QString map_name = patientArray[0].toString();
+
+                // Print the map_name being processed
+                qDebug() << "Processing map_name:" << map_name;
+
+                // Compare map_name with the model
+                if (modelList.contains(map_name)) {
+                    qDebug() << "map_name exists in modelList, appending:" << map_name;
+                    mapsList.append(
+                        map_name); // Append only if map_name exists in the model
+                } else {
+                    qDebug() << "map_name does not exist in modelList:" << map_name;
+                }
             }
         }
     }
-    m_maps->setStringList(mapsList);
+
+    m_maps->setStringList(mapsList); // Update the m_maps model
     emit mapsChanged();
 }
 

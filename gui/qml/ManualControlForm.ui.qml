@@ -59,7 +59,7 @@ Rectangle {
             // Título 2
             Text {
                 text: qsTr("¡¡ADVERTENCIA!!")
-                color: "#ff0000"
+                color: "#c52020"
                 font.pixelSize: 26
                 font.bold: true
             }
@@ -112,7 +112,6 @@ Rectangle {
         onReleased: scale = 1.0
     }
 
-
     Text {
         id: text1
         x: 1018
@@ -120,7 +119,6 @@ Rectangle {
         width: 182
         height: 32
         color: "#ffffff"
-
 
         text: qsTr("%1 m/s  %2 rad/s").arg(linear_value.toFixed(3)).arg(
                   angular_value.toFixed(3))
@@ -132,10 +130,5 @@ Rectangle {
     }
 }
 
-/*##^##
-Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.75;height:700;width:1300}D{i:2}D{i:4}D{i:5}D{i:6}
-D{i:7}D{i:3}D{i:1}D{i:9}D{i:8}D{i:10}D{i:12}
-}
-##^##*/
+
 

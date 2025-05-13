@@ -6,12 +6,11 @@
 #include <QStringListModel>
 
 #include "NetworkDDBB.h"
+#include "../include/StringHandler.h"
 #include "cliente.h"
-#include "include/NetworkDDBB.h"
-#include "cliente.h"
-#include "include/NetworkDDBB.h"
 
 class Cliente;
+class StringHandler;
 
 class Database : public QObject
 {
@@ -46,6 +45,7 @@ public:
     explicit Database(QObject *parent = nullptr);
     void setClient(Cliente *cli);
     void setIpServerDDBB(const QString &ip);
+    void setStringHandler(StringHandler *sh);
 
     Q_INVOKABLE void login(const QString &user, const QString &pass);
     Q_INVOKABLE void signIn(const QString &name, const QString &lastname, const QString &username,const QString &role, const QString &pass);
@@ -118,11 +118,13 @@ private:
     void handleAllMaps(const QJsonObject &response);
     void updatePatients(const QJsonArray &result);
     void updateMaps(const QJsonArray &result);
+    // void updateMaps(const QJsonArray &result);
     void handleIdPatient(const QJsonObject &response);
     void handleMapInfo(const QJsonObject &response);
 
     Cliente* cliente;
     NetworkDDBB* networkDDBB;
+    StringHandler* stringHandler;
 
     bool m_passLogin;
     QString m_role;

@@ -40,7 +40,7 @@ Rectangle {
 
         Text {
             id: textMapName
-            text: qsTr("Añadir Paciente")
+            text: qsTr("Crear nuevo mapa")
             font.pixelSize: 22
             anchors.horizontalCenter: parent.horizontalCenter
             color: "#000000"
