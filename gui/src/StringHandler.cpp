@@ -31,7 +31,7 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
                 static int i = 0;
                 if (i == 10)
                 {
-                    cliente->sendMessage(ToJson::sendRequestBattery());
+                    // cliente->sendMessage(ToJson::sendRequestBattery());
                     i = 0;
                 }
                 if (i == 10)
@@ -56,10 +56,21 @@ QString StringHandler::getImageSource()
     return m_imageSource;
 }
 
-void StringHandler::sendStateRemoteControlledHandler(bool mapping, bool in)
+void StringHandler::startSLAM()
 {
-    cliente->sendMessage(ToJson::sendStateRemoteControlled(mapping, in));
+    setMapping(true);
+    cliente->sendMessage(ToJson::sendStateRemoteControlled(true));
+} 
+
+void StringHandler::stopSLAM()
+{
+    setMapping(false);
+    cliente->sendMessage(ToJson::sendStateRemoteControlled(false));
 }
+// void StringHandler::sendStateRemoteControlledHandler(bool mapping, bool in)
+// {
+//     cliente->sendMessage(ToJson::sendStateRemoteControlled(mapping, in));
+// }
 
 QString StringHandler::updateMapPaintPoint(QImage &mapa, int columna, int fila, float yaw)
 {

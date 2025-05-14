@@ -584,6 +584,7 @@ void MapInfo::sendStopProcesses()
         setCheckInitInitialPose(false);
 
     cliente->sendMessage(ToJson::stopProcesses());
+    cliente->clear();
 }
 
 float MapInfo::resolution() const

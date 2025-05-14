@@ -43,20 +43,17 @@ void HandleMsg::JoystickPosition(const json &json_msg)
 
 void HandleMsg::StateRemoteControlled(const json &json_msg)
 {
-    if (!json_msg["in"])
+    if (json_msg.contains("mapping") && json_msg["mapping"] == false)
     {
-        // bkill the process (all)
         nodeManager.close_publisher(Request_Map_SLAM);
         nodeManager.close_publisher(Joystick_Position);
-        // SI HE INICIALIZADO ALGO CON UN ROS2 RUN O LAUNCH HAY QUE HACER UN KILL
-        // RVIZ
-        return;
     }
-    else if (json_msg.contains("mapping") && json_msg["mapping"] == true)
+    else
     {
+        std::cout << "++ Create a publisher of REQUEST_MAP_SLAM" << std::endl;
         nodeManager.create_publisher(Request_Map_SLAM);
+        nodeManager.create_publisher(Joystick_Position);
     }
-    nodeManager.create_publisher(Joystick_Position);
 }
 
 void HandleMsg::DeleteMap(const json &json_msg)

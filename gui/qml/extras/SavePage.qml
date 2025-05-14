@@ -15,7 +15,7 @@ SavePageForm {
             // }
             PropertyChanges {
                 target: text_header
-                text: "¿Guardar los cambios?"
+                text: "¿Guardar los cambios en este archivo?"
             }
             PropertyChanges {
                 target: no_save

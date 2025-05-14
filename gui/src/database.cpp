@@ -139,8 +139,8 @@ void Database::setMapInformation(const QString &username,const QString &map_name
     QString query;
     QJsonArray args;
 
-    query = "INSERT INTO map (name, location, details, create_day, id_user) "
-            "SELECT ?, ?, ?, CURRENT_TIMESTAMP, id FROM user WHERE username = ?;";
+    query = "INSERT INTO map (name, map_save, location, details, create_day, id_user) "
+            "SELECT ?, 0, ?, ?, CURRENT_TIMESTAMP, id FROM user WHERE username = ? RETURNING name;";
 
     args.append(map_name.toLower());
     args.append(location);
@@ -175,6 +175,9 @@ void Database::handleQueryResponse(const QJsonObject &response)
         break;
     case Target::GetMapInformation:
         handleMapInfo(response);
+        break;
+    case Target::SetMapInformation:
+        handleMapInformation(response);
         break;
     default:
         if (response["status"].toString() != "success")
@@ -359,6 +362,23 @@ void Database::handleAllMaps(const QJsonObject &response)
     }
 }
 
+void Database::handleMapInformation(const QJsonObject &response)
+{
+    if (response["status"].toString() == "success")
+    {
+        QJsonArray result = response["result"].toArray();
+        if (!result.isEmpty() && result[0].isArray())
+        {
+            QJsonArray innerArray = result[0].toArray();
+            setMapNameTemporal(innerArray[0].toString());
+        }
+    }
+    else
+    {
+        qDebug() << "Error in query:" << response["message"].toString();
+    }
+}
+
 void Database::updatePatients(const QJsonArray &result)
 {
     QStringList patientList;
@@ -512,6 +532,8 @@ void Database::clear()
     m_patients->setStringList(QStringList());
     m_idPatient = -1;
     m_patient.clear();
+
+    m_mapNameTemporal = "";
 }
 
 bool Database::passCheckUsername() const
@@ -577,4 +599,17 @@ void Database::setMapDescription(const QVariantMap &newMapDescription)
 QStringListModel *Database::maps() const
 {
     return m_maps;
+}
+
+QString Database::mapNameTemporal() const
+{
+    return m_mapNameTemporal;
+}
+
+void Database::setMapNameTemporal(const QString &newMapNameTemporal)
+{
+    if (m_mapNameTemporal == newMapNameTemporal)
+        return;
+    m_mapNameTemporal = newMapNameTemporal;
+    emit mapNameTemporalChanged();
 }

@@ -51,16 +51,16 @@ Rectangle {
         anchors.leftMargin: 26
         anchors.topMargin: 35
         radius: 4
-        TextArea {
+        Text {
             id: text_name
             color: "#454545"
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
-            placeholderText: qsTr("Nombre del mapa")
+            text: (ddbb.mapDescription.map_name)
             font.pixelSize: 20
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
-            anchors.leftMargin: 0
+            anchors.leftMargin: 20
         }
     }
 
@@ -86,32 +86,32 @@ Rectangle {
         }
     }
 
-    Button {
-        id: no_save
-        text: qsTr("No Guardar")
-        anchors.right: cancel.left
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 28
-        anchors.rightMargin: 10
+//    Button {
+//        id: no_save
+//        text: qsTr("No Guardar")
+//        anchors.right: cancel.left
+//        anchors.bottom: parent.bottom
+//        anchors.bottomMargin: 28
+//        anchors.rightMargin: 10
 
-        background: Rectangle {
-            color: "#ffffff" // Color inicial
-            radius: 6
-            border.color: "#454545" // Borde del mismo color que el texto
-            border.width: 2
-        }
+//        background: Rectangle {
+//            color: "#ffffff" // Color inicial
+//            radius: 6
+//            border.color: "#454545" // Borde del mismo color que el texto
+//            border.width: 2
+//        }
 
-        contentItem: Label {
-            text: parent.text
-            color: "#454545"
-            font.pixelSize: 18
-        }
-    }
+//        contentItem: Label {
+//            text: parent.text
+//            color: "#454545"
+//            font.pixelSize: 18
+//        }
+//    }
 
     Button {
         id: save
         text: qsTr("Guardar")
-        anchors.right: no_save.left
+        anchors.right: cancel.left
         anchors.bottom: parent.bottom
         // t: save.enabled ? "white" : "#454545";
         anchors.bottomMargin: 28
@@ -131,7 +131,7 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;height:210}D{i:1}D{i:2}D{i:4}D{i:3}D{i:5}D{i:8}D{i:11}
+    D{i:0;height:210}D{i:1}D{i:3}D{i:2}D{i:4}D{i:7}
 }
 ##^##*/
 

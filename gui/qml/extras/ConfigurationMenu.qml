@@ -73,7 +73,8 @@ Rectangle {
             }
             onTriggered: {
                 console.log("Apagar")
-                mapInfo.sendStopProcesses()
+                applicationFlow.popToHome();
+                // mapInfo.sendStopProcesses()
             }
 
         }

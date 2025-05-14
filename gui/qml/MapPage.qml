@@ -17,7 +17,8 @@ MapPageForm {
     }
 
     mapPageForm_buttonStop.onClicked: {
-        mapInfo.sendStopProcesses();
+        applicationFlow.popToHome()
+        // mapInfo.sendStopProcesses();
     }
 
     mapPageForm_buttonNext.onClicked: {

@@ -52,7 +52,9 @@ public:
     // Q_INVOKABLE bool isInSameNetwork(const QString &ip1, const std::string& subnetMask = "255.255.255.0");
     Q_INVOKABLE void setImage(const QByteArray &data);
     Q_INVOKABLE QString getImageSource();
-    Q_INVOKABLE void sendStateRemoteControlledHandler(bool mapping, bool in);
+    Q_INVOKABLE void startSLAM();
+    Q_INVOKABLE void stopSLAM();
+    // Q_INVOKABLE void sendStateRemoteControlledHandler(bool mapping, bool in);
 
     void setClient(Cliente *cli);
     void setMapInfo(MapInfo *mapIn);

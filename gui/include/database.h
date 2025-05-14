@@ -20,6 +20,9 @@ class Database : public QObject
     // role is admin and doctor
     Q_PROPERTY(QString role READ role WRITE setRole NOTIFY roleChanged FINAL)
     Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged FINAL)
+
+    Q_PROPERTY(QString mapNameTemporal READ mapNameTemporal WRITE setMapNameTemporal NOTIFY mapNameTemporalChanged FINAL)
+
     Q_PROPERTY(QStringListModel* patients READ patients NOTIFY patientsChanged FINAL)
     Q_PROPERTY(QStringListModel* maps READ maps NOTIFY mapsChanged FINAL)
     Q_PROPERTY(int idPatient READ idPatient WRITE setIdPatient NOTIFY idPatientChanged FINAL)
@@ -27,6 +30,7 @@ class Database : public QObject
     Q_PROPERTY(QVariantMap patient READ patient WRITE setPatient NOTIFY patientChanged)
     Q_PROPERTY(QVariantMap mapDescription READ mapDescription WRITE setMapDescription NOTIFY mapDescriptionChanged FINAL)
 
+    Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged FINAL)
 
 public:
     enum class Target{
@@ -87,6 +91,9 @@ public:
 
     QStringListModel *maps() const;
 
+    QString mapNameTemporal() const;
+    void setMapNameTemporal(const QString &newMapNameTemporal);
+
 private slots:
     void handleQueryResponse(const QJsonObject& response);
     // query = "SELECT name, location, details, create_day, create_by_name, create_by_lastname "
@@ -111,6 +118,8 @@ signals:
 
     void mapsChanged();
 
+    void mapNameTemporalChanged();
+
 private:
     void handleLoginResponse(const QJsonObject& response);
     void handleChechUsernameResponse(const QJsonObject& response);
@@ -121,6 +130,7 @@ private:
     // void updateMaps(const QJsonArray &result);
     void handleIdPatient(const QJsonObject &response);
     void handleMapInfo(const QJsonObject &response);
+    void handleMapInformation(const QJsonObject &response);
 
     Cliente* cliente;
     NetworkDDBB* networkDDBB;
@@ -136,6 +146,7 @@ private:
     QVariantMap m_patient;
     QVariantMap m_mapDescription;
     QStringListModel *m_maps = new QStringListModel(this);
+    QString m_mapNameTemporal;
 };
 
 #endif // DATABASE_H

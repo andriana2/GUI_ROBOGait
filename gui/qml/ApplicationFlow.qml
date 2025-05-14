@@ -29,15 +29,15 @@ ApplicationFlowForm {
         //         if(stringHandler.saveMap)
         //         {
         //             // console.log("estoy en backButton stringHandler.saveMap")
-        //             mystackview.pop()
-        //             applicationFlow.state = applicationFlow.previousState
-        //             stringHandler.sendStateRemoteControlledHandler(1,0)
-        //             stringHandler.setNameMap("")
-        //             visible_image = 0
-        //             stringHandler.setTypeSaveMap(-1)
-        //             type_save = -1
-        //             stringHandler.setSaveMap(0)
-        //             stringHandler.setMapping(0)
+                    // mystackview.pop()
+                    // applicationFlow.state = applicationFlow.previousState
+                    // stringHandler.sendStateRemoteControlledHandler(1,0)
+                    // stringHandler.setNameMap("")
+                    // visible_image = 0
+                    // stringHandler.setTypeSaveMap(-1)
+                    // type_save = -1
+                    // stringHandler.setSaveMap(0)
+                    // stringHandler.setMapping(0)
         //         }
         //         else
         //         {
@@ -63,6 +63,9 @@ ApplicationFlowForm {
 
         //     }
         // }
+        if (applicationFlow.state !== "create_map") {
+            stringHadler.stopSLAM()
+        }
         if (applicationFlow.state === "map_path")
         {
             // mapInfo.clearInfoImage()
@@ -81,11 +84,11 @@ ApplicationFlowForm {
         applicationFlow.state = applicationFlow.previousState
     }
     function popToLogin() {
-        console.log("_________________estoy en el estado: " + applicationFlow.state)
+        // console.log("_________________estoy en el estado: " + applicationFlow.state)
         while (applicationFlow.state !== "register_page" && mystackview.depth > 1) {
             mystackview.pop();
             applicationFlow.state = applicationFlow.previousState;
-            console.log("_________________estoy en el estado: " + applicationFlow.state)
+            // console.log("_________________estoy en el estado: " + applicationFlow.state)
         }
     }
 
@@ -93,6 +96,7 @@ ApplicationFlowForm {
         // console.log("_________________estoy en el estado: " + applicationFlow.state)
         while (applicationFlow.state !== "Home" && mystackview.depth > 1) {
             mystackview.pop();
+            mapInfo.sendStopProcesses();
             applicationFlow.state = applicationFlow.previousState;
             // console.log("_________________estoy en el estado: " + applicationFlow.state)
         }
@@ -202,6 +206,14 @@ ApplicationFlowForm {
             stringHandler.requestMapName()
             mystackview.push(select_map)
             applicationFlow.state = "select_map"
+        }
+    }
+
+    function create_map_push() {
+        if (applicationFlow.state !== "create_map") {
+            mystackview.push(create_map)
+            applicationFlow.state = "create_map"
+            stringHadler.startSLAM()
         }
     }
 

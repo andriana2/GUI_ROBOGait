@@ -6,14 +6,16 @@ import "extras"
 Rectangle {
     id: rectangle
     color: "#518bb7"
+    property alias resetMapButton: resetMapButton
+    property alias saveMapButton: saveMapButton
     property alias imageDisplay: imageDisplay
     property alias joystick: joystick
-    property alias switchRow: switchRow
-    property alias customSwitch: customSwitch
 
-    property alias save_page: save_page
-    property bool save_page_visible: save_page_visible
+    // property alias switchRow: switchRow
+    // property alias customSwitch: customSwitch
 
+    // property alias save_page: save_page
+    // property bool save_page_visible: save_page_visible
     Rectangle {
         id: mapa
         width: 2 * parent.width / 3
@@ -32,9 +34,9 @@ Rectangle {
                              parent.width * imageDisplay.sourceSize.height
                              / imageDisplay.sourceSize.width)
             anchors.centerIn: parent
-            visible: stringHandler.imageSource !== "" // Solo visible si hay una fuente válida
+            // visible: stringHandler.imageSource !== "" // Solo visible si hay una fuente válida
             fillMode: Image.PreserveAspectCrop
-            source: stringHandler.imageSource // Vinculación directa al valor de stringHandler.imageSource
+            // source: stringHandler.imageSource // Vinculación directa al valor de stringHandler.imageSource
         }
     }
 
@@ -54,64 +56,84 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
         }
     }
-
-    Row {
-        id: switchRow
-        anchors.horizontalCenter: manualControl.horizontalCenter
-        anchors.verticalCenter: manualControl.top
-        anchors.horizontalCenterOffset: -text_mapear.minimumPixelSize
-        anchors.verticalCenterOffset: -manualControl.height / 3
-        spacing: 10
-
-        // Texto a la izquierda
-        Text {
-            id: text_mapear
-            text: qsTr("Mapear")
-            anchors.verticalCenter: parent.verticalCenter
-            color: "white"
-            font.pixelSize: 16
-            verticalAlignment: Text.AlignVCenter
-        }
-
-        // Switch redondo personalizado
-        Rectangle {
-            id: customSwitch
-            width: 50
-            height: 30
-            radius: height / 2
-            color: checked ? "#D02833" : "#B0BEC5"
-            border.color: "gray"
-
-            // Declaramos la propiedad `checked`
-            property bool checked: false
-
-            // Círculo que se mueve
-            Rectangle {
-                id: handle
-                width: 24
-                height: 24
-                radius: width / 2
-                color: "white"
-                border.color: "gray"
-                anchors.verticalCenter: parent.verticalCenter
-                x: customSwitch.checked ? parent.width - width - 3 : 3
-
-                // Animación suave
-                Behavior on x {
-                    NumberAnimation {
-                        duration: 200
-                        easing.type: Easing.InOutQuad
-                    }
-                }
-            }
-
-            // Área de interacción
-            MouseArea {
-                anchors.fill: parent
-                onClicked: customSwitch.checked = !customSwitch.checked
-            }
+    Button {
+        id: resetMapButton
+        width: 160
+        height: 35
+        text: qsTr("RESETEAR")
+        anchors.left: manualControl.horizontalCenter
+        anchors.top: manualControl.bottom
+        anchors.leftMargin: 7
+        anchors.topMargin: 30
+        font.styleName: "Medium"
+        font.capitalization: Font.AllUppercase
+        font.weight: Font.Normal
+        font.bold: true
+        font.pointSize: 15
+        background: Rectangle {
+            radius: 10
+            color: "#aed2ea"
+            border.color: "#aed2ea"
         }
     }
+
+    // Row {
+    //     id: switchRow
+    //     anchors.horizontalCenter: manualControl.horizontalCenter
+    //     anchors.verticalCenter: manualControl.top
+    //     anchors.horizontalCenterOffset: -text_mapear.minimumPixelSize
+    //     anchors.verticalCenterOffset: -manualControl.height / 3
+    //     spacing: 10
+
+    //     // Texto a la izquierda
+    //     Text {
+    //         id: text_mapear
+    //         text: qsTr("Mapear")
+    //         anchors.verticalCenter: parent.verticalCenter
+    //         color: "white"
+    //         font.pixelSize: 16
+    //         verticalAlignment: Text.AlignVCenter
+    //     }
+
+    //     // Switch redondo personalizado
+    //     Rectangle {
+    //         id: customSwitch
+    //         width: 50
+    //         height: 30
+    //         radius: height / 2
+    //         color: checked ? "#D02833" : "#B0BEC5"
+    //         border.color: "gray"
+
+    //         // Declaramos la propiedad `checked`
+    //         property bool checked: false
+
+    //         // Círculo que se mueve
+    //         Rectangle {
+    //             id: handle
+    //             width: 24
+    //             height: 24
+    //             radius: width / 2
+    //             color: "white"
+    //             border.color: "gray"
+    //             anchors.verticalCenter: parent.verticalCenter
+    //             x: customSwitch.checked ? parent.width - width - 3 : 3
+
+    //             // Animación suave
+    //             //                Behavior on x {
+    //             //                    NumberAnimation {
+    //             //                        duration: 200
+    //             //                        easing.type: Easing.InOutQuad
+    //             //                    }
+    //             //                }
+    //         }
+
+    //         // Área de interacción
+    //         MouseArea {
+    //             anchors.fill: parent
+    //             onClicked: customSwitch.checked = !customSwitch.checked
+    //         }
+    //     }
+    // }
     SavePage {
         id: save_page
         anchors.verticalCenter: parent.verticalCenter
@@ -119,4 +141,33 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         // state_save_page: state_save_page
     }
+    Button {
+        id: saveMapButton
+        x: 885
+        width: 160
+        height: 35
+        text: qsTr("GUARDAR")
+        anchors.right: resetMapButton.left
+        anchors.top: manualControl.bottom
+        anchors.rightMargin: 15
+        anchors.topMargin: 30
+        font.styleName: "Medium"
+        font.capitalization: Font.AllUppercase
+        font.weight: Font.Normal
+        font.bold: true
+        font.pointSize: 15
+        background: Rectangle {
+            radius: 10
+            color: "#aed2ea"
+            border.color: "#aed2ea"
+        }
+    }
 }
+
+/*##^##
+Designer {
+    D{i:0;autoSize:true;formeditorZoom:0.66;height:700;width:1300}D{i:2}D{i:1}D{i:4}D{i:3}
+D{i:5}D{i:7}
+}
+##^##*/
+
