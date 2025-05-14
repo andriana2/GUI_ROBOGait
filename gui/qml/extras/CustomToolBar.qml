@@ -11,15 +11,15 @@ CustomToolBarForm {
         }
     }
 
-    saveButton.onClicked: applicationFlow.saveButton()
-    saveButton.states: State {
-        name: "pressed"
-        when: saveButton.pressed
-        PropertyChanges {
-            target: saveButton
-            scale: 1.1
-        }
-    }
+    // saveButton.onClicked: applicationFlow.saveButton()
+    // saveButton.states: State {
+    //     name: "pressed"
+    //     when: saveButton.pressed
+    //     PropertyChanges {
+    //         target: saveButton
+    //         scale: 1.1
+    //     }
+    // }
 
 }
 

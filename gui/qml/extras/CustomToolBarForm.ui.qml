@@ -5,7 +5,7 @@ import QtQuick.Layouts 6.0
 Item {
     id: root
     property alias backButton: backButton
-    property alias saveButton: saveButton
+    // property alias saveButton: saveButton
     property alias logo: logo
     property alias title: title
     property alias config: config
@@ -38,23 +38,23 @@ Item {
         }
 
         // Boton de guardar
-        Button {
-            id: saveButton
-            anchors.left: backButton.right
-            anchors.verticalCenter: parent.verticalCenter
-            icon.source: "../../images/icon_app/saveButton.png"
-            icon.width: 24
-            icon.height: 24
-            icon.color: "white"
-            background: null
-            transitions: Transition {
-                NumberAnimation {
-                    properties: "scale"
-                    duration: 100
-                    easing.type: Easing.InOutQuad
-                }
-            }
-        }
+        // Button {
+        //     id: saveButton
+        //     anchors.left: backButton.right
+        //     anchors.verticalCenter: parent.verticalCenter
+        //     icon.source: "../../images/icon_app/saveButton.png"
+        //     icon.width: 24
+        //     icon.height: 24
+        //     icon.color: "white"
+        //     background: null
+        //     transitions: Transition {
+        //         NumberAnimation {
+        //             properties: "scale"
+        //             duration: 100
+        //             easing.type: Easing.InOutQuad
+        //         }
+        //     }
+        // }
 
         Text {
             id: username

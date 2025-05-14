@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 
 Rectangle {
     id: root
-    property alias no_save: no_save
+    // property alias no_save: no_save
     property alias save: save
     property alias cancel: cancel
     property alias text_name: text_name
@@ -56,7 +56,7 @@ Rectangle {
             color: "#454545"
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
-            text: (ddbb.mapDescription.map_name)
+            text: (ddbb.mapNameTemporal)
             font.pixelSize: 20
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter

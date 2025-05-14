@@ -22,7 +22,7 @@ CreateMapForm {
         function onLinealVelocityChanged(){
             linear_value = stringHandler.linealVelocity
         }
-        onImageSourceChanged: {
+        function onImageSourceChanged() {
             if (stringHandler.imageSource !== "") {
                 imageDisplay.source = stringHandler.imageSource
                 imageDisplay.visible = true

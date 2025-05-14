@@ -114,8 +114,6 @@ Rectangle {
 
     Text {
         id: text1
-        x: 1018
-        y: 174
         width: 182
         height: 32
         color: "#ffffff"

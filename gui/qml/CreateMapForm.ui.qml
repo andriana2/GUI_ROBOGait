@@ -11,10 +11,13 @@ Rectangle {
     property alias imageDisplay: imageDisplay
     property alias joystick: joystick
 
+    property real linear_value
+    property real angular_value
+
     // property alias switchRow: switchRow
     // property alias customSwitch: customSwitch
 
-    // property alias save_page: save_page
+    property alias save_page: save_page
     // property bool save_page_visible: save_page_visible
     Rectangle {
         id: mapa
@@ -161,6 +164,22 @@ Rectangle {
             color: "#aed2ea"
             border.color: "#aed2ea"
         }
+    }
+    Text {
+        id: text1
+        x: 1018
+        y: 174
+        width: 182
+        height: 32
+        color: "#ffffff"
+
+        text: qsTr("%1 m/s  %2 rad/s").arg(linear_value.toFixed(3)).arg(
+                  angular_value.toFixed(3))
+        anchors.right: manualControl.right
+        anchors.bottom: manualControl.top
+        font.pixelSize: 20
+        anchors.rightMargin: 0
+        anchors.bottomMargin: 0
     }
 }
 

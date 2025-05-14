@@ -63,8 +63,8 @@ ApplicationFlowForm {
 
         //     }
         // }
-        if (applicationFlow.state !== "create_map") {
-            stringHadler.stopSLAM()
+        if (applicationFlow.state === "create_map") {
+            stringHandler.stopSLAM()
         }
         if (applicationFlow.state === "map_path")
         {
@@ -103,47 +103,47 @@ ApplicationFlowForm {
         stringHandler.errorConnection = false
     }
 
-    function saveButton()
-    {
-        if(!stringHandler.saveMap)
-        {
-            console.log("saveButton FALSE")
-            console.log(type_save)
-            console.log(visible_save)
+    // function saveButton()
+    // {
+    //     if(!stringHandler.saveMap)
+    //     {
+    //         console.log("saveButton FALSE")
+    //         console.log(type_save)
+    //         console.log(visible_save)
 
-            if (stringHandler.typeSaveMap === 1)
-            {
-                stringHandler.setTypeSaveMap(0)
-                type_save = 0
-                visible_save = 1
-                stringHandler.setSaveMap(1)
-                stringHandler.setNameMap(stringHandler.nameMap) // BUENOO |- |- JIJI
-            }
-            else
-            {
-                stringHandler.setTypeSaveMap(2)
-                type_save = 2
-                visible_save = 1
-                stringHandler.setSaveMap(1)
-            }
+    //         if (stringHandler.typeSaveMap === 1)
+    //         {
+    //             stringHandler.setTypeSaveMap(0)
+    //             type_save = 0
+    //             visible_save = 1
+    //             stringHandler.setSaveMap(1)
+    //             stringHandler.setNameMap(stringHandler.nameMap) // BUENOO |- |- JIJI
+    //         }
+    //         else
+    //         {
+    //             stringHandler.setTypeSaveMap(2)
+    //             type_save = 2
+    //             visible_save = 1
+    //             stringHandler.setSaveMap(1)
+    //         }
 
-        }
-        else
-        {
-            // if (stringHandler.typeSaveMap === 2)
-            // {
+    //     }
+    //     else
+    //     {
+    //         // if (stringHandler.typeSaveMap === 2)
+    //         // {
 
-            // }
+    //         // }
 
-            console.log("saveButton TRUE")
-            console.log(type_save)
-            console.log(visible_save)
-            stringHandler.setTypeSaveMap(0)
-            type_save = 0
-            visible_save = 1
-            stringHandler.setSaveMap(1)
-        }
-    }
+    //         console.log("saveButton TRUE")
+    //         console.log(type_save)
+    //         console.log(visible_save)
+    //         stringHandler.setTypeSaveMap(0)
+    //         type_save = 0
+    //         visible_save = 1
+    //         stringHandler.setSaveMap(1)
+    //     }
+    // }
 
     function confirmButton() {
         applicationFlow.state = "Insert"
@@ -213,7 +213,7 @@ ApplicationFlowForm {
         if (applicationFlow.state !== "create_map") {
             mystackview.push(create_map)
             applicationFlow.state = "create_map"
-            stringHadler.startSLAM()
+            stringHandler.startSLAM()
         }
     }
 
@@ -235,8 +235,6 @@ ApplicationFlowForm {
                 target: toolbar
                 backButton.opacity: 0
                 backButton.enabled: false
-                saveButton.opacity: 0
-                saveButton.enabled: false
                 logo.opacity: 0
                 logo.enabled: false
                 title.opacity: 0
@@ -272,8 +270,6 @@ ApplicationFlowForm {
                 target: toolbar
                 backButton.opacity: 0
                 backButton.enabled: false
-                saveButton.opacity: 0
-                saveButton.enabled: false
                 config.opacity: 0
                 config.enabled: false
                 username.opacity: 0
@@ -307,8 +303,6 @@ ApplicationFlowForm {
                 target: toolbar
                 backButton.opacity: 0
                 backButton.enabled: false
-                saveButton.opacity: 0
-                saveButton.enabled: false
                 config.opacity: 0
                 config.enabled: false
                 username.opacity: 0
@@ -346,8 +340,6 @@ ApplicationFlowForm {
                 target: toolbar
                 backButton.opacity: 0
                 backButton.enabled: false
-                saveButton.opacity: 0
-                saveButton.enabled: false
                 config.opacity: 1
                 config.enabled: true
                 username.opacity: 1
@@ -377,8 +369,6 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target: toolbar
-                saveButton.opacity: 0
-                saveButton.enabled: false
                 backButton.opacity: 1
                 backButton.enabled: true
                 config.opacity: 1
@@ -410,8 +400,6 @@ ApplicationFlowForm {
                 target: toolbar
                 backButton.opacity: 1
                 backButton.enabled: true
-                saveButton.opacity: 0
-                saveButton.enabled: false
                 config.opacity: 1
                 config.enabled: true
                 username.opacity: 1
@@ -438,8 +426,6 @@ ApplicationFlowForm {
                 target: toolbar
                 backButton.opacity: 1
                 backButton.enabled: true
-                saveButton.opacity: 0
-                saveButton.enabled: false
                 config.opacity: 1
                 config.enabled: true
                 username.opacity: 1
@@ -468,8 +454,6 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target: toolbar
-                saveButton.opacity: 0
-                saveButton.enabled: false
                 backButton.opacity: 1
                 backButton.enabled: true
                 config.opacity: 1
@@ -500,8 +484,6 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target: toolbar
-                saveButton.opacity: 0
-                saveButton.enabled: false
                 backButton.opacity: 1
                 backButton.enabled: true
                 config.opacity: 1
@@ -532,8 +514,6 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target: toolbar
-                saveButton.opacity: 1
-                saveButton.enabled: true
                 backButton.opacity: 1
                 backButton.enabled: true
                 config.opacity: 1
@@ -564,8 +544,6 @@ ApplicationFlowForm {
             }
             PropertyChanges {
                 target: toolbar
-                saveButton.opacity: 0
-                saveButton.enabled: false
                 backButton.opacity: 1
                 backButton.enabled: true
                 config.opacity: 1
