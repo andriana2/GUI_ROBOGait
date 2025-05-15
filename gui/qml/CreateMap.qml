@@ -30,6 +30,15 @@ CreateMapForm {
                 imageDisplay.visible = false
             }
         }
+        function onTypeSaveMapChanged(){
+
+            if(stringHandler.typeSaveMap === 0){
+                currentState = "cm_back_button_pressed"
+                applicationFlow.type_save = -1
+                stringHandler.setTypeSaveMap(-1)
+            }
+        }
+
     }
 
     joystick.onPressed: {
@@ -38,6 +47,7 @@ CreateMapForm {
 
     joystick.onReleased: {
         stringHandler.setCurrentVelocity(0.0, 0.0)
+        stringHandler.setSaveMap(0)
         console.log("Joystick liberado");
     }
 
@@ -54,6 +64,29 @@ CreateMapForm {
 
     saveMapButton.onClicked: {
         currentState = "cm_save_map"
+    }
+
+    save_page.save.onClicked: {
+        console.log("Guardar presionado")
+        stringHandler.setSaveMap(1)
+        ddbb.mapCreateSave(1) // guardar que hay mapa creado
+        stringHandler.setNameMap(ddbb.mapNameTemporal)
+        applicationFlow.popFunction()
+        applicationFlow.popFunction()
+    }
+
+    save_page.cancel.onClicked: {
+        console.log("Presionado cancelar")
+        currentState = "cm_nothing"
+    }
+
+    save_page.no_save.onClicked: {
+        console.log("Presionado cancelar")
+        stringHandler.setSaveMap(1)
+        currentState = "cm_nothing"
+        ddbb.mapCreateSave(0) // borrar la información que haya del mapa si no se guarda
+        applicationFlow.popFunction()
+        applicationFlow.popFunction()
     }
 
     states: [
@@ -77,6 +110,19 @@ CreateMapForm {
                 target: save_page
                 visible: true
                 opacity: 1 //save_again
+                currentState: "sp_save_without_not_save_button"
+            }
+        },
+        State {
+            name: "cm_back_button_pressed"
+            StateChangeScript {
+                script: console.log("estoy en CREATE_MAP cm_back_button_pressed")
+            }
+            PropertyChanges {
+                target: save_page
+                visible: true
+                opacity: 1 //save_again
+                currentState: "sp_save_with_not_save_button"
             }
         }
     ]

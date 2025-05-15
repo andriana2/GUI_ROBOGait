@@ -20,12 +20,9 @@ RegisterMapForm {
             errorPopup.visible = false
             console.log("Añadir información del mapa presionado")
             ddbb.setMapInformation(ddbb.username, mapNameField.text, locationField.text, descriptionField.text)
+            applicationFlow.type_save = -1
+            stringHandler.setSaveMap(0)
             applicationFlow.create_map_push()
-            // Add user information logic here
-// TODO crear un addMapInformation en mapInfo o database tiene pinta que la info del mapa ira alli
-            // ddbb.addPatient(nameField.text, lastnameField.text, age, weight, height, ddbb.username, descriptionField.text)
-    // TODO un push to CreateMap
-// applicationFlow.popFunction()
         }
     }
 

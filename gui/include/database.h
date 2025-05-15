@@ -60,6 +60,7 @@ public:
     Q_INVOKABLE void getIdFromName(QString const &complete_name);
     Q_INVOKABLE void getMapInformation(const QString &map_name);
     Q_INVOKABLE void setMapInformation(const QString &username, const QString &map_name, const QString &location, const QString &details);
+    Q_INVOKABLE void mapCreateSave(bool save);
 
     QString targetToString(Target target);
     Target stringToTarget(const QString& str);

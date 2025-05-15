@@ -8,7 +8,6 @@ Rectangle {
     color: "#518bb7"
     property alias select_patient_mouse_area: select_patient_mouse_area
     property alias select_map_mouse_area: select_map_mouse_area
-    // property alias hacer_mapa_mouse_area: hacer_mapa_mouse_area
     property alias mapa_mouse_area: mapa_mouse_area
     property alias manualControl_mouse_area: manualControl_mouse_area
 
@@ -105,26 +104,6 @@ Rectangle {
                     anchors.fill: parent
                 }
             }
-
-            // Rectangle {
-            //     id: hacer_mapa
-            //     width: 150
-            //     height: 150
-            //     color: "#235c87"
-
-            //     Text {
-            //         id: text3
-            //         color: "#ffffff"
-            //         text: qsTr("HACER MAPA")
-            //         anchors.centerIn: parent
-            //         font.pixelSize: 24
-            //     }
-
-            //     MouseArea {
-            //         id: hacer_mapa_mouse_area
-            //         anchors.fill: parent
-            //     }
-            // }
         }
     }
     Image {
@@ -206,24 +185,18 @@ Rectangle {
             source: "../images/icon_app/circle-info-solid.svg"
             fillMode: Image.PreserveAspectFit
         }
-               Behavior on scale {
-                   NumberAnimation {
-                       duration: 150
-                       easing.type: Easing.OutQuad
-                   }
-               }
+        Behavior on scale {
+            NumberAnimation {
+                duration: 150
+                easing.type: Easing.OutQuad
+            }
+        }
 
-               // Change scale when pressed/released
-               onPressed: scale = 1.2
-               onReleased: scale = 1.0
+        // Change scale when pressed/released
+        onPressed: scale = 1.2
+        onReleased: scale = 1.0
     }
 }
 
-/*##^##
-Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.75;height:700;width:1300}D{i:4}D{i:5}D{i:3}D{i:7}
-D{i:8}D{i:6}D{i:2}D{i:11}D{i:12}D{i:10}D{i:14}D{i:15}D{i:13}D{i:9}D{i:1}D{i:16}D{i:17}
-D{i:18}D{i:19}D{i:20}D{i:21}
-}
-##^##*/
+
 

@@ -2,12 +2,12 @@ import QtQuick 2.15
 
 SavePageForm {
 
-    property int state_save_page: state_save_page
+    property string currentState: "sp_save_with_not_save_button"
+    state: currentState
 
     states: [
         State {
-            name: "out_save"
-            when: state_save_page === 1
+            name: "sp_save_with_not_save_button"
             // StateChangeScript {
             //     script: {
             //         console.log("estoy en saliendo por eso me pregunta que hacer si guardar sin cambios")
@@ -25,8 +25,7 @@ SavePageForm {
             }
         },
         State {
-            name: "save"
-            when: state_save_page === 2
+            name: "sp_save_without_not_save_button"
             // StateChangeScript {
             //     script: {
             //         console.log("estoy en guardar")
@@ -48,25 +47,6 @@ SavePageForm {
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 28
                 anchors.rightMargin: 10
-            }
-        },
-        State {
-            name: "save_again"
-            when: state_save_page === 3
-            // StateChangeScript {
-            //     script: {
-            //         console.log("estoy en guardar de nuevo")
-            //     }
-            // }
-            PropertyChanges {
-                target: text_header
-                text: "¿Guardar los cambios en este archivo?"
-            }
-            PropertyChanges {
-                target: no_save
-                visible: true
-                opacity: 1
-
             }
         }
     ]

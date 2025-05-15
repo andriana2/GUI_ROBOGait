@@ -64,9 +64,19 @@ ApplicationFlowForm {
         //     }
         // }
         if (applicationFlow.state === "create_map") {
-            stringHandler.stopSLAM()
+            if(stringHandler.saveMap)
+            {
+                stringHandler.stopSLAM()
+                mystackview.pop()
+                applicationFlow.state = applicationFlow.previousState
+            }
+            else if (type_save === -1)
+            {
+                stringHandler.setTypeSaveMap(0)
+            }
+
         }
-        if (applicationFlow.state === "map_path")
+        else if (applicationFlow.state === "map_path")
         {
             // mapInfo.clearInfoImage()
             mystackview.pop()

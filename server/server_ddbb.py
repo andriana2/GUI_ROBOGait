@@ -27,7 +27,6 @@ def is_query_safe(query):
     # Lista de palabras clave peligrosas (expandida)
     dangerous_keywords = [
         "DROP",
-        "DELETE",
         "ALTER",
         "TRUNCATE",
         "--",

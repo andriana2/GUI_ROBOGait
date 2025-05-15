@@ -189,12 +189,36 @@ Rectangle {
             padding: 0
         }
     }
+    Button {
+        id: infoButton
+        width: 37
+        height: 37
+        anchors.verticalCenter: explain.verticalCenter
+        anchors.right: rectagle_conteiner.left
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 20
+        anchors.rightMargin: -7
+        background: Image {
+            source: "../images/icon_app/circle-info-solid.svg"
+            fillMode: Image.PreserveAspectFit
+        }
+        Behavior on scale {
+            NumberAnimation {
+                duration: 150
+                easing.type: Easing.OutQuad
+            }
+        }
+
+        // Change scale when pressed/released
+        onPressed: scale = 1.2
+        onReleased: scale = 1.0
+    }
 }
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}D{i:2}D{i:3}D{i:4}D{i:5}D{i:10}D{i:1}D{i:15}
-D{i:17}
+    D{i:0;autoSize:true;formeditorZoom:0.75;height:700;width:1300}D{i:2}D{i:3}D{i:4}D{i:5}
+D{i:10}D{i:1}D{i:15}D{i:17}D{i:20}
 }
 ##^##*/
 

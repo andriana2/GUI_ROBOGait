@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 
 Rectangle {
     id: root
-    // property alias no_save: no_save
+    property alias no_save: no_save
     property alias save: save
     property alias cancel: cancel
     property alias text_name: text_name
@@ -86,32 +86,32 @@ Rectangle {
         }
     }
 
-//    Button {
-//        id: no_save
-//        text: qsTr("No Guardar")
-//        anchors.right: cancel.left
-//        anchors.bottom: parent.bottom
-//        anchors.bottomMargin: 28
-//        anchors.rightMargin: 10
+   Button {
+       id: no_save
+       text: qsTr("No Guardar")
+       anchors.right: cancel.left
+       anchors.bottom: parent.bottom
+       anchors.bottomMargin: 28
+       anchors.rightMargin: 10
 
-//        background: Rectangle {
-//            color: "#ffffff" // Color inicial
-//            radius: 6
-//            border.color: "#454545" // Borde del mismo color que el texto
-//            border.width: 2
-//        }
+       background: Rectangle {
+           color: "#ffffff" // Color inicial
+           radius: 6
+           border.color: "#454545" // Borde del mismo color que el texto
+           border.width: 2
+       }
 
-//        contentItem: Label {
-//            text: parent.text
-//            color: "#454545"
-//            font.pixelSize: 18
-//        }
-//    }
+       contentItem: Label {
+           text: parent.text
+           color: "#454545"
+           font.pixelSize: 18
+       }
+   }
 
     Button {
         id: save
         text: qsTr("Guardar")
-        anchors.right: cancel.left
+        anchors.right: no_save.left
         anchors.bottom: parent.bottom
         // t: save.enabled ? "white" : "#454545";
         anchors.bottomMargin: 28

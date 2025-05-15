@@ -150,6 +150,28 @@ void Database::setMapInformation(const QString &username,const QString &map_name
     networkDDBB->sendSqlCommand(query, targetToString(Target::SetMapInformation), args);
 }
 
+void Database::mapCreateSave(bool save)
+{
+    QString query;
+    QJsonArray args;
+
+    if (save)
+    {
+        query = "UPDATE map SET map_save = 1 WHERE name = ?;";
+
+        args.append(m_mapNameTemporal);
+
+    }
+    else
+    {
+        query = "DELETE FROM map WHERE name = ?;";
+
+        args.append(m_mapNameTemporal);
+    }
+
+    networkDDBB->sendSqlCommand(query, targetToString(Target::SetMapInformation), args);
+}
+
 void Database::handleQueryResponse(const QJsonObject &response)
 {
     qDebug() << "Respuesta de la consulta recibida:" << response;

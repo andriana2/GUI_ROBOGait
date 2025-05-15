@@ -14,11 +14,27 @@ Rectangle {
     property real linear_value
     property real angular_value
 
-    // property alias switchRow: switchRow
-    // property alias customSwitch: customSwitch
-
     property alias save_page: save_page
-    // property bool save_page_visible: save_page_visible
+
+    Text {
+        id: mapPageForm_text
+        height: parent.width / 8
+        color: "#ffffff"
+        text: qsTr("Desplace el círculo pequeño para comenzar a crear el mapa. La velocidad de movimiento aumentará cuanto más se aleje del centro. Para más detalles presione el botón de información.")
+        anchors.left: mapa.right
+        anchors.right: parent.right
+        anchors.top: parent.top
+        font.pixelSize: 22
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        font.styleName: "Medium"
+        font.bold: true
+        wrapMode: Text.Wrap
+        anchors.topMargin: 25
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
+    }
+
     Rectangle {
         id: mapa
         width: 2 * parent.width / 3
@@ -37,9 +53,7 @@ Rectangle {
                              parent.width * imageDisplay.sourceSize.height
                              / imageDisplay.sourceSize.width)
             anchors.centerIn: parent
-            // visible: stringHandler.imageSource !== "" // Solo visible si hay una fuente válida
             fillMode: Image.PreserveAspectCrop
-            // source: stringHandler.imageSource // Vinculación directa al valor de stringHandler.imageSource
         }
     }
 
@@ -80,69 +94,11 @@ Rectangle {
         }
     }
 
-    // Row {
-    //     id: switchRow
-    //     anchors.horizontalCenter: manualControl.horizontalCenter
-    //     anchors.verticalCenter: manualControl.top
-    //     anchors.horizontalCenterOffset: -text_mapear.minimumPixelSize
-    //     anchors.verticalCenterOffset: -manualControl.height / 3
-    //     spacing: 10
-
-    //     // Texto a la izquierda
-    //     Text {
-    //         id: text_mapear
-    //         text: qsTr("Mapear")
-    //         anchors.verticalCenter: parent.verticalCenter
-    //         color: "white"
-    //         font.pixelSize: 16
-    //         verticalAlignment: Text.AlignVCenter
-    //     }
-
-    //     // Switch redondo personalizado
-    //     Rectangle {
-    //         id: customSwitch
-    //         width: 50
-    //         height: 30
-    //         radius: height / 2
-    //         color: checked ? "#D02833" : "#B0BEC5"
-    //         border.color: "gray"
-
-    //         // Declaramos la propiedad `checked`
-    //         property bool checked: false
-
-    //         // Círculo que se mueve
-    //         Rectangle {
-    //             id: handle
-    //             width: 24
-    //             height: 24
-    //             radius: width / 2
-    //             color: "white"
-    //             border.color: "gray"
-    //             anchors.verticalCenter: parent.verticalCenter
-    //             x: customSwitch.checked ? parent.width - width - 3 : 3
-
-    //             // Animación suave
-    //             //                Behavior on x {
-    //             //                    NumberAnimation {
-    //             //                        duration: 200
-    //             //                        easing.type: Easing.InOutQuad
-    //             //                    }
-    //             //                }
-    //         }
-
-    //         // Área de interacción
-    //         MouseArea {
-    //             anchors.fill: parent
-    //             onClicked: customSwitch.checked = !customSwitch.checked
-    //         }
-    //     }
-    // }
     SavePage {
         id: save_page
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -60
         anchors.horizontalCenter: parent.horizontalCenter
-        // state_save_page: state_save_page
     }
     Button {
         id: saveMapButton
@@ -181,12 +137,36 @@ Rectangle {
         anchors.rightMargin: 0
         anchors.bottomMargin: 0
     }
+    Button {
+        id: infoButton
+        width: 37
+        height: 37
+        anchors.left: mapa.right
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 0
+        anchors.bottomMargin: 20
+        anchors.rightMargin: -7
+        background: Image {
+            source: "../images/icon_app/circle-info-solid.svg"
+            fillMode: Image.PreserveAspectFit
+        }
+               Behavior on scale {
+                   NumberAnimation {
+                       duration: 150
+                       easing.type: Easing.OutQuad
+                   }
+               }
+
+               // Change scale when pressed/released
+               onPressed: scale = 1.2
+               onReleased: scale = 1.0
+    }
 }
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.66;height:700;width:1300}D{i:2}D{i:1}D{i:4}D{i:3}
-D{i:5}D{i:7}
+    D{i:0;autoSize:true;formeditorZoom:0.75;height:700;width:1300}D{i:1}D{i:3}D{i:2}D{i:5}
+D{i:4}D{i:6}D{i:8;invisible:true}D{i:9}D{i:11}D{i:12}
 }
 ##^##*/
 
