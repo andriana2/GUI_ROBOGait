@@ -30,7 +30,7 @@ Rectangle {
         font.styleName: "Medium"
         font.bold: true
         wrapMode: Text.Wrap
-        anchors.topMargin: 25
+        anchors.topMargin: 5
         anchors.leftMargin: 10
         anchors.rightMargin: 10
     }

@@ -113,48 +113,48 @@ void Servidor::udp_discovery()
 
 void Servidor::handle_udp_acks()
 {
-    std::thread([this]()
-                {
-        char buffer[1024];
-        int failed_acks = 0;
-        const int max_failed_acks = 3;
+    // std::thread([this]()
+    //             {
+    //     char buffer[1024];
+    //     int failed_acks = 0;
+    //     const int max_failed_acks = 3;
 
-        while (connection_active_) {
-            try {
-                udp_socket_.send_to(boost::asio::buffer("ACK"), client_endpoint_);
-            } catch (...) {
-                std::cerr << "Error sending ACK\n";
-                connection_active_ = false;
-                break;
-            }
+    //     while (connection_active_) {
+    //         try {
+    //             udp_socket_.send_to(boost::asio::buffer("ACK"), client_endpoint_);
+    //         } catch (...) {
+    //             std::cerr << "Error sending ACK\n";
+    //             connection_active_ = false;
+    //             break;
+    //         }
 
-            bool ack_received = false;
-            for (int i = 0; i < 5; ++i) {
-                boost::system::error_code ec;
-                udp::endpoint sender;
-                udp_socket_.non_blocking(true);
-                size_t len = udp_socket_.receive_from(boost::asio::buffer(buffer), sender, 0, ec);
+    //         bool ack_received = false;
+    //         for (int i = 0; i < 5; ++i) {
+    //             boost::system::error_code ec;
+    //             udp::endpoint sender;
+    //             udp_socket_.non_blocking(true);
+    //             size_t len = udp_socket_.receive_from(boost::asio::buffer(buffer), sender, 0, ec);
 
-                if (!ec && len > 0 && sender == client_endpoint_ &&
-                    std::string(buffer, len) == "ACK") {
-                    ack_received = true;
-                    failed_acks = 0;
-                    break;
-                }
+    //             if (!ec && len > 0 && sender == client_endpoint_ &&
+    //                 std::string(buffer, len) == "ACK") {
+    //                 ack_received = true;
+    //                 failed_acks = 0;
+    //                 break;
+    //             }
 
-                std::this_thread::sleep_for(std::chrono::milliseconds(200));
-            }
+    //             std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    //         }
 
-            if (!ack_received && ++failed_acks >= max_failed_acks) {
-                // nodeManager.reset(); // This cause a bug because doing at the same time as other .reset()
-                std::cerr << "UDP connection lost\n";
-                connection_active_ = false;
-                break;
-            }
+    //         if (!ack_received && ++failed_acks >= max_failed_acks) {
+    //             // nodeManager.reset(); // This cause a bug because doing at the same time as other .reset()
+    //             std::cerr << "UDP connection lost\n";
+    //             connection_active_ = false;
+    //             break;
+    //         }
 
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-        } })
-        .detach();
+    //         std::this_thread::sleep_for(std::chrono::seconds(1));
+    //     } })
+    //     .detach();
 }
 
 void Servidor::startAccept()
