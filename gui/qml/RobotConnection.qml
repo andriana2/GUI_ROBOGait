@@ -3,7 +3,8 @@ import "extras"
 
 RobotConnectionForm {
     buttonSearchRobot{
-        onClicked:  stringHandler.searchRobotIp()
+        // onClicked:  stringHandler.searchRobotIp()
+        onClicked: applicationFlow.register_page_push()
     }
 
     InformationRectangle {

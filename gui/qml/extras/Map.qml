@@ -54,7 +54,8 @@ Item {
             anchors.centerIn: parent
             visible: true
             fillMode: Image.PreserveAspectCrop
-            source: mapInfo.imgSource
+            // source: mapInfo.imgSource
+            source: "../../images/my_map.png"
         }
     }
 

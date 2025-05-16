@@ -8,11 +8,12 @@ MainMenuForm {
     }
 
     mapa_mouse_area.onClicked: {
-        if (stringHandler.stateBottomBar === "MP_cbb")
-        {
-            mapInfo.setMapName(stringHandler.mapNameTest)
-            applicationFlow.map_path_push()
-        }
+        // if (stringHandler.stateBottomBar === "MP_cbb")
+        // {
+        //     mapInfo.setMapName(stringHandler.mapNameTest)
+        //     applicationFlow.map_path_push()
+        // }
+        applicationFlow.map_path_push()
     }
     
     select_map_mouse_area.onClicked: {
