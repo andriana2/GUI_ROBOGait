@@ -260,6 +260,9 @@ void NodeManager::close_publisher(Target const &target)
                 std::cerr << "Error loading YAML file: " << e.what() << std::endl;
             }
             std::string name_cartographer = config["NAME_CARTOGRAPHER_LAUNCH"].as<std::string>();
+
+            processController.stopProcess(name_cartographer);
+
             slam_launch_file = false;
         }
         if (!tf_service_client_)
