@@ -100,6 +100,7 @@ qt_add_qml_module(appgui
     qml/extras/DescriptionPatientForm.ui.qml
     qml/extras/DescriptionMapForm.ui.qml
     qml/extras/ImageText.qml
+    qml/extras/PopUpInfoForm.ui.qml
 
 
     ${qml_singletons}
@@ -118,6 +119,8 @@ qt_add_qml_module(appgui
     images/icon_app/trash-solid.svg
     images/icon_app/plus-solid.svg
     images/icon_app/circle-info-solid.svg
+    images/icon_app/circle-question.svg
+    images/icon_app/xmark-solid.svg
 
     # images sponsors
     images/sponsors/car.png

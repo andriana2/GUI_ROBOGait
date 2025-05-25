@@ -10,6 +10,9 @@ Rectangle {
     property alias select_map_mouse_area: select_map_mouse_area
     property alias mapa_mouse_area: mapa_mouse_area
     property alias manualControl_mouse_area: manualControl_mouse_area
+    property alias infoForm: infoForm
+    property alias infoButton: infoButton
+
 
     Column {
         id: column
@@ -195,6 +198,30 @@ Rectangle {
         // Change scale when pressed/released
         onPressed: scale = 1.2
         onReleased: scale = 1.0
+    }
+
+
+    PopUpInfoForm {
+        id: infoForm
+        anchors.centerIn: parent
+        visible: false
+
+        textInfo.text: "<h2>Objetivo de la aplicación</h2>
+            <p>Esta aplicación permite controlar el robot <b>ROBOGait</b> y realizar pruebas de la marcha humana para la evaluación de la movilidad. <br>
+            Su uso facilita la detección de posibles alteraciones en la marcha y contribuye al diagnóstico clínico.</p>
+            <h2>Cómo empezar</h2>
+            <ol>
+            <li><b>Seleccionar mapa</b> – Defina el entorno en el que se realizará la evaluación del paciente.</li>
+            <li><b>Seleccionar paciente</b> – Asigne un paciente para registrar y analizar su patrón de marcha.</li>
+            <li><b>Control manual</b> – Permite un manejo directo del robot para ajustes o pruebas preliminares.</li>
+            <li><b>Prueba</b> – Inicia el análisis de la marcha del paciente con el robot.</li>
+            </ol>
+            <p>La selección del mapa y el paciente es obligatoria antes de iniciar una prueba.<br>
+            Los nombres seleccionados aparecerán en la parte inferior de la pantalla.</p>
+            <h2>¿Necesita ayuda?</h2>
+            <p>Para asistencia técnica, contacte con la ETSIDI en:
+            <a href='mailto:correo.soporte@upm.es'>correo.soporte@upm.es</a></p><br><br><br>"
+
     }
 }
 

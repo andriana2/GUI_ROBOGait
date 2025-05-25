@@ -14,6 +14,11 @@ MainMenuForm {
             applicationFlow.map_path_push()
         }
     }
+
+    infoButton.onClicked: {
+        infoForm.visible = true
+        infoForm.enabled = true
+    }
     
     select_map_mouse_area.onClicked: {
         applicationFlow.select_map_push()

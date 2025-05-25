@@ -17,6 +17,11 @@ ManualControlForm {
         }
     }
 
+    infoButton.onClicked: {
+        infoForm.visible = true
+        infoForm.enabled = true
+    }
+
     Connections {
         target: joystick
 

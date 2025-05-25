@@ -21,6 +21,11 @@ MapPageForm {
         // mapInfo.sendStopProcesses();
     }
 
+    infoButton.onClicked: {
+        infoForm.visible = true
+        infoForm.enabled = true
+    }
+
     mapPageForm_buttonNext.onClicked: {
         if(state === "mp_initialPosition")
         {
@@ -219,6 +224,22 @@ MapPageForm {
             PropertyChanges { target: mapPageForm_buttonPrevious; enabled: false; opacity: 0 }
             PropertyChanges { target: mp_map; map_currentState: "map_initialPosition" }
             PropertyChanges { target: mapPageForm_boxImages; state: "bi_draw_robot" }
+            PropertyChanges {
+                target: infoForm
+                textInfo.text:     "<h2>Información de la pantalla</h2>
+                                   <p>En esta pantalla debes establecer la posición inicial del robot en el mapa.
+                                   Es importante que sea lo más precisa posible para evitar errores durante la prueba.</p>
+
+                                   <h2>Botones</h2>
+                                   <ul>
+                                       <li><b>Insertar imagen:</b> Al pulsar da permiso para colocar la imagen del robot en el mapa.</li>
+                                       <li><b>Borrar:</b> Al pulsar elimina la imagen del robot del mapa.</li>
+                                   </ul>
+
+                                   <h2>¿Necesita ayuda?</h2>
+                                   <p>Para asistencia técnica, contacte con ETSIDI en:
+                                   <a href='mailto:correo.soporte@upm.es'>correo.soporte@upm.es</a></p><br><br><br>"
+            }
         },
         State {
             name: "mp_initialOrientation"
@@ -231,6 +252,21 @@ MapPageForm {
             PropertyChanges { target: mapPageForm_buttonPrevious; enabled: true; opacity: 1; text: qsTr("Anterior") }
             PropertyChanges { target: mp_map; map_currentState: "map_initialOrientation" }
             PropertyChanges { target: mapPageForm_boxImages; state: "bi_nothing" }
+            PropertyChanges {
+                target: infoForm
+                textInfo.text:     "<h2>Información de la pantalla</h2>
+                                   <p>En esta pantalla debes establecer la orientación inicial del robot en el mapa. <br>
+                                   Es importante que sea lo más precisa posible para evitar errores durante la prueba.</p>
+
+                                   <h2>Botones</h2>
+                                   <ul>
+                                       <li><b>Rueda:</b> Gire la rueda para indicar la orientación, presión la zona más alejada del centro, dentro del circulo, para comenzar.
+                                   </ul>
+
+                                   <h2>¿Necesita ayuda?</h2>
+                                   <p>Para asistencia técnica, contacte con ETSIDI en:
+                                   <a href='mailto:correo.soporte@upm.es'>correo.soporte@upm.es</a></p><br><br><br>"
+            }
         },
         State {
             name: "selectAction"
@@ -243,6 +279,21 @@ MapPageForm {
             PropertyChanges { target: mapPageForm_buttonPrevious; enabled: true; opacity: 1; text: qsTr("Anterior") }
             PropertyChanges { target: mp_map; map_currentState: "map_selectAction" }
             PropertyChanges { target: mapPageForm_boxImages; state: "bi_select_action" }
+            PropertyChanges {
+                target: infoForm
+                textInfo.text:     "<h2>Información de la pantalla</h2>
+                                   <p>En esta pantalla debe elegir como quiere hacer el camino del robot.</p>
+
+                                   <h2>Botones</h2>
+                                   <ul>
+                                       <li><b>Dibujar trayectoria:</b> A mano alzada dibuja la trajectoria que el robot segirá.</li>
+                                       <li><b>Posición Final:</b> Selecciona la posición final pero no la trayectoria que sigue.</li>
+                                   </ul>
+
+                                   <h2>¿Necesita ayuda?</h2>
+                                   <p>Para asistencia técnica, contacte con ETSIDI en:
+                                   <a href='mailto:correo.soporte@upm.es'>correo.soporte@upm.es</a></p><br><br><br>"
+            }
         },
         State {
             name: "mp_goalPosePosition"
@@ -256,6 +307,22 @@ MapPageForm {
             PropertyChanges { target: mapPageForm_buttonPrevious; enabled: true; opacity: 1; text: qsTr("Anterior") }
             PropertyChanges { target: mp_map; map_currentState: "map_goalPosePosition" }
             PropertyChanges { target: mapPageForm_boxImages; state: "bi_draw_robot" }
+            PropertyChanges {
+                target: infoForm
+                textInfo.text:     "<h2>Información de la pantalla</h2>
+                                   <p>En esta pantalla debes establecer la posición objetivo del robot en el mapa.
+                                   Es importante que sea lo más precisa posible para evitar errores durante la prueba.</p>
+
+                                   <h2>Botones</h2>
+                                   <ul>
+                                       <li><b>Insertar imagen:</b> Al pulsar da permiso para colocar la imagen del robot en el mapa.</li>
+                                       <li><b>Borrar:</b> Al pulsar elimina la imagen del robot del mapa.</li>
+                                   </ul>
+
+                                   <h2>¿Necesita ayuda?</h2>
+                                   <p>Para asistencia técnica, contacte con ETSIDI en:
+                                   <a href='mailto:correo.soporte@upm.es'>correo.soporte@upm.es</a></p><br><br><br>"
+            }
         },
         State {
             name: "mp_goalPoseOrientation"
@@ -269,6 +336,21 @@ MapPageForm {
             PropertyChanges { target: mapPageForm_buttonPrevious; enabled: true; opacity: 1; text: qsTr("Anterior") }
             PropertyChanges { target: mp_map; map_currentState: "map_goalPoseOrientation" }
             PropertyChanges { target: mapPageForm_boxImages; state: "bi_nothing" }
+            PropertyChanges {
+                target: infoForm
+                textInfo.text:     "<h2>Información de la pantalla</h2>
+                                   <p>En esta pantalla debes establecer la orientación objetivo del robot en el mapa. <br>
+                                   Es importante que sea lo más precisa posible para evitar errores durante la prueba.</p>
+
+                                   <h2>Botones</h2>
+                                   <ul>
+                                       <li><b>Rueda:</b> Gire la rueda para indicar la orientación, presión la zona más alejada del centro, dentro del circulo, para comenzar.
+                                   </ul>
+
+                                   <h2>¿Necesita ayuda?</h2>
+                                   <p>Para asistencia técnica, contacte con ETSIDI en:
+                                   <a href='mailto:correo.soporte@upm.es'>correo.soporte@upm.es</a></p><br><br><br>"
+            }
         },
         State {
             name: "mp_PathGoalPose"
@@ -282,6 +364,15 @@ MapPageForm {
             PropertyChanges { target: mapPageForm_buttonPrevious; enabled: true; opacity: 1; text: qsTr("Anterior") }
             PropertyChanges { target: mp_map; map_currentState: "map_PathGoalPose" }
             PropertyChanges { target: mapPageForm_boxImages; state: "bi_nothing" }
+            PropertyChanges {
+                target: infoForm
+                textInfo.text:     "<h2>Información de la pantalla</h2>
+                                   <p>Tras selecionar la posición objetivo se esta creando la trayectoria hacia el objetivo. Cuando la trayectoria se pinta en pantalla podrá seguir con el comienzo del movimiento</p>
+
+                                   <h2>¿Necesita ayuda?</h2>
+                                   <p>Para asistencia técnica, contacte con ETSIDI en:
+                                   <a href='mailto:correo.soporte@upm.es'>correo.soporte@upm.es</a></p><br><br><br>"
+            }
         },
         State {
             name: "mp_GoalPoseMove"
@@ -295,6 +386,15 @@ MapPageForm {
             PropertyChanges { target: mapPageForm_buttonPrevious; enabled: false; opacity: 0 }
             PropertyChanges { target: mp_map; map_currentState: "map_GoalPoseMove" }
             PropertyChanges { target: mapPageForm_boxImages; state: "bi_nothing" }
+            PropertyChanges {
+                target: infoForm
+                textInfo.text:     "<h2>Información de la pantalla</h2>
+                                   <p>El robot se esta moviendo hacia la posición objetivo</p>
+
+                                   <h2>¿Necesita ayuda?</h2>
+                                   <p>Para asistencia técnica, contacte con ETSIDI en:
+                                   <a href='mailto:correo.soporte@upm.es'>correo.soporte@upm.es</a></p><br><br><br>"
+            }
         },
         State {
             name: "mp_drawPath"
@@ -308,6 +408,24 @@ MapPageForm {
             PropertyChanges { target: mapPageForm_buttonPrevious; enabled: true; opacity: 1; text: qsTr("Anterior") }
             PropertyChanges { target: mp_map; map_currentState: "map_drawPath" }
             PropertyChanges { target: mapPageForm_boxImages; state: "bi_draw_path" }
+            PropertyChanges {
+                target: infoForm
+                textInfo.text:     "<h2>Información de la pantalla</h2>
+                                   <p>En esta pantalla dibujara la trayectoria que quiere que siga el robot.</p>
+
+                                   <h2>Botones</h2>
+                                   <ul>
+                                        <li><b>Dibujar:</b> A mano alzada dibuja la trajectoria que el robot segirá.</li>
+                                        <li><b>Borrar:</b> Borrará la trayectoria dibujada.</li>
+                                        <li><b>Trayectoria final:</b> Se hace un filtrado de la trajectoria.</li>
+                                        <li><b>Verificar:</b> Verificas que la trayectoria no pasa cerca de una zona de color negro.</li>
+                                   </ul>
+
+                                   <h2>¿Necesita ayuda?</h2>
+                                   <p>Para asistencia técnica, contacte con ETSIDI en:
+                                   <a href='mailto:correo.soporte@upm.es'>correo.soporte@upm.es</a></p><br><br><br>"
+            }
+
         },
         State {
             name: "mp_drawPathMove"
@@ -321,6 +439,15 @@ MapPageForm {
             PropertyChanges { target: mapPageForm_buttonPrevious; enabled: false; opacity: 0}
             PropertyChanges { target: mp_map; map_currentState: "map_drawPathMove" }
             PropertyChanges { target: mapPageForm_boxImages; state: "bi_nothing" }
+            PropertyChanges {
+                target: infoForm
+                textInfo.text:     "<h2>Información de la pantalla</h2>
+                                   <p>El robot se esta moviendo siguiendo la trajectoria dibujada</p>
+
+                                   <h2>¿Necesita ayuda?</h2>
+                                   <p>Para asistencia técnica, contacte con ETSIDI en:
+                                   <a href='mailto:correo.soporte@upm.es'>correo.soporte@upm.es</a></p><br><br><br>"
+            }
         }
     ]
 }

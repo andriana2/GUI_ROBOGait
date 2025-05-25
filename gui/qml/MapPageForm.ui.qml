@@ -14,6 +14,9 @@ Rectangle {
     property alias mapPageForm_orientationCircleForm: orientationCircle
     property alias mapPageForm_boxImages: boxImages
 
+    property alias infoForm: infoForm
+    property alias infoButton: infoButton
+
     property string mapPageForm_previousState: ""
     property string mapPageForm_nextState: ""
 
@@ -212,6 +215,27 @@ Rectangle {
         // Change scale when pressed/released
         onPressed: scale = 1.2
         onReleased: scale = 1.0
+    }
+
+    PopUpInfoForm {
+        id: infoForm
+        anchors.centerIn: parent
+        visible: false
+
+        textInfo.text: "<h2>Información de la pantalla</h2>\
+                <p>Esta pantalla permite controlar el robot a través del joystick.</p>\
+                <h2><span style='color:red;'>¡¡ADVERTENCIA!!</span></h2>\
+                <p>Este robot no cuenta con un sistema de gestión de colisiones. Asegúrese de evitar obstáculos y supervisar su desplazamiento en todo momento.</p>\
+                <h2>Movimientos del robot</h2>\
+                <ul>\
+                  <li><b>Hacia adelante:</b> Avanza en línea recta.</li>\
+                  <li><b>Hacia atrás:</b> Retrocede en línea recta.</li>\
+                  <li><b>Hacia la izquierda:</b> Gira en sentido horario (hacia la derecha).</li>\
+                  <li><b>Hacia la derecha:</b> Gira en sentido antihorario (hacia la izquierda).</li>\
+                  <li><b>Posiciones intermedias:</b> El robot se moverá en una combinación de traslación y giro, ajustando su dirección según la inclinación del joystick.</li>\
+                </ul>\
+                <h2>¿Necesita ayuda?</h2>\
+                <p>Para asistencia técnica, contacte con ETSIDI en: <a href='mailto:correo.soporte@upm.es'>correo.soporte@upm.es</a></p><br><br><br>"
     }
 }
 
