@@ -142,7 +142,12 @@ MapPageForm {
     mapPageForm_boxImages.onBif_draw_path_pressed: {
         if (state === "selectAction"){
             mapPage.state = "mp_drawPath"
-            mapInfo.sendInitialPose();}
+            mapInfo.sendInitialPose();
+        }
+        if (state === "mp_selectNextStep")
+        {
+            applicationFlow.popToManualControl() ///////// TODO
+        }
 
         else if (state === "mp_drawPath")
         {
@@ -188,6 +193,8 @@ MapPageForm {
         }
         else if (state === "selectAction")
             mapPage.state = "mp_goalPosePosition"
+        else if (state === "mp_selectNextStep")
+            applicationFlow. popToMainMenu() ////////////////TODO
 
     }
 
@@ -378,11 +385,11 @@ MapPageForm {
             name: "mp_GoalPoseMove"
             StateChangeScript { script: console.log("estoy en mp_GoalPoseMove") }
             StateChangeScript { script: mp_map.canvas.requestPaint() }
-            PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_PathGoalPose"; mapPageForm_nextState: "selectAction" }
+            PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_PathGoalPose"; mapPageForm_nextState: "mp_selectNextStep" }
             PropertyChanges { target: mapPageForm_text; text: qsTr("Moviendo") }
             PropertyChanges { target: mapPageForm_orientationCircleForm; state: "nothing" }
             PropertyChanges { target: mapPageForm_buttonNext; enabled: true; opacity: 1 }
-            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Nuevo Camino") }
+            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Siguiente+") }
             PropertyChanges { target: mapPageForm_buttonPrevious; enabled: false; opacity: 0 }
             PropertyChanges { target: mp_map; map_currentState: "map_GoalPoseMove" }
             PropertyChanges { target: mapPageForm_boxImages; state: "bi_nothing" }
@@ -431,11 +438,11 @@ MapPageForm {
             name: "mp_drawPathMove"
             StateChangeScript { script: console.log("estoy en mp_drawPathMove") }
             StateChangeScript { script: mp_map.canvas.requestPaint() }
-            PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_drawPath"; mapPageForm_nextState: "selectAction" }
+            PropertyChanges { target: mapPage; mapPageForm_previousState: "mp_drawPath"; mapPageForm_nextState: "mp_selectNextStep" }
             PropertyChanges { target: mapPageForm_text; text: qsTr("Moviendo") }
             PropertyChanges { target: mapPageForm_orientationCircleForm; state: "nothing" }
             PropertyChanges { target: mapPageForm_buttonNext; enabled: true; opacity: 1 }
-            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Nuevo Camino") }
+            PropertyChanges { target: mapPage; mapPageForm_nextState_text: qsTr("Siguiente+") }
             PropertyChanges { target: mapPageForm_buttonPrevious; enabled: false; opacity: 0}
             PropertyChanges { target: mp_map; map_currentState: "map_drawPathMove" }
             PropertyChanges { target: mapPageForm_boxImages; state: "bi_nothing" }
@@ -443,6 +450,33 @@ MapPageForm {
                 target: infoForm
                 textInfo.text:     "<h2>Información de la pantalla</h2>
                                    <p>El robot se esta moviendo siguiendo la trajectoria dibujada</p>
+
+                                   <h2>¿Necesita ayuda?</h2>
+                                   <p>Para asistencia técnica, contacte con ETSIDI en:
+                                   <a href='mailto:correo.soporte@upm.es'>correo.soporte@upm.es</a></p><br><br><br>"
+            }
+        },
+        State {
+            name: "mp_selectNextStep"
+            StateChangeScript { script: console.log("estoy en selectAction") }
+            StateChangeScript { script: mp_map.canvas.requestPaint() }
+            PropertyChanges { target: mapPage; mapPageForm_previousState: ""; mapPageForm_nextState: "" }
+            PropertyChanges { target: mapPageForm_text; text: qsTr("Seleccione la acción que quiere realizar a continuación:") }
+            PropertyChanges { target: mapPageForm_orientationCircleForm; state: "nothing" }
+            PropertyChanges { target: mapPageForm_buttonNext; enabled: false; opacity: 0 }
+            PropertyChanges { target: mapPageForm_buttonPrevious; enabled: false; opacity: 0;}
+            PropertyChanges { target: mp_map; map_currentState: "map_selectNextStep" }
+            PropertyChanges { target: mapPageForm_boxImages; state: "bi_select_action_next_step" }
+            PropertyChanges {
+                target: infoForm
+                textInfo.text:     "<h2>Información de la pantalla</h2>
+                                   <p>En esta pantalla debe elegir que haces a continuación.</p>
+
+                                   <h2>Botones</h2>
+                                   <ul>
+                                       <li><b>Menú principal:</b> Te dirigiras al menú principal de la apliación.</li>
+                                       <li><b>Control Manual:</b> Movieras el robot de forma manual en la pantalla control manual.</li>
+                                   </ul>
 
                                    <h2>¿Necesita ayuda?</h2>
                                    <p>Para asistencia técnica, contacte con ETSIDI en:

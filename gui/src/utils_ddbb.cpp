@@ -58,8 +58,8 @@ std::pair<QString, QString> splitNameSurname(const QString &fullName)
         return {fullName.trimmed().toLower(), ""};
     }
 
-    QString firstName = parts[0].trimmed().toLower();
-    QString lastName = parts[1].trimmed().toLower();
+    QString firstName = parts[1].trimmed().toLower();
+    QString lastName = parts[0].trimmed().toLower();
 
     return {firstName, lastName};
 }

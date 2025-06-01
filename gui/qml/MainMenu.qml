@@ -4,7 +4,8 @@ import "extras"
 MainMenuForm {
 
     manualControl_mouse_area.onClicked: {
-        applicationFlow.manualControl_push()
+            applicationFlow.manualControl_push()
+
     }
 
     mapa_mouse_area.onClicked: {
@@ -21,13 +22,19 @@ MainMenuForm {
     }
     
     select_map_mouse_area.onClicked: {
+        if (ddbb.role !== "guest")
+        {
         applicationFlow.select_map_push()
         ddbb.selectAllMap()
+        }
     }
 
     select_patient_mouse_area.onClicked: {
+        if (ddbb.role !== "guest")
+        {
         ddbb.selectAllPatient(ddbb.username)
         applicationFlow.select_patient_push()
+        }
     }
 
 }

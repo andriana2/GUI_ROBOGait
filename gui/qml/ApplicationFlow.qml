@@ -113,6 +113,29 @@ ApplicationFlowForm {
         stringHandler.errorConnection = false
     }
 
+
+    function popToMainMenu() {
+        // console.log("_________________estoy en el estado: " + applicationFlow.state)
+        while (applicationFlow.state !== "menu_app" && mystackview.depth > 1) {
+            mystackview.pop();
+            applicationFlow.state = applicationFlow.previousState;
+            // console.log("_________________estoy en el estado: " + applicationFlow.state)
+        }
+        stringHandler.errorConnection = false
+    }
+
+    function popToManualControl() {
+        // console.log("_________________estoy en el estado: " + applicationFlow.state)
+        while (applicationFlow.state !== "menu_app" && mystackview.depth > 1) {
+            mystackview.pop();
+            applicationFlow.state = applicationFlow.previousState;
+            // console.log("_________________estoy en el estado: " + applicationFlow.state)
+        }
+        manualControl_push()
+        stringHandler.errorConnection = false
+    }
+
+
     // function saveButton()
     // {
     //     if(!stringHandler.saveMap)

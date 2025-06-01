@@ -36,7 +36,7 @@ GuestForm {
         } else {
             errorPopup.visible = false
             console.log("Iniciar como invitado presionado")
-            ddbb.role =("doctor")
+            ddbb.role =("guest")
             ddbb.username = nameField.text
             applicationFlow.menu_push()
             nameField.text = ""

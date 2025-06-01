@@ -413,7 +413,7 @@ void Database::updatePatients(const QJsonArray &result)
             {
                 QString firstName = capitalizeWords(patientArray[0].toString());
                 QString lastName = capitalizeWords(patientArray[1].toString());
-                QString fullName = firstName + ", " + lastName;
+                QString fullName =  lastName  + ", " + firstName;
                 patientList.append(fullName);
             }
         }

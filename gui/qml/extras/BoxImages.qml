@@ -98,6 +98,22 @@ BoxImagesForm {
             PropertyChanges { target: boxImages; image_source_check_black: "../../images/icon_app/file-arrow-down-solid.svg" }
             PropertyChanges { target: boxImages; image_source_clear: "../../images/icon_app/eraser-solid.svg" }
             PropertyChanges { target: boxImages; image_source_edit: "../../images/icon_app/pencil-solid.svg" }
+        },
+        State {
+            name: "bi_select_action_next_step"
+            StateChangeScript { script: console.log("estoy en bi_select_action_next_step") }
+            PropertyChanges { target: bif_clear; visible: true; enabled: true; width: 120; height: 120 }
+            PropertyChanges { target: bif_draw_path; visible: true; enabled: true; width: 120; height: 120 }
+            PropertyChanges { target: bif_text_clear; visible: true; enabled: true; text: qsTr("Menú\n Principal") }
+            PropertyChanges { target: bif_text_draw_path; visible: true; enabled: true; text: qsTr("Control\n Manual") }
+            PropertyChanges { target: bif_check; visible: false; enabled: false }
+            PropertyChanges { target: bif_edit; visible: false; enabled: false }
+            PropertyChanges { target: bif_check_black; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_check; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_edit; visible: false; enabled: false }
+            PropertyChanges { target: bif_text_check_black; visible: false; enabled: false }
+            PropertyChanges { target: boxImages; image_source_clear: "../../images/action/goal.png" }
+            PropertyChanges { target: boxImages; image_source_draw_path: "../../images/action/draw_pencil.png" }
         }
     ]
 

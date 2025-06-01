@@ -34,6 +34,7 @@ Rectangle {
                 Image {
                     id: select_map_image
                     anchors.fill: parent
+                    opacity: ddbb.role === "guest" ? 0.5 : 1
                     source: "../images/menu/select_map.png"
                     fillMode: Image.PreserveAspectCrop
                 }
@@ -53,6 +54,7 @@ Rectangle {
                 Image {
                     id: select_patient_image
                     anchors.fill: parent
+                    opacity: ddbb.role === "guest" ? 0.5 : 1
                     source: "../images/menu/select_patient.png"
                     fillMode: Image.PreserveAspectCrop
                 }

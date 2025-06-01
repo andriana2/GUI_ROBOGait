@@ -131,6 +131,8 @@ qt_add_qml_module(appgui
     # images robot
     images/robot/robot.png
     images/robot/robot_with_arrow.png
+    images/robot/robot_goal.png
+    images/robot/robot_with_arrow_goal.png
 
     # images main menu
     images/menu/image_test.png

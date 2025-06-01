@@ -78,8 +78,15 @@ Item {
             source: "../../images/robot/robot_with_arrow.png" // Ruta a tu imagen
         }
 
+        property var imageRobotWithArrowGoal: Image {
+            source: "../../images/robot/robot_with_arrow_goal.png" // Ruta a tu imagen
+        }
+
         property var imageRobot: Image {
             source: "../../images/robot/robot.png" // Ruta a tu imagen
+        }
+        property var imageRobotGoal: Image {
+            source: "../../images/robot/robot_goal.png" // Ruta a tu imagen
         }
 
         Connections {
@@ -99,13 +106,26 @@ Item {
             }
         }
 
-        function drawAndValidateImage(x, y, orientation) {
+        function drawAndValidateImage(x, y, orientation, initialOrientation) {
             var ctx = getContext('2d');
             // ctx.clearRect(0, 0, width, height); // Limpiar el Canvas antes de dibujar
 
             var scaledWidth, scaledHeight;
             if (orientation === 0.0) {
-                scaledWidth = imageRobot.width * scale;
+                // scaledWidth = imageRobot.width * scale;
+                // scaledHeight = imageRobot.height * scale;
+                // ctx.drawImage(
+                //             imageRobot,
+                //             x - scaledWidth / 2,
+                //             y - scaledHeight / 2,
+                //             scaledWidth,
+                //             scaledHeight
+                //             );
+                // console.log("Posición: X=" + x + " Y=" + y);
+
+                if (map_currentState === "map_initialPosition")
+                {
+                                    scaledWidth = imageRobot.width * scale;
                 scaledHeight = imageRobot.height * scale;
                 ctx.drawImage(
                             imageRobot,
@@ -114,10 +134,6 @@ Item {
                             scaledWidth,
                             scaledHeight
                             );
-                // console.log("Posición: X=" + x + " Y=" + y);
-
-                if (map_currentState === "map_initialPosition")
-                {
                     mapInfo.setPositionScreen(x, y);
                     circleDrawn = true;
 
@@ -132,6 +148,15 @@ Item {
 
                 else if (map_currentState === "map_goalPosePosition")
                 {
+                                    scaledWidth = imageRobotGoal.width * scale;
+                scaledHeight = imageRobotGoal.height * scale;
+                ctx.drawImage(
+                            imageRobotGoal,
+                            x - scaledWidth / 2,
+                            y - scaledHeight / 2,
+                            scaledWidth,
+                            scaledHeight
+                            );
                     mapInfo.setFinalScreenPosition(x, y);
                     circleDrawn = true;
                     console.log(" lastX " + lastX + " lastY " + lastY  + " mapInfoOriginalX " + mapInfo.finalPathPosition.x+ " mapInfoOriginalY " + mapInfo.finalPathPosition.y)
@@ -146,14 +171,21 @@ Item {
                 }
 
             } else {
-                scaledWidth = imageRobotWithArrow.width * scale;
-                scaledHeight = imageRobotWithArrow.height * scale;
+                var sourceImage;
+                if ((map_currentState === "map_goalPoseOrientation" && initialOrientation === 0) || initialOrientation === 0)
+                    sourceImage = imageRobotWithArrowGoal;
+                else 
+                {
+                    sourceImage = imageRobotWithArrow;
+                }
+                scaledWidth = sourceImage.width * scale;
+                scaledHeight = sourceImage.height * scale;
                 ctx.save(); // Guardar el estado actual del contexto
                 ctx.translate(x, y); // Trasladar el origen al punto (x, y)
                 ctx.rotate((360 - orientation) * Math.PI / 180); // Rotar el contexto en radianes
                 // console.log("Orientacion en MAP.QML " + orientation);
                 ctx.drawImage(
-                            imageRobotWithArrow,
+                            sourceImage,
                             -scaledWidth / 2, // Ajustar la posición para centrar la imagen
                             -scaledHeight / 2,
                             scaledWidth,
@@ -216,7 +248,7 @@ Item {
                 if(mapInfo.positionScreen.x !== 0 && mapInfo.positionScreen.y !== 0)
                 {
                     ctx.clearRect(0, 0, width, height);
-                    drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, 0.0);
+                    drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, 0.0, 1);
                 }
                 else
                 {
@@ -224,7 +256,7 @@ Item {
                         return;
                     }
                     ctx.clearRect(0, 0, width, height);
-                    drawAndValidateImage(lastX, lastY, 0.0);
+                    drawAndValidateImage(lastX, lastY, 0.0, 1);
                 }
                 break;
                 // Set initial pose yaw
@@ -233,13 +265,13 @@ Item {
                 ctx.clearRect(0, 0, width, height);
                 // console.log("Orientation: " + mapInfo.orientation);
                 mp_map.canvas.enablePainting = false
-                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation, 1);
                 break;
                 // Select if you want to draw the path or goal pose
             case "map_selectAction":
                 console.log("map_selectAction")
                 ctx.clearRect(0, 0, width, height);
-                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation, 1);
                 break;
                 // Set goal pose x and y
             case "map_goalPosePosition":
@@ -248,19 +280,19 @@ Item {
                 {
                     ctx.clearRect(0, 0, width, height);
                     console.log("finalScreenPosition.x: " + mapInfo.finalScreenPosition.x+ " mapInfo.finalScreenPosition.y " + mapInfo.finalScreenPosition.y + " mapInfo.positionScreen.x " + mapInfo.positionScreen.x  + " mapInfo.positionScreen.y " + mapInfo.positionScreen.y)
-                    drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
-                    drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, 0.0);
+                    drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation, 1);
+                    drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, 0.0, 1);
                 }
                 else {
                     console.log("map_goalPosePosition")
                     console.log("enablePainting: " + enablePainting + " lastX " + lastX + " lastY " + lastY  + " circleDrawn " + circleDrawn)
                     ctx.clearRect(0, 0, width, height);
-                    drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                    drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation, 1);
                     circleDrawn = false
                     if (!enablePainting || lastX === -1 || lastY === -1 || circleDrawn === true) {
                         return;
                     }
-                    drawAndValidateImage(lastX, lastY, 0.0);
+                    drawAndValidateImage(lastX, lastY, 0.0, 0);
                 }
 
                 break;
@@ -269,36 +301,44 @@ Item {
                 // console.log("map_goalPoseOrientation")
                 ctx.clearRect(0, 0, width, height);
                 mp_map.canvas.enablePainting = false
-                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation); // redibujo el robot inicial
-                drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, mapInfo.finalPathOrientation); // dibujo el robot final y la orientacion
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation, 1); // redibujo el robot inicial
+                drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, mapInfo.finalPathOrientation, 0); // dibujo el robot final y la orientacion
                 break;
                 // when you are waiting for the path of goal pose
             case "map_PathGoalPose":
                 console.log("map_PathGoalPose")
                 ctx.clearRect(0, 0, width, height);
-                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation, 1);
+                drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, mapInfo.finalPathOrientation, 0); // dibujo el robot final y la orientacion
                 drawPointsAndLines(ctx)
                 break;
                 // Show the robot moving
             case "map_GoalPoseMove":
                 console.log("map_GoalPoseMove")
                 ctx.clearRect(0, 0, width, height);
-                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation, 1);
+                drawAndValidateImage(mapInfo.finalScreenPosition.x, mapInfo.finalScreenPosition.y, mapInfo.finalPathOrientation, 0); // dibujo el robot final y la orientacion
                 drawPointsAndLines(ctx)
                 break;
                 // Draw the trayectory
             case "map_drawPath":
                 // console.log("map_drawPath")
                 ctx.clearRect(0, 0, width, height);
-                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation, 1);
                 drawPath(ctx);
                 break;
                 // Show the robot moving
             case "map_drawPathMove":
                 // console.log("map_drawPathMove")
                 ctx.clearRect(0, 0, width, height);
-                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation, 1);
                 drawPath(ctx);
+                break;
+            case "map_selectNextStep":
+                ctx.clearRect(0, 0, width, height);
+                drawAndValidateImage(mapInfo.positionScreen.x, mapInfo.positionScreen.y, mapInfo.orientation, 1);
+                drawPath(ctx);
+
                 break;
             default:
                 console.log("Estado no reconocido: ", map_currentState);
