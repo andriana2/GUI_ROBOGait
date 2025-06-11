@@ -112,8 +112,8 @@ BoxImagesForm {
             PropertyChanges { target: bif_text_check; visible: false; enabled: false }
             PropertyChanges { target: bif_text_edit; visible: false; enabled: false }
             PropertyChanges { target: bif_text_check_black; visible: false; enabled: false }
-            PropertyChanges { target: boxImages; image_source_clear: "../../images/action/goal.png" }
-            PropertyChanges { target: boxImages; image_source_draw_path: "../../images/action/draw_pencil.png" }
+            PropertyChanges { target: boxImages; image_source_clear: "../../images/icon_app/home.svg" }
+            PropertyChanges { target: boxImages; image_source_draw_path: "../../images/icon_app/manual_control.png" }
         }
     ]
 

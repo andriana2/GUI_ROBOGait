@@ -165,31 +165,18 @@ Rectangle {
     }
     Button {
         id: buttonStop
-        height: 50
+        height: 100
+        anchors.right: rectagle_conteiner.left
+        width: height
         anchors.top: parent.top
+        anchors.rightMargin: 0
         anchors.topMargin: 5
-        anchors.horizontalCenter: parent.horizontalCenter
-        width: 100
+        property string defaultImage: "../images/stop.png"
+        property string pressedImage: "../images/stop_light.png"
 
-        background: Rectangle {
-            color: buttonStop.down ? "#f8d7da" : "#f5c6cb"
-            radius: 15
-            border.color: "#721c24"
-            border.width: 2
-        }
-
-        contentItem: Label {
-            id: buttonLabel
-            text: qsTr("STOP")
-            color: "#721c24"
-            font.pixelSize: 30
-            font.bold: true
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font.styleName: "Regular"
-            font.weight: Font.Light
-            anchors.fill: parent
-            padding: 0
+        background: Image {
+            source: buttonStop.pressed ? buttonStop.pressedImage : buttonStop.defaultImage
+            fillMode: Image.PreserveAspectFit
         }
     }
     Button {
@@ -205,16 +192,16 @@ Rectangle {
             source: "../images/icon_app/circle-info-solid.svg"
             fillMode: Image.PreserveAspectFit
         }
-        Behavior on scale {
-            NumberAnimation {
-                duration: 150
-                easing.type: Easing.OutQuad
-            }
-        }
+        //        Behavior on scale {
+        //            NumberAnimation {
+        //                duration: 150
+        //                easing.type: Easing.OutQuad
+        //            }
+        //        }
 
-        // Change scale when pressed/released
-        onPressed: scale = 1.2
-        onReleased: scale = 1.0
+        //        // Change scale when pressed/released
+        //        onPressed: scale = 1.2
+        //        onReleased: scale = 1.0
     }
 
     PopUpInfoForm {
@@ -223,26 +210,25 @@ Rectangle {
         visible: false
 
         textInfo.text: "<h2>Información de la pantalla</h2>\
-                <p>Esta pantalla permite controlar el robot a través del joystick.</p>\
-                <h2><span style='color:red;'>¡¡ADVERTENCIA!!</span></h2>\
-                <p>Este robot no cuenta con un sistema de gestión de colisiones. Asegúrese de evitar obstáculos y supervisar su desplazamiento en todo momento.</p>\
-                <h2>Movimientos del robot</h2>\
-                <ul>\
-                  <li><b>Hacia adelante:</b> Avanza en línea recta.</li>\
-                  <li><b>Hacia atrás:</b> Retrocede en línea recta.</li>\
-                  <li><b>Hacia la izquierda:</b> Gira en sentido horario (hacia la derecha).</li>\
-                  <li><b>Hacia la derecha:</b> Gira en sentido antihorario (hacia la izquierda).</li>\
-                  <li><b>Posiciones intermedias:</b> El robot se moverá en una combinación de traslación y giro, ajustando su dirección según la inclinación del joystick.</li>\
-                </ul>\
-                <h2>¿Necesita ayuda?</h2>\
-                <p>Para asistencia técnica, contacte con ETSIDI en: <a href='mailto:correo.soporte@upm.es'>correo.soporte@upm.es</a></p><br><br><br>"
+<p>Esta pantalla permite controlar el robot a través del joystick.</p>\
+<h2><span style='color:red;'>¡¡ADVERTENCIA!!</span></h2>\
+<p>Este robot no cuenta con un sistema de gestión de colisiones. Asegúrese de evitar obstáculos y supervisar su desplazamiento en todo momento.</p>\
+<h2>Movimientos del robot</h2>\
+<ul>\
+<li><b>Hacia adelante:</b> Avanza en línea recta.</li>\
+<li><b>Hacia atrás:</b> Retrocede en línea recta.</li>\
+<li><b>Hacia la izquierda:</b> Gira en sentido horario (hacia la derecha).</li>\
+<li><b>Hacia la derecha:</b> Gira en sentido antihorario (hacia la izquierda).</li>\
+<li><b>Posiciones intermedias:</b> El robot se moverá en una combinación de traslación y giro, ajustando su dirección según la inclinación del joystick.</li>\
+</ul>\
+<h2>¿Necesita ayuda?</h2>\
+<p>Para asistencia técnica, contacte con ETSIDI en: <a href='mailto:correo.soporte@upm.es'>correo.soporte@upm.es</a></p><br><br><br>"
     }
 }
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.75;height:700;width:1300}D{i:2}D{i:3}D{i:4}D{i:5}
-D{i:10}D{i:1}D{i:15}D{i:17}D{i:20}
+    D{i:0;autoSize:true;formeditorZoom:0.9;height:700;width:1300}D{i:2}D{i:3}D{i:4}D{i:5}
+D{i:10}D{i:1}D{i:15}D{i:17}D{i:19}D{i:21}
 }
 ##^##*/
-

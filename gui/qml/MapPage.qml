@@ -18,7 +18,7 @@ MapPageForm {
 
     mapPageForm_buttonStop.onClicked: {
         applicationFlow.popToHome()
-        // mapInfo.sendStopProcesses();
+        mapInfo.sendStopProcesses();
     }
 
     infoButton.onClicked: {

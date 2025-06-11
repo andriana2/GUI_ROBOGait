@@ -121,6 +121,8 @@ qt_add_qml_module(appgui
     images/icon_app/circle-info-solid.svg
     images/icon_app/circle-question.svg
     images/icon_app/xmark-solid.svg
+    images/icon_app/home.svg
+    images/icon_app/manual_control.png
 
     # images sponsors
     images/sponsors/car.png
@@ -150,6 +152,9 @@ qt_add_qml_module(appgui
     images/my_map.png
     images/logo.png
     images/icon.png
+
+    images/stop.png
+    images/stop_light.png
 
 
 

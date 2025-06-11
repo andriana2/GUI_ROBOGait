@@ -13,6 +13,10 @@ CreateMapForm {
             stringHandler.setCurrentVelocity(angular, linear)
         }
     }
+    mapPageForm_buttonStop.onClicked: {
+        applicationFlow.popToHome()
+        mapInfo.sendStopProcesses();
+    }
 
     Connections {
         target: stringHandler

@@ -10,6 +10,7 @@ Rectangle {
     property alias saveMapButton: saveMapButton
     property alias imageDisplay: imageDisplay
     property alias joystick: joystick
+    property alias mapPageForm_buttonStop: buttonStop
 
     property real linear_value
     property real angular_value
@@ -94,6 +95,23 @@ Rectangle {
         }
     }
 
+    Button {
+        id: buttonStop
+        height: 100
+        anchors.right: mapPageForm_text.left
+        width: height
+        anchors.top: parent.top
+        anchors.rightMargin: 0
+        anchors.topMargin: 5
+        property string defaultImage: "../images/stop.png"
+        property string pressedImage: "../images/stop_light.png"
+
+        background: Image {
+            source: buttonStop.pressed ? buttonStop.pressedImage : buttonStop.defaultImage
+            fillMode: Image.PreserveAspectFit
+        }
+    }
+
     SavePage {
         id: save_page
         anchors.verticalCenter: parent.verticalCenter
@@ -129,8 +147,8 @@ Rectangle {
         height: 32
         color: "#ffffff"
 
-        text: qsTr("%1 m/s  %2 rad/s").arg(linear_value.toFixed(3)).arg(
-                  angular_value.toFixed(3))
+        //        text: qsTr("%1 m/s  %2 rad/s").arg(linear_value.toFixed(3)).arg(
+        //                  angular_value.toFixed(3))
         anchors.right: manualControl.right
         anchors.bottom: manualControl.top
         font.pixelSize: 20
@@ -163,5 +181,9 @@ Rectangle {
     }
 }
 
-
-
+/*##^##
+Designer {
+    D{i:0;autoSize:true;height:480;width:640}D{i:1}D{i:3}D{i:2}D{i:5}D{i:4}D{i:6}D{i:8;invisible:true}
+D{i:9}D{i:11}D{i:12}
+}
+##^##*/
