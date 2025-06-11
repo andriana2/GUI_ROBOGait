@@ -96,26 +96,26 @@ void Cliente::answerUdp()
             QByteArray buffer2 = {"ACK"};
             udpSocket.writeDatagram(buffer2, sender, port);
         }
-        // else if (mensaje.contains("battery"))
-        // {
-        //     QRegularExpression regex("battery:\\s*(\\d+)"); // example: "battery: 75"
-        //     QRegularExpressionMatch match = regex.match(mensaje);
+        else if (mensaje.contains("battery"))
+        {
+            QRegularExpression regex("battery:\\s*(\\d+)"); // example: "battery: 75"
+            QRegularExpressionMatch match = regex.match(mensaje);
 
-        //     if (match.hasMatch())
-        //     {
-        //         QString batteryValue = match.captured(1);
+            if (match.hasMatch())
+            {
+                QString batteryValue = match.captured(1);
 
-        //         // Optionally, convert the battery value to an integer
-        //         int batteryLevel = batteryValue.toInt();
-        //         qDebug() << "Battery level as integer:" << batteryLevel;
+                // Optionally, convert the battery value to an integer
+                int batteryLevel = batteryValue.toInt();
+                qDebug() << "Battery level as integer:" << batteryLevel;
 
-        //         stringHandler->setBatteryPercentage(batteryLevel);
-        //     }
-        //     else
-        //     {
-        //         qDebug() << "Unexpected format for battery message.";
-        //     }
-        // }
+                stringHandler->setBatteryPercentage(batteryLevel);
+            }
+            else
+            {
+                qDebug() << "Unexpected format for battery message.";
+            }
+        }
     }
 }
 

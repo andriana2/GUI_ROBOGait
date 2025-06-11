@@ -31,7 +31,7 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
                 static int i = 0;
                 if (i == 10)
                 {
-                    // cliente->sendMessage(ToJson::sendRequestBattery());
+                    cliente->sendMessage(ToJson::sendRequestBattery());
                     i = 0;
                 }
                 if (i == 10)
@@ -387,7 +387,7 @@ void StringHandler::menu_page(bool in)
     {
         if (!periodicTimerBattery->isActive())
         {
-            periodicTimerBattery->start(200);
+            periodicTimerBattery->start(20000);
         }
     }
     mapInfo->setCheckInitInitialPose(false); // OJOOOOOOOOOOOOOOOOOOOOOO
