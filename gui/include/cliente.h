@@ -28,6 +28,7 @@ public:
     // Constructor and Destructor
     Cliente(int port_);
     ~Cliente();
+    void disconnectRobot();
 
     // Connection different class methods
     void setStringHandler(StringHandler *sh);

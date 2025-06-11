@@ -24,13 +24,13 @@ Rectangle {
         anchors.left: mapa.right
         anchors.right: parent.right
         anchors.top: parent.top
-        font.pixelSize: 22
+        font.pixelSize: 18
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         font.styleName: "Medium"
         font.bold: true
         wrapMode: Text.Wrap
-        anchors.topMargin: 5
+        anchors.topMargin: 0
         anchors.leftMargin: 10
         anchors.rightMargin: 10
     }
@@ -150,23 +150,18 @@ Rectangle {
             source: "../images/icon_app/circle-info-solid.svg"
             fillMode: Image.PreserveAspectFit
         }
-               Behavior on scale {
-                   NumberAnimation {
-                       duration: 150
-                       easing.type: Easing.OutQuad
-                   }
-               }
+        Behavior on scale {
+            NumberAnimation {
+                duration: 150
+                easing.type: Easing.OutQuad
+            }
+        }
 
-               // Change scale when pressed/released
-               onPressed: scale = 1.2
-               onReleased: scale = 1.0
+        // Change scale when pressed/released
+        onPressed: scale = 1.2
+        onReleased: scale = 1.0
     }
 }
 
-/*##^##
-Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.75;height:700;width:1300}D{i:1}D{i:3}D{i:2}D{i:5}
-D{i:4}D{i:6}D{i:8;invisible:true}D{i:9}D{i:11}D{i:12}
-}
-##^##*/
+
 

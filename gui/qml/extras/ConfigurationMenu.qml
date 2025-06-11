@@ -74,6 +74,8 @@ Rectangle {
             onTriggered: {
                 console.log("Apagar")
                 applicationFlow.popToHome();
+                // stringHandler.disconnectRobot();
+
                 // mapInfo.sendStopProcesses()
             }
 
@@ -92,6 +94,7 @@ Rectangle {
             onTriggered: {
                 applicationFlow.popToLogin();
                 ddbb.clear();
+                stringHandler.clear_all()
             }
         }
     }

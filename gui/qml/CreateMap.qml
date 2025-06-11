@@ -71,6 +71,7 @@ CreateMapForm {
         stringHandler.setSaveMap(1)
         ddbb.mapCreateSave(1) // guardar que hay mapa creado
         stringHandler.setNameMap(ddbb.mapNameTemporal)
+        ddbb.selectAllMap()
         stringHandler.stopSLAM()
         applicationFlow.popFunction()
         applicationFlow.popFunction()

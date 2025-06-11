@@ -1,6 +1,7 @@
 #include "../include/HandleMsg.h"
 
 #include <yaml-cpp/yaml.h>
+#include "../include/utils.h"
 
 HandleMsg::HandleMsg(NodeManager &nodeManager) : nodeManager(nodeManager) {}
 
@@ -47,6 +48,20 @@ void HandleMsg::StateRemoteControlled(const json &json_msg)
     {
         nodeManager.close_publisher(Request_Map_SLAM);
         nodeManager.close_publisher(Joystick_Position);
+        YAML::Node config;
+        try
+        {
+            std::string path_ = PATH;
+            config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error loading YAML file: " << e.what() << std::endl;
+        }
+        std::string path = PATH + config["PATH2MAP"].as<std::string>();
+        delete_map_file(path, "temporal_map");
+
+
     }
     else
     {

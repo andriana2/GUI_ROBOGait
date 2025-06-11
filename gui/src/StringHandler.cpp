@@ -50,6 +50,11 @@ void StringHandler::searchRobotIp()
     cliente->startSearchUdp();
 }
 
+void StringHandler::disconnectRobot()
+{
+    cliente->disconnectRobot();
+}
+
 QString StringHandler::getImageSource()
 {
     // qDebug() << m_imageSource;
@@ -124,6 +129,11 @@ QString StringHandler::updateMapPaintPoint(QImage &mapa, int columna, int fila, 
 
 void StringHandler::getImageMapSlam(const QJsonObject &json)
 {
+    if (json["data"].toString().isEmpty())
+    {
+        setImageSource("");
+        return;
+    }
     periodicTimer->stop();
     QByteArray data = QByteArray::fromBase64(json["data"].toString().toUtf8());
     totalSize = json["total_size"].toInt();
@@ -240,7 +250,7 @@ void StringHandler::getImageMapPath(const QJsonObject &json)
 
 void StringHandler::setImageSource(const QString &source)
 {
-    if (source.isEmpty())
+    if (source.isEmpty() || source == "")
     {
         m_imageSource = "";
     }

@@ -56,8 +56,9 @@ void NodeManager::open_server_database()
     if (processController.listProcessesString().find(config["NAME_DATABASE"].as<std::string>()) == std::string::npos)
     {
         std::string name_server_database = config["NAME_DATABASE"].as<std::string>();
-        std::string path_server_database = config["DATABASE"].as<std::string>();
-        std::string path2comand = config["PATH2DATABASE"].as<std::string>();
+        std::string path_server_database = PATH +config["DATABASE"].as<std::string>();
+        pri1("Path to database: " + path_server_database);
+        std::string path2comand = PATH + config["PATH2DATABASE"].as<std::string>();
         std::string command = "python3 " + path2comand + " " + path_server_database;
         processController.startProcess(name_server_database, command);
         server_database_active = true;
@@ -468,7 +469,7 @@ void NodeManager::refresh_map(std::string const &map_name)
     }
     std::string map_saver_cli = config["MAP_SAVER_CLI"].as<std::string>();
 
-    std::string command = map_saver_cli;
+    std::string command = map_saver_cli + PATH + config["PATH2MAP"].as<std::string>();
     command += "/" + replaceSpaces(map_name);
     // int result = system(command.c_str());
     std::thread t(&NodeManager::execute_command, this, command);
@@ -482,6 +483,38 @@ void NodeManager::refresh_map(std::string const &map_name)
     //     std::cerr << "Hubo un error al ejecutar el comando. " << command << std::endl;
 #endif
 }
+// OPCOIn b
+// void NodeManager::refresh_map(const std::string &map_name)
+// {
+//   // 1) Cliente al servicio; se crea una sola vez y se reutiliza.
+//   static auto save_map_client =
+//       node_->create_client<nav2_msgs::srv::SaveMap>("/map_saver/save_map");
+
+//   if (!save_map_client->wait_for_service(std::chrono::seconds(2))) {
+//     RCLCPP_ERROR(node_->get_logger(), "Servicio /map_saver/save_map no disponible");
+//     return;
+//   }
+
+//   // 2) Construye la petición:
+//   auto req = std::make_shared<nav2_msgs::srv::SaveMap::Request>();
+//   req->map_topic        = "/map";
+//   req->map_url          = "/home/robogait/GUI_ROBOGait/server/maps/" +
+//                           replaceSpaces(map_name) + ".yaml";
+//   req->image_format     = "png";       // pgm | png | bmp
+//   req->map_mode         = "trinary";   // trinary | scale | raw
+//   req->free_thresh      = 0.25;
+//   req->occupied_thresh  = 0.65;
+
+//   // 3) Llamada asíncrona → no bloquea tu hilo de control
+//   save_map_client->async_send_request(
+//       req,
+//       [this, map_name](auto future) {
+//         if (future.get()->result)
+//           RCLCPP_INFO(node_->get_logger(), "Mapa «%s» guardado", map_name.c_str());
+//         else
+//           RCLCPP_ERROR(node_->get_logger(), "Falló al guardar «%s»", map_name.c_str());
+//       });
+// }
 
 void NodeManager::create_global_plan(RealPositionMeters const &initialpose, RealPositionMeters const &goalpose, std::string const &pathMap)
 {

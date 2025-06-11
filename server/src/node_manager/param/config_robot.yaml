@@ -1,15 +1,19 @@
 ROBOT_NAME: "RobogaitIndoor"
 TYPE: "V3"
 
-DATABASE: "/home/robogait/GUI_ROBOGait/server/db_robogait.db"
-PATH2DATABASE: "/home/robogait/GUI_ROBOGait/server/server_ddbb.py"
+DATABASE: "server/db_robogait.db"
+# DATABASE: "/home/robogait/GUI_ROBOGait/server/db_robogait.db"
+PATH2DATABASE: "server/server_ddbb.py"
+# PATH2DATABASE: "/home/robogait/GUI_ROBOGait/server/server_ddbb.py"
 NAME_DATABASE: "database"
 
-PATH2MAP: "/home/robogait/GUI_ROBOGait/server/maps"
+PATH2MAP: "server/maps"
+# PATH2MAP: "/home/robogait/GUI_ROBOGait/server/maps"
 START_ROBOT: "ros2 launch roverrobotics_driver mini.launch.py"
 NAME_START_ROBOT: "roverrobotics_driver"
 
-MAP_SAVER_CLI: "ros2 run nav2_map_server map_saver_cli -t /map -f /home/robogait/GUI_ROBOGait/server/maps"
+MAP_SAVER_CLI: "ros2 run nav2_map_server map_saver_cli -t /map -f "
+# MAP_SAVER_CLI: "ros2 run nav2_map_server map_saver_cli -t /map -f /home/robogait/GUI_ROBOGait/server/maps"
 NAME_MAP_SAVER_CLI: "nav2_map_save"
 
 TF_SERVICE: "ros2 run tf_service tf_service_node"

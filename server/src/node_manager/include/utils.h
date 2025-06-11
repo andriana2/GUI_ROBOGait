@@ -25,6 +25,10 @@ Header stringToHeader(const std::string &str);
 std::string targetToString(Target target);
 Target stringToTarget(const std::string &str);
 
+void delete_map_file(const std::string &path, const std::string &map_name);
+bool check_exist(const std::string &path, const std::string &map_name);
+
+
 // void getValuePositionJoystick(const std::string& input, float &linear, float &angular);
 
 void pri1(std::string const &msg);

@@ -2,6 +2,60 @@
 #include <boost/asio.hpp>
 #include <boost/beast/core/detail/base64.hpp>
 
+#include <filesystem>
+// #include <yaml-cpp/yaml.h> 
+
+namespace fs = std::filesystem;
+
+void delete_map_file(const std::string &path, const std::string &map_name)
+{
+    fs::path yaml = fs::path(path) / (map_name + ".yaml");
+    fs::path pgm = fs::path(path) / (map_name + ".pgm");
+
+    std::error_code ec; // para no lanzar excepciones
+    bool b1 = fs::remove(yaml, ec);
+    if (!ec)
+    {
+        if (b1)
+            std::cout << "Delete: " << yaml << "\n";
+        else
+            std::cout << "No exist: " << yaml << "\n";
+    }
+    else
+    {
+        std::cerr << "Error delete " << yaml << ": " << ec.message() << "\n";
+    }
+
+    bool b2 = fs::remove(pgm, ec);
+    if (!ec)
+    {
+        if (b2)
+            std::cout << "Delete: " << pgm << "\n";
+        else
+            std::cout << "No exist: " << pgm << "\n";
+    }
+    else
+    {
+        std::cerr << "Error delete " << pgm << ": " << ec.message() << "\n";
+    }
+}
+
+bool check_exist(const std::string &path, const std::string &map_name)
+{
+    fs::path yaml_file = fs::path(path) / (map_name + ".yaml");
+    fs::path pgm_file  = fs::path(path) / (map_name + ".pgm");
+
+    // Verificamos existencia
+    if (!fs::exists(yaml_file) || !fs::exists(pgm_file)) {
+        std::cerr << "Mapa no encontrado: "
+                  << "\n  " << yaml_file
+                  << "\n  " << pgm_file << std::endl;
+        // aquí podrías enviar un mensaje de error al cliente JSON, si corresponde
+        return false;
+    }
+    return true;
+}
+
 std::string headerToString(Header header)
 {
     switch (header)

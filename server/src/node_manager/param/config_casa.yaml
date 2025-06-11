@@ -1,15 +1,15 @@
 ROBOT_NAME: "RobogaitIndoor"
 TYPE: "V3"
 
-DATABASE: "/home/andri/Desktop/gui_nuevo/gui_/server/db_robogait.db"
-PATH2DATABASE: "/home/andri/Desktop/gui_nuevo/gui_/server/server_ddbb.py"
+DATABASE: "server/db_robogait.db"
+PATH2DATABASE: "server/server_ddbb.py"
 NAME_DATABASE: "database"
 
-PATH2MAP: "/home/andri/Desktop/gui_nuevo/gui_/server/maps"
+PATH2MAP: "server/maps"
 START_ROBOT: ""
 NAME_START_ROBOT: ""
 
-MAP_SAVER_CLI: "ros2 run nav2_map_server map_saver_cli -t /map -f /home/andri/Desktop/gui_nuevo/gui_/server/maps"
+MAP_SAVER_CLI: "ros2 run nav2_map_server map_saver_cli -t /map -f "
 NAME_MAP_SAVER_CLI: "nav2_map_save"
 
 TF_SERVICE: "ros2 run tf_service tf_service_node"

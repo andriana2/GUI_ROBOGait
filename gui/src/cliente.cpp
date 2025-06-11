@@ -37,6 +37,18 @@ Cliente::~Cliente()
     delete timeoutTimer;
 }
 
+void Cliente::disconnectRobot()
+{
+    if (socket->isOpen())
+    {
+        socket->disconnectFromHost();
+        if (socket->state() != QAbstractSocket::UnconnectedState)
+        {
+            socket->waitForDisconnected(3000);
+        }
+    }
+}
+
 void Cliente::setStringHandler(StringHandler *sh) { stringHandler = sh; }
 void Cliente::setMapInfo(MapInfo *sh) { mapInfo = sh; }
 void Cliente::setDatabase(Database *sh) { database = sh; }

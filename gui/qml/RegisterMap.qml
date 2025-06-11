@@ -13,7 +13,7 @@ RegisterMapForm {
     }
 
     rm_add_map.onClicked: {
-        if (mapNameField.text === "" || descriptionField.text === "" || locationField.text === "") {
+        if (mapNameField.text === "" || locationField.text === "") {
             errorPopup.errorRectangleTextError.text = qsTr("Error: Has dejado campos vacíos")
             errorPopup.visible = true
         } else {

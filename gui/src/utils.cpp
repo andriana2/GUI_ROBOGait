@@ -13,6 +13,10 @@
 #include <QRegularExpression>
 #include <QDebug>
 
+#include <cstdlib>
+#include <iostream>
+
+
 QVector<QString> extractJSONObjects(const QString &input)
 {
     static QString incompleteFragment; // Guarda fragmentos incompletos entre llamadas

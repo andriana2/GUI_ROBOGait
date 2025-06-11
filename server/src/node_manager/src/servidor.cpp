@@ -292,7 +292,7 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             {
                 std::cerr << "Error loading YAML file: " << e.what() << std::endl;
             }
-            std::string path_yaml = config["PATH2MAP"].as<std::string>();
+            std::string path_yaml = PATH + config["PATH2MAP"].as<std::string>();
             path_python_program += "server/src/node_manager/launch_file/nav_to_pose_path_launch.py";
             path_yaml += "/" + map_name_without_spaces + ".yaml";
             RealPositionMeters initialpose = getRealPosition(path_yaml, json_msg["x_initialpose"], json_msg["y_initialpose"]);
@@ -336,7 +336,7 @@ void Servidor::handleType(std::vector<std::string> const &jsons)
             {
                 std::cerr << "Error loading YAML file: " << e.what() << std::endl;
             }
-            std::string path = config2["PATH2MAP"].as<std::string>();
+            std::string path = PATH + config2["PATH2MAP"].as<std::string>();
 
             path += "/" + replaceSpaces(json_msg["map_name"]) + ".yaml";
             try
@@ -392,7 +392,7 @@ void Servidor::handleRequestMsg(const json &json_msg)
         {
             std::cerr << "Error loading YAML file: " << e.what() << std::endl;
         }
-        std::string path = config["PATH2MAP"].as<std::string>();
+        std::string path = PATH + config["PATH2MAP"].as<std::string>();
 
         sendMsg(toJson::sendMapName(getMapName(path)));
     }
@@ -408,7 +408,7 @@ void Servidor::handleRequestMsg(const json &json_msg)
         {
             std::cerr << "Error loading YAML file: " << e.what() << std::endl;
         }
-        std::string path = config["PATH2MAP"].as<std::string>();
+        std::string path = PATH + config["PATH2MAP"].as<std::string>();
 
         if (json_msg.contains("map_name") && json_msg["map_name"] != "")
         {
@@ -442,7 +442,7 @@ void Servidor::handleRequestImg(const json &json_msg)
         {
             std::cerr << "Error loading YAML file: " << e.what() << std::endl;
         }
-        std::string path = config["PATH2MAP"].as<std::string>();
+        std::string path = PATH + config["PATH2MAP"].as<std::string>();
 
         if (json_msg.contains("map_name") && json_msg["map_name"] != "")
         {
@@ -450,29 +450,51 @@ void Servidor::handleRequestImg(const json &json_msg)
 
             std::cout << "+++++++++++++++Mapa seleccionado: " << map_name_without_spaces << std::endl;
             float resolution = 0.0;
-            getResolution(path + "/" + map_name_without_spaces + ".yaml", resolution);
-            path += "/" + map_name_without_spaces + ".pgm";
-            int width = 0, height = 0;
-            getImageSize(path, width, height);
+            if (check_exist(path, map_name_without_spaces))
+            {
+                getResolution(path + "/" + map_name_without_spaces + ".yaml", resolution);
+                path += "/" + map_name_without_spaces + ".pgm";
+                int width = 0, height = 0;
+                getImageSize(path, width, height);
 
-            sendMsg(toJson::sendInfoMap(json_msg["map_name"], width, height, resolution));
-            std::thread sendMapThread(&Servidor::sendImageMap, this, path, false);
-            sendMapThread.detach();
+                sendMsg(toJson::sendInfoMap(json_msg["map_name"], width, height, resolution));
+                std::thread sendMapThread(&Servidor::sendImageMap, this, path, false);
+                sendMapThread.detach();
+            }
+            else
+            {
+                sendMsg(toJson::sendImgMap());
+
+                std::cerr << "Error: The map does not exist at the specified path: " << map_name_without_spaces << std::endl;
+            }
         }
         else
         {
             // pri1("Estoy en else de handleRequestImg");
-            FinalPosition fp = nodeManager.getPositionRobotPixel(path + "/temporal_map.yaml");
-            path += "/temporal_map.pgm";
+            if (check_exist(path, "temporal_map"))
+            {
+                FinalPosition fp = nodeManager.getPositionRobotPixel(path + "/temporal_map.yaml");
+                sendMsg(toJson::sendRobotPositionPixel(fp.x_pixel, fp.y_pixel, fp.yaw));
+            }
+
+            std::string path_new = path + "/temporal_map.pgm";
 
             // send robot position pixels
             // pri1("Hola4");
-            sendMsg(toJson::sendRobotPositionPixel(fp.x_pixel, fp.y_pixel, fp.yaw));
             // pri1("Hola5");
             nodeManager.refresh_map();
-            // pri1("Hola6");
-            std::thread sendMapThread(&Servidor::sendImageMap, this, path, true);
-            sendMapThread.detach();
+            pri1("Hola6");
+            pri1(path);
+            if (check_exist(path, "temporal_map"))
+            {
+                std::thread sendMapThread(&Servidor::sendImageMap, this, path_new, true);
+                sendMapThread.detach();
+            }
+            else
+            {
+                sendMsg(toJson::sendImgMap());
+                std::cerr << "Error: The map does not exist at the specified path: " << path << "/temporal_map" << std::endl;
+            }
         }
     }
     else if (json_msg.contains("target") && json_msg["target"] == targetToString(Img_Map_Select))
@@ -487,13 +509,21 @@ void Servidor::handleRequestImg(const json &json_msg)
         {
             std::cerr << "Error loading YAML file: " << e.what() << std::endl;
         }
-        std::string path = config["PATH2MAP"].as<std::string>();
+        std::string path = PATH + config["PATH2MAP"].as<std::string>();
 
-        path += "/" + replaceSpaces(json_msg["map_name"]);
+        std::string path_with_map = "/" + replaceSpaces(json_msg["map_name"]);
 
-        // nodeManager.refresh_map(json_msg["map_name"]);
-        std::thread sendMapThread(&Servidor::sendImageMap, this, path, false);
-        sendMapThread.detach();
+        if (check_exist(path, path_with_map))
+        {
+            std::thread sendMapThread(&Servidor::sendImageMap, this, path, false);
+            sendMapThread.detach();
+        }
+        else
+        {
+                sendMsg(toJson::sendImgMap());
+
+            std::cerr << "Error: The map does not exist at the specified path: " << path_with_map << std::endl;
+        }
     }
 }
 

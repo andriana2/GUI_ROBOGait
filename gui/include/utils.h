@@ -85,6 +85,8 @@ public:
     }
 };
 
+void delete_map_file(const std::string &path, const std::string &nombre_base);
+
 QVector<QString> extractJSONObjects(const QString &input);
 QByteArray fromHex(const QString &hex);
 

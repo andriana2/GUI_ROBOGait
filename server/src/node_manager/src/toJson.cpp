@@ -43,6 +43,14 @@ namespace toJson
             {"total_frame", total_frame}};
     }
 
+    json sendImgMap()
+    {
+        return {
+            {"opt", headerToString(IMG)},
+            {"target", targetToString(Img_Map_SLAM)},
+            {"data", ""}};
+    }
+
     void getPositionJoystick(const json &j, float &linear_output, float &angular_output)
     {
         if (j.contains("linear") && j["linear"].is_string())

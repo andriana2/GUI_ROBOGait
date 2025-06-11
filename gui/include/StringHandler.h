@@ -77,6 +77,8 @@ public:
     QString imageSource() const;
     Q_INVOKABLE void setImageSource(const QString &source);
 
+    Q_INVOKABLE void disconnectRobot();
+
     bool mapping() const;
     Q_INVOKABLE void setMapping(bool newMapping);
 
@@ -113,7 +115,7 @@ public:
     int batteryPercentage() const;
     void setBatteryPercentage(int newBatteryPercentage);
 
-    void clear_all();
+    Q_INVOKABLE void clear_all();
 
     QString patientName() const;
     void setPatientName(const QString &newPatientName);
