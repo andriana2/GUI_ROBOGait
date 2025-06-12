@@ -31,7 +31,7 @@ void NodeManager::create_subscription(Target const &target)
 
 void NodeManager::close_subscription(Target const &target)
 {
-        if (target == Battery_Level)
+    if (target == Battery_Level)
     {
         if (!battert_subscription_)
         {
@@ -56,7 +56,7 @@ void NodeManager::open_server_database()
     if (processController.listProcessesString().find(config["NAME_DATABASE"].as<std::string>()) == std::string::npos)
     {
         std::string name_server_database = config["NAME_DATABASE"].as<std::string>();
-        std::string path_server_database = PATH +config["DATABASE"].as<std::string>();
+        std::string path_server_database = PATH + config["DATABASE"].as<std::string>();
         pri1("Path to database: " + path_server_database);
         std::string path2comand = PATH + config["PATH2DATABASE"].as<std::string>();
         std::string command = "python3 " + path2comand + " " + path_server_database;
@@ -286,9 +286,16 @@ void NodeManager::close_publisher(Target const &target)
             {
                 std::cerr << "Error loading YAML file: " << e.what() << std::endl;
             }
-            std::string name_nav2_bringup = config["NAME_NAV2_BRINGUP_LAUNCH"].as<std::string>();
-
-            processController.stopProcess(name_nav2_bringup);
+            if (navegando)
+            {
+                std::string name_nav2_bringup = config["NAME_NAV2_BRINGUP_LAUNCH"].as<std::string>();
+                processController.stopProcess(name_nav2_bringup);
+            }
+            else
+            {
+                std::string name_nav2_bringup = config["NAME_PERSON_FOLLOWER"].as<std::string>();
+                processController.stopProcess(name_nav2_bringup);
+            }
             bringup_launch_file = false;
         }
         if (!initial_pose_publisher_)
@@ -326,8 +333,11 @@ void NodeManager::close_publisher(Target const &target)
             {
                 std::cerr << "Error loading YAML file: " << e.what() << std::endl;
             }
-            std::string nav2_bringup = config["NAV2_BRINGUP_LAUNCH"].as<std::string>();
-
+            std::string nav2_bringup;
+            if (navegando)
+                nav2_bringup = config["NAV2_BRINGUP_LAUNCH"].as<std::string>();
+            else
+                nav2_bringup = config["PERSON_FOLLOWER"].as<std::string>();
             processController.stopProcess(nav2_bringup);
             bringup_launch_file = false;
         }
@@ -567,7 +577,6 @@ void NodeManager::start_robot()
 #if ROBOT
         create_subscription(Battery_Level);
 #endif
-
     }
 #endif
 }
@@ -684,14 +693,28 @@ void NodeManager::start_bringup(std::string const &map_name)
             std::cerr << "Error loading YAML file: " << e.what() << std::endl;
         }
         std::string path_yaml = config["PATH2MAP"].as<std::string>();
-        std::string nav2_bringup_launch = config["NAV2_BRINGUP_LAUNCH"].as<std::string>();
-        std::string name_nav2_bringup_launch = config["NAME_NAV2_BRINGUP_LAUNCH"].as<std::string>();
+        if (navegando)
+        {
+            std::string nav2_bringup_launch = config["NAV2_BRINGUP_LAUNCH"].as<std::string>();
+            std::string name_nav2_bringup_launch = config["NAME_NAV2_BRINGUP_LAUNCH"].as<std::string>();
 
-        std::string bringup = nav2_bringup_launch;
-        bringup += path_yaml;
-        bringup += "/" + map_name + ".yaml";
-        pri1("Start bring up GOAL POSE:" + bringup);
-        processController.startProcess(name_nav2_bringup_launch, bringup);
+            std::string bringup = nav2_bringup_launch;
+            bringup += path_yaml;
+            bringup += "/" + map_name + ".yaml";
+            pri1("Start bring up GOAL POSE:" + bringup);
+            processController.startProcess(name_nav2_bringup_launch, bringup);
+        }
+        else
+        {
+            std::string person_follower = config["PERSON_FOLLOWER"].as<std::string>();
+            std::string name_person_follower = config["NAME_PERSON_FOLLOWER"].as<std::string>();
+
+            std::string bringup = person_follower;
+            bringup += path_yaml;
+            bringup += "/" + map_name + ".yaml";
+            pri1("+++++++++++++++++++Start person follow up GOAL POSE:" + bringup);
+            processController.startProcess(name_person_follower, bringup);
+        }
         bringup_launch_file = true;
     }
 #endif
