@@ -44,6 +44,8 @@ public:
         GetIdPatient,
         GetMapInformation,
         SetMapInformation,
+        InitTest,
+        ResultTest,
         Unknow
     };
     explicit Database(QObject *parent = nullptr);
@@ -61,6 +63,8 @@ public:
     Q_INVOKABLE void getMapInformation(const QString &map_name);
     Q_INVOKABLE void setMapInformation(const QString &username, const QString &map_name, const QString &location, const QString &details);
     Q_INVOKABLE void mapCreateSave(bool save);
+    Q_INVOKABLE void initTest();
+    Q_INVOKABLE void setResultTest(const QString &comment);
 
     QString targetToString(Target target);
     Target stringToTarget(const QString& str);
@@ -94,6 +98,7 @@ public:
 
     QString mapNameTemporal() const;
     void setMapNameTemporal(const QString &newMapNameTemporal);
+
 
 private slots:
     void handleQueryResponse(const QJsonObject& response);
@@ -132,6 +137,7 @@ private:
     void handleIdPatient(const QJsonObject &response);
     void handleMapInfo(const QJsonObject &response);
     void handleMapInformation(const QJsonObject &response);
+    void handleTestExperiment(const QJsonObject &response);
 
     Cliente* cliente;
     NetworkDDBB* networkDDBB;

@@ -12,6 +12,7 @@ MainMenuForm {
         if (stringHandler.stateBottomBar === "MP_cbb")
         {
             mapInfo.setMapName(stringHandler.mapNameTest)
+            ddbb.initTest()
             applicationFlow.map_path_push()
         }
     }

@@ -134,7 +134,7 @@ void Database::getMapInformation(const QString &map_name)
     networkDDBB->sendSqlCommand(query, targetToString(Target::GetMapInformation), args);
 }
 
-void Database::setMapInformation(const QString &username,const QString &map_name,  const QString &location, const QString &details)
+void Database::setMapInformation(const QString &username, const QString &map_name, const QString &location, const QString &details)
 {
     QString query;
     QJsonArray args;
@@ -160,7 +160,6 @@ void Database::mapCreateSave(bool save)
         query = "UPDATE map SET map_save = 1 WHERE name = ?;";
 
         args.append(m_mapNameTemporal);
-
     }
     else
     {
@@ -170,6 +169,43 @@ void Database::mapCreateSave(bool save)
     }
 
     networkDDBB->sendSqlCommand(query, targetToString(Target::SetMapInformation), args);
+}
+
+void Database::initTest()
+{
+    QString query;
+    QJsonArray args;
+
+    query = "INSERT INTO experiments (id_patient, id_map, id_user, date) SELECT p.id, m.id, u.id, CURRENT_TIMESTAMP FROM patient AS p JOIN map AS m JOIN user AS u "
+            "WHERE p.name = ? AND p.lastname = ? and m.name = ? AND u.username = ? RETURNING id;";
+    auto [name, lastname] = splitNameSurname(stringHandler->patientName());
+    QString map_name = stringHandler->mapNameTest();
+    QString username_ = this->username();
+    args.append(name.toLower());
+    args.append(lastname.toLower());
+    args.append(map_name.toLower());
+    args.append(username_.toLower());
+    networkDDBB->sendSqlCommand(query, targetToString(Target::InitTest), args);
+}
+
+void Database::setResultTest(QString const &comment)
+{
+    QString query;
+    QJsonArray args;
+    if (comment == "")
+    {
+        query = "INSERT INTO result (id_experiments) VALUES (?) RETURNING id;";
+        args.append(stringHandler->idExperiment());
+
+    }
+    else
+    {
+        query = "INSERT INTO result (id_experiments, comment) VALUES (?,?) RETURNING id;";
+        args.append(stringHandler->idExperiment());
+        args.append(comment);
+    }
+
+    networkDDBB->sendSqlCommand(query, targetToString(Target::InitTest), args);
 }
 
 void Database::handleQueryResponse(const QJsonObject &response)
@@ -200,6 +236,9 @@ void Database::handleQueryResponse(const QJsonObject &response)
         break;
     case Target::SetMapInformation:
         handleMapInformation(response);
+        break;
+    case Target::InitTest:
+        handleTestExperiment(response);
         break;
     default:
         if (response["status"].toString() != "success")
@@ -320,7 +359,6 @@ void Database::handleIdPatient(const QJsonObject &response)
         qDebug() << "Error in query:" << response["message"].toString();
 }
 
-
 void Database::handleMapInfo(const QJsonObject &response)
 {
     if (response["status"].toString() == "success")
@@ -335,7 +373,7 @@ void Database::handleMapInfo(const QJsonObject &response)
                 QString location = (innerArray[1].toString());
                 QString details = (innerArray[2].toString());
                 QString createDay = innerArray[3].toString();
-                QString createByName = innerArray[4].toString() + " " +innerArray[5].toString() ;
+                QString createByName = innerArray[4].toString() + " " + innerArray[5].toString();
 
                 qDebug() << "Map Name:" << map_name;
                 qDebug() << "Localización:" << location;
@@ -401,6 +439,38 @@ void Database::handleMapInformation(const QJsonObject &response)
     }
 }
 
+void Database::handleTestExperiment(const QJsonObject &response)
+{
+    if (response["status"].toString() == "success")
+    {
+        QJsonArray result = response["result"].toArray();
+        if (!result.isEmpty() && result[0].isArray())
+        {
+            QJsonArray innerArray = result[0].toArray();
+            if (innerArray.size() >= 1)
+            {
+                int experimentId = innerArray[0].toInt();
+                qDebug() << "Experiment ID:" << experimentId;
+                stringHandler->setIdExperiment(experimentId);
+                // Emit a signal or handle the experiment ID as needed
+            }
+            else
+            {
+                qWarning() << "Unexpected response structure: insufficient fields";
+            }
+        }
+        else
+        {
+            qWarning() << "No valid data found in the response";
+        }
+    }
+    else
+    {
+        qDebug() << "Error in query:" << response["message"].toString();
+    }
+}
+
+
 void Database::updatePatients(const QJsonArray &result)
 {
     QStringList patientList;
@@ -413,7 +483,7 @@ void Database::updatePatients(const QJsonArray &result)
             {
                 QString firstName = capitalizeWords(patientArray[0].toString());
                 QString lastName = capitalizeWords(patientArray[1].toString());
-                QString fullName =  lastName  + ", " + firstName;
+                QString fullName = lastName + ", " + firstName;
                 patientList.append(fullName);
             }
         }
@@ -422,40 +492,50 @@ void Database::updatePatients(const QJsonArray &result)
     emit patientsChanged();
 }
 
-void extracted(QStringList &modelList) {
-    for (const QString &item : modelList) {
+void extracted(QStringList &modelList)
+{
+    for (const QString &item : modelList)
+    {
         qDebug() << " - " << item;
     }
 }
-void Database::updateMaps(const QJsonArray &result) {
-    if (!stringHandler->model()) {
+void Database::updateMaps(const QJsonArray &result)
+{
+    if (!stringHandler->model())
+    {
         qWarning() << "Model is null!";
         return;
     }
 
     QStringList modelList =
         stringHandler->model()
-                                ->stringList(); // Get the list of strings from the model
+            ->stringList(); // Get the list of strings from the model
     QStringList mapsList;
 
     qDebug() << "Model List:";
     extracted(modelList);
 
-    for (const QJsonValue &value : result) {
-        if (value.isArray()) {
+    for (const QJsonValue &value : result)
+    {
+        if (value.isArray())
+        {
             QJsonArray patientArray = value.toArray();
-            if (patientArray.size() == 1) {
+            if (patientArray.size() == 1)
+            {
                 QString map_name = patientArray[0].toString();
 
                 // Print the map_name being processed
                 qDebug() << "Processing map_name:" << map_name;
 
                 // Compare map_name with the model
-                if (modelList.contains(map_name)) {
+                if (modelList.contains(map_name))
+                {
                     qDebug() << "map_name exists in modelList, appending:" << map_name;
                     mapsList.append(
                         map_name); // Append only if map_name exists in the model
-                } else {
+                }
+                else
+                {
                     qDebug() << "map_name does not exist in modelList:" << map_name;
                 }
             }
@@ -469,17 +549,20 @@ void Database::updateMaps(const QJsonArray &result) {
 QString Database::targetToString(Database::Target target)
 {
     static const QMap<Target, QString> targetMap = {
-                                                    {Target::Login, "Login"},
-                                                    {Target::SignIn, "SignIn"},
-                                                    {Target::Guest, "Guest"},
-                                                    {Target::CheckUsername, "CheckUsername"},
-                                                    {Target::AddPatient, "AddPatient"},
-                                                    {Target::SelectMaps, "SelectMaps"},
-                                                    {Target::SelectPatient, "SelectPatient"},
-                                                    {Target::GetIdPatient, "GetIdPatient"},
-                                                    {Target::GetMapInformation, "GetMapInformation"},
-                                                    {Target::SetMapInformation, "SetMapInformation"},
-                                                    {Target::Unknow, "Unknow"}};
+        {Target::Login, "Login"},
+        {Target::SignIn, "SignIn"},
+        {Target::Guest, "Guest"},
+        {Target::CheckUsername, "CheckUsername"},
+        {Target::AddPatient, "AddPatient"},
+        {Target::SelectMaps, "SelectMaps"},
+        {Target::SelectPatient, "SelectPatient"},
+        {Target::GetIdPatient, "GetIdPatient"},
+        {Target::GetMapInformation, "GetMapInformation"},
+        {Target::SetMapInformation, "SetMapInformation"},
+        {Target::InitTest, "InitTest"},
+        {Target::ResultTest, "ResultTest"},
+        {Target::Unknow, "Unknow"}
+    };
 
     return targetMap.value(target, "Unknow");
 }
@@ -487,21 +570,22 @@ QString Database::targetToString(Database::Target target)
 Database::Target Database::stringToTarget(const QString &str)
 {
     static const QMap<QString, Target> stringMap = {
-                                                    {"Login", Target::Login},
-                                                    {"SignIn", Target::SignIn},
-                                                    {"Guest", Target::Guest},
-                                                    {"CheckUsername", Target::CheckUsername},
-                                                    {"AddPatient", Target::AddPatient},
-                                                    {"SelectPatient", Target::SelectPatient},
-                                                    {"SelectMaps", Target::SelectMaps},
-                                                    {"GetIdPatient", Target::GetIdPatient},
-                                                    {"GetMapInformation", Target::GetMapInformation},
-                                                    {"SetMapInformation", Target::SetMapInformation},
-                                                    {"Unknow", Target::Unknow}};
+        {"Login", Target::Login},
+        {"SignIn", Target::SignIn},
+        {"Guest", Target::Guest},
+        {"CheckUsername", Target::CheckUsername},
+        {"AddPatient", Target::AddPatient},
+        {"SelectPatient", Target::SelectPatient},
+        {"SelectMaps", Target::SelectMaps},
+        {"GetIdPatient", Target::GetIdPatient},
+        {"GetMapInformation", Target::GetMapInformation},
+        {"SetMapInformation", Target::SetMapInformation},
+        {"InitTest", Target::InitTest},
+        {"ResultTest", Target::ResultTest},
+        {"Unknow", Target::Unknow}};
 
     return stringMap.value(str, Target::Unknow);
 }
-
 bool Database::passLogin() const
 {
     return m_passLogin;

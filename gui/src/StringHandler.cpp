@@ -633,3 +633,16 @@ float StringHandler::linealVelocity() const
 }
 
 
+
+int StringHandler::idExperiment() const
+{
+    return m_idExperiment;
+}
+
+void StringHandler::setIdExperiment(int newIdExperiment)
+{
+    if (m_idExperiment == newIdExperiment)
+        return;
+    m_idExperiment = newIdExperiment;
+    emit idExperimentChanged();
+}

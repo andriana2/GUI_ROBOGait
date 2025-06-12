@@ -295,6 +295,7 @@ void NodeManager::close_publisher(Target const &target)
             {
                 std::string name_nav2_bringup = config["NAME_PERSON_FOLLOWER"].as<std::string>();
                 processController.stopProcess(name_nav2_bringup);
+                processController.startProcess(config["NAME_START_ROBOT"].as<std::string>(), config["START_ROBOT"].as<std::string>());
             }
             bringup_launch_file = false;
         }
@@ -335,10 +336,17 @@ void NodeManager::close_publisher(Target const &target)
             }
             std::string nav2_bringup;
             if (navegando)
-                nav2_bringup = config["NAV2_BRINGUP_LAUNCH"].as<std::string>();
+            {
+                nav2_bringup = config["NAME_NAV2_BRINGUP_LAUNCH"].as<std::string>();
+                processController.stopProcess(nav2_bringup);
+            }
             else
-                nav2_bringup = config["PERSON_FOLLOWER"].as<std::string>();
-            processController.stopProcess(nav2_bringup);
+            {
+                nav2_bringup = config["NAME_PERSON_FOLLOWER"].as<std::string>();
+                processController.stopProcess(nav2_bringup);
+
+                processController.startProcess(config["NAME_START_ROBOT"].as<std::string>(), config["START_ROBOT"].as<std::string>());
+            }
             bringup_launch_file = false;
         }
         if (!initial_pose_publisher_)
@@ -706,6 +714,7 @@ void NodeManager::start_bringup(std::string const &map_name)
         }
         else
         {
+            processController.stopProcess(config["NAME_START_ROBOT"].as<std::string>());
             std::string person_follower = config["PERSON_FOLLOWER"].as<std::string>();
             std::string name_person_follower = config["NAME_PERSON_FOLLOWER"].as<std::string>();
 

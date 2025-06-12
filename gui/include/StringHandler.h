@@ -42,6 +42,7 @@ class StringHandler : public QObject
     Q_PROPERTY(int batteryPercentage READ batteryPercentage WRITE setBatteryPercentage NOTIFY batteryPercentageChanged FINAL)
     Q_PROPERTY(QString patientName READ patientName WRITE setPatientName NOTIFY patientNameChanged FINAL)
     Q_PROPERTY(QString mapNameTest READ mapNameTest WRITE setMapNameTest NOTIFY mapNameTestChanged FINAL)
+    Q_PROPERTY(int idExperiment READ idExperiment WRITE setIdExperiment NOTIFY idExperimentChanged FINAL)
 
     Q_PROPERTY(float angularVelocity READ angularVelocity NOTIFY angularVelocityChanged FINAL)
     Q_PROPERTY(float linealVelocity READ linealVelocity NOTIFY linealVelocityChanged FINAL)
@@ -131,6 +132,9 @@ public:
     float linealVelocity() const;
     void setLinealVelocity(const float &newLinealVelocity);
 
+    int idExperiment() const;
+    void setIdExperiment(int newIdExperiment);
+
 signals:
 
     void imageReceived(const QString &image);
@@ -158,6 +162,8 @@ signals:
     void angularVelocityChanged();
 
     void linealVelocityChanged();
+
+    void idExperimentChanged();
 
 private:
     bool moveStop = 0;
@@ -193,6 +199,7 @@ private:
 
     float m_angularVelocity = 0.0;
     float m_linealVelocity = 0.0;
+    int m_idExperiment;
 };
 
 #endif // STRINGHANDLER_H
