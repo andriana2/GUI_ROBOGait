@@ -293,8 +293,14 @@ void NodeManager::close_publisher(Target const &target)
             }
             else
             {
-                std::string name_nav2_bringup = config["NAME_PERSON_FOLLOWER"].as<std::string>();
-                processController.stopProcess(name_nav2_bringup);
+                // std::string name_nav2_bringup = config["NAME_PERSON_FOLLOWER"].as<std::string>();
+                // processController.stopProcess(name_nav2_bringup);
+
+                processController.stopProcess(config["NAME_NAVIGATION_ROBOT"].as<std::string>());
+                processController.stopProcess(config["NAME_DISTANCE_TRACKER"].as<std::string>());
+                processController.stopProcess(config["NAME_CAMERA_CONTROLLER"].as<std::string>());
+                processController.stopProcess(config["NAME_DYNAMIXEL"].as<std::string>());
+                processController.stopProcess(config["NAME_PRUEBA"].as<std::string>());
                 processController.startProcess(config["NAME_START_ROBOT"].as<std::string>(), config["START_ROBOT"].as<std::string>());
             }
             bringup_launch_file = false;
@@ -342,8 +348,11 @@ void NodeManager::close_publisher(Target const &target)
             }
             else
             {
-                nav2_bringup = config["NAME_PERSON_FOLLOWER"].as<std::string>();
-                processController.stopProcess(nav2_bringup);
+                processController.stopProcess(config["NAME_NAVIGATION_ROBOT"].as<std::string>());
+                processController.stopProcess(config["NAME_DISTANCE_TRACKER"].as<std::string>());
+                processController.stopProcess(config["NAME_CAMERA_CONTROLLER"].as<std::string>());
+                processController.stopProcess(config["NAME_DYNAMIXEL"].as<std::string>());
+                processController.stopProcess(config["NAME_PRUEBA"].as<std::string>());
 
                 processController.startProcess(config["NAME_START_ROBOT"].as<std::string>(), config["START_ROBOT"].as<std::string>());
             }
@@ -691,9 +700,10 @@ void NodeManager::start_bringup(std::string const &map_name)
     if (!bringup_launch_file)
     {
         YAML::Node config;
+        std::string path_;
         try
         {
-            std::string path_ = PATH;
+            path_ = PATH;
             config = YAML::LoadFile(path_ + "server/src/node_manager/param/config.yaml");
         }
         catch (const std::exception &e)
@@ -707,22 +717,39 @@ void NodeManager::start_bringup(std::string const &map_name)
             std::string name_nav2_bringup_launch = config["NAME_NAV2_BRINGUP_LAUNCH"].as<std::string>();
 
             std::string bringup = nav2_bringup_launch;
-            bringup += path_yaml;
+            bringup += path_ + path_yaml;
             bringup += "/" + map_name + ".yaml";
-            pri1("Start bring up GOAL POSE:" + bringup);
+            pri1("++++++++++++++++++++++++++Start bring up GOAL POSE:" + bringup);
             processController.startProcess(name_nav2_bringup_launch, bringup);
         }
         else
         {
             processController.stopProcess(config["NAME_START_ROBOT"].as<std::string>());
-            std::string person_follower = config["PERSON_FOLLOWER"].as<std::string>();
-            std::string name_person_follower = config["NAME_PERSON_FOLLOWER"].as<std::string>();
+            std::string nav_robot = config["NAVIGATION_ROBOT"].as<std::string>();
+            std::string name_nav_robot = config["NAME_NAVIGATION_ROBOT"].as<std::string>();
 
-            std::string bringup = person_follower;
-            bringup += path_yaml;
+            std::string bringup = nav_robot;
+            bringup += path_ + path_yaml;
             bringup += "/" + map_name + ".yaml";
             pri1("+++++++++++++++++++Start person follow up GOAL POSE:" + bringup);
-            processController.startProcess(name_person_follower, bringup);
+            processController.startProcess(name_nav_robot, bringup);
+
+            std::string distance_tracker = config["DISTANCE_TRACKER"].as<std::string>();
+            std::string name_distance_tracker = config["NAME_DISTANCE_TRACKER"].as<std::string>();
+            processController.startProcess(name_distance_tracker, distance_tracker);
+
+            std::string camara = config["CAMERA_CONTROLLER"].as<std::string>();
+            std::string name_camara = config["NAME_CAMERA_CONTROLLER"].as<std::string>();
+            processController.startProcess(name_camara, camara);
+
+            std::string dinamixel = config["DYNAMIXEL"].as<std::string>();
+            std::string name_dinamixel = config["NAME_DYNAMIXEL"].as<std::string>();
+            processController.startProcess(name_dinamixel, dinamixel);
+
+
+            std::string prueba = config["PRUEBA"].as<std::string>();
+            std::string name_prueba = config["NAME_PRUEBA"].as<std::string>();
+            processController.startProcess(name_prueba, prueba);
         }
         bringup_launch_file = true;
     }

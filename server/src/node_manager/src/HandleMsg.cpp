@@ -83,7 +83,7 @@ void HandleMsg::DeleteMap(const json &json_msg)
     {
         std::cerr << "Error loading YAML file: " << e.what() << std::endl;
     }
-    std::string path = config["PATH2MAP"].as<std::string>();
+    std::string path = PATH + config["PATH2MAP"].as<std::string>();
     path += "/" + replaceSpaces(json_msg["map_name"]);
     std::string path1 = path + ".pgm";
     if (std::remove(path1.c_str()) == 0)
@@ -128,7 +128,7 @@ void HandleMsg::SaveMap(const json &json_msg)
     {
         std::cerr << "Error loading YAML file: " << e.what() << std::endl;
     }
-    std::string path = config["PATH2MAP"].as<std::string>();
+    std::string path = PATH + config["PATH2MAP"].as<std::string>();
     path += "/" + replaceSpaces(json_msg["map_name"]);
     nodeManager.refresh_map(replaceSpaces(json_msg["map_name"]));
 }
@@ -155,7 +155,7 @@ void HandleMsg::InitialPose(const json &json_msg)
     {
         std::cerr << "Error loading YAML file: " << e.what() << std::endl;
     }
-    std::string path_yaml = config["PATH2MAP"].as<std::string>();
+    std::string path_yaml = PATH + config["PATH2MAP"].as<std::string>();
 
     path_yaml += "/" + map_name_without_spaces + ".yaml";
     RealPositionMeters initialpose = getRealPosition(path_yaml, json_msg["x_initialpose"], json_msg["y_initialpose"]);
@@ -178,7 +178,7 @@ void HandleMsg::GoalPose(const json &json_msg)
     {
         std::cerr << "Error loading YAML file: " << e.what() << std::endl;
     }
-    std::string path_yaml = config["PATH2MAP"].as<std::string>();
+    std::string path_yaml =PATH +  config["PATH2MAP"].as<std::string>();
 
     path_yaml += "/" + map_name_without_spaces + ".yaml";
     RealPositionMeters goalpose = getRealPosition(path_yaml, json_msg["x_goalpose"], json_msg["y_goalpose"]);
@@ -201,7 +201,7 @@ void HandleMsg::WaypointFollower(const json &json_msg)
     {
         std::cerr << "Error loading YAML file: " << e.what() << std::endl;
     }
-    std::string path_yaml = config["PATH2MAP"].as<std::string>();
+    std::string path_yaml = PATH + config["PATH2MAP"].as<std::string>();
 
     path_yaml += "/" + map_name_without_spaces + ".yaml";
 
