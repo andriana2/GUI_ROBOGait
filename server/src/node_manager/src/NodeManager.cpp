@@ -717,7 +717,7 @@ void NodeManager::start_bringup(std::string const &map_name)
             std::string name_nav2_bringup_launch = config["NAME_NAV2_BRINGUP_LAUNCH"].as<std::string>();
 
             std::string bringup = nav2_bringup_launch;
-            bringup += path_ + path_yaml;
+            bringup += path_yaml;
             bringup += "/" + map_name + ".yaml";
             pri1("++++++++++++++++++++++++++Start bring up GOAL POSE:" + bringup);
             processController.startProcess(name_nav2_bringup_launch, bringup);
