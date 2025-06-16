@@ -7,7 +7,8 @@ Este proyecto contiene la interfaz gráfica desarrollada con Qt y la infraestruc
 - Ubuntu 22.04
 - Conexión a Internet
 - Cuenta de estudiante UPM para licencia Qt
-
+- Odenador con capacidad para instalar Android Studio
+- Tablet con un sistema operativo Android
 --- 
 
 ## Graphical User Interface (GUI)
@@ -43,13 +44,12 @@ El proyecto utiliza puertos, por lo que si estás en Linux, no olvides habilitar
 
 ```bash
 sudo ufw enable
-sudo ufw allow 5000
 sudo ufw allow 45454
 ```
 | Puerto | Protocolo | Uso                                   |
 |--------|-----------|----------------------------------------|
-| 5000   | TCP       | Comunicación con base de datos SQLite |
-| 45454  | TCP/UDP   | Conexión entre cliente y servidor     |
+| 45454  | UDP   | Conexión entre cliente y servidor     |
+| 45454  | TCP   | Conexión entre cliente y servidor     |
 
 ---
 

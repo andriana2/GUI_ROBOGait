@@ -8,7 +8,8 @@ This project includes the graphical user interface developed with Qt and the ser
 - Ubuntu 22.04  
 - Internet connection  
 - UPM student account for Qt license
-
+- Computer to install Android Studio
+- Tablet with Android
 --- 
 
 ## Graphical User Interface (GUI)
@@ -44,14 +45,13 @@ This project uses ports, so if you are on Linux, don’t forget to enable them:
 
 ```bash
 sudo ufw enable
-sudo ufw allow 5000
 sudo ufw allow 45454
 ```
 
 | Port   | Protocol | Purpose                                |
 |--------|----------|----------------------------------------|
-| 5000   | TCP      | Communication with SQLite database     |
-| 45454  | TCP/UDP  | Connection between client and server   |
+| 45454  | UDP  | Connection between client and server   |
+| 45454  | TCP  | Connection between client and server   |
 
 ---
 

@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include <cmath>
-#define I_AM_ROBOT 0
+#define I_AM_ROBOT 1
 
 class TFServiceNode : public rclcpp::Node
 {
