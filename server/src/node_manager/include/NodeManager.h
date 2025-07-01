@@ -73,7 +73,7 @@ private:
     bool bringup_launch_file = false;
     bool start_robot_launch_file = false;
     // float battery_level;
-    bool navegando = false;
+    bool navegando = NAV;
 
     std::vector<RealPositionMeters> path_;
 };

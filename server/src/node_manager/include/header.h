@@ -3,7 +3,8 @@
 
 
 #define EN_CASA 0
-#define ROBOT 1
+#define ROBOT 0
+#define NAV 1
 enum Header {
     MSG,
     REQUEST_MSG,
