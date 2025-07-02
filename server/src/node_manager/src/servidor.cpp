@@ -77,7 +77,7 @@ void Servidor::udp_discovery()
         char buffer[1024] = {0};
         udp::endpoint client_ep;
 
-        std::cout << "Waiting for UPD client...\n";
+        std::cout << ":P Waiting for UPD client...\n";
         size_t len = udp_socket_.receive_from(boost::asio::buffer(buffer), client_ep);
 
         std::cout << "UDP client found: " << client_ep << "\n";
@@ -478,15 +478,19 @@ void Servidor::handleRequestImg(const json &json_msg)
             }
 
             std::string path_new = path + "/temporal_map.pgm";
+            pri1("eeeeeeeeeeeeeeeeeeeeeee");
+            pri1(path_new);
+            pri1("...................");
+
 
             // send robot position pixels
             // pri1("Hola4");
             // pri1("Hola5");
             nodeManager.refresh_map();
             pri1("Hola6");
-            pri1(path);
             if (check_exist(path, "temporal_map"))
             {
+                pri1(path);
                 std::thread sendMapThread(&Servidor::sendImageMap, this, path_new, true);
                 sendMapThread.detach();
             }
@@ -512,6 +516,8 @@ void Servidor::handleRequestImg(const json &json_msg)
         std::string path = PATH + config["PATH2MAP"].as<std::string>();
 
         std::string path_with_map = "/" + replaceSpaces(json_msg["map_name"]);
+            std::cout << "COMANDO EJECUTADO EN EL SERVIDOR: " << path_with_map << std::endl;
+
 
         if (check_exist(path, path_with_map))
         {
@@ -520,8 +526,7 @@ void Servidor::handleRequestImg(const json &json_msg)
         }
         else
         {
-                sendMsg(toJson::sendImgMap());
-
+            sendMsg(toJson::sendImgMap());
             std::cerr << "Error: The map does not exist at the specified path: " << path_with_map << std::endl;
         }
     }

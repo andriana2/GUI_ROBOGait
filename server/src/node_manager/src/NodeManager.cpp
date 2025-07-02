@@ -298,6 +298,7 @@ void NodeManager::close_publisher(Target const &target)
 
                 processController.stopProcess(config["NAME_NAVIGATION_ROBOT"].as<std::string>());
                 processController.stopProcess(config["NAME_DISTANCE_TRACKER"].as<std::string>());
+                processController.stopProcess(config["NAME_DISTANCE_CONTROLLER"].as<std::string>());
                 processController.stopProcess(config["NAME_CAMERA_CONTROLLER"].as<std::string>());
                 processController.stopProcess(config["NAME_DYNAMIXEL"].as<std::string>());
                 processController.stopProcess(config["NAME_PRUEBA"].as<std::string>());
@@ -350,6 +351,7 @@ void NodeManager::close_publisher(Target const &target)
             {
                 processController.stopProcess(config["NAME_NAVIGATION_ROBOT"].as<std::string>());
                 processController.stopProcess(config["NAME_DISTANCE_TRACKER"].as<std::string>());
+                processController.stopProcess(config["NAME_DISTANCE_CONTROLLER"].as<std::string>());
                 processController.stopProcess(config["NAME_CAMERA_CONTROLLER"].as<std::string>());
                 processController.stopProcess(config["NAME_DYNAMIXEL"].as<std::string>());
                 processController.stopProcess(config["NAME_PRUEBA"].as<std::string>());
@@ -499,6 +501,7 @@ void NodeManager::refresh_map(std::string const &map_name)
     std::string command = map_saver_cli + PATH + config["PATH2MAP"].as<std::string>();
     command += "/" + replaceSpaces(map_name);
     // int result = system(command.c_str());
+    std::cout << "COMANDO EJECUTADO: " << command << std::endl;
     std::thread t(&NodeManager::execute_command, this, command);
     t.detach();
 
@@ -737,6 +740,10 @@ void NodeManager::start_bringup(std::string const &map_name)
             std::string distance_tracker = config["DISTANCE_TRACKER"].as<std::string>();
             std::string name_distance_tracker = config["NAME_DISTANCE_TRACKER"].as<std::string>();
             processController.startProcess(name_distance_tracker, distance_tracker);
+
+            std::string distance_controller = config["DISTANCE_CONTROLLER"].as<std::string>();
+            std::string name_distance_controller = config["NAME_DISTANCE_CONTROLLER"].as<std::string>();
+            processController.startProcess(name_distance_controller, distance_controller);
 
             std::string camara = config["CAMERA_CONTROLLER"].as<std::string>();
             std::string name_camara = config["NAME_CAMERA_CONTROLLER"].as<std::string>();
