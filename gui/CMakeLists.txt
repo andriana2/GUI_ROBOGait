@@ -10,14 +10,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Network)
-# find_package(OpenCV REQUIRED)
-
-set(qml_singletons
-    qml/extras/ConstantVariables.qml
-)
-
-# set_source_files_properties(${qml_singletons}
-#     PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_executable(appgui
     src/main.cpp
@@ -102,10 +94,6 @@ qt_add_qml_module(appgui
     qml/extras/ImageText.qml
     qml/extras/PopUpInfoForm.ui.qml
 
-
-    ${qml_singletons}
-
-
     RESOURCES
     # icon_app include .svg
     images/icon_app/check-solid.svg
@@ -147,18 +135,12 @@ qt_add_qml_module(appgui
     images/action/goal.png
 
     # images
-
-
     images/my_map.png
     images/logo.png
     images/icon.png
 
     images/stop.png
     images/stop_light.png
-
-
-
-
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

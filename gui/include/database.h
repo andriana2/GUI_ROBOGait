@@ -23,8 +23,8 @@ class Database : public QObject
 
     Q_PROPERTY(QString mapNameTemporal READ mapNameTemporal WRITE setMapNameTemporal NOTIFY mapNameTemporalChanged FINAL)
 
-    Q_PROPERTY(QStringListModel* patients READ patients NOTIFY patientsChanged FINAL)
-    Q_PROPERTY(QStringListModel* maps READ maps NOTIFY mapsChanged FINAL)
+    Q_PROPERTY(QStringListModel *patients READ patients NOTIFY patientsChanged FINAL)
+    Q_PROPERTY(QStringListModel *maps READ maps NOTIFY mapsChanged FINAL)
     Q_PROPERTY(int idPatient READ idPatient WRITE setIdPatient NOTIFY idPatientChanged FINAL)
 
     Q_PROPERTY(QVariantMap patient READ patient WRITE setPatient NOTIFY patientChanged)
@@ -33,7 +33,8 @@ class Database : public QObject
     Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged FINAL)
 
 public:
-    enum class Target{
+    enum class Target
+    {
         Login,
         SignIn,
         Guest,
@@ -54,7 +55,7 @@ public:
     void setStringHandler(StringHandler *sh);
 
     Q_INVOKABLE void login(const QString &user, const QString &pass);
-    Q_INVOKABLE void signIn(const QString &name, const QString &lastname, const QString &username,const QString &role, const QString &pass);
+    Q_INVOKABLE void signIn(const QString &name, const QString &lastname, const QString &username, const QString &role, const QString &pass);
     Q_INVOKABLE void checkUsername(const QString &user);
     Q_INVOKABLE void addPatient(const QString &name, const QString &lastname, int age, double weight, double height, const QString &username, const QString &description);
     Q_INVOKABLE void selectAllPatient(const QString &username);
@@ -67,8 +68,8 @@ public:
     Q_INVOKABLE void setResultTest(const QString &comment);
 
     QString targetToString(Target target);
-    Target stringToTarget(const QString& str);
-    bool passLogin() const;
+    Target stringToTarget(const QString &str);
+    bool passLogin() const; // if the login is correct
     void setPassLogin(bool newPassLogin);
 
     QString role() const;
@@ -93,18 +94,13 @@ public:
     QVariantMap mapDescription() const;
     void setMapDescription(const QVariantMap &newMapDescription);
 
-
     QStringListModel *maps() const;
 
     QString mapNameTemporal() const;
     void setMapNameTemporal(const QString &newMapNameTemporal);
 
-
 private slots:
-    void handleQueryResponse(const QJsonObject& response);
-    // query = "SELECT name, location, details, create_day, create_by_name, create_by_lastname "
-    //         "FROM map WHERE name = ?";
-    // args.append(map_name);
+    void handleQueryResponse(const QJsonObject &response);
 
 signals:
 
@@ -127,8 +123,9 @@ signals:
     void mapNameTemporalChanged();
 
 private:
-    void handleLoginResponse(const QJsonObject& response);
-    void handleChechUsernameResponse(const QJsonObject& response);
+    // the database response
+    void handleLoginResponse(const QJsonObject &response);
+    void handleChechUsernameResponse(const QJsonObject &response);
     void handleAllPatient(const QJsonObject &response);
     void handleAllMaps(const QJsonObject &response);
     void updatePatients(const QJsonArray &result);
@@ -139,9 +136,9 @@ private:
     void handleMapInformation(const QJsonObject &response);
     void handleTestExperiment(const QJsonObject &response);
 
-    Cliente* cliente;
-    NetworkDDBB* networkDDBB;
-    StringHandler* stringHandler;
+    Cliente *cliente;
+    NetworkDDBB *networkDDBB;
+    StringHandler *stringHandler;
 
     bool m_passLogin;
     QString m_role;

@@ -38,6 +38,7 @@ StringHandler::StringHandler(QObject *parent) : QObject(parent), cliente(nullptr
                     i = 0;
                 i++; });
 }
+
 void StringHandler::setClient(Cliente *cli) { cliente = cli; }
 
 void StringHandler::setMapInfo(MapInfo *mapIn)
@@ -65,17 +66,37 @@ void StringHandler::startSLAM()
 {
     setMapping(true);
     cliente->sendMessage(ToJson::sendStateRemoteControlled(true));
-} 
+}
 
 void StringHandler::stopSLAM()
 {
     setMapping(false);
     cliente->sendMessage(ToJson::sendStateRemoteControlled(false));
 }
-// void StringHandler::sendStateRemoteControlledHandler(bool mapping, bool in)
-// {
-//     cliente->sendMessage(ToJson::sendStateRemoteControlled(mapping, in));
-// }
+
+void StringHandler::setImage(const QByteArray &data)
+{
+    if (!data.isEmpty())
+    {
+        QImage image;
+        // qDebug() << data;
+        if (image.loadFromData(data))
+        { // Intenta cargar los datos como una imagen
+            // Convertir la imagen a un URL de datos en memoria
+            QByteArray imageData;
+            QBuffer buffer(&imageData);
+            buffer.open(QIODevice::WriteOnly);
+            image.save(&buffer, "PGM"); // Guarda la imagen en formato PGM en memoria
+
+            m_imageSource = "data:image/pgm;base64," + imageData.toBase64();
+            emit imageSourceChanged();
+        }
+        else
+        {
+            qWarning() << "Invalid image data!";
+        }
+    }
+}
 
 QString StringHandler::updateMapPaintPoint(QImage &mapa, int columna, int fila, float yaw)
 {
@@ -248,6 +269,19 @@ void StringHandler::getImageMapPath(const QJsonObject &json)
     }
 }
 
+void StringHandler::getRobotPositionPixel(const QJsonObject &json)
+{
+    finalPosition.x_pixel = json["x"].toInt();
+    finalPosition.y_pixel = json["y"].toInt();
+    finalPosition.yaw = json["yaw"].toDouble();
+    finalPosition.active = true;
+}
+
+QString StringHandler::imageSource() const
+{
+    return m_imageSource;
+}
+
 void StringHandler::setImageSource(const QString &source)
 {
     if (source.isEmpty() || source == "")
@@ -259,43 +293,6 @@ void StringHandler::setImageSource(const QString &source)
         m_imageSource = "data:image/png;base64," + source;
     }
     emit imageSourceChanged();
-}
-
-void StringHandler::getRobotPositionPixel(const QJsonObject &json)
-{
-    finalPosition.x_pixel = json["x"].toInt();
-    finalPosition.y_pixel = json["y"].toInt();
-    finalPosition.yaw = json["yaw"].toDouble();
-    finalPosition.active = true;
-}
-
-void StringHandler::setImage(const QByteArray &data)
-{
-    if (!data.isEmpty())
-    {
-        QImage image;
-        // qDebug() << data;
-        if (image.loadFromData(data))
-        { // Intenta cargar los datos como una imagen
-            // Convertir la imagen a un URL de datos en memoria
-            QByteArray imageData;
-            QBuffer buffer(&imageData);
-            buffer.open(QIODevice::WriteOnly);
-            image.save(&buffer, "PGM"); // Guarda la imagen en formato PGM en memoria
-
-            m_imageSource = "data:image/pgm;base64," + imageData.toBase64();
-            emit imageSourceChanged();
-        }
-        else
-        {
-            qWarning() << "Invalid image data!";
-        }
-    }
-}
-
-QString StringHandler::imageSource() const
-{
-    return m_imageSource;
 }
 
 bool StringHandler::mapping() const
@@ -385,7 +382,6 @@ void StringHandler::requestBattery()
 {
     cliente->sendMessage(ToJson::sendRequestBattery());
 }
-
 
 void StringHandler::menu_page(bool in)
 {
@@ -637,8 +633,6 @@ float StringHandler::linealVelocity() const
 {
     return m_linealVelocity;
 }
-
-
 
 int StringHandler::idExperiment() const
 {

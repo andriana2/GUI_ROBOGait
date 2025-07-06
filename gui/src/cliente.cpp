@@ -208,10 +208,6 @@ void Cliente::processJson(const QJsonDocument &json)
         if (stringToTarget(jsonObj["target"].toString()) == Goal_Pose_Path)
         {
             QString jsonString = json.toJson(QJsonDocument::Indented);
-
-            // Imprimirlo en la consola con qDebug()
-            // qDebug().noquote() << "JSON recibido:\n"
-            //                    << jsonString;
             mapInfo->parseJsonToQList(jsonObj);
         }
     }

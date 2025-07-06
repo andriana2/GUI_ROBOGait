@@ -13,14 +13,6 @@ if len(sys.argv) != 2:
 
 DATABASE = sys.argv[1]
 print("Usando base de datos:", DATABASE)
-
-# if EN_CASA and not ROBOT:
-#     DATABASE = "/home/andri/Desktop/gui_nuevo/gui_/server/db_robogait.db"  # casa
-# elif not ROBOT:
-#     DATABASE = "/home/robogait/Desktop/gui_andri/GUI_ROBOGait/server/db_robogait.db"  # uni
-# else:
-#     DATABASE = "/home/robogait/GUI_ROBOGait/server/db_robogait.db"  # robot
-
 print(DATABASE)
 
 def is_query_safe(query):
@@ -37,22 +29,6 @@ def is_query_safe(query):
         "MERGE",
     ]
 
-    # # Regex para detectar SQL injection y evitar múltiples sentencias
-    # injection_pattern = re.compile(
-    #     r"(--|'|\"|/\*|\*/|xp_)|", # Comentarios SQL, caracteres peligrosos
-    #     re.IGNORECASE
-    # )
-
-    # # Comprobar cuántas veces se encuentran SELECT, INSERT o UPDATE
-    # select_count = query.upper().count("SELECT")
-    # insert_count = query.upper().count("INSERT")
-    # update_count = query.upper().count("UPDATE")
-
-    # # Si hay más de una ocurrencia de SELECT, INSERT o UPDATE, bloquear
-    # if select_count > 1 or insert_count > 1 or update_count > 1:
-    #     print("more than one select, insert or update")
-    #     return False
-
     # Comprobar si la consulta contiene más de un `;`
     # Permitir una sentencia con un `;` al final
     if query.count(";") > 1 or (
@@ -65,9 +41,6 @@ def is_query_safe(query):
     if any(keyword in query.upper() for keyword in dangerous_keywords):
         print("dangerous keywords")
         return False
-    # if injection_pattern.search(query):
-    #     print("injection pattern")
-    #     return False
     return True
 
 

@@ -4,7 +4,7 @@
 
 #define EN_CASA 0
 #define ROBOT 1
-#define NAV 1
+#define NAV 0
 enum Header {
     MSG,
     REQUEST_MSG,

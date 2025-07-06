@@ -29,12 +29,12 @@ class MapInfo;
 class StringHandler : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString imageSource READ imageSource WRITE setImageSource NOTIFY imageSourceChanged) //La imagen que se muestra (ManualControl)
-    Q_PROPERTY(bool mapping READ mapping WRITE setMapping NOTIFY mappingChanged FINAL)//Si estoy mapeando o solo moviendo con el joystick (ManualControl)
-    Q_PROPERTY(bool saveMap READ saveMap WRITE setSaveMap NOTIFY saveMapChanged FINAL)//Saber si se ha guaradado la imagen (ManualControl)
-    Q_PROPERTY(int typeSaveMap READ typeSaveMap WRITE setTypeSaveMap NOTIFY typeSaveMapChanged FINAL)//Tipo de mapa si se a guardado o no (ManualControl)
-    Q_PROPERTY(QString nameMap READ nameMap WRITE setNameMap NOTIFY nameMapChanged FINAL)//Nombre del mapa por si se ha guardado el mapa (ManualControl)
-    Q_PROPERTY(QStringListModel* model READ model NOTIFY modelChanged FINAL) // lista que aparece (SelectMap)
+    Q_PROPERTY(QString imageSource READ imageSource WRITE setImageSource NOTIFY imageSourceChanged)   // La imagen que se muestra (ManualControl)
+    Q_PROPERTY(bool mapping READ mapping WRITE setMapping NOTIFY mappingChanged FINAL)                // Si estoy mapeando o solo moviendo con el joystick (ManualControl)
+    Q_PROPERTY(bool saveMap READ saveMap WRITE setSaveMap NOTIFY saveMapChanged FINAL)                // Saber si se ha guaradado la imagen (ManualControl)
+    Q_PROPERTY(int typeSaveMap READ typeSaveMap WRITE setTypeSaveMap NOTIFY typeSaveMapChanged FINAL) // Tipo de mapa si se a guardado o no (ManualControl)
+    Q_PROPERTY(QString nameMap READ nameMap WRITE setNameMap NOTIFY nameMapChanged FINAL)             // Nombre del mapa por si se ha guardado el mapa (ManualControl)
+    Q_PROPERTY(QStringListModel *model READ model NOTIFY modelChanged FINAL)                          // lista que aparece (SelectMap)
     Q_PROPERTY(QString strFindRobot READ strFindRobot WRITE setStrFindRobot NOTIFY strFindRobotChanged FINAL)
 
     Q_PROPERTY(bool errorConnection READ errorConnection WRITE setErrorConnection NOTIFY errorConnectionChanged FINAL)
@@ -47,38 +47,30 @@ class StringHandler : public QObject
     Q_PROPERTY(float angularVelocity READ angularVelocity NOTIFY angularVelocityChanged FINAL)
     Q_PROPERTY(float linealVelocity READ linealVelocity NOTIFY linealVelocityChanged FINAL)
 
-
 public:
     explicit StringHandler(QObject *parent = nullptr);
-    // Q_INVOKABLE bool isInSameNetwork(const QString &ip1, const std::string& subnetMask = "255.255.255.0");
-    Q_INVOKABLE void setImage(const QByteArray &data);
+    void setClient(Cliente *cli);
+    void setMapInfo(MapInfo *mapIn);
+    
+    Q_INVOKABLE void searchRobotIp();
+    Q_INVOKABLE void disconnectRobot();
     Q_INVOKABLE QString getImageSource();
     Q_INVOKABLE void startSLAM();
     Q_INVOKABLE void stopSLAM();
-    // Q_INVOKABLE void sendStateRemoteControlledHandler(bool mapping, bool in);
+    Q_INVOKABLE void setImage(const QByteArray &data);
 
-    void setClient(Cliente *cli);
-    void setMapInfo(MapInfo *mapIn);
-
-    Q_INVOKABLE void searchRobotIp();
-
-    // msg send
-    // Q_INVOKABLE void setCurrentMove(const QString &lineal,const QString & angular);
-
-    void setImageMap(const QByteArray &data);
-
+    // edit image
+    QString updateMapPaintPoint(QImage &mapa, int columna, int fila, float yaw);
+    
     // msg recived
     void getImageMapSlam(const QJsonObject &json);
     void getImageMapPath(const QJsonObject &json);
     void getRobotPositionPixel(const QJsonObject &json);
 
-    //edit image
-    QString updateMapPaintPoint(QImage &mapa, int columna, int fila, float yaw);
 
     QString imageSource() const;
     Q_INVOKABLE void setImageSource(const QString &source);
 
-    Q_INVOKABLE void disconnectRobot();
 
     bool mapping() const;
     Q_INVOKABLE void setMapping(bool newMapping);
@@ -95,6 +87,7 @@ public:
     Q_INVOKABLE QStringListModel *model() const;
     Q_INVOKABLE void loadData(const std::vector<std::string> &data);
     Q_INVOKABLE void requestMapName();
+    Q_INVOKABLE void requestBattery();
 
     Q_INVOKABLE void menu_page(bool in);
 
@@ -125,17 +118,15 @@ public:
     void setMapNameTest(const QString &newMapNameTest);
 
     Q_INVOKABLE void updateBottomBarState();
-    Q_INVOKABLE void setCurrentVelocity(const float & newAngularVelocity, const float & newLinealVelocity);
+    Q_INVOKABLE void setCurrentVelocity(const float &newAngularVelocity, const float &newLinealVelocity);
+    
     float angularVelocity() const;
-    void setAngularVelocity(const float &newAngularVelocity);
 
     float linealVelocity() const;
-    void setLinealVelocity(const float &newLinealVelocity);
 
     int idExperiment() const;
     void setIdExperiment(int newIdExperiment);
 
-    Q_INVOKABLE void requestBattery();
 
 signals:
 

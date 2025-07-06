@@ -6,14 +6,14 @@ El directorio `gui` se trata de la interfaz grafica de usuario donde se encuentr
 
 La estructura del directorio `gui` es la siguiente:
 
-```
+``` bash
 gui/
 ├── android/            # Carpeta donde se crea el icono de la aplicacion en android
-├── images/        # Images e iconos del proyecto
-├── include/              # Parámetros de configuración
-├── qml/              # Archivos del front-end
+├── images/             # Images e iconos del proyecto
+├── include/            # Parámetros de configuración
+├── qml/                # Archivos del front-end
 ├── src/                # Código fuente de la implementación del gestor de nodos
-├── test/                # Donde se ejecutan los test del proyecto
+├── test/               # Donde se ejecutan los test del proyecto
 └── CMakeLists.txt      # Configuración del sistema de construcción
 ```
 
@@ -22,7 +22,7 @@ gui/
 1. **Directorio Include**  
    Contiene los archivos `.h` con las funcionalidades principales. Inclúyelos en tu proyecto para acceder a las herramientas necesarias desde el backend.
 2. **Directorio QML**  
-   Aquí se encuentran los archivos de interfaz de usuario (front-end). Puedes modificar estos archivos para cambiar la apariencia o comportamiento visual de la GUI.
+   Aquí se encuentran los archivos de interfaz de usuario (frontend). Puedes modificar estos archivos para cambiar la apariencia o comportamiento visual de la GUI.
 3. **Directorio Images**  
    Contiene los íconos e imágenes usados en la interfaz gráfica. Puedes añadir o reemplazar imágenes según el diseño de tu aplicación.
 4. **Directorio Android**  
@@ -74,12 +74,47 @@ El proyecto está separado en `.qml` y `.ui.qml`, donde el primero contiene toda
 
 + **RegisterPatient.qml RegisterPatientForm.ui.qml**: Pagina donde se registra a los pacientes.
 
-+ **main.qml**: Inicia el front-end.
++ **RegisterMap.qml RegisterMapForm.ui.qml**: Pagina donde se rellena el formulario del mapa.
+
++ **CreateMap.qml CreateMapForm.ui.qml**: La pantalla donde se realiza el movimiento del robot y se ve los resultados por pantalla.
+
++ **main.qml**: Inicia el frontend.
 
 
 ### Extras
++ **Battery.qml BatteryForm.ui.qml**: Batteria de la base del robot.
 
++ **BoxImages.qml BoxImagesForm.ui.qml**: Las imagenes de las pruebas.
 
++ **ConfigurationMenu.qml**: Submenu donde apagas el robot o cierras sesión.
+
++ **CustomBottomBar.qml CustomBottomBarForm.ui.qml**: Barra de abajo.
+
++ **DescriptionMapForm.qml**: Cuadro a la derecha de cuando selecionas un mapa con toda la información.
+
++ **DescriptionPatientForm.qml**: Cuadro a la derecha de cuando selecionas un paciente con toda la información.
+
++ **ErrorRectangle.qml**: Cuadro de error el cual sale cuando hay un error.
+
++ **InformationRectangle.qml**: Cuadro de información cuando el robot es detectado.
+
++ **ImageTest.qml**: Imagen y texto debajo.
+
++ **Joystick.qml JoystickForm.ui.qml**: Joystick.
+
++ **Map.qml**: Juntar dierentes modulos de cuando haces una prueba.
+
++ **OrientationCircle.qml OrientationCircleForm.ui.qml**: Ruleta para decir la orientación del robot.
+
++ **PopUpInfoForm.qml**: JCuadro de información el cual sale cuando pulsas el boton de información.
+
++ **SavePage.qml SavePageForm.ui.qml**: Cuadro donde hay botones para guardar no guardar y cancelar.
+
++ **Login.qml LoginForm.ui.qml**: Pantalla de login.
+
++ **Guest.qml GuestForm.ui.qml**: Pantalla de inicio de sesion como invitado.
+
++ **SignInForm.qml SignInFormForm.ui.qml**: Pantalla de registrase.
 
 ## Comenzando
 

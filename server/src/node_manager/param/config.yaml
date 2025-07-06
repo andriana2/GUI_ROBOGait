@@ -24,13 +24,13 @@ NAME_NAV2_BRINGUP_LAUNCH: "roverrobotics_driver_navigation"
 DISTANCE_CONTROLLER: "ros2 run navigation_pkg distance_controller"
 NAME_DISTANCE_CONTROLLER: "distance_controller"
 
-DISTANCE_TRACKER: "ros2 run distance_tracker distance2 --ros-args -p box:=false"
+DISTANCE_TRACKER: "ros2 run distance_tracker distance"
 NAME_DISTANCE_TRACKER: "distance_tracker"
 
-CAMERA_CONTROLLER : "ros2 run navigation_pkg camera_controller_vel"
+CAMERA_CONTROLLER: "ros2 run navigation_pkg camera_controller_vel"
 NAME_CAMERA_CONTROLLER: "camera_controller"
 
-DYNAMIXEL : "ros2 run navigation_pkg dynamixel_vel"
+DYNAMIXEL: "ros2 run navigation_pkg dynamixel_vel"
 NAME_DYNAMIXEL: "dynamixel"
 
 PRUEBA: "ros2 run navigation_pkg robot_controller_remapping"
