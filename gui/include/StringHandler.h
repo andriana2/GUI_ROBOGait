@@ -135,6 +135,8 @@ public:
     int idExperiment() const;
     void setIdExperiment(int newIdExperiment);
 
+    Q_INVOKABLE void requestBattery();
+
 signals:
 
     void imageReceived(const QString &image);

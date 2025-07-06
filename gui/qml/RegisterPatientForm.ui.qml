@@ -12,7 +12,7 @@ Page {
     property alias heightField: heightField
     property alias descriptionField: descriptionField
 
-    property int keyboardHeight: Qt.inputMethod.visible ? (parent.height - Qt.inputMethod.keyboardRectangle.height + 20) : 0
+    // property int keyboardHeight: Qt.inputMethod.visible ? (parent.height - Qt.inputMethod.keyboardRectangle.height + 20) : 0
 
     Rectangle {
         id: rectangle
@@ -29,7 +29,7 @@ Page {
             anchors.horizontalCenter: parent.horizontalCenter
             clip: true
             // ScrollBar.vertical.policy: ScrollBar.AsNeeded
-            bottomPadding: keyboardHeight > 0 ? keyboardHeight : 0
+            // bottomPadding: keyboardHeight > 0 ? keyboardHeight : 0
 
             Behavior on bottomPadding {
                 NumberAnimation {

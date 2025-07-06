@@ -24,20 +24,14 @@ SignInForm {
         if (nameField.text === "" || lastnameField.text === "" || usernameField.text === "" || passwordField.text === "" || repeatpasswordField.text === "") {
             errorPopup.errorRectangleTextError.text = "Error: Has dejado campos vacíos"
             errorPopup.visible = true
-        } else if (!/^[a-zA-Z]+$/.test(nameField.text)) {
+        } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(nameField.text)) {
             errorPopup.errorRectangleTextError.text = "Error: El nombre solo debe contener letras"
             errorPopup.visible = true
-        } else if (!/^[a-zA-Z]+$/.test(lastnameField.text)) {
+        } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(lastnameField.text)) {
             errorPopup.errorRectangleTextError.text = "Error: El apellido solo debe contener letras"
             errorPopup.visible = true
         } else if (passwordField.text.length < 8) {
             errorPopup.errorRectangleTextError.text = "Error: La contraseña debe tener al menos 8 caracteres"
-            errorPopup.visible = true
-        } else if (!passwordField.text.match(/[A-Z]/)) {
-            errorPopup.errorRectangleTextError.text = "Error: La contraseña debe contener al menos una letra mayúscula"
-            errorPopup.visible = true
-        } else if (!passwordField.text.match(/[a-z]/)) {
-            errorPopup.errorRectangleTextError.text = "Error: La contraseña debe contener al menos una letra minúscula"
             errorPopup.visible = true
         } else if (passwordField.text !== repeatpasswordField.text) {
             errorPopup.errorRectangleTextError.text = "Error: Las contraseñas no coinciden"

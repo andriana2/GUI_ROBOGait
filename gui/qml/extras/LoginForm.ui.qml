@@ -10,7 +10,7 @@ Page {
     property alias passwordField: passwordField
 
     // Calcula la altura del teclado y ajusta el padding inferior dinámicamente
-    property int keyboardHeight: Qt.inputMethod.visible ? (parent.height - Qt.inputMethod.keyboardRectangle.height + 20) : 0
+    // property int keyboardHeight: Qt.inputMethod.visible ? (parent.height - Qt.inputMethod.keyboardRectangle.height + 20) : 0
 
     Rectangle {
         id: rectangle
@@ -25,7 +25,7 @@ Page {
             anchors.bottomMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
             clip: true
-            bottomPadding: keyboardHeight > 0 ? keyboardHeight : 0
+            // bottomPadding: keyboardHeight > 0 ? keyboardHeight : 0
 
             Behavior on bottomPadding {
                 NumberAnimation {

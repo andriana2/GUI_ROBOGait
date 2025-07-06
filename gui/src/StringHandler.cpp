@@ -381,13 +381,19 @@ void StringHandler::requestMapName()
     cliente->sendMessage(ToJson::sendRequestMapName());
 }
 
+void StringHandler::requestBattery()
+{
+    cliente->sendMessage(ToJson::sendRequestBattery());
+}
+
+
 void StringHandler::menu_page(bool in)
 {
     if (in)
     {
         if (!periodicTimerBattery->isActive())
         {
-            periodicTimerBattery->start(20000);
+            periodicTimerBattery->start(500);
         }
     }
     mapInfo->setCheckInitInitialPose(false); // OJOOOOOOOOOOOOOOOOOOOOOO

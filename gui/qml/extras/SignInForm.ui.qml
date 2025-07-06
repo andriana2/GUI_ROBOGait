@@ -13,7 +13,7 @@ Page {
     property alias passwordField: passwordField
     property alias repeatpasswordField: repeatpasswordField
 
-    property int keyboardHeight: Qt.inputMethod.visible ? (parent.height - Qt.inputMethod.keyboardRectangle.height + 20) : 0
+    // property int keyboardHeight: Qt.inputMethod.visible ? (parent.height - Qt.inputMethod.keyboardRectangle.height + 20) : 0
 
     // width: 1300
     // height: 700
@@ -29,7 +29,7 @@ Page {
             anchors.bottomMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
             clip: true
-            bottomPadding: keyboardHeight > 0 ? keyboardHeight : 0
+            // bottomPadding: keyboardHeight > 0 ? keyboardHeight : 0
 
             Behavior on bottomPadding {
                 NumberAnimation {

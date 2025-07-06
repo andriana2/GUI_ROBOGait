@@ -27,10 +27,10 @@ GuestForm {
         if (nameField.text === "" || lastnameField.text === "") {
             errorPopup.errorRectangleTextError.text = "Error: Has dejado campos vacíos"
             errorPopup.visible = true
-        } else if (!/^[a-zA-Z\s]+$/.test(nameField.text)) { // Allow letters and spaces
+        } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(nameField.text)) { // Allow letters and spaces
             errorPopup.errorRectangleTextError.text = "Error: El nombre solo debe contener letras y espacios"
             errorPopup.visible = true
-        } else if (!/^[a-zA-Z\s]+$/.test(lastnameField.text)) { // Allow letters and spaces
+        } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(lastnameField.text)) { // Allow letters and spaces
             errorPopup.errorRectangleTextError.text = "Error: El apellido solo debe contener letras y espacios"
             errorPopup.visible = true
         } else {

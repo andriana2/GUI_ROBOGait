@@ -186,6 +186,7 @@ ApplicationFlowForm {
         if (applicationFlow.state !== "menu_app") {
             mystackview.push(menu_app)
             applicationFlow.state = "menu_app"
+            stringHandler.requestBattery();
         }
     }
 
