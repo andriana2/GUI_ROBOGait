@@ -9,8 +9,6 @@
 #include <QVector>
 #include <QJsonObject>
 
-#define EN_CASA 1
-
 enum Header
 {
     MSG,

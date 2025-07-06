@@ -116,34 +116,3 @@ El proyecto está separado en `.qml` y `.ui.qml`, donde el primero contiene toda
 
 + **SignInForm.qml SignInFormForm.ui.qml**: Pantalla de registrase.
 
-## Comenzando
-
-Para comenzar a trabajar con este proyecto, sigue los pasos a continuación:
-
-1. **Clonar el repositorio**  
-   Clona el repositorio en tu máquina local utilizando el siguiente comando:
-   ```bash
-   git clone <URL_DEL_REPOSITORIO>
-   cd GUI_ROBOGAIT/server
-   ```
-
-2. **Cambiar el path a param**
-   Dentro del archivo `node_manager/include/header.h` se encuentra un `#define` que se debe cambiar al path en el que se encuentra el proyecto. Estructura:
-   ```C 
-   #define PATH "/home/robogait/GUI_ROBOGait/"
-   ```
-
-3. **Construir el proyecto**  
-   Asegúrate de tener instalado ROS 2 y sus dependencias. Luego, ejecuta el siguiente comando para compilar el proyecto asegurate de estar en `GUI_ROBOGAIT/server`:
-   ```bash
-   colcon build
-   source install/setup.bash
-   ```
-
-4. **Ejecutar el nodo principal**  
-   Una vez completada la compilación, puedes ejecutar el nodo principal del proyecto con el siguiente comando:
-   ```bash
-   ros2 run node_manager node_manager
-   ```
-
-Con estos pasos, tendrás el servidor configurado y listo para su uso.
