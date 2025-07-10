@@ -1,126 +1,167 @@
+
 # Proyecto ROBOGait – Cliente (GUI) y Servidor ROS2
 
-Este proyecto contiene la interfaz gráfica desarrollada con Qt y la infraestructura del servidor con ROS2 y Flask para controlar el robot ROBOGait.
+Este proyecto contiene:
+
+- Una **interfaz gráfica de usuario (GUI)** desarrollada con Qt para Android y escritorio.
+- Un **servidor ROS 2 + Flask** que gestiona la lógica y comunicación con el robot ROBOGait.
 
 ---
+
 ## Requisitos previos
+
 - Ubuntu 22.04
 - Conexión a Internet
-- Cuenta de estudiante UPM para licencia Qt
-- Odenador con capacidad para instalar Android Studio
-- Tablet con un sistema operativo Android
---- 
-
-## Graphical User Interface (GUI)
-Dentro de este proyecto se incluye todo lo necesario para compilar en Qt Creator.
-
-### Pasos para instalar Qt Creator:
-1. Descarga Qt Creator desde el sitio oficial con la licencia de estudiante y el correo de la UPM: [link](https://www.qt.io/qt-educational-license#application).
-2. Si deseas usarlo para desarrollar en Android, sigue estos [pasos](https://doc.qt.io/qt-6/android-getting-started.html). Si se te complica aquí los pasos para el NDK y SDK [ndk y sdk](https://www.youtube.com/watch?v=7U6Q7xG8N70) el jdk es con la linea de código
-3. **Nota**: Debes activar la opción de desarrollador en el móvil/tablet para poder compilar el código en tu dispositivo. Aquí tienes un [video](https://youtu.be/f91wxQdP8Ak?si=0kSbNOwmc2m3rqNe) que explica cómo hacerlo.
+- Cuenta UPM para licencia educativa de Qt
+- Ordenador con capacidad para ejecutar Android Studio
+- Tablet con sistema operativo Android
 
 ---
 
-## Server
-Incluye la información necesaria para configurar el servidor y comunicarte con el cliente (tablet/móvil). Este servidor debe complementarse con el código de RoboGait Indoor v3 (a fecha de 06/07/2025).
+## Interfaz gráfica (GUI)
 
-### Pasos para instalar lo necesario:
-1. Instalar ROS 2 Humble: [Link](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html).
-2. Instalar dependencias:
-    ```bash
-    sudo apt install build-essential cmake libboost-system-dev libyaml-cpp-dev nlohmann-json3-dev libopencv-dev
-    ```
-3. Instalar dependencias de Python en Linux:
-    ```bash
-    sudo apt update
-    sudo apt install python3 python3-pip
-    pip install Flask
-    ```
-4. Instalar dependencias de la base de datos:
-    ```bash
-    sudo apt update
-    sudo apt install sqlite3
-    sudo apt install sqlitebrowser
-    ```
+El directorio `gui/` contiene todo lo necesario para compilar el proyecto en Qt Creator.
+
+### Pasos para instalar Qt Creator
+
+1. Descarga Qt Creator con licencia educativa desde este enlace:  
+   👉 [Solicitar licencia educativa de Qt](https://www.qt.io/qt-educational-license#application)
+
+2. Si deseas compilar para Android, sigue estos pasos oficiales:  
+   👉 [Guía oficial: Android con Qt](https://doc.qt.io/qt-6/android-getting-started.html)
+
+   También puedes apoyarte en este video para configurar correctamente el **NDK**, **SDK** y **JDK**:  
+   🎥 [Video de configuración Android](https://www.youtube.com/watch?v=7U6Q7xG8N70)
+
+3. **Importante:** Activa el modo desarrollador en tu tablet/móvil Android.  
+   🎥 [Cómo activar el modo desarrollador](https://youtu.be/f91wxQdP8Ak?si=0kSbNOwmc2m3rqNe)
+
 ---
 
-## Puertos
-El proyecto utiliza un puerto, por lo que si estás en Linux, no olvides habilitarlos:
+## Servidor ROS2 + Flask
+
+El directorio `server/` contiene el servidor encargado de comunicarse con el cliente y controlar el robot. Este proyecto se complementa con **ROBOGait Indoor v3** (versión 06/07/2025).
+
+### Instalación de dependencias
+
+1. **Instalar ROS 2 Humble**  
+   👉 [Guía oficial](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
+
+2. **Instalar dependencias del sistema:**
+
+   ```bash
+   sudo apt update
+   sudo apt install build-essential cmake libboost-system-dev libyaml-cpp-dev \
+       nlohmann-json3-dev libopencv-dev
+   ```
+
+3. **Instalar dependencias de Python:**
+
+   ```bash
+   sudo apt install python3 python3-pip
+   pip install Flask
+   ```
+
+4. **Instalar herramientas para la base de datos SQLite:**
+
+   ```bash
+   sudo apt install sqlite3 sqlitebrowser
+   ```
+
+---
+
+## Configuración de puertos
+
+Este proyecto utiliza un único puerto para comunicación:
 
 ```bash
 sudo ufw enable
 sudo ufw allow 45454
 ```
-| Puerto | Protocolo | Uso                                   |
-|--------|-----------|----------------------------------------|
-| 45454  | UDP   | Conexión entre cliente y servidor     |
-| 45454  | TCP   | Conexión entre cliente y servidor     |
+
+| Puerto | Protocolo | Uso                             |
+|--------|-----------|----------------------------------|
+| 45454  | UDP       | Descubrimiento y ACKs           |
+| 45454  | TCP       | Comunicación de datos cliente-servidor |
 
 ---
 
-## Comenzando
-### GUI
+## Instrucciones de uso
 
-1. **Clonar el repositorio**  
-   Clona el repositorio en tu máquina local utilizando el siguiente comando:
+### Cliente (GUI)
+
+1. **Clonar el repositorio:**
+
    ```bash
    git clone <URL_DEL_REPOSITORIO>
    cd GUI_ROBOGAIT/gui
    ```
-2. **Abrir con Qt Creator** <br>
-    Para abrir el proyecto, seleciona `Open Project`, seleciona el CMakeLists.txt.
 
-3. **Configuración del proyecto**<br>
-    Cuando llegas al `Kit Selection` asegurate de guardar elegir tanto el Desktop como Android (en mi caso fue el Clang armeaby-v7a).
+2. **Abrir el proyecto con Qt Creator:**
 
-4. **Play**<br>
-    Seleciona la forma de ejecutar abajo a la izquierda si quieres hacerlo como Desktop o como Android y pulsa Play.
+   - Selecciona `Open Project`
+   - Elige el archivo `CMakeLists.txt`
 
-Con estos pasos, tendrás la interfaz configurado y listo para su uso.
+3. **Configurar Kit:**
 
+   - En la sección `Kit Selection`, selecciona tanto `Desktop` como `Android`
+   - Para Android, puedes usar `Clang armeabi-v7a` (u otro compatible)
+
+4. **Compilar y ejecutar:**
+
+   - Selecciona el modo de ejecución en la esquina inferior izquierda (Desktop o Android)
+   - Pulsa el botón **Play**
+
+---
 
 ### Servidor
-Para comenzar a trabajar con este proyecto, sigue los pasos a continuación:
 
-1. **Clonar el repositorio**  
-   Clona el repositorio en tu máquina local utilizando el siguiente comando:
+1. **Clonar el repositorio:**
+
    ```bash
    git clone <URL_DEL_REPOSITORIO>
    cd GUI_ROBOGAIT/server
    ```
 
-2. **Cambiar el path a param**
-   Dentro del archivo `node_manager/include/header.h` se encuentra un `#define` que se debe cambiar al path en el que se encuentra el proyecto. Estructura:
-   ```C 
-   #define PATH "/home/robogait/GUI_ROBOGait/"
+2. **Configurar ruta del proyecto:**
+
+   En el archivo `node_manager/include/header.h`, modifica la siguiente línea con el path real del proyecto:
+
+   ```cpp
+   #define PATH "/home/tu_usuario/GUI_ROBOGait/"
    ```
 
-3. **Construir el proyecto**  
-   Asegúrate de tener instalado ROS 2 y sus dependencias. Luego, ejecuta el siguiente comando para compilar el proyecto asegurate de estar en `GUI_ROBOGAIT/server`:
+3. **Compilar el proyecto con colcon:**
+
    ```bash
    colcon build
    source install/setup.bash
    ```
 
-4. **Ejecutar el nodo principal**  
-   Una vez completada la compilación, puedes ejecutar el nodo principal del proyecto con el siguiente comando:
+4. **Ejecutar el nodo principal:**
+
    ```bash
    ros2 run node_manager node_manager
    ```
 
-Con estos pasos, tendrás el servidor configurado y listo para su uso.
+---
 
+## Solución a errores comunes
 
-## ERRORES Y SOLUCION
-Si te falla en algún momento los qtquick, ejecuta esto:
-```bash
-sudo apt install qml-module-qtquick-layouts
-```
-En Gazebo, si te falla, ejecuta esto:
-```bash
-source /usr/share/gazebo/setup.sh
-```
-Turtlebot3 navegación para ejecutar el rviz2:
-```bash
-ros2 run rviz2 rviz2 -d $(ros2 pkg prefix nav2_bringup)/share/nav2_bringup/rviz/nav2_default_view.rviz
-```
+- **Error con módulos QtQuick:**
+
+   ```bash
+   sudo apt install qml-module-qtquick-layouts
+   ```
+
+- **Error al iniciar Gazebo:**
+
+   ```bash
+   source /usr/share/gazebo/setup.sh
+   ```
+
+- **Ejecutar Rviz2 con navegación Turtlebot3:**
+
+   ```bash
+   ros2 run rviz2 rviz2 -d $(ros2 pkg prefix nav2_bringup)/share/nav2_bringup/rviz/nav2_default_view.rviz
+   ```
